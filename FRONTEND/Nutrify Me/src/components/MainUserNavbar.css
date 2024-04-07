@@ -5,9 +5,7 @@
   border-color: #99756e;
 }
 
-/* .userButton {
-  :hover: {
-    backgroundColor: '#ffffff',
-    boxShadow: 'none',
-  },
-} */
+.userButton:hover {
+  background: "#ffffff";
+  boxshadow: "none";
+}

@@ -1,0 +1,7 @@
+import { useState } from "react";
+
+function Registration() {
+  return <></>;
+}
+
+export default Registration;
