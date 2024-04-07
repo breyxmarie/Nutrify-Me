@@ -40,3 +40,12 @@
 .read-the-docs {
   color: #888;
 }
+
+.navbar-link.activeLink {
+  /* Styles for the active state (e.g., font weight, background color) */
+  color: #5754a8; /* Example color change on active */
+}
+
+.normalLink {
+  /* Optional default styles for links */
+}

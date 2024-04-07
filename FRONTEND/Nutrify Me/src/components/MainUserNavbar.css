@@ -1,0 +1,13 @@
+.active {
+  /* Styles for the active state (e.g., font weight, background color) */
+  /* background: #b9a09b; */
+  border-bottom: 5px solid red;
+  border-color: #99756e;
+}
+
+/* .userButton {
+  :hover: {
+    backgroundColor: '#ffffff',
+    boxShadow: 'none',
+  },
+} */

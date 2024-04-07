@@ -14,6 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 //import logo from "./images/logo.png";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import "./MainUserNavbar.css";
 // const pages = [
 //   "HOME",
 //   "TELEMEDICINE",
@@ -24,13 +25,30 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 // ];
 
 const pages = [
-  { names: "HOME", links: "" },
+  { names: "HOME", links: "/" },
   { names: "TELEMEDICINE", links: "/telemedicine-home" },
   { names: "MEAL PLAN SHOP", links: "/meal-plan-shop-home" },
   { names: "MEAL PLAN GENERATOR", links: "/meal-plan-generator-home" },
   { names: "FOOD JOURNAL", links: "/food-journal-home" },
   { names: "ABOUT US", links: "/about-us-user" },
 ];
+
+const StyledLink = `
+  color: #99756e; /* Default styles */
+  display: block;
+  text-decoration: none;
+  padding-y: 10px;
+
+  &.active {
+    color: #5754a8;
+    font-weight: bold; /* Active state styles */
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
 const LinkPages = [
   "",
   "/telemedicine-home",
@@ -39,11 +57,13 @@ const LinkPages = [
   "/food-journal-home",
   "/about-us-user",
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 function MainUserNavbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const activeLink = " bg-blue-100 text-black";
+  const normalLink = "";
   const path = location.pathname;
 
   const handleOpenNavMenu = (event) => {
@@ -65,7 +85,6 @@ function MainUserNavbar() {
     <AppBar position="fixed">
       <Container maxWidth="xl" sx={{ background: "#ffffff", padding: 2 }}>
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
           <Typography
             variant="h6"
             noWrap
@@ -82,7 +101,6 @@ function MainUserNavbar() {
             }}
           >
             <img src="/images/logo.png" alt="Logo" />
-            LOGO
           </Typography>
 
           <Box
@@ -148,70 +166,78 @@ function MainUserNavbar() {
               color: "inherit",
               textDecoration: "none",
             }}
-          >
-            LOGO
-          </Typography>
+          ></Typography>
           <Box // * dito yun change ng style for main nav bar
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
               background: "#FFFFFF",
-              border: 2,
+              border: 1,
               borderColor: "#000000",
               borderRadius: 4,
-              px: 6,
+              justifyContent: "space-between",
+              alignItems: "center",
+              px: 2,
+              mx: 5,
             }}
           >
             {pages.map((page) => (
-              // <Button
-              //   key={page.names}
-              //   onClick={handleCloseNavMenu}
-              //   sx={{ my: 2, color: "#99756E", display: "block" }}
-              //   component={Link}
-              //   to={page.links}
-              //   selected={page.links === path}
+              // <Box
+              //   sx={{
+              //     borderBottom: 2,
+              //     display: "flex",
+              //     flexGrow: 1,
+              //     justifyContent: "space-between",
+              //     alignItems: "center",
+              //     p: 2,
+              //   }}
+              //   onMouseEnter={(e) => (e.target.style.background = "#000000")}
+              //   onMouseLeave={(e) => (e.target.style.background = "none")}
+              //   style={{
+              //     color: "#99756E",
+              //     textDecoration: "none",
+              //     py: "10px",
+              //   }}
               // >
-              //   {page.names}
-              // </Button>
-              <Box sx={{ m: 2 }}>
-                <NavLink
-                  key={page.names}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 6,
-                    p: 6,
-                    textcolor: "#99756E",
-                    display: "block",
-                  }}
-                  style={{
-                    color: "#99756E",
-                    textDecoration: "none",
-                    py: "10px",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.target.style.textDecorationLine = "underline")
-                  }
-                  onMouseLeave={(e) => (
-                    (e.target.style.color = "#99756E"),
-                    (e.target.style.background = "white")(
-                      (e.target.style.textDecorationLine = "none")
-                    )
-                  )}
-                  activeStyle={{ color: "#5754a8" }}
-                  component={Link}
-                  to={page.links}
-                  selected={page.links === path}
-                >
+              <NavLink
+                key={page.names}
+                onClick={handleCloseNavMenu}
+                sx={{
+                  textcolor: "#99756E",
+                  display: "block",
+                }}
+                style={{
+                  color: "#99756E",
+                  textDecoration: "none",
+                  //height: "50px",
+                  display: "block",
+                }}
+                onMouseEnter={(e) => (e.target.style.background = "#b9a09b")}
+                onMouseLeave={(e) => (e.target.style.background = "#FFFFFF")}
+                className="activeLink"
+                //activeClassName="StyledLink" // Define your active class in CSS
+                // className="normalLink"
+                component={Link}
+                to={page.links}
+                selected={page.links === path}
+              >
+                <p className="border w-full h-full px-4 centered">
                   {page.names}
-                </NavLink>
-              </Box>
+                </p>
+              </NavLink>
             ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Button
+                  variant="contained"
+                  className="userButton"
+                  sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                >
+                  WELCOME *USER!
+                </Button>
               </IconButton>
             </Tooltip>
             <Menu
