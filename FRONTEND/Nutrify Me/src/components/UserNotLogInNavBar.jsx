@@ -16,6 +16,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import "./MainUserNavbar.css";
 import LogIn from "./LogIn";
+import Grid from "@mui/material/Grid";
 // const pages = [
 //   "HOME",
 //   "TELEMEDICINE",
@@ -101,7 +102,7 @@ function userNotLogInNavBar() {
               textDecoration: "none",
             }}
           >
-            <img src="/images/logo.png" alt="Logo" />
+            {/* <img src="/images/logo.png" alt="Logo" /> */}
           </Typography>
 
           <Box
@@ -155,149 +156,149 @@ function userNotLogInNavBar() {
               )}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Typography
-            variant="h5"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              mr: 2,
-              display: { xs: "flex", md: "none" },
-              flexGrow: 1,
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          ></Typography>
-          <Box sx={{ alignItems: "center", mx: "32%" }}>
-            <Box // * dito yun change ng style for main nav bar
-              sx={{
-                flexGrow: 1,
-                display: { xs: "none", md: "flex" },
-                background: "#FFFFFF",
-                border: 1,
-                borderColor: "#000000",
-                borderRadius: 4,
-                justifyContent: "space-between",
-                alignItems: "center",
-                px: 7,
-                // mx: 50,
-              }}
-            >
-              {pages.map((page) => (
-                // <Box
-                //   sx={{
-                //     borderBottom: 2,
-                //     display: "flex",
-                //     flexGrow: 1,
-                //     justifyContent: "space-between",
-                //     alignItems: "center",
-                //     p: 2,
-                //   }}
-                //   onMouseEnter={(e) => (e.target.style.background = "#000000")}
-                //   onMouseLeave={(e) => (e.target.style.background = "none")}
-                //   style={{
-                //     color: "#99756E",
-                //     textDecoration: "none",
-                //     py: "10px",
-                //   }}
-                // >
-                <NavLink
-                  key={page.names}
-                  onClick={handleCloseNavMenu}
+          <Grid container spacing={3} sx={{ mt: ".5px" }}>
+            <Grid xs>
+              <img src="/images/logo.png" alt="Logo" />
+            </Grid>
+            <Grid xs={6} sx={{ mt: "20px" }}>
+              <Box sx={{ alignItems: "center", mx: "20%" }}>
+                <Box // * dito yun change ng style for main nav bar
                   sx={{
-                    textcolor: "#99756E",
-                    display: "block",
+                    flexGrow: 1,
+                    display: { xs: "none", md: "flex" },
+                    background: "#FFFFFF",
+                    border: 1,
+                    borderColor: "#000000",
+                    borderRadius: 4,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    px: 6,
+                    // mx: 50,
                   }}
-                  style={{
-                    color: "#99756E",
-                    textDecoration: "none",
-                    //height: "50px",
-                    display: "block",
-                    mx: "70px",
-                  }}
-                  onMouseEnter={(e) => (e.target.style.background = "#b9a09b")}
-                  onMouseLeave={(e) => (e.target.style.background = "#FFFFFF")}
-                  className="activeLink"
-                  //activeClassName="StyledLink" // Define your active class in CSS
-                  // className="normalLink"
-                  component={Link}
-                  to={page.links}
-                  selected={page.links === path}
                 >
-                  <p className="border w-full h-full px-4 centered">
-                    {page.names}
-                  </p>
-                </NavLink>
-              ))}
-            </Box>
-          </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <Box>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Button
-                    variant="contained"
-                    className="userButton"
-                    onMouseEnter={(e) =>
-                      (e.target.style.background = "#E66253")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.target.style.background = "#E66253")
-                    }
-                    sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
-                  >
-                    CONTACT US
-                  </Button>
-                </IconButton>
+                  {pages.map((page) => (
+                    // <Box
+                    //   sx={{
+                    //     borderBottom: 2,
+                    //     display: "flex",
+                    //     flexGrow: 1,
+                    //     justifyContent: "space-between",
+                    //     alignItems: "center",
+                    //     p: 2,
+                    //   }}
+                    //   onMouseEnter={(e) => (e.target.style.background = "#000000")}
+                    //   onMouseLeave={(e) => (e.target.style.background = "none")}
+                    //   style={{
+                    //     color: "#99756E",
+                    //     textDecoration: "none",
+                    //     py: "10px",
+                    //   }}
+                    // >
+                    <NavLink
+                      key={page.names}
+                      onClick={handleCloseNavMenu}
+                      sx={{
+                        textcolor: "#99756E",
+                        display: "block",
+                      }}
+                      style={{
+                        color: "#99756E",
+                        textDecoration: "none",
+                        //height: "50px",
+                        display: "block",
+                        // mx: "70px",
+                      }}
+                      onMouseEnter={(e) =>
+                        (e.target.style.background = "#b9a09b")
+                      }
+                      onMouseLeave={(e) =>
+                        (e.target.style.background = "#FFFFFF")
+                      }
+                      className="activeLink"
+                      //activeClassName="StyledLink" // Define your active class in CSS
+                      // className="normalLink"
+                      component={Link}
+                      to={page.links}
+                      selected={page.links === path}
+                    >
+                      <p className="border w-full h-full px-4 centered">
+                        {page.names}
+                      </p>
+                    </NavLink>
+                  ))}
+                </Box>
               </Box>
-            </Tooltip>
-            <Box sx={{ my: "5px" }}>
-              <Link
-                href=""
-                component={Link}
-                to={"/Log-In"}
-                style={{ color: "#898246", textDecoration: "underline" }}
-              >
-                Log In
-              </Link>{" "}
-              &nbsp; &nbsp;
-              <Link
-                href=""
-                component={Link}
-                to={"/Register"}
-                style={{ color: "#898246", textDecoration: "underline" }}
-              >
-                Sign Up
-              </Link>
-            </Box>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+            </Grid>
+
+            <Grid xs sx={{ mt: "25px" }}>
+              <Box sx={{ flexGrow: 0 }}>
+                <Tooltip title="Open settings">
+                  <Box>
+                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                      <Button
+                        variant="contained"
+                        className="userButton"
+                        onMouseEnter={(e) =>
+                          (e.target.style.background = "#E66253")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.target.style.background = "#E66253")
+                        }
+                        sx={{
+                          borderRadius: 4,
+                          background: "#E66253",
+                          mr: "15px ",
+                        }}
+                      >
+                        CONTACT US
+                      </Button>
+                    </IconButton>
+                  </Box>
+                </Tooltip>
+                <Box sx={{ my: "5px" }}>
+                  <Link
+                    href=""
+                    component={Link}
+                    to={"/Log-In"}
+                    style={{ color: "#898246", textDecoration: "underline" }}
+                  >
+                    Log In
+                  </Link>{" "}
+                  &nbsp; &nbsp;
+                  <Link
+                    href=""
+                    component={Link}
+                    to={"/Register"}
+                    style={{ color: "#898246", textDecoration: "underline" }}
+                  >
+                    Sign Up
+                  </Link>
+                </Box>
+                <Menu
+                  sx={{ mt: "45px" }}
+                  id="menu-appbar"
+                  anchorEl={anchorElUser}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={Boolean(anchorElUser)}
+                  onClose={handleCloseUserMenu}
+                >
+                  {settings.map((setting) => (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  ))}
+                </Menu>
+              </Box>
+            </Grid>
+          </Grid>
         </Toolbar>
       </Container>
     </AppBar>
