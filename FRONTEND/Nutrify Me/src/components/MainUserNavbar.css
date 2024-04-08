@@ -18,34 +18,34 @@
 @media (max-width: 575.98px) {
   /* CSS rules for extra small devices */
   .content {
-    padding-top: 80px; /* Adjust padding for extra small devices */
+    padding-top: 20px; /* Adjust padding for extra small devices */
   }
 }
 
 @media (min-width: 576px) {
   /* CSS rules for small devices */
   .content {
-    padding-top: 100px; /* Adjust padding for extra small devices */
+    padding-top: 20px; /* Adjust padding for extra small devices */
   }
 }
 
 @media (min-width: 768px) {
   /* CSS rules for medium devices */
   .content {
-    padding-top: 80px; /* Adjust padding for extra small devices */
+    padding-top: 20px; /* Adjust padding for extra small devices */
   }
 }
 
 @media (min-width: 992px) {
   /* CSS rules for large devices */
   .content {
-    padding-top: 80px; /* Adjust padding for extra small devices */
+    padding-top: 30px; /* Adjust padding for extra small devices */
   }
 }
 
 @media (min-width: 1200px) {
   /* CSS rules for extra large devices */
   .content {
-    padding-top: 120px; /* Adjust padding for extra small devices */
+    padding-top: 30px; /* Adjust padding for extra small devices */
   }
 }

@@ -12,6 +12,7 @@ import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/MainUserNavbar";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
+import UserFooter from "./components/UserFooter";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -21,7 +22,16 @@ function App() {
       {/* <MainUserNavBar /> */}
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <>
+                {/* <MainUserNavBar /> */}
+                <Home />
+                {/* <UserFooter /> */}
+              </>
+            }
+          />
           <Route path="/telemedicine-home" element={<TelemedicineHome />} />
           <Route path="/meal-plan-shop-home" element={<MealPlanShopHome />} />
           <Route

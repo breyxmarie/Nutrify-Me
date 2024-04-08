@@ -1,5 +1,6 @@
 import { useState } from "react";
 import MainUserNavbar from "./MainUserNavbar";
+import UserFooter from "./UserFooter";
 import UserNotLogInNavBar from "./UserNotLogInNavBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -26,6 +27,7 @@ function Home() {
       }}
     >
       <UserNotLogInNavBar />
+
       <Box
         className="content"
         sx={{
@@ -36,9 +38,10 @@ function Home() {
         }}
         // maxWidth:false
         // disableGutters
+        position="absolute"
       >
         {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}
-        <Box sx={{ px: "200px", py: 4 }}>
+        <Box sx={{ px: "10px", py: 0 }}>
           <Box
             component="section"
             sx={{
@@ -48,25 +51,51 @@ function Home() {
               display: "flex",
               alignItems: "center",
               width: "100%",
-              height: "400px" /* Adjust height as per your requirement */,
+              height: "700px" /* Adjust height as per your requirement */,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
           >
             <Grid container spacing={2}>
-              <Grid>
+              <Grid xs={4}>
                 <p></p>
               </Grid>
-              <Grid>
-                <Typography variant="h5" component="div">
-                  DIETICIANS AVAILABLE 24/7 TO REGULATE YOUR BLOOD PRESSURE!
+              <Grid
+                xs={8}
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  marginLeft: "auto",
+                  float: "right",
+                  mr: "60px",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  component="div"
+                  sx={{
+                    color: "#99756E",
+                    fontWeight: "bold",
+                    textAlign: "right",
+                    fontSize: "40px",
+                  }}
+                >
+                  DIETICIANS AVAILABLE 24/7 <br />
+                  TO REGULATE YOUR BLOOD <br />
+                  PRESSURE!
                 </Typography>
 
                 <br />
 
                 <Button
                   variant="contained"
-                  sx={{ mx: "auto", display: "block" }}
+                  sx={{
+                    float: "right",
+                    mx: "auto",
+                    display: "block",
+                    background: "#E66253",
+                    fontSize: "20px",
+                  }}
                 >
                   BOOK AN APPOINTMENT
                 </Button>
@@ -77,10 +106,11 @@ function Home() {
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "#99756E", border: 1 }}
+            sx={{ color: "#99756E", border: 1, fontSize: "70px" }}
           >
             The Process
           </Typography>
+
           <Box
             sx={{
               display: "grid",
@@ -154,7 +184,7 @@ function Home() {
                   3
                 </h2>
               </center>
-              <h3>Appointment</h3>
+              <h3>Diet Recommendation</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -163,7 +193,7 @@ function Home() {
             <Item>
               {" "}
               <img
-                src="/images/diagnostic 2.png"
+                src="/images/diagnostic 4.png"
                 width="170px"
                 height="170px"
               />
@@ -175,10 +205,10 @@ function Home() {
                     width: 30,
                   }}
                 >
-                  2
+                  4
                 </h2>
               </center>
-              <h3>Appointment</h3>
+              <h3>Meal Plan Ordering</h3>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -204,15 +234,34 @@ function Home() {
             <Grid xs={8}>
               <p></p>
             </Grid>
-            <Grid xs={8}>
+            <Grid xs={8} sx={{ ml: "40px" }}>
               <br />
-              <Typography variant="h5" component="div">
+              <Typography
+                variant="h5"
+                component="div"
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  textAlign: "left",
+                  fontSize: "40px",
+                }}
+              >
                 LOOKING FOR MEAL PLANS CATERED TO LESSEN HYPERTENSION?
               </Typography>
 
               <br />
 
-              <Button variant="contained" sx={{ mx: "auto", display: "block" }}>
+              <Button
+                variant="contained"
+                sx={{
+                  mx: "auto",
+                  display: "block",
+                  float: "left",
+
+                  background: "#E66253",
+                  fontSize: "20px",
+                }}
+              >
                 VIEW MEAL PLANS
               </Button>
             </Grid>
@@ -331,6 +380,7 @@ function Home() {
           </Grid>
         </Box>
       </Box>
+      <UserFooter />
     </Box>
   );
 }
