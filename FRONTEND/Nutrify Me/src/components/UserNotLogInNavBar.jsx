@@ -79,7 +79,8 @@ function userNotLogInNavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: -1 }}>
+    <AppBar position="fixed">
+      {/* sx={{ zIndex: -1 }} */}
       <Container
         maxWidth="100%"
         sx={{ background: "#ffffff", padding: 2, overflow: scroll }}

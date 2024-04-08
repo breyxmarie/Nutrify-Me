@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import { Container } from "@mui/material";
 
 function Home() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -16,48 +18,55 @@ function Home() {
     color: theme.palette.text.secondary,
   }));
   return (
-    <div>
-      <UserNotLogInNavBar />
-
-      <Box
-        sx={{
-          mt: "50px",
-
-          backgroundImage: "url('/images/HomeImage.png')",
-          // flexDirection: "column",
-          // display: "flex",
-          height: "385px",
-          minHeight: "500px",
-          //minWidth: "1000px",
-          width: "100%",
-        }}
-      >
-        <h2>DIETICIANS AVAILABLE 24/7 TO REGULATE YOUR BLOOD PRESSURE!</h2>
-        <br />
-        <Button>BOOK AN APPOINTMENT</Button>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+      }}
+      maxWidth:false
+      disableGutters
+    >
+      <UserNotLogInNavBar /> {/* Your navbar component */}
+      <Box sx={{ px: 4, py: 4 }}>
+        {" "}
+        {/* Body Section */}
+        <Container
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            backgroundImage: "url('/images/HomeImage.png')",
+          }}
+        >
+          {" "}
+          {/* Centered heading */}
+          <Typography variant="h5" component="div">
+            DIETICIANS AVAILABLE 24/7 TO REGULATE YOUR BLOOD PRESSURE!
+          </Typography>
+          <br />
+          <Button variant="contained" sx={{ mx: "auto", display: "block" }}>
+            BOOK AN APPOINTMENT
+          </Button>{" "}
+        </Container>
+        {/* Centered button */}
+        <Typography variant="h6" component="div">
+          The Process
+        </Typography>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: 2,
+          }}
+        >
+          {" "}
+          {/* Grid of items */}
+          <Item>1</Item>
+          <Item>2</Item>
+          <Item>3</Item>
+          <Item>4</Item>
+        </Box>
       </Box>
-
-      <Box>
-        <h2>The Process</h2>
-      </Box>
-
-      <Box sx={{ width: "100%" }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={6}>
-            <Item>1</Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>2</Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>3</Item>
-          </Grid>
-          <Grid item xs={6}>
-            <Item>4</Item>
-          </Grid>
-        </Grid>
-      </Box>
-    </div>
+    </Box>
   );
 }
 
