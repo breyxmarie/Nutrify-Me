@@ -30,12 +30,14 @@ function Home() {
 
       <Box
         className="content"
-        sx={{
-          // display: "flex",
-          // flexDirection: "column",
-          // pt: "60px",
-          background: "white",
-        }}
+        sx={
+          {
+            // display: "flex",
+            // flexDirection: "column",
+            // pt: "60px",
+            //background: "white",
+          }
+        }
         // maxWidth:false
         // disableGutters
         position="absolute"
@@ -106,7 +108,14 @@ function Home() {
           <Typography
             variant="h6"
             component="div"
-            sx={{ color: "#99756E", border: 1, fontSize: "70px" }}
+            sx={{
+              color: "#99756E",
+              border: 1,
+              fontSize: "70px",
+              fontWeight: "bold",
+              mx: 70,
+              borderRadius: 8,
+            }}
           >
             The Process
           </Typography>
@@ -132,12 +141,13 @@ function Home() {
                     background: "#99756E",
                     borderRadius: 20,
                     width: 30,
+                    fontWeight: "bold",
                   }}
                 >
                   1
                 </h2>
               </center>
-              <h3>Profiling</h3>
+              <h2 style={{ fontWeight: "bold" }}>Profiling</h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -160,7 +170,7 @@ function Home() {
                   2
                 </h2>
               </center>
-              <h3>Appointment</h3>
+              <h2>Appointment</h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -184,7 +194,7 @@ function Home() {
                   3
                 </h2>
               </center>
-              <h3>Diet Recommendation</h3>
+              <h2>Diet Recommendation</h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -208,7 +218,7 @@ function Home() {
                   4
                 </h2>
               </center>
-              <h3>Meal Plan Ordering</h3>
+              <h2>Meal Plan Ordering</h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}

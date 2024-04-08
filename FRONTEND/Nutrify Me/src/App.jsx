@@ -2,6 +2,7 @@ import { useState } from "react";
 import Home from "./components/Home";
 import AboutUs from "./components/AboutUs";
 import MainHome from "./components/MainHome";
+import UserNotLogInNavBar from "./components/UserNotLogInNavBar";
 import AboutUsUser from "./components/AboutUsUser";
 import FoodJournalHome from "./components/FoodJournalHome";
 import MealPlangeneratorHome from "./components/MealPlangeneratorHome";
@@ -40,7 +41,14 @@ function App() {
           />
           <Route path="/food-journal-home" element={<FoodJournalHome />} />
           <Route path="/about-us-user" element={<AboutUsUser />} />
-          <Route path="/about-us" element={<AboutUs />} />
+          <Route
+            path="/about-us"
+            element={
+              <>
+                <AboutUs />
+              </>
+            }
+          />
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />
         </Routes>
