@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MainUserNavbar from "./MainUserNavbar";
 import UserNotLogInNavBar from "./UserNotLogInNavBar";
 import Box from "@mui/material/Box";
@@ -7,10 +7,20 @@ import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { Link } from "react-router-dom";
+import MyTextField from "./forms/MyTextField";
+import MyMultiSelectField from "./forms/MyMultiSelectField";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import TextField from "@mui/material/TextField";
+//import PhoneInput from "react-phone-input-2";
+import { PhoneInput } from "react-international-phone";
+import "react-international-phone/style.css";
 
 function UserFooter() {
+  const [phone, setPhone] = useState("");
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -19,111 +29,261 @@ function UserFooter() {
     color: theme.palette.text.secondary,
   }));
 
+  const navigate = useNavigate();
+  const defaultValues = {
+    name: "",
+  };
+
+  const schema = yup.object({
+    name: yup.string().required("Name is a required field"),
+  });
+
+  const { handleSubmit, control } = useForm({
+    defaultValues: defaultValues,
+    resolver: yupResolver(schema),
+  });
+
   return (
-    <footer className="footer">
-      <div className="container">
-        <p className="copyright">
-          &copy; {new Date().getFullYear()} Acme Corporation. All rights
-          reserved.
-        </p>
-        <ul>
-          <li>
-            <Link to="/contact">Contact Us</Link>
-          </li>
-          <li>
-            <Link to="/about">About Us</Link>
-          </li>
-        </ul>
+    <footer className="footer" style={{ width: "100vw" }}>
+      <div
+        className="container"
+        style={{ background: "#E66253", color: "#ffffff", padding: 20 }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <img
+              src="/images/logoCircle.png"
+              width="170px"
+              height="170px"
+            ></img>
+
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{
+              textAlign: "left",
+            }}
+          >
+            TELEMEDICINE <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Home
+            </Link>
+            <br />
+            <Link
+              to="/about"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Appointments
+            </Link>
+            <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Meet Us
+            </Link>
+            <br />
+            <Link
+              to="/about"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Services
+            </Link>
+            <br />
+            <br />
+            E-COMMERCE <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Shops
+            </Link>
+            <br />
+            <Link
+              to="/about"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Meal Plans
+            </Link>
+            <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Meal Plan History
+            </Link>
+          </Grid>
+          <Grid item xs={2} style={{ textAlign: "left" }}>
+            MEAL PLAN GENERATOR <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Meal Plan Generator
+            </Link>
+            <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Meal Plan History
+            </Link>
+            <br />
+            <br />
+            FOOD JOURNAL
+            <br />
+            <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Journal
+            </Link>
+            <br />
+            <Link
+              to="/contact"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Progress Report
+            </Link>
+          </Grid>
+          <Grid item xs={3} sx={{ textAlign: "left" }}>
+            CONTACT US
+            <br />
+            <form onSubmit={handleSubmit()}>
+              {" "}
+              <TextField
+                sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                // value={value}
+                // id="outlined-basic"
+                // label={label}
+                // variant="standard"
+
+                id="outlined-basic"
+                // label="Outlined"
+                variant="outlined"
+                placeholder="name"
+                name="name"
+                // error={!!error}
+                // helperText={error?.message}
+              />
+              <br />
+              <br />
+              <TextField
+                sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                id="outlined-basic"
+                variant="outlined"
+                placeholder="Email"
+                name="email"
+              />
+              <br />
+              <br />
+              <PhoneInput
+                sx={{ width: "100%" }}
+                defaultCountry="ph"
+                value={phone}
+                onChange={(phone) => setPhone(phone)}
+                name="MobileNumber"
+              />
+              <br />
+              <TextField
+                id="outlined-multiline-flexible"
+                sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                multiline
+                rows={4}
+                placeholder="Type message here"
+              />
+              {/* <MyTextField
+                label="Name"
+                name={"name"}
+                control={control}
+                placeholder="Provide a project name"
+                width={"100%"}
+              /> */}
+              <br />
+              <Button
+                variant="contained"
+                type="submit"
+                sx={{
+                  width: "30%",
+                  background: "#ffffff",
+                  color: "#E66253",
+                  fontWeight: "bold",
+                  borderRadius: 6,
+                  mt: 2,
+                }}
+              >
+                SEND
+                <img
+                  src="/images/paperplane.png"
+                  width="20px"
+                  height="20px"
+                  style={{ margin: 0, marginTop: 5 }}
+                ></img>
+              </Button>
+            </form>
+          </Grid>
+        </Grid>
       </div>
+      <Grid
+        container
+        spacing={2}
+        sx={{ color: "#ffffff", background: "#898246" }}
+      >
+        <Grid xs={4}>
+          <p className="copyright" style={{ pl: 5 }}>
+            {new Date().getFullYear()} NutrifyMe. All rights reserved.
+          </p>
+        </Grid>
+
+        <Grid xs={4} style={{ alignText: "right" }}>
+          <p className="copyright" style={{ alignText: "right" }}>
+            Follow NutrifyMe!
+            <a href="" style={{ margin: 10, marginTop: 2 }}>
+              <img
+                src="/images/facebook.png"
+                width="20px"
+                height="20px"
+                style={{ margin: 0, marginTop: 5 }}
+              ></img>
+            </a>
+            <a href="" style={{ margin: 10 }}>
+              <img src="/images/instagram.png" width="20px" height="20px"></img>
+            </a>
+          </p>
+        </Grid>
+      </Grid>
     </footer>
-    // <footer position="fixed" style={{ background: "#000000" }}>
-    // <Box
-    //   sx={{
-    //     display: "grid",
-    //     gridTemplateColumns: "repeat(4, 1fr)",
-    //     gap: 2,
-    //   }}
-    // >
-    //   <Item>
-    //     <img src="/images/diagnostic 1.png" width="170px" height="170px" />
-    //     <center>
-    //       <h2
-    //         style={{
-    //           background: "#99756E",
-    //           borderRadius: 20,
-    //           width: 30,
-    //         }}
-    //       >
-    //         1
-    //       </h2>
-    //     </center>
-    //     <h3>Profiling</h3>
-    //     <p>
-    //       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-    //       eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-    //     </p>
-    //   </Item>
-    //   <Item>
-    //     <img src="/images/diagnostic 2.png" width="170px" height="170px" />
-    //     <center>
-    //       <h2
-    //         style={{
-    //           background: "#99756E",
-    //           borderRadius: 20,
-    //           width: 30,
-    //         }}
-    //       >
-    //         2
-    //       </h2>
-    //     </center>
-    //     <h3>Appointment</h3>
-    //     <p>
-    //       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-    //       eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-    //     </p>
-    //   </Item>
-    //   <Item>
-    //     {" "}
-    //     <img src="/images/diagnostic 3.png" width="170px" height="170px" />
-    //     <center>
-    //       <h2
-    //         style={{
-    //           background: "#99756E",
-    //           borderRadius: 20,
-    //           width: 30,
-    //         }}
-    //       >
-    //         3
-    //       </h2>
-    //     </center>
-    //     <h3>Diet Recommendation</h3>
-    //     <p>
-    //       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-    //       eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-    //     </p>
-    //   </Item>
-    //   <Item>
-    //     {" "}
-    //     <img src="/images/diagnostic 4.png" width="170px" height="170px" />
-    //     <center>
-    //       <h2
-    //         style={{
-    //           background: "#99756E",
-    //           borderRadius: 20,
-    //           width: 30,
-    //         }}
-    //       >
-    //         4
-    //       </h2>
-    //     </center>
-    //     <h3>Meal Plan Ordering</h3>
-    //     <p>
-    //       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-    //       eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-    //     </p>
-    //   </Item>
-    // </Box>
-    // // </footer>
   );
 }
 

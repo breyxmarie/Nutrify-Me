@@ -29,11 +29,26 @@ function App() {
               <>
                 {/* <MainUserNavBar /> */}
                 <Home />
-                {/* <UserFooter /> */}
+                <UserFooter />
               </>
             }
           />
-          <Route path="/telemedicine-home" element={<TelemedicineHome />} />
+          <Route
+            path="/user-home"
+            element={
+              <>
+                <MainHome /> <UserFooter />
+              </>
+            }
+          />
+          <Route
+            path="/telemedicine-home"
+            element={
+              <>
+                <TelemedicineHome /> <UserFooter />{" "}
+              </>
+            }
+          />
           <Route path="/meal-plan-shop-home" element={<MealPlanShopHome />} />
           <Route
             path="/meal-plan-generator-home"
@@ -46,6 +61,7 @@ function App() {
             element={
               <>
                 <AboutUs />
+                <UserFooter />
               </>
             }
           />

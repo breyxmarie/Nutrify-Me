@@ -6,7 +6,7 @@ import UserFooter from "./UserFooter";
 
 function AboutUs() {
   return (
-    <div className="content">
+    <div className="content" style={{ paddingBottom: "40px" }}>
       <UserNotLogInNavBar />
       <Box
         sx={{
@@ -144,7 +144,6 @@ function AboutUs() {
           </Grid>
         </Grid>
       </Box>
-      <UserFooter />
     </div>
   );
 }
