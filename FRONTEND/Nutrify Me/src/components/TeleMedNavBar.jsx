@@ -26,8 +26,8 @@ import "./MainUserNavbar.css";
 
 const pages = [
   { names: "APPOINTMENTS", links: "/telemedicine-home" },
-  { names: " MEET US", links: "/about-us" },
-  { names: "MESSAGES", links: "/meal-plan-shop-home" },
+  { names: " MEET US", links: "/telemedicine-meet-us" },
+  { names: "MESSAGES", links: "/telemedicine-messages" },
 ];
 
 const StyledLink = `
@@ -79,7 +79,12 @@ function TeleMedNavBar() {
   };
 
   return (
-    <AppBar position="fixed" className="w-full" style={{ top: "125px" }}>
+    <AppBar
+      onUpdate={() => window.scrollTo(0, 0)}
+      position="fixed"
+      className="w-full"
+      style={{ top: "125px" }}
+    >
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 2 }}>
         <Toolbar disableGutters>
           <Box

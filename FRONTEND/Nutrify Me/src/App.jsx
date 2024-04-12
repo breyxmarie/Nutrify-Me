@@ -8,6 +8,9 @@ import FoodJournalHome from "./components/FoodJournalHome";
 import MealPlangeneratorHome from "./components/MealPlangeneratorHome";
 import MealPlanShopHome from "./components/MealPlanShopHome";
 import TelemedicineHome from "./components/TelemedicineHome";
+import TelemedicineMeetUs from "./components/TelemedicineMeetUs";
+import TelemedicineMessages from "./components/TelemedicineMessages";
+import TelemedicineConsultation from "./components/TelemedicineConsultation";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/MainUserNavbar";
@@ -21,7 +24,8 @@ function App() {
   return (
     <div>
       {/* <MainUserNavBar /> */}
-      <BrowserRouter>
+      {/* User Not Log In */}
+      <BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
         <Routes>
           <Route
             path="/"
@@ -33,11 +37,31 @@ function App() {
               </>
             }
           />
+
+          <Route
+            path="/about-us"
+            element={
+              <>
+                <AboutUs />
+                <UserFooter />
+              </>
+            }
+          />
+          {/* User Log In */}
           <Route
             path="/user-home"
             element={
               <>
                 <MainHome /> <UserFooter />
+              </>
+            }
+          />
+          {/* Telemedicine  */}
+          <Route
+            path="/telemedicine-meet-us"
+            element={
+              <>
+                <TelemedicineMeetUs /> <UserFooter />{" "}
               </>
             }
           />
@@ -49,6 +73,24 @@ function App() {
               </>
             }
           />
+          <Route
+            path="/telemedicine-messages"
+            element={
+              <>
+                <TelemedicineMessages /> <UserFooter />{" "}
+              </>
+            }
+          />
+          <Route
+            path="/telemedicine-consultation"
+            element={
+              <>
+                <TelemedicineConsultation /> <UserFooter />{" "}
+              </>
+            }
+          />
+
+          {/*  */}
           <Route path="/meal-plan-shop-home" element={<MealPlanShopHome />} />
           <Route
             path="/meal-plan-generator-home"
@@ -56,15 +98,7 @@ function App() {
           />
           <Route path="/food-journal-home" element={<FoodJournalHome />} />
           <Route path="/about-us-user" element={<AboutUsUser />} />
-          <Route
-            path="/about-us"
-            element={
-              <>
-                <AboutUs />
-                <UserFooter />
-              </>
-            }
-          />
+
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />
         </Routes>
