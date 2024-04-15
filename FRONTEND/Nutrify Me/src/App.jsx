@@ -91,7 +91,14 @@ function App() {
           />
 
           {/*  */}
-          <Route path="/meal-plan-shop-home" element={<MealPlanShopHome />} />
+          <Route
+            path="/meal-plan-shop-home"
+            element={
+              <>
+                <MealPlanShopHome /> <UserFooter />
+              </>
+            }
+          />
           <Route
             path="/meal-plan-generator-home"
             element={<MealPlangeneratorHome />}

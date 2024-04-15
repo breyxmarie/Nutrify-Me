@@ -16,38 +16,15 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import "./MainUserNavbar.css";
 
 const pages = [
-  { names: "APPOINTMENTS", links: "/telemedicine-home" },
-  { names: " MEET US", links: "/telemedicine-meet-us" },
-  { names: "MESSAGES", links: "/telemedicine-messages" },
+  { names: "SHOP", links: "/telemedicine-home" },
+  { names: " MEAL PLANS", links: "/telemedicine-meet-us" },
+  { names: "MEAL PLAN HISTORY", links: "/telemedicine-messages" },
+  { names: "TRACK ORDERS", links: "/telemedicine-messages" },
 ];
 
-const StyledLink = `
-  color: #99756e; /* Default styles */
-  display: block;
-  text-decoration: none;
-  padding-y: 10px;
-
-  &.active {
-    color: #5754a8;
-    font-weight: bold; /* Active state styles */
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const LinkPages = [
-  "",
-  "/telemedicine-home",
-  "/meal-plan-shop-home",
-  "/meal-plan-generator-home",
-  "/food-journal-home",
-  "/about-us-user",
-];
 const settings = ["Profile", "Logout"];
 
-function TeleMedNavBar() {
+function MealPlanShopNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -195,4 +172,4 @@ function TeleMedNavBar() {
     </AppBar>
   );
 }
-export default TeleMedNavBar;
+export default MealPlanShopNavBar;
