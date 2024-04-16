@@ -17,3 +17,7 @@
   width: 100vw;
   max-width: 100vw;
 }
+
+.MuiButton-root:hover {
+  background-color: #000000; /* Example hover style */
+}

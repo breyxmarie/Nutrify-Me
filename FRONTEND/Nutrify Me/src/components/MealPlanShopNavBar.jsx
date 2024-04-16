@@ -17,9 +17,9 @@ import "./MainUserNavbar.css";
 
 const pages = [
   { names: "SHOP", links: "/meal-plan-shop-home" },
-  { names: " MEAL PLANS", links: "/telemedicine-meet-us" },
-  { names: "MEAL PLAN HISTORY", links: "/telemedicine-messages" },
-  { names: "TRACK ORDERS", links: "/telemedicine-messages" },
+  { names: " MEAL PLANS", links: "/meal-plan-shop-meal-plans" },
+  { names: "MEAL PLAN HISTORY", links: "/meal-plan-shop-meal-plan-history" },
+  { names: "TRACK ORDERS", links: "/meal-plan-shop-track-orders" },
 ];
 
 const settings = ["Profile", "Logout"];
@@ -51,7 +51,7 @@ function MealPlanShopNavBar() {
       onUpdate={() => window.scrollTo(0, 0)}
       position=""
       className="w-full"
-      style={{ top: "125px", height: "0px" }}
+      style={{ top: "125px", height: "0px", width: "100vw" }}
     >
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>
@@ -135,7 +135,8 @@ function MealPlanShopNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 2,
-              mx: "20%",
+              ml: "20%",
+              mr: "10%",
             }}
           >
             {pages.map((page) => (
@@ -167,10 +168,10 @@ function MealPlanShopNavBar() {
               </NavLink>
             ))}
           </Box>
-          <Link to="/telemedicine-consultation">
+          <Link to="/telemedicine-consultation" sX={{ mx: "30px" }}>
             <img
               src="/images/shopping cart.png"
-              style={{ mr: "20%" }}
+              style={{ marginRight: "170px" }}
               width="45"
               height="45"
             />

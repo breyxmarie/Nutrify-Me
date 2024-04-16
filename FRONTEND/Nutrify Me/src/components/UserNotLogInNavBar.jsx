@@ -84,7 +84,12 @@ function userNotLogInNavBar() {
       {/* sx={{ zIndex: -1 }} */}
       <Container
         maxWidth="100%"
-        sx={{ background: "#ffffff", padding: 2, overflow: scroll }}
+        sx={{
+          background: "#ffffff",
+          padding: 2,
+          overflow: scroll,
+          width: "100vw",
+        }}
       >
         <Toolbar disableGutters>
           <Typography

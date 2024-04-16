@@ -50,3 +50,7 @@
 .normalLink {
   /* Optional default styles for links */
 }
+
+.MuiButton-root:hover {
+  background-color: #000000; /* Example hover style */
+}

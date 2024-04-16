@@ -7,6 +7,10 @@ import AboutUsUser from "./components/AboutUsUser";
 import FoodJournalHome from "./components/FoodJournalHome";
 import MealPlangeneratorHome from "./components/MealPlangeneratorHome";
 import MealPlanShopHome from "./components/MealPlanShopHome";
+import MealPlanShopMealPlans from "./components/MealPlanShopMealPlans";
+import MealPlanShopMealPlanHistory from "./components/MealPlanShopMealPlanHistory";
+import MealPlanShopTrackOrders from "./components/MealPlanShopTrackOrders";
+import MealPlanShopCustomizeMeal from "./components/MealPlanShopCustomizeMeal";
 import TelemedicineHome from "./components/TelemedicineHome";
 import TelemedicineMeetUs from "./components/TelemedicineMeetUs";
 import TelemedicineMessages from "./components/TelemedicineMessages";
@@ -114,6 +118,51 @@ function App() {
               </>
             }
           />
+
+          <Route
+            path="/meal-plan-shop-meal-plans"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopMealPlans /> <UserFooter />
+              </>
+            }
+          />
+
+          <Route
+            path="/meal-plan-shop-meal-plan-history"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopMealPlanHistory /> <UserFooter />
+              </>
+            }
+          />
+
+          <Route
+            path="/meal-plan-shop-customize-meal"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopCustomizeMeal /> <UserFooter />
+              </>
+            }
+          />
+
+          <Route
+            path="/meal-plan-shop-track-orders"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopTrackOrders /> <UserFooter />
+              </>
+            }
+          />
+          {/* meal plan generator */}
 
           <Route
             path="/meal-plan-generator-home"

@@ -76,6 +76,7 @@ function MainHome() {
                   display: "block",
                   background: "#E66253",
                   fontSize: "20px",
+                  "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
                 }}
               >
                 BOOK AN APPOINTMENT
@@ -233,6 +234,7 @@ function MainHome() {
 
                 background: "#E66253",
                 fontSize: "20px",
+                "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
               }}
             >
               VIEW MEAL PLANS

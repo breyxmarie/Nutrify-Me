@@ -74,7 +74,7 @@ function TeleMedNavBar() {
       onUpdate={() => window.scrollTo(0, 0)}
       position=""
       className="w-full"
-      style={{ top: "115px", height: "0px" }}
+      style={{ top: "115px", height: "0px", width: "100vw" }}
     >
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>
