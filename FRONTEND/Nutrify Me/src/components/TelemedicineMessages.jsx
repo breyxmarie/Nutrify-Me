@@ -18,8 +18,8 @@ function TelemedicineMessages() {
       }}
     >
       {" "}
-      <MainUserNavbar />
-      <TeleMedNavBar />
+      {/* <MainUserNavbar />
+      <TeleMedNavBar /> */}
       <Box
         sx={{
           backgroundImage: "url('/images/telemedPic.png')",

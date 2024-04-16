@@ -72,11 +72,11 @@ function TeleMedNavBar() {
   return (
     <AppBar
       onUpdate={() => window.scrollTo(0, 0)}
-      position="fixed"
+      position=""
       className="w-full"
-      style={{ top: "125px" }}
+      style={{ top: "115px", height: "0px" }}
     >
-      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 2 }}>
+      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>
           <Box
             sx={{

@@ -20,8 +20,8 @@ function TelemedidinceConsultation() {
       }}
     >
       {" "}
-      <MainUserNavbar />
-      <TeleMedNavBar />
+      {/* <MainUserNavbar />
+      <TeleMedNavBar /> */}
       <Box sx={{ mx: 10 }}>
         <Grid
           container

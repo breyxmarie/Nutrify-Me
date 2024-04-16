@@ -1,14 +1,14 @@
 import { useState } from "react";
-import MainUserNavBar from "./MainUserNavbar";
-import { styled } from "@mui/material/styles";
-import "./MainUserNavbar.css";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
+import MainUserNavbar from "./MainUserNavbar";
+import UserNotLogInNavBar from "./UserNotLogInNavBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import UserFooter from "./UserFooter";
-import UserNotLogInNavBar from "./UserNotLogInNavBar";
+import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import { Container } from "@mui/material";
+import "./MainUserNavbar.css";
 
 function Home() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -20,7 +20,7 @@ function Home() {
   }));
   return (
     <div className="content" style={{ paddingBottom: "40px" }}>
-      <UserNotLogInNavBar />
+      {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}
       <Box sx={{ px: "0px", py: 0 }}>
@@ -93,7 +93,7 @@ function Home() {
             border: 1,
             fontSize: "70px",
             fontWeight: "bold",
-            mx: 70,
+            mx: "30%",
             borderRadius: 8,
           }}
         >

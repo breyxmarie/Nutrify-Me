@@ -7,7 +7,7 @@ import UserFooter from "./UserFooter";
 function AboutUs() {
   return (
     <div className="content" style={{ paddingBottom: "40px" }}>
-      <UserNotLogInNavBar />
+      {/* <UserNotLogInNavBar /> */}
       <Box
         sx={{
           backgroundImage: "url('/images/AboutUsImage.png')",

@@ -82,7 +82,7 @@ function MainUserNavbar() {
   };
 
   return (
-    <AppBar position="fixed" className="w-full">
+    <AppBar position="" className="w-full">
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 2 }}>
         <Toolbar disableGutters>
           <Typography

@@ -170,8 +170,8 @@ function TelemedicineHome() {
         fontFamily: "Poppins",
       }}
     >
-      <MainUserNavbar />
-      <TeleMedNavBar />
+      {/* <MainUserNavbar />
+      <TeleMedNavBar /> */}
       <Box
         sx={{
           backgroundImage: "url('/images/telemedPic.png')",

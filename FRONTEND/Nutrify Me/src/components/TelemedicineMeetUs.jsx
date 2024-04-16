@@ -15,8 +15,8 @@ function TelemedicineHome() {
         color: "#99756E",
       }}
     >
-      <MainUserNavbar />
-      <TeleMedNavBar />
+      {/* <MainUserNavbar />
+      <TeleMedNavBar /> */}
 
       <Box
         sx={{

@@ -100,8 +100,8 @@ function MealPlanShopHome() {
         fontFamily: "Poppins",
       }}
     >
-      <MainUserNavbar />
-      <MealPlanShopNavBar />
+      {/* <MainUserNavbar /> */}
+      {/* <MealPlanShopNavBar /> */}
 
       <Box
         sx={{

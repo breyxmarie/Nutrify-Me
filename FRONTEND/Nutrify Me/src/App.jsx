@@ -14,6 +14,8 @@ import TelemedicineConsultation from "./components/TelemedicineConsultation";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/MainUserNavbar";
+import TeleMedNavBar from "./components/TeleMedNavBar";
+import MealPlanShopNavBar from "./components/MealPlanShopNavBar";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import UserFooter from "./components/UserFooter";
@@ -32,6 +34,7 @@ function App() {
             element={
               <>
                 {/* <MainUserNavBar /> */}
+                <UserNotLogInNavBar />
                 <Home />
                 <UserFooter />
               </>
@@ -42,6 +45,7 @@ function App() {
             path="/about-us"
             element={
               <>
+                <UserNotLogInNavBar />
                 <AboutUs />
                 <UserFooter />
               </>
@@ -52,6 +56,7 @@ function App() {
             path="/user-home"
             element={
               <>
+                <MainUserNavBar />
                 <MainHome /> <UserFooter />
               </>
             }
@@ -61,6 +66,8 @@ function App() {
             path="/telemedicine-meet-us"
             element={
               <>
+                <MainUserNavBar />
+                <TeleMedNavBar />
                 <TelemedicineMeetUs /> <UserFooter />{" "}
               </>
             }
@@ -69,6 +76,8 @@ function App() {
             path="/telemedicine-home"
             element={
               <>
+                <MainUserNavBar />
+                <TeleMedNavBar />
                 <TelemedicineHome /> <UserFooter />{" "}
               </>
             }
@@ -77,6 +86,8 @@ function App() {
             path="/telemedicine-messages"
             element={
               <>
+                <MainUserNavBar />
+                <TeleMedNavBar />
                 <TelemedicineMessages /> <UserFooter />{" "}
               </>
             }
@@ -85,20 +96,25 @@ function App() {
             path="/telemedicine-consultation"
             element={
               <>
+                <MainUserNavBar />
+                <TeleMedNavBar />
                 <TelemedicineConsultation /> <UserFooter />{" "}
               </>
             }
           />
 
-          {/*  */}
+          {/* meal plan shop*/}
           <Route
             path="/meal-plan-shop-home"
             element={
               <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
                 <MealPlanShopHome /> <UserFooter />
               </>
             }
           />
+
           <Route
             path="/meal-plan-generator-home"
             element={<MealPlangeneratorHome />}

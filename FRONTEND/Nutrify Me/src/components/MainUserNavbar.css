@@ -11,7 +11,7 @@
 }
 
 .content {
-  padding-top: 180px;
+  padding-top: 0px;
   position: relative; /* Adjust based on your navbar height */
   left: 0px;
   width: 100vw;

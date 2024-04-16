@@ -19,7 +19,7 @@ function MainHome() {
   }));
   return (
     <div className="content" style={{ paddingBottom: "40px" }}>
-      <MainUserNavBar />
+      {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}
       <Box sx={{ px: "0px", py: 0 }}>
@@ -92,7 +92,7 @@ function MainHome() {
             border: 1,
             fontSize: "70px",
             fontWeight: "bold",
-            mx: 70,
+            mx: "30%",
             borderRadius: 8,
           }}
         >

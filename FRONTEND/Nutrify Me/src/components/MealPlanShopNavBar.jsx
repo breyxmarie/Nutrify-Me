@@ -16,7 +16,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import "./MainUserNavbar.css";
 
 const pages = [
-  { names: "SHOP", links: "/telemedicine-home" },
+  { names: "SHOP", links: "/meal-plan-shop-home" },
   { names: " MEAL PLANS", links: "/telemedicine-meet-us" },
   { names: "MEAL PLAN HISTORY", links: "/telemedicine-messages" },
   { names: "TRACK ORDERS", links: "/telemedicine-messages" },
@@ -49,11 +49,11 @@ function MealPlanShopNavBar() {
   return (
     <AppBar
       onUpdate={() => window.scrollTo(0, 0)}
-      position="fixed"
+      position=""
       className="w-full"
-      style={{ top: "125px" }}
+      style={{ top: "125px", height: "0px" }}
     >
-      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 2 }}>
+      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>
           <Box
             sx={{
@@ -135,7 +135,7 @@ function MealPlanShopNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 2,
-              mx: "30%",
+              mx: "20%",
             }}
           >
             {pages.map((page) => (
@@ -167,6 +167,14 @@ function MealPlanShopNavBar() {
               </NavLink>
             ))}
           </Box>
+          <Link to="/telemedicine-consultation">
+            <img
+              src="/images/shopping cart.png"
+              style={{ mr: "20%" }}
+              width="45"
+              height="45"
+            />
+          </Link>
         </Toolbar>
       </Container>
     </AppBar>
