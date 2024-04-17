@@ -22,7 +22,7 @@ function MealPlanShopTrackOrders() {
       date: "11/21/23",
       time: "8am",
       description: "lorem ipsum",
-      number: "#75840",
+      number: "75840",
       image: "/images/food.png",
       status: "In Transit",
     },
@@ -31,7 +31,7 @@ function MealPlanShopTrackOrders() {
       date: "11/21/23",
       time: "8am",
       description: "lorem ipsum",
-      number: "#75840",
+      number: "65840",
       image: "/images/food.png",
       status: "Delivered",
     },
@@ -40,7 +40,7 @@ function MealPlanShopTrackOrders() {
       date: "11/21/23",
       time: "8am",
       description: "lorem ipsum",
-      number: "#75840",
+      number: "15840",
       image: "/images/food.png",
       status: "Packing",
     },
@@ -49,7 +49,7 @@ function MealPlanShopTrackOrders() {
       date: "11/21/23",
       time: "8am",
       description: "lorem ipsum",
-      number: "#75840",
+      number: "55840",
       image: "/images/food.png",
       status: "Order Placed",
     },
@@ -111,12 +111,19 @@ function MealPlanShopTrackOrders() {
             </Grid>
             <Grid xs={8} sx={{ color: "#99756E", textAlign: "left" }}>
               {item.name} <br />
-              <a
-                href=""
-                style={{ color: "#E66253", textDecoration: "underline" }}
+              <Link
+                to={`/meal-plan-shop-order/${item.number}`}
+                state={{
+                  date: `${item.date}`,
+                  time: `${item.time}`,
+                  description: `${item.description}`,
+                  image: `${item.image}`,
+                }}
               >
-                View Details
-              </a>
+                <a h style={{ color: "#E66253", textDecoration: "underline" }}>
+                  View Details
+                </a>
+              </Link>
             </Grid>
             <Grid xs={2}>
               <Box
@@ -124,6 +131,8 @@ function MealPlanShopTrackOrders() {
                   borderRadius: 5,
                   background: getColor(item.status),
                   mt: "40%",
+                  px: 2,
+                  py: 1,
                 }}
               >
                 {item.status}

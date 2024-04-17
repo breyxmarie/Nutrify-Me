@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import Home from "./components/Home";
 import AboutUs from "./components/AboutUs";
 import MainHome from "./components/MainHome";
@@ -13,6 +14,7 @@ import MealPlanShopTrackOrders from "./components/MealPlanShopTrackOrders";
 import MealPlanShopCheckout from "./components/MealPlanShopCheckout";
 import MealPlanShopCart from "./components/MealPlanShopCart";
 import MealPlanShopCustomizeMeal from "./components/MealPlanShopCustomizeMeal";
+import MealPlanShopOrders from "./components/MealPlanShopOrders";
 import TelemedicineHome from "./components/TelemedicineHome";
 import TelemedicineMeetUs from "./components/TelemedicineMeetUs";
 import TelemedicineMessages from "./components/TelemedicineMessages";
@@ -186,6 +188,19 @@ function App() {
               </>
             }
           />
+
+          <Route
+            path="/meal-plan-shop-order/:orderId?"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopOrders orderId={useParams().orderId} />{" "}
+                <UserFooter />
+              </>
+            }
+          />
+
           {/* meal plan generator  */}
 
           <Route
