@@ -26,9 +26,47 @@ function MealPlanShopTrackOrders() {
       image: "/images/food.png",
       status: "In Transit",
     },
+    {
+      name: "lorem",
+      date: "11/21/23",
+      time: "8am",
+      description: "lorem ipsum",
+      number: "#75840",
+      image: "/images/food.png",
+      status: "Delivered",
+    },
+    {
+      name: "lorem",
+      date: "11/21/23",
+      time: "8am",
+      description: "lorem ipsum",
+      number: "#75840",
+      image: "/images/food.png",
+      status: "Packing",
+    },
+    {
+      name: "lorem",
+      date: "11/21/23",
+      time: "8am",
+      description: "lorem ipsum",
+      number: "#75840",
+      image: "/images/food.png",
+      status: "Order Placed",
+    },
   ];
 
-  function getColor(status) {}
+  function getColor(status) {
+    switch (status) {
+      case "In Transit":
+        return "#F8E753";
+      case "Delivered":
+        return "#36FF24";
+      case "Order Placed":
+        return "#E66253";
+      default:
+        return "#0096FF";
+    }
+  }
   return (
     <div
       className="content"
@@ -80,7 +118,17 @@ function MealPlanShopTrackOrders() {
                 View Details
               </a>
             </Grid>
-            <Grid xs={2}></Grid>
+            <Grid xs={2}>
+              <Box
+                sx={{
+                  borderRadius: 5,
+                  background: getColor(item.status),
+                  mt: "40%",
+                }}
+              >
+                {item.status}
+              </Box>
+            </Grid>
           </Grid>
         </Box>
       ))}
