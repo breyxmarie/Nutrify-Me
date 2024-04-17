@@ -10,6 +10,8 @@ import MealPlanShopHome from "./components/MealPlanShopHome";
 import MealPlanShopMealPlans from "./components/MealPlanShopMealPlans";
 import MealPlanShopMealPlanHistory from "./components/MealPlanShopMealPlanHistory";
 import MealPlanShopTrackOrders from "./components/MealPlanShopTrackOrders";
+import MealPlanShopCheckout from "./components/MealPlanShopCheckout";
+import MealPlanShopCart from "./components/MealPlanShopCart";
 import MealPlanShopCustomizeMeal from "./components/MealPlanShopCustomizeMeal";
 import TelemedicineHome from "./components/TelemedicineHome";
 import TelemedicineMeetUs from "./components/TelemedicineMeetUs";
@@ -162,7 +164,29 @@ function App() {
               </>
             }
           />
-          {/* meal plan generator */}
+
+          <Route
+            path="/meal-plan-shop-cart"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopCart /> <UserFooter />
+              </>
+            }
+          />
+
+          <Route
+            path="/meal-plan-shop-checkout"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanShopNavBar />
+                <MealPlanShopCheckout /> <UserFooter />
+              </>
+            }
+          />
+          {/* meal plan generator  */}
 
           <Route
             path="/meal-plan-generator-home"

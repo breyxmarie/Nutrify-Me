@@ -168,7 +168,7 @@ function MealPlanShopNavBar() {
               </NavLink>
             ))}
           </Box>
-          <Link to="/telemedicine-consultation" sX={{ mx: "30px" }}>
+          <Link to="/meal-plan-shop-cart" sX={{ mx: "30px" }}>
             <img
               src="/images/shopping cart.png"
               style={{ marginRight: "170px" }}

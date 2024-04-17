@@ -18,6 +18,12 @@ function MealPlanShopMealPlanHistory() {
       description: "lorem ipsum",
       image: "/images/food.png",
     },
+    {
+      name: "[NAME]",
+      date: "9 March 2024, 12:19 PM",
+      description: "lorem ipsum",
+      image: "/images/food.png",
+    },
   ];
 
   return (
@@ -53,14 +59,24 @@ function MealPlanShopMealPlanHistory() {
       <br />
       <br />
       {history.map((item, index) => (
-        <Box sx={{ border: 1, ml: "5%", mr: "5%", p: 5, borderRadius: 3 }}>
+        <Box
+          sx={{
+            border: 1,
+            ml: "5%",
+            mr: "5%",
+            p: 5,
+            my: 4,
+            borderRadius: 3,
+            borderColor: "#000000",
+          }}
+        >
           <Grid container spacing={2}>
             <Grid xs={4}>
               <img src={item.image} width="60%" height="100%" />
             </Grid>
             <Grid xs={8} sx={{ textAlign: "left" }}>
-              <Typography>{item.name}</Typography>
-              <Typography>{item.date}</Typography>
+              <Typography sx={{ color: "#99756E" }}> {item.name}</Typography>
+              <Typography sx={{ color: "#000000" }}>{item.date}</Typography>
               <Typography>{item.description}</Typography>
               <Button
                 sx={{
