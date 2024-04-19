@@ -25,6 +25,10 @@ function MealPlanShopTrackOrders() {
       number: "75840",
       image: "/images/food.png",
       status: "In Transit",
+      courier: "[courier]",
+      deliveryDate: "12/15/2023",
+      trackNum: "2SR7-P3J0-DFGT",
+      shipLink: "https://www.shipmenttracking.com/182i333i29",
     },
     {
       name: "lorem",
@@ -34,6 +38,10 @@ function MealPlanShopTrackOrders() {
       number: "65840",
       image: "/images/food.png",
       status: "Delivered",
+      courier: "[courier]",
+      deliveryDate: "12/15/2023",
+      trackNum: "2SR7-P3J0-DFGT",
+      shipLink: "https://www.shipmenttracking.com/182i333i29",
     },
     {
       name: "lorem",
@@ -43,6 +51,10 @@ function MealPlanShopTrackOrders() {
       number: "15840",
       image: "/images/food.png",
       status: "Packing",
+      courier: "[courier]",
+      deliveryDate: "12/15/2023",
+      trackNum: "2SR7-P3J0-DFGT",
+      shipLink: "https://www.shipmenttracking.com/182i333i29",
     },
     {
       name: "lorem",
@@ -52,6 +64,10 @@ function MealPlanShopTrackOrders() {
       number: "55840",
       image: "/images/food.png",
       status: "Order Placed",
+      courier: "[courier]",
+      deliveryDate: "12/15/2023",
+      trackNum: "2SR7-P3J0-DFGT",
+      shipLink: "https://www.shipmenttracking.com/182i333i29",
     },
   ];
 
@@ -118,6 +134,12 @@ function MealPlanShopTrackOrders() {
                   time: `${item.time}`,
                   description: `${item.description}`,
                   image: `${item.image}`,
+
+                  status: `${item.status}`,
+                  courier: `${item.courier}`,
+                  deliveryDate: `${item.deliveryDate}`,
+                  trackNum: `${item.trackNum}`,
+                  shipLink: `${item.shipLink}`,
                 }}
               >
                 <a h style={{ color: "#E66253", textDecoration: "underline" }}>

@@ -18,12 +18,29 @@ function MealPlanShopOrders() {
   const { orderId } = useParams();
   //const [orderID, setOrderID] = useState(null);
 
-  const [status, setStatus] = useState(null);
+  //const [status, setStatus] = useState(null);
 
   const location = useLocation();
-  const { date, time, description, image } = location.state || {};
+  const {
+    date,
+    time,
+    description,
+    image,
+    status,
+    courier,
+    deliveryDate,
+    trackNum,
+    shipLink,
+  } = location.state || {};
   console.log(orderId);
   console.log(useParams());
+
+  function getColorStatus(status) {
+    switch (status) {
+      case "":
+        return;
+    }
+  }
   return (
     <div
       className="content"
@@ -31,6 +48,8 @@ function MealPlanShopOrders() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        marginLeft: "10px",
+        marginRight: "10px",
       }}
     >
       {" "}
@@ -43,10 +62,117 @@ function MealPlanShopOrders() {
           ml: 10,
         }}
       >
-        {orderId || "No order ID provided"} <br />
-        {date} <br />
-        <img src={image} />
+        {" "}
+        ORDER #{orderId || "No order ID provided"} <br />
       </Typography>
+      <Typography
+        sx={{
+          textAlign: "left",
+          color: "#99756E",
+          fontSize: "20px",
+          fontWeight: "bold",
+          ml: 10,
+        }}
+      >
+        {date} <br />
+      </Typography>
+      <br />
+      <Grid container spacing={2}>
+        <Grid xs={2}>
+          <Box
+            sx={{
+              borderRadius: "50%",
+              background: "#E66253",
+              height: "45px",
+              width: "45px",
+              display: "inline-block",
+              justifyItems: "right",
+            }}
+          >
+            <img src="/images/check.png" style={{ marginTop: 7 }} />
+          </Box>
+
+          <Typography>ORDER CONFIRMED</Typography>
+          <Typography>
+            {time}, {date}
+          </Typography>
+        </Grid>
+        <Grid xs={3}>
+          <hr style={{ marginTop: "3%" }} />
+        </Grid>
+        <Grid xs={2}>
+          {" "}
+          <Box
+            sx={{
+              borderRadius: "50%",
+              background: "#E66253",
+              height: "45px",
+              width: "45px",
+              display: "inline-block",
+              justifyItems: "right",
+            }}
+          >
+            <img src="/images/2.png" style={{ marginTop: 7 }} />
+          </Box>
+          <Typography>SHIPPING</Typography>
+          <Typography>Shipped with {courier}</Typography>
+        </Grid>
+        <Grid xs={3}>
+          {" "}
+          <hr style={{ marginTop: "3%" }} />
+        </Grid>
+        <Grid xs={2}>
+          <Box
+            sx={{
+              borderRadius: "50%",
+              background: "#E66253",
+              height: "45px",
+              width: "45px",
+              display: "inline-block",
+              justifyItems: "left",
+            }}
+          >
+            <img src="/images/3.png" style={{ marginTop: 7 }} />
+
+            <Typography>TO DELIVERY</Typography>
+            <Typography>Estimated Date: {deliveryDate}</Typography>
+          </Box>
+        </Grid>
+      </Grid>
+      <br />
+      <Box>
+        <Grid container spacing={2} sx={{}}>
+          <Grid xs={2} sx={{ textAlign: "left", ml: "5%", color: "#99756E" }}>
+            TRACKING NUMBER:
+          </Grid>
+          <Grid xs={2} sx={{ textAlign: "left" }}>
+            {trackNum}
+          </Grid>
+        </Grid>
+        <br />
+        <Grid container spacing={2}>
+          <Grid xs={2} sx={{ textAlign: "left", ml: "5%", color: "#99756E" }}>
+            SHIPMENT TRACKING URL:
+          </Grid>
+          <Grid xs={2} sx={{ textAlign: "left" }}>
+            <a href={shipLink}>{shipLink}</a>
+          </Grid>
+        </Grid>
+      </Box>
+      <Typography
+        sx={{
+          textAlign: "left",
+          color: "#99756E",
+          fontSize: "20px",
+          fontWeight: "bold",
+          ml: 10,
+        }}
+      >
+        ORDER SUMMARY:
+      </Typography>
+      <Box sx={{ border: 1 }}>
+        <img src={image} width="60px" height="60px" />
+      </Box>
     </div>
   );
 }
