@@ -29,6 +29,15 @@ function MealPlanShopTrackOrders() {
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
       shipLink: "https://www.shipmenttracking.com/182i333i29",
+      quantity: 2,
+      items: [
+        { name: " lorem1 ", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem2", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem3", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem4", quantity: 2, price: 23, image: "/images/food.png" },
+      ],
+      totalPrice: 1000,
+      shippingPrice: 80,
     },
     {
       name: "lorem",
@@ -42,6 +51,15 @@ function MealPlanShopTrackOrders() {
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
       shipLink: "https://www.shipmenttracking.com/182i333i29",
+      quantity: 2,
+      items: [
+        { name: " lorem1 ", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem2", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem3", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem4", quantity: 2, price: 23, image: "/images/food.png" },
+      ],
+      totalPrice: 1000,
+      shippingPrice: 80,
     },
     {
       name: "lorem",
@@ -55,6 +73,15 @@ function MealPlanShopTrackOrders() {
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
       shipLink: "https://www.shipmenttracking.com/182i333i29",
+      quantity: 2,
+      items: [
+        { name: " lorem1 ", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem2", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem3", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem4", quantity: 2, price: 23, image: "/images/food.png" },
+      ],
+      totalPrice: 1000,
+      shippingPrice: 80,
     },
     {
       name: "lorem",
@@ -68,6 +95,15 @@ function MealPlanShopTrackOrders() {
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
       shipLink: "https://www.shipmenttracking.com/182i333i29",
+      quantity: 2,
+      items: [
+        { name: " lorem1 ", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem2", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem3", quantity: 2, price: 23, image: "/images/food.png" },
+        { name: " lorem4", quantity: 2, price: 23, image: "/images/food.png" },
+      ],
+      totalPrice: 1000,
+      shippingPrice: 80,
     },
   ];
 
@@ -83,6 +119,13 @@ function MealPlanShopTrackOrders() {
         return "#0096FF";
     }
   }
+  //console.log(order.items.name);
+  {
+    order.map((itemData) =>
+      itemData.items.map((item, index) => console.log("try " + item.quantity))
+    );
+  }
+
   return (
     <div
       className="content"
@@ -140,6 +183,11 @@ function MealPlanShopTrackOrders() {
                   deliveryDate: `${item.deliveryDate}`,
                   trackNum: `${item.trackNum}`,
                   shipLink: `${item.shipLink}`,
+                  name: `${item.name}`,
+                  quantity: `${item.quantity}`,
+                  items: item.items,
+                  totalPrice: `${item.totalPrice}`,
+                  shippingPrice: `${item.shippingPrice}`,
                 }}
               >
                 <a h style={{ color: "#E66253", textDecoration: "underline" }}>

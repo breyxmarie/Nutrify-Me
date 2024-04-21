@@ -31,9 +31,19 @@ function MealPlanShopOrders() {
     deliveryDate,
     trackNum,
     shipLink,
+    name,
+    quantity,
+    items,
+    totalPrice,
+    shippingPrice,
   } = location.state || {};
   console.log(orderId);
   console.log(useParams());
+
+  //const totalOrderPrice =
+  // parseInt(totalPrice, 10) + parseInt(shippingPrice, 10);
+
+  const [totalOrderPrice, setTotalOrderPrice] = useState(0);
 
   function getColorStatus(status) {
     switch (status) {
@@ -41,6 +51,18 @@ function MealPlanShopOrders() {
         return;
     }
   }
+
+  function getTotalPrice(price) {
+    setTotalOrderPrice(totalOrderPrice + parseInt(price));
+  }
+
+  // {
+  //   items.map((itemData) => console.log("try" + itemData));
+  // }
+
+  console.log("try " + location.state.items);
+
+  items.map((item, index) => console.log("try " + item.image));
   return (
     <div
       className="content"
@@ -159,6 +181,7 @@ function MealPlanShopOrders() {
           </Grid>
         </Grid>
       </Box>
+      <br />
       <Typography
         sx={{
           textAlign: "left",
@@ -170,8 +193,82 @@ function MealPlanShopOrders() {
       >
         ORDER SUMMARY:
       </Typography>
-      <Box sx={{ border: 1 }}>
-        <img src={image} width="60px" height="60px" />
+      <br />
+      <Box
+        sx={{
+          border: 1,
+          mx: "120px",
+          color: "#99756E",
+          fontWeight: "bold",
+          fontSize: "120%",
+        }}
+      >
+        {items.map((item, index) => (
+          <Box
+            sx={{
+              mx: 5,
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "120%",
+            }}
+          >
+            <Grid container spacing={2} sx={{ mt: "2%", ml: "2%" }}>
+              <Grid xs={2}>
+                <img src={item.image} width="160px" height="160px" />
+              </Grid>
+              <Grid xs={3} sx={{ mt: "6%" }}>
+                {item.name}{" "}
+              </Grid>
+              <Grid xs={1} sx={{ mt: "6%" }}>
+                x {item.quantity}
+              </Grid>
+              <Grid xs={5} sx={{ textAlign: "right", mr: 5, mt: "6%" }}>
+                {/* {totalPrice} */}
+                {setTotalOrderPrice(item.price)}
+              </Grid>
+            </Grid>
+          </Box>
+        ))}
+        <br />
+        <hr />
+        <br />
+        <Box>
+          <Grid container spacing={2}>
+            <Grid xs={6}></Grid>
+            <Grid xs={3}> Product Total</Grid>
+            <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
+              PHP {totalPrice}
+            </Grid>
+          </Grid>
+          <br />
+          <Grid container spacing={2}>
+            <Grid xs={6}></Grid>
+            <Grid xs={3}> Shipping</Grid>
+            <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
+              PHP {shippingPrice}
+            </Grid>
+          </Grid>
+          <br />
+
+          <Grid container spacing={2}>
+            <Grid xs={7}></Grid>
+            <Grid xs={5}>
+              <hr />
+            </Grid>
+          </Grid>
+          <br />
+
+          <Grid container spacing={2} sx={{}}>
+            <Grid xs={7}></Grid>
+            <Grid xs={2} sx={{ textAlign: "left", ml: 5 }}>
+              {" "}
+              Total
+            </Grid>
+            <Grid xs={2.5} s>
+              PHP {totalOrderPrice}
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
     </div>
   );
