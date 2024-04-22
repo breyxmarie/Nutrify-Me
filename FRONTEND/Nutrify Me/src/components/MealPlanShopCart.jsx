@@ -17,6 +17,8 @@ function MealPlanShopCart() {
     { product: "lorem", price: 50, quantity: 5, subtotal: 6 },
   ];
 
+  function generateOrderNumber() {}
+
   const deleteItem = (item) => {
     // Handle click event for each slide item
     // Replace this with your desired logic (e.g., navigate, open modal)
