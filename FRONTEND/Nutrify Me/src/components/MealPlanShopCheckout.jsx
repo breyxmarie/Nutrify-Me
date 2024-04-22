@@ -17,6 +17,19 @@ import "./MainUserNavbar.css";
 import ReactDOM from "react-dom";
 
 function MealPlanShopCheckout() {
+  const listAdress = [
+    {
+      fullName: "lorem ipsum",
+      address: "full random address",
+      phoneNumber: "0123456",
+    },
+    {
+      fullName: "lorem ipsum",
+      address: "full random address",
+      phoneNumber: "0123456",
+    },
+  ];
+
   return (
     <div
       className="content"
@@ -24,6 +37,7 @@ function MealPlanShopCheckout() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
       <Typography
@@ -32,40 +46,10 @@ function MealPlanShopCheckout() {
         CHECKOUT
       </Typography>
 
-      <Box sx={{ mx: "80px" }}>
-        <Grid container spacing={2}>
-          <Grid xs={5} sx={{ mr: 10 }}>
-            {" "}
-            <Typography
-              sx={{
-                color: "#99756E",
-                fontSize: "15px",
-                fontWeight: "bold",
-                m: 5,
-              }}
-            >
-              BILLING DETAILS
-            </Typography>
-            <hr />
-            <Grid container spacing={2}>
-              <Grid xs={5}>First Name</Grid>
-              <Grid xs={5}></Grid>
-            </Grid>
-          </Grid>
-          <Grid xs={6} sx={{ border: 1, borderColor: "#000000" }}>
-            {" "}
-            <Typography
-              sx={{
-                color: "#99756E",
-                fontSize: "15px",
-                fontWeight: "bold",
-                m: 5,
-              }}
-            >
-              ORDER SUMMARY
-            </Typography>
-          </Grid>
-        </Grid>
+      <Box sx={{ borderRadius: 3, border: 1 }}>
+        <img src="./images/location.png" />
+        Delivery Address
+        <img src="./images/right outline arrow.png" />
       </Box>
     </div>
   );

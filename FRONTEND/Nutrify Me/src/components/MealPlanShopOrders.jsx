@@ -43,7 +43,7 @@ function MealPlanShopOrders() {
   //const totalOrderPrice =
   // parseInt(totalPrice, 10) + parseInt(shippingPrice, 10);
 
-  const [totalOrderPrice, setTotalOrderPrice] = useState(0);
+  //const [totalOrderPrice, setTotalOrderPrice] = useState(0);
 
   function getColorStatus(status) {
     switch (status) {
@@ -52,8 +52,22 @@ function MealPlanShopOrders() {
     }
   }
 
+  function calculateTotalPrice() {
+    const newTotal = items.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0
+    );
+    return newTotal;
+  }
+
+  const totalPrices = calculateTotalPrice(); // Calculate total price here
+  const [totalOrderPrice, setTotalOrderPrice] = useState(
+    totalPrices + parseInt(shippingPrice) ||
+      totalPrices + parseInt(shippingPrice)
+  ); // Use calculated price if totalPrice is not available
+
   function getTotalPrice(price) {
-    setTotalOrderPrice(totalOrderPrice + parseInt(price));
+    // setTotalOrderPrice(totalOrderPrice + parseInt(price));
   }
 
   // {
@@ -223,8 +237,9 @@ function MealPlanShopOrders() {
                 x {item.quantity}
               </Grid>
               <Grid xs={5} sx={{ textAlign: "right", mr: 5, mt: "6%" }}>
-                {/* {totalPrice} */}
-                {setTotalOrderPrice(item.price)}
+                {/* {totalPrice}
+                {setTotalOrderPrice(item.price)} */}
+                {item.price}
               </Grid>
             </Grid>
           </Box>
