@@ -179,12 +179,13 @@ function App() {
           />
 
           <Route
-            path="/meal-plan-shop-checkout"
+            path="/meal-plan-shop-checkout/:cartId?"
             element={
               <>
                 <MainUserNavBar />
                 <MealPlanShopNavBar />
-                <MealPlanShopCheckout /> <UserFooter />
+                <MealPlanShopCheckout cartId={useParams().cartId} />{" "}
+                <UserFooter />
               </>
             }
           />

@@ -13,17 +13,37 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 
 function MealPlanShopCart() {
   const cartItems = [
-    { product: "lorem", price: 50, quantity: 5, subtotal: 6 },
-    { product: "lorem", price: 50, quantity: 5, subtotal: 6 },
+    {
+      product: "lorem",
+      price: 50,
+      quantity: 5,
+      subtotal: 6,
+      image: "/images/logo.png",
+    },
+    {
+      product: "lorem",
+      price: 50,
+      quantity: 5,
+      subtotal: 6,
+      image: "/images/logo.png",
+    },
   ];
 
-  function generateOrderNumber() {}
+  const [orderNumber, setOrderNumber] = useState(
+    Math.floor(Math.random() * 1000000)
+  );
+  function generateOrderNumber() {
+    const tempNum = Math.floor(Math.random() * 1000000);
+    setOrderNumber(tempNum);
+    console.log(orderNumber);
+  }
 
   const deleteItem = (item) => {
     // Handle click event for each slide item
     // Replace this with your desired logic (e.g., navigate, open modal)
     console.log("Clicked item:", item);
   };
+
   return (
     <div
       className="content"
@@ -177,7 +197,11 @@ function MealPlanShopCart() {
         </Grid>
         <hr />
         <center>
-          <Link to="/meal-plan-shop-checkout" sX={{ mx: "30px" }}>
+          <Link
+            to={`/meal-plan-shop-checkout/${orderNumber}`}
+            state={{ cartItems: cartItems }}
+            sx={{ mx: "30px" }}
+          >
             <Button
               sx={{
                 float: "center",
