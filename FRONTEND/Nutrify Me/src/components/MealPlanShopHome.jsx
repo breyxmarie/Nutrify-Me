@@ -1,5 +1,5 @@
 import MealPlanShopNavBar from "./MealPlanShopNavBar";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import * as React from "react";
 import MainUserNavbar from "./MainUserNavbar";
 import TeleMedNavBar from "./TeleMedNavBar";
@@ -10,13 +10,31 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
 import { NavLink, Link, useLocation } from "react-router-dom";
-
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import "./MainUserNavbar.css";
 import "pure-react-carousel/dist/react-carousel.es.css";
 
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 function MealPlanShopHome() {
+  const handleNextC = () => {
+    //* add sa carousel to handle prev and next buttons
+    sliderRefC.current.slickNext(); // Trigger next slide transition
+  };
+
+  const handlePrevC = () => {
+    sliderRefC.current.slickPrev(); // Trigger previous slide transition
+  };
+  const sliderRefC = useRef(null);
+  const settings = {
+    dots: true, // Enable pagination dots
+    infinite: true, // Enable infinite looping
+    slidesToShow: 1, // Number of slides visible at once
+    slidesToScroll: 1, // Number of slides to scroll per click
+  };
   const mealPlan = [
     {
       name: "High Protein",
@@ -65,6 +83,24 @@ function MealPlanShopHome() {
       question: "lorem ipsum eme",
       answer:
         " Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Amet consectetur adipiscing elit pellentesque habitant",
+    },
+  ];
+
+  const testimonial = [
+    {
+      image: "/images/logo.png",
+      star: 3,
+      comment: "lorem ipsum random words comments",
+    },
+    {
+      image: "/images/logo.png",
+      star: 3,
+      comment: "lorem ipsum random words comments",
+    },
+    {
+      image: "/images/logo.png",
+      star: 3,
+      comment: "lorem ipsum random words comments",
     },
   ];
   const [buttonText, setButtonText] = useState("/images/triangle.png");
@@ -173,56 +209,95 @@ function MealPlanShopHome() {
             MEAL PLAN FOR YOUR <br />
             DIETARY NEEDS?
           </Typography>
-          <Button
-            sx={{
-              background: "#E66253",
-              color: "#ffffff",
-              px: 5,
-              py: 1,
-              mt: "10px",
-              fontSize: 20,
-              ml: "40%",
-            }}
-          >
-            CUSTOMIZE
-          </Button>
+          <Link to={"/meal-plan-shop-customize-meal"}>
+            <Button
+              sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                px: 5,
+                py: 1,
+                mt: "10px",
+                fontSize: 20,
+                ml: "40%",
+              }}
+            >
+              CUSTOMIZE
+            </Button>
+          </Link>
         </Box>
       </Box>
 
       <Box>
         <Typography>Patient’s Testimonials</Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={1}>
+            <button onClick={handlePrevC} style={{ marginTop: "80%" }}>
+              <img src="/images/left arrow.png" width="30px" height="30px" />
+            </button>
+          </Grid>
+          <Grid item xs={10}>
+            <Slider
+              {...settings}
+              ref={sliderRefC}
+              sx={{
+                color: "#000000",
+                border: 1,
+                borderColor: "#000000",
+                ml: "30px",
+                mr: "30px",
+              }}
+            >
+              {testimonial.map((item, index) => (
+                <Box key={index} onClick={() => handleSlideClick(item)}>
+                  <Box
+                    sx={{
+                      color: "#000000",
+                      border: 3,
+                      borderColor: "#898246",
+                      borderRadius: 3,
+                      ml: "230px",
+                      mr: "230px",
+                    }}
+                  >
+                    <Grid>
+                      <img
+                        src={item.image}
+                        width="140"
+                        height="140"
+                        style={{ marginLeft: 10 }}
+                      />
+                    </Grid>
 
-        <Box sx={{ mx: "120px" }}>
-          <Carousel>
-            <div style={{ border: 1 }}>
-              <img
-                src="/images/telemedPic.png"
-                width="10"
-                height="120"
-                style={{ m: "120px" }}
-              />
-              <p className="legend">Legend 1</p>
-            </div>
-            <div>
-              <img src="/images/telemedPic.png" />
-              <p className="legend">Legend 2</p>
-            </div>
-            <div>
-              <img src="/images/telemedPic.png" />
-              <p className="legend">Legend 3</p>
-            </div>
-            <Box sx={{ mx: 35, border: 1, my: 10 }}>
-              {" "}
-              <img
-                src="/images/telemedPic.png"
-                width="20"
-                height="70"
-                style={{ margin: 55 }}
-              />
-            </Box>
-          </Carousel>
-        </Box>
+                    <Grid>
+                      <img
+                        src="/images/star.png"
+                        width="10"
+                        height="10"
+                        style={{ marginLeft: 10 }}
+                      />
+                      <Typography sx={{ color: "#000000" }}>
+                        {item.comment}
+                      </Typography>
+                    </Grid>
+                  </Box>
+                </Box>
+              ))}
+            </Slider>
+          </Grid>
+          <Grid item xs={1}>
+            {" "}
+            {/* Button container (adjust width as needed) */}
+            <button
+              onClick={handleNextC}
+              style={{ marginTop: "70%", background: "#ffffff" }}
+            >
+              <img src="/images/right arrow.png" width="30px" height="30px" />
+            </button>
+          </Grid>
+        </Grid>
 
+        <br />
+        <br />
         <Box sx={{ background: "#898246", color: "#ffffff", py: 4 }}>
           <Typography sx={{ fontSize: "40px" }}>
             Need to consult with a dietician about the meals <br />
@@ -280,7 +355,6 @@ function MealPlanShopHome() {
                   {f.answer}
                 </h3>
                 <Box />{" "}
-                {/* Your custom component for spacing/styling (optional) */}
               </>
             )}
             {/* 👇️ show component on click */}

@@ -123,19 +123,14 @@ function MealPlanShopCheckout() {
       content: (
         <div>
           <br />
-          <Grid container spacing={2}>
-            <Grid xs={2}>
+          <Grid container spacing={2} sx={{ ml: 5 }}>
+            <Grid xs={3}>
               <img src="/images/location white.png" />
             </Grid>
             <Grid xs={8}>
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 Address Selection
               </Typography>
-            </Grid>
-            <Grid xs={2}>
-              <Button>
-                <img src="/images/close.png" />{" "}
-              </Button>
             </Grid>
           </Grid>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
@@ -187,19 +182,14 @@ function MealPlanShopCheckout() {
       content: (
         <div>
           <br />
-          <Grid container spacing={2}>
-            <Grid xs={2}>
+          <Grid container spacing={2} sx={{ ml: 5 }}>
+            <Grid xs={3}>
               <img src="/images/location white.png" />
             </Grid>
             <Grid xs={8}>
               <Typography id="modal-modal-title" variant="h6" component="h2">
                 Add New Address
               </Typography>
-            </Grid>
-            <Grid xs={2}>
-              <Button>
-                <img src="/images/close.png" />{" "}
-              </Button>
             </Grid>
           </Grid>
           <br />
@@ -247,9 +237,33 @@ function MealPlanShopCheckout() {
             placeholder="Postal Code"
             name="address line 3"
           />
+
+          <br />
+          <br />
+          <center>
+            <Button
+              sx={{
+                background: "#ffffff",
+                color: "#E66253",
+                ml: 2,
+                height: "100%",
+                px: 2,
+                borderRadius: 5,
+                fontSize: "15px",
+                "&:hover": {
+                  backgroundColor: "#E66253",
+                  color: "#ffffff",
+                  border: 1,
+                },
+              }}
+            >
+              SUBMIT
+            </Button>
+          </center>
         </div>
       ),
     },
+
     // ... Add more tabs as needed
   ];
   return (
@@ -302,6 +316,9 @@ function MealPlanShopCheckout() {
               aria-describedby="modal-description"
             >
               <Box sx={style}>
+                <Button sx={{ float: "right" }} onClick={handleClose}>
+                  <img src="/images/close.png" height="10" weight="10" />
+                </Button>
                 <Tabs
                   value={activeTab}
                   style={{

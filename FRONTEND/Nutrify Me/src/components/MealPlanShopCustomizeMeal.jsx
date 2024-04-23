@@ -142,7 +142,7 @@ function MealPlanShopCustomizeMeal() {
                   <center>
                     <img src={item.image} width="40%" height="40%" />
                   </center>
-                  {item.name}
+                  <Typography sx={{ color: "#000000" }}>{item.name}</Typography>
                 </div>
               ))}
             </Slider>
@@ -182,15 +182,21 @@ function MealPlanShopCustomizeMeal() {
             </button>
           </Grid>
           <Grid item xs={10}>
-            {" "}
-            {/* Carousel container */}
             <Slider {...settings} ref={sliderRefC}>
               {carbohydrate.map((item, index) => (
-                <div key={index} onClick={() => handleSlideClick(item)}>
+                <div
+                  key={index}
+                  style={{ color: "#000000" }}
+                  onClick={() => handleSlideClick(item)}
+                >
                   <center>
                     <img src={item.image} width="40%" height="40%" />
+                    <br />
+                    <br />
+                    <Typography sx={{ color: "#000000" }}>
+                      {item.name}
+                    </Typography>
                   </center>
-                  {item.name}
                 </div>
               ))}
             </Slider>
@@ -239,7 +245,7 @@ function MealPlanShopCustomizeMeal() {
                   <center>
                     <img src={item.image} width="40%" height="40%" />
                   </center>
-                  {item.name}
+                  <Typography sx={{ color: "#000000" }}>{item.name}</Typography>
                 </div>
               ))}
             </Slider>
