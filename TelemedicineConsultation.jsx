@@ -1,5 +1,3 @@
-import MainUserNavbar from "./MainUserNavbar";
-import TeleMedNavBar from "./TeleMedNavBar";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import Grid from "@mui/material/Grid";

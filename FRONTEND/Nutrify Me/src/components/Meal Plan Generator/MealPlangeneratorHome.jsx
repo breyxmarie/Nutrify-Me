@@ -1,11 +1,7 @@
 import { useState } from "react";
-import MainUserNavbar from "../MainUserNavbar";
+
 function MealPlangeneratorHome() {
-  return (
-    <div>
-      <MainUserNavbar />
-    </div>
-  );
+  return <div></div>;
 }
 
 export default MealPlangeneratorHome;

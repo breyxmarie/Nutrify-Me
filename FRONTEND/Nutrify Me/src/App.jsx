@@ -7,18 +7,18 @@ import UserNotLogInNavBar from "./components/UserNotLogInNavBar";
 import AboutUsUser from "./components/AboutUsUser";
 import FoodJournalHome from "./components/Food Journal/FoodJournalHome";
 import MealPlangeneratorHome from "./components/Meal Plan Generator/MealPlangeneratorHome";
-import MealPlanShopHome from "./components/MealPlanShopHome";
-import MealPlanShopMealPlans from "./components/MealPlanShopMealPlans";
-import MealPlanShopMealPlanHistory from "./components/MealPlanShopMealPlanHistory";
-import MealPlanShopTrackOrders from "./components/MealPlanShopTrackOrders";
-import MealPlanShopCheckout from "./components/MealPlanShopCheckout";
-import MealPlanShopCart from "./components/MealPlanShopCart";
-import MealPlanShopCustomizeMeal from "./components/MealPlanShopCustomizeMeal";
-import MealPlanShopOrders from "./components/MealPlanShopOrders";
-import TelemedicineHome from "./components/TelemedicineHome";
-import TelemedicineMeetUs from "./components/TelemedicineMeetUs";
-import TelemedicineMessages from "./components/TelemedicineMessages";
-import TelemedicineConsultation from "./components/TelemedicineConsultation";
+import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
+import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
+import MealPlanShopMealPlanHistory from "./components/Meal Plan Shop/MealPlanShopMealPlanHistory";
+import MealPlanShopTrackOrders from "./components/Meal Plan Shop/MealPlanShopTrackOrders";
+import MealPlanShopCheckout from "./components/Meal Plan Shop/MealPlanShopCheckout";
+import MealPlanShopCart from "./components/Meal Plan Shop/MealPlanShopCart";
+import MealPlanShopCustomizeMeal from "./components/Meal Plan Shop/MealPlanShopCustomizeMeal";
+import MealPlanShopOrders from "./components/Meal Plan Shop/MealPlanShopOrders";
+import TelemedicineHome from "./components/Telemedicine/TelemedicineHome";
+import TelemedicineMeetUs from "./components/Telemedicine/TelemedicineMeetUs";
+import TelemedicineMessages from "./components/Telemedicine/TelemedicineMessages";
+import TelemedicineConsultation from "./components/Telemedicine/TelemedicineConsultation";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/MainUserNavbar";
@@ -206,10 +206,30 @@ function App() {
 
           <Route
             path="/meal-plan-generator-home"
-            element={<MealPlangeneratorHome />}
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlangeneratorHome />{" "}
+              </>
+            }
           />
-          <Route path="/food-journal-home" element={<FoodJournalHome />} />
-          <Route path="/about-us-user" element={<AboutUsUser />} />
+          <Route
+            path="/food-journal-home"
+            element={
+              <>
+                {" "}
+                <MainUserNavBar /> <FoodJournalHome />
+              </>
+            }
+          />
+          <Route
+            path="/about-us-user"
+            element={
+              <>
+                <MainUserNavBar /> <AboutUsUser />
+              </>
+            }
+          />
 
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />

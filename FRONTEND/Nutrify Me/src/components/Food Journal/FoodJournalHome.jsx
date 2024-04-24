@@ -1,12 +1,7 @@
 import { useState } from "react";
-import MainUserNavbar from "../MainUserNavbar";
 
 function FoodJournalHome() {
-  return (
-    <div>
-      <MainUserNavbar />
-    </div>
-  );
+  return <div></div>;
 }
 
 export default FoodJournalHome;

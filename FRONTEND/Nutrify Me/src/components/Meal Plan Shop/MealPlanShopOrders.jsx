@@ -1,9 +1,8 @@
-import MealPlanShopNavBar from "./MealPlanShopNavBar";
+import MealPlanShopNavBar from "../MealPlanShopNavBar";
 import { useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import * as React from "react";
-import MainUserNavbar from "./MainUserNavbar";
-import TeleMedNavBar from "./TeleMedNavBar";
+
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
@@ -252,7 +251,7 @@ function MealPlanShopOrders() {
             <Grid xs={6}></Grid>
             <Grid xs={3}> Product Total</Grid>
             <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
-              PHP {totalPrice}
+              PHP {totalPrices}
             </Grid>
           </Grid>
           <br />
