@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MainUserNavbar from "./MainUserNavbar";
+import MainUserNavbar from "../MainUserNavbar";
 
 function FoodJournalHome() {
   return (
