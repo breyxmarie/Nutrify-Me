@@ -1,5 +1,5 @@
-import MealPlanShopNavBar from "../MealPlanShopNavBar";
-import { useState, useRef } from "react";
+import MealPlanShopNavBar from "../NavBars/MealPlanShopNavBar";
+import { useState, useRef, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import * as React from "react";
 
@@ -39,11 +39,6 @@ function MealPlanShopOrders() {
   console.log(orderId);
   console.log(useParams());
 
-  //const totalOrderPrice =
-  // parseInt(totalPrice, 10) + parseInt(shippingPrice, 10);
-
-  //const [totalOrderPrice, setTotalOrderPrice] = useState(0);
-
   function getColorStatus(status) {
     switch (status) {
       case "":
@@ -65,17 +60,27 @@ function MealPlanShopOrders() {
       totalPrices + parseInt(shippingPrice)
   ); // Use calculated price if totalPrice is not available
 
-  function getTotalPrice(price) {
-    // setTotalOrderPrice(totalOrderPrice + parseInt(price));
-  }
-
-  // {
-  //   items.map((itemData) => console.log("try" + itemData));
-  // }
-
   console.log("try " + location.state.items);
 
-  items.map((item, index) => console.log("try " + item.image));
+  const [color1, setColor1] = useState("#E66253");
+  const [color2, setColor2] = useState("#E66253");
+  const [color3, setColor3] = useState("#E66253");
+  function getStatus() {
+    switch (status) {
+      case "Order Confirmed":
+        setColor2("#B3B3B3");
+        setColor3("#B3B3B3");
+        return;
+      case "Shipping":
+        setColor3("#B3B3B3");
+        return;
+    }
+  }
+
+  useEffect(() => {
+    getStatus(); // Call getStatus only once on component mount
+  }, []);
+
   return (
     <div
       className="content"
@@ -117,7 +122,7 @@ function MealPlanShopOrders() {
           <Box
             sx={{
               borderRadius: "50%",
-              background: "#E66253",
+              background: color1,
               height: "45px",
               width: "45px",
               display: "inline-block",
@@ -140,7 +145,7 @@ function MealPlanShopOrders() {
           <Box
             sx={{
               borderRadius: "50%",
-              background: "#E66253",
+              background: color2,
               height: "45px",
               width: "45px",
               display: "inline-block",
@@ -160,7 +165,7 @@ function MealPlanShopOrders() {
           <Box
             sx={{
               borderRadius: "50%",
-              background: "#E66253",
+              background: color3,
               height: "45px",
               width: "45px",
               display: "inline-block",

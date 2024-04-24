@@ -13,41 +13,17 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import "./MainUserNavbar.css";
 
 const pages = [
-  { names: "APPOINTMENTS", links: "/telemedicine-home" },
-  { names: " MEET US", links: "/telemedicine-meet-us" },
-  { names: "MESSAGES", links: "/telemedicine-messages" },
+  { names: "SHOP", links: "/meal-plan-shop-home" },
+  { names: " MEAL PLANS", links: "/meal-plan-shop-meal-plans" },
+  { names: "MEAL PLAN HISTORY", links: "/meal-plan-shop-meal-plan-history" },
+  { names: "TRACK ORDERS", links: "/meal-plan-shop-track-orders" },
 ];
 
-const StyledLink = `
-  color: #99756e; /* Default styles */
-  display: block;
-  text-decoration: none;
-  padding-y: 10px;
-
-  &.active {
-    color: #5754a8;
-    font-weight: bold; /* Active state styles */
-  }
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const LinkPages = [
-  "",
-  "/telemedicine-home",
-  "/meal-plan-shop-home",
-  "/meal-plan-generator-home",
-  "/food-journal-home",
-  "/about-us-user",
-];
 const settings = ["Profile", "Logout"];
 
-function TeleMedNavBar() {
+function MealPlanShopNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -74,7 +50,7 @@ function TeleMedNavBar() {
       onUpdate={() => window.scrollTo(0, 0)}
       position=""
       className="w-full"
-      style={{ top: "115px", height: "0px", width: "100vw" }}
+      style={{ top: "125px", height: "0px", width: "100vw" }}
     >
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>
@@ -158,7 +134,8 @@ function TeleMedNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 2,
-              mx: "30%",
+              ml: "20%",
+              mr: "10%",
             }}
           >
             {pages.map((page) => (
@@ -190,9 +167,17 @@ function TeleMedNavBar() {
               </NavLink>
             ))}
           </Box>
+          <Link to="/meal-plan-shop-cart" sX={{ mx: "30px" }}>
+            <img
+              src="/images/shopping cart.png"
+              style={{ marginRight: "170px" }}
+              width="45"
+              height="45"
+            />
+          </Link>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-export default TeleMedNavBar;
+export default MealPlanShopNavBar;

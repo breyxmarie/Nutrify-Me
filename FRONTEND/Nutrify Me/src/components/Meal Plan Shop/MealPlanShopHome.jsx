@@ -1,4 +1,4 @@
-import MealPlanShopNavBar from "../MealPlanShopNavBar";
+import MealPlanShopNavBar from "../NavBars/MealPlanShopNavBar";
 import { useState, useRef } from "react";
 import * as React from "react";
 
@@ -104,20 +104,6 @@ function MealPlanShopHome() {
   ];
   const [buttonText, setButtonText] = useState("/images/triangle.png");
 
-  // const [isShown, setIsShown] = useState(false);
-
-  // const handleClick = (event) => {
-  //   // 👇️ toggle shown state
-  //   setIsShown((current) => !current);
-  //   setButtonText(
-  //     buttonText === "/images/triangle.png"
-  //       ? "/images/upside down.png"
-  //       : "/images/triangle.png"
-  //   );
-  //   // 👇️ or simply set it to true
-  //   // setIsShown(true);
-  // };
-
   const [isShown, setIsShown] = useState(Array(faqs.length).fill(false)); // State array for each FAQ
 
   const handleClick = (index) => {
@@ -135,9 +121,6 @@ function MealPlanShopHome() {
         fontFamily: "Poppins",
       }}
     >
-      {/* <MainUserNavbar /> */}
-      {/* <MealPlanShopNavBar /> */}
-
       <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
@@ -154,7 +137,11 @@ function MealPlanShopHome() {
       ></Box>
 
       <Box>
-        <Typography>MEAL PLANS</Typography>
+        <Typography
+          sx={{ color: "#99756E", fontSize: "40px", fontWeight: "bold" }}
+        >
+          MEAL PLANS
+        </Typography>
         <Grid container spacing={2}>
           {mealPlan.slice(0, 2).map((plan, index) => (
             <Grid item xs={3} sm={4} md={6} key={index}>
@@ -227,7 +214,11 @@ function MealPlanShopHome() {
       </Box>
 
       <Box>
-        <Typography>Patient’s Testimonials</Typography>
+        <Typography
+          sx={{ color: "#99756E", fontSize: "35px", fontWeight: "bold" }}
+        >
+          Patient’s Testimonials
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={1}>
             <button onClick={handlePrevC} style={{ marginTop: "80%" }}>

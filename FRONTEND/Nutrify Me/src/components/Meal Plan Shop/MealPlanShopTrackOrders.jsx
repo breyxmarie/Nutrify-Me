@@ -1,4 +1,4 @@
-import MealPlanShopNavBar from "../MealPlanShopNavBar";
+import MealPlanShopNavBar from "../NavBars/MealPlanShopNavBar";
 import { useState, useRef } from "react";
 import * as React from "react";
 
@@ -22,7 +22,7 @@ function MealPlanShopTrackOrders() {
       description: "lorem ipsum",
       number: "75840",
       image: "/images/food.png",
-      status: "In Transit",
+      status: "Order Confirmed",
       courier: "[courier]",
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
@@ -44,7 +44,7 @@ function MealPlanShopTrackOrders() {
       description: "lorem ipsum",
       number: "65840",
       image: "/images/food.png",
-      status: "Delivered",
+      status: "Order Confirmed",
       courier: "[courier]",
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
@@ -66,7 +66,7 @@ function MealPlanShopTrackOrders() {
       description: "lorem ipsum",
       number: "15840",
       image: "/images/food.png",
-      status: "Packing",
+      status: "Shipping",
       courier: "[courier]",
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
@@ -88,7 +88,7 @@ function MealPlanShopTrackOrders() {
       description: "lorem ipsum",
       number: "55840",
       image: "/images/food.png",
-      status: "Order Placed",
+      status: "Delivered",
       courier: "[courier]",
       deliveryDate: "12/15/2023",
       trackNum: "2SR7-P3J0-DFGT",
@@ -107,7 +107,7 @@ function MealPlanShopTrackOrders() {
 
   function getColor(status) {
     switch (status) {
-      case "In Transit":
+      case "Shipping":
         return "#F8E753";
       case "Delivered":
         return "#36FF24";

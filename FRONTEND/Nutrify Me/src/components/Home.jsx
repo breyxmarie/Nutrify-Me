@@ -1,6 +1,6 @@
 import { useState } from "react";
-import MainUserNavbar from "./MainUserNavbar";
-import UserNotLogInNavBar from "./UserNotLogInNavBar";
+import MainUserNavbar from "./NavBars/MainUserNavbar";
+import UserNotLogInNavBar from "./NavBars/UserNotLogInNavBar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";

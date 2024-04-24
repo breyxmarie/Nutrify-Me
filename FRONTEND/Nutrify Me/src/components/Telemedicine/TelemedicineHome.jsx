@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as React from "react";
-import MainUserNavbar from "../MainUserNavbar";
-import TeleMedNavBar from "../TeleMedNavBar";
+import MainUserNavbar from "../NavBars/MainUserNavbar";
+import TeleMedNavBar from "../NavBars/TeleMedNavBar";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";

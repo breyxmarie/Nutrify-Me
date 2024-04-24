@@ -95,11 +95,6 @@ function MealPlanShopCheckout() {
     color: "#ffffff",
   };
 
-  // const [open, setOpen] = React.useState(false);
-  // const handleOpen = () => setOpen(true);
-  // const handleClose = () => setOpen(false);
-  //
-
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
 
@@ -261,8 +256,6 @@ function MealPlanShopCheckout() {
         </div>
       ),
     },
-
-    // ... Add more tabs as needed
   ];
   return (
     <div
@@ -347,97 +340,6 @@ function MealPlanShopCheckout() {
                 ))}
               </Box>
             </Modal>
-            {/* 
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-              sx={{}}
-            >
-              <Box sx={style}>
-                <Grid container spacing={2}>
-                  <Grid xs={2}>
-                    <img src="/images/location white.png" />
-                  </Grid>
-                  <Grid xs={8}>
-                    <Typography
-                      id="modal-modal-title"
-                      variant="h6"
-                      component="h2"
-                    >
-                      Address Selection
-                    </Typography>
-                  </Grid>
-                  <Grid xs={2}>
-                    <Button>
-                      <img src="/images/close.png" />{" "}
-                    </Button>
-                  </Grid>
-                </Grid>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  Duis mollis, est non commodo luctus, nisi erat porttitor
-                  ligula.
-                </Typography>
-
-                <FormControl sx={{ ml: 15, mb: 3 }}>
-                  <FormLabel id="demo-radio-buttons-group-label"></FormLabel>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    defaultValue="female"
-                    name="radio-buttons-group"
-                  >
-                    {listAddress.map((item, index) => (
-                      <FormControlLabel
-                        value={item.address}
-                        control={<Radio />}
-                        label={(item.fullName, item.address)}
-                        // onChange=
-                      />
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-                <center>
-                  <Button
-                    sx={{
-                      background: "#ffffff",
-                      color: "#E66253",
-                      ml: 2,
-                      height: "100%",
-                      px: 2,
-                      borderRadius: 5,
-                      fontSize: "15px",
-                      "&:hover": {
-                        backgroundColor: "#E66253",
-                        color: "#ffffff",
-                        border: 1,
-                      },
-                    }}
-                  >
-                    CHOOSE ADDRESS
-                  </Button>
-
-                  <Button
-                    sx={{
-                      background: "#ffffff",
-                      color: "#E66253",
-                      ml: 2,
-                      height: "100%",
-                      px: 2,
-                      borderRadius: 5,
-                      fontSize: "15px",
-                      "&:hover": {
-                        backgroundColor: "#E66253",
-                        color: "#ffffff",
-                        border: 1,
-                      },
-                    }}
-                  >
-                    ADD NEW ADDRESS
-                  </Button>
-                </center>
-              </Box>
-            </Modal> */}
           </Grid>
         </Grid>
       </Box>

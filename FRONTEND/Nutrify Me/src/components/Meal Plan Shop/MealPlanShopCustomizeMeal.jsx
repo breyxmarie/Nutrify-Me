@@ -1,4 +1,4 @@
-import MealPlanShopNavBar from "../MealPlanShopNavBar";
+import MealPlanShopNavBar from "../NavBars/MealPlanShopNavBar";
 import { useState, useRef } from "react";
 import * as React from "react";
 
@@ -26,7 +26,7 @@ function MealPlanShopCustomizeMeal() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const carouselRef = useRef(null);
 
-  const sliderRef = useRef(null); //*kapag magaadd ng customize meal
+  const sliderRef = useRef(null); //* kapag magaadd ng customize meal
   const sliderRefC = useRef(null);
   const sliderRefL = useRef(null);
 

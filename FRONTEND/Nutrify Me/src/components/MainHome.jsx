@@ -1,5 +1,5 @@
 import { useState } from "react";
-import MainUserNavBar from "./MainUserNavbar";
+import MainUserNavBar from "./NavBars/MainUserNavbar";
 import { styled } from "@mui/material/styles";
 import "./MainUserNavbar.css";
 import Paper from "@mui/material/Paper";

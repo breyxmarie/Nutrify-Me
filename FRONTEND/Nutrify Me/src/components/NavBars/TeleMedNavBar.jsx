@@ -12,25 +12,12 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-//import logo from "./images/logo.png";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import "./MainUserNavbar.css";
-// const pages = [
-//   "HOME",
-//   "TELEMEDICINE",
-//   "MEAL PLAN SHOP",
-//   "MEAL PLAN GENERATOR",
-//   "FOOD JOURNAL",
-//   "ABOUT US",
-// ];
 
 const pages = [
-  { names: "HOME", links: "/user-home" },
-  { names: "TELEMEDICINE", links: "/telemedicine-home" },
-  { names: "MEAL PLAN SHOP", links: "/meal-plan-shop-home" },
-  { names: "MEAL PLAN GENERATOR", links: "/meal-plan-generator-home" },
-  { names: "FOOD JOURNAL", links: "/food-journal-home" },
-  { names: "ABOUT US", links: "/about-us-user" },
+  { names: "APPOINTMENTS", links: "/telemedicine-home" },
+  { names: " MEET US", links: "/telemedicine-meet-us" },
+  { names: "MESSAGES", links: "/telemedicine-messages" },
 ];
 
 const StyledLink = `
@@ -59,7 +46,7 @@ const LinkPages = [
 ];
 const settings = ["Profile", "Logout"];
 
-function MainUserNavbar() {
+function TeleMedNavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -82,28 +69,14 @@ function MainUserNavbar() {
   };
 
   return (
-    <AppBar position="" className="w-full" style={{ width: "100vw" }}>
-      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 2 }}>
+    <AppBar
+      onUpdate={() => window.scrollTo(0, 0)}
+      position=""
+      className="w-full"
+      style={{ top: "115px", height: "0px", width: "100vw" }}
+    >
+      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
-            sx={{
-              ml: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          >
-            {/* <img src="/images/logo.png" alt="Logo" /> */}
-            <img src="/images/logo.png" alt="Logo" />
-          </Typography>
-
           <Box
             sx={{
               flexGrow: 1,
@@ -183,28 +156,11 @@ function MainUserNavbar() {
               borderRadius: 4,
               justifyContent: "space-between",
               alignItems: "center",
-              px: 7,
-              mx: 9,
+              px: 2,
+              mx: "30%",
             }}
           >
             {pages.map((page) => (
-              // <Box
-              //   sx={{
-              //     borderBottom: 2,
-              //     display: "flex",
-              //     flexGrow: 1,
-              //     justifyContent: "space-between",
-              //     alignItems: "center",
-              //     p: 2,
-              //   }}
-              //   onMouseEnter={(e) => (e.target.style.background = "#000000")}
-              //   onMouseLeave={(e) => (e.target.style.background = "none")}
-              //   style={{
-              //     color: "#99756E",
-              //     textDecoration: "none",
-              //     py: "10px",
-              //   }}
-              // >
               <NavLink
                 key={page.names}
                 onClick={handleCloseNavMenu}
@@ -233,47 +189,9 @@ function MainUserNavbar() {
               </NavLink>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Button
-                  variant="contained"
-                  className="userButton"
-                  onMouseEnter={(e) => (e.target.style.background = "#E66253")}
-                  onMouseLeave={(e) => (e.target.style.background = "#E66253")}
-                  sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
-                >
-                  WELCOME *USER!
-                </Button>
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
         </Toolbar>
       </Container>
     </AppBar>
   );
 }
-export default MainUserNavbar;
+export default TeleMedNavBar;

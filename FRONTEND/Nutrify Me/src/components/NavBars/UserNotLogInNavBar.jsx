@@ -12,19 +12,11 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-//import logo from "./images/logo.png";
+
 import { NavLink, Link, useLocation } from "react-router-dom";
-import "./MainUserNavbar.css";
-import LogIn from "./LogIn";
+
+import LogIn from "../LogIn";
 import Grid from "@mui/material/Grid";
-// const pages = [
-//   "HOME",
-//   "TELEMEDICINE",
-//   "MEAL PLAN SHOP",
-//   "MEAL PLAN GENERATOR",
-//   "FOOD JOURNAL",
-//   "ABOUT US",
-// ];
 
 const pages = [
   { names: "HOME", links: "/" },
@@ -106,9 +98,7 @@ function userNotLogInNavBar() {
               color: "inherit",
               textDecoration: "none",
             }}
-          >
-            {/* <img src="/images/logo.png" alt="Logo" /> */}
-          </Typography>
+          ></Typography>
 
           <Box
             sx={{
@@ -178,27 +168,9 @@ function userNotLogInNavBar() {
                     justifyContent: "space-between",
                     alignItems: "center",
                     px: 6,
-                    // mx: 50,
                   }}
                 >
                   {pages.map((page) => (
-                    // <Box
-                    //   sx={{
-                    //     borderBottom: 2,
-                    //     display: "flex",
-                    //     flexGrow: 1,
-                    //     justifyContent: "space-between",
-                    //     alignItems: "center",
-                    //     p: 2,
-                    //   }}
-                    //   onMouseEnter={(e) => (e.target.style.background = "#000000")}
-                    //   onMouseLeave={(e) => (e.target.style.background = "none")}
-                    //   style={{
-                    //     color: "#99756E",
-                    //     textDecoration: "none",
-                    //     py: "10px",
-                    //   }}
-                    // >
                     <NavLink
                       key={page.names}
                       onClick={handleCloseNavMenu}
