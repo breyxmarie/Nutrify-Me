@@ -12,17 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-//import logo from "./images/logo.png";
 import { NavLink, Link, useLocation } from "react-router-dom";
-
-// const pages = [
-//   "HOME",
-//   "TELEMEDICINE",
-//   "MEAL PLAN SHOP",
-//   "MEAL PLAN GENERATOR",
-//   "FOOD JOURNAL",
-//   "ABOUT US",
-// ];
 
 const pages = [
   { names: "HOME", links: "/user-home" },
@@ -49,14 +39,6 @@ const StyledLink = `
   }
 `;
 
-const LinkPages = [
-  "",
-  "/telemedicine-home",
-  "/meal-plan-shop-home",
-  "/meal-plan-generator-home",
-  "/food-journal-home",
-  "/about-us-user",
-];
 const settings = ["Profile", "Logout"];
 
 function MainUserNavbar() {
@@ -217,6 +199,7 @@ function MainUserNavbar() {
                   textDecoration: "none",
                   //height: "50px",
                   display: "block",
+                  transition: "background-color 0.2s ease-in-out",
                 }}
                 onMouseEnter={(e) => (e.target.style.background = "#b9a09b")}
                 onMouseLeave={(e) => (e.target.style.background = "#FFFFFF")}

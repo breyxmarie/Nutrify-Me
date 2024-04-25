@@ -23,6 +23,7 @@ import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/NavBars/MainUserNavbar";
 import TeleMedNavBar from "./components/NavBars/TeleMedNavBar";
+import FoodJournalNavBar from "./components/NavBars/FoodJournalNavBar";
 import MealPlanShopNavBar from "./components/NavBars/MealPlanShopNavBar";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
@@ -218,7 +219,8 @@ function App() {
             element={
               <>
                 {" "}
-                <MainUserNavBar /> <FoodJournalHome />
+                <MainUserNavBar /> <FoodJournalNavBar />
+                <FoodJournalHome /> <UserFooter />
               </>
             }
           />
@@ -226,7 +228,7 @@ function App() {
             path="/about-us-user"
             element={
               <>
-                <MainUserNavBar /> <AboutUsUser />
+                <MainUserNavBar /> <AboutUsUser /> <UserFooter />
               </>
             }
           />
