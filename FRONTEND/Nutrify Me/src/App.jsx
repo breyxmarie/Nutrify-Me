@@ -19,12 +19,16 @@ import TelemedicineHome from "./components/Telemedicine/TelemedicineHome";
 import TelemedicineMeetUs from "./components/Telemedicine/TelemedicineMeetUs";
 import TelemedicineMessages from "./components/Telemedicine/TelemedicineMessages";
 import TelemedicineConsultation from "./components/Telemedicine/TelemedicineConsultation";
+import NutritionistConsultation from "./components/Nutritionist/NutritionistConsultation";
+import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment";
+import NutritionistHome from "./components/Nutritionist/NutritionistHome";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/NavBars/MainUserNavbar";
 import TeleMedNavBar from "./components/NavBars/TeleMedNavBar";
 import FoodJournalNavBar from "./components/NavBars/FoodJournalNavBar";
 import MealPlanShopNavBar from "./components/NavBars/MealPlanShopNavBar";
+import NutritionistNavBar from "./components/NavBars/NutritionistNavBar";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import UserFooter from "./components/UserFooter";
@@ -235,6 +239,35 @@ function App() {
 
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />
+
+          {/* Nutritionist screen  NutritionistNavBar */}
+
+          <Route
+            path="/nutritionist-home"
+            element={
+              <>
+                <NutritionistNavBar /> <NutritionistHome />
+              </>
+            }
+          />
+
+          <Route
+            path="/nutritionist-consultation"
+            element={
+              <>
+                <NutritionistNavBar /> <NutritionistConsultation />
+              </>
+            }
+          />
+
+          <Route
+            path="/nutritionist-appointment"
+            element={
+              <>
+                <NutritionistNavBar /> <NutritionistAppointment />{" "}
+              </>
+            }
+          />
         </Routes>
       </BrowserRouter>
     </div>
