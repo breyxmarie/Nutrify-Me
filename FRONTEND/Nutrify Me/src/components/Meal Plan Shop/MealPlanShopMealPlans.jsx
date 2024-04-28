@@ -16,36 +16,71 @@ function MealPlanShopMealPlans() {
       name: "High Protein",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "High Protein",
     },
     {
       name: "Vegetarian",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "Vegetarian",
     },
     {
       name: "Vegetarian",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "High Protein",
     },
     {
       name: "Vegetarian",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "High Protein",
     },
     {
       name: "Vegetarian",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "High Protein",
     },
     {
       name: "Vegetarian",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "High Protein",
     },
     {
       name: "Vegetarian",
       description: "lorem ipsum",
       image: "/images/plan food.png",
+      price: 50,
+      quantity: 1,
+      subtotal: 6,
+
+      product: "High Protein",
     },
   ];
   return (
@@ -85,17 +120,31 @@ function MealPlanShopMealPlans() {
               <img src={plan.image} width="350px" height="350px" />
               <Typography variant="body1">{plan.name}</Typography>
               <Typography variant="body1">{plan.description}</Typography>
-              <Button
-                sx={{
-                  borderRadius: 4,
-                  background: "#D9D9D9",
-                  color: "#000000",
-                  px: 4,
-                  py: 1,
+
+              <Link
+                to={"/meal-plan-shop-cart"}
+                state={{
+                  // product: plan.product,
+                  // price: plan.price,
+                  // quantity: plan.quantity,
+                  // subtotal: plan.subtotal,
+                  // image: plan.image,
+
+                  addCart: plan,
                 }}
               >
-                ORDER NOW
-              </Button>
+                <Button
+                  sx={{
+                    borderRadius: 4,
+                    background: "#D9D9D9",
+                    color: "#000000",
+                    px: 4,
+                    py: 1,
+                  }}
+                >
+                  ORDER NOW
+                </Button>
+              </Link>
             </Grid>
           ))}
         </Grid>

@@ -111,7 +111,7 @@ function App() {
               <>
                 <MainUserNavBar />
                 <TeleMedNavBar />
-                <TelemedicineConsultation /> <UserFooter />{" "}
+                <TelemedicineConsultation /> <UserFooter />
               </>
             }
           />

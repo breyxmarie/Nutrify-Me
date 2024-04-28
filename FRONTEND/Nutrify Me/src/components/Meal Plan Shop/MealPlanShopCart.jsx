@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import MainUserNavbar from "../NavBars/MainUserNavbar";
 import TeleMedNavBar from "../NavBars/TeleMedNavBar";
@@ -12,23 +12,37 @@ import { Typography } from "@mui/material";
 import { NavLink, Link, useLocation } from "react-router-dom";
 
 function MealPlanShopCart() {
-  const cartItems = [
-    {
-      product: "lorem",
-      price: 50,
-      quantity: 5,
-      subtotal: 6,
-      image: "/images/logo.png",
-    },
-    {
-      product: "lorem",
-      price: 50,
-      quantity: 5,
-      subtotal: 6,
-      image: "/images/logo.png",
-    },
-  ];
+  const location = useLocation();
+  const { addCart } = location.state || {};
 
+  const [cartItems, setCartItems] = useState([
+    {
+      product: "lorem",
+      price: 50,
+      quantity: 5,
+      subtotal: 6,
+      image: "/images/logo.png",
+    },
+    {
+      product: "lorem",
+      price: 50,
+      quantity: 5,
+      subtotal: 6,
+      image: "/images/logo.png",
+    },
+    {
+      product: "High Protein",
+      price: 50,
+      quantity: 5,
+      subtotal: 6,
+      image: "/images/logo.png",
+    },
+  ]);
+
+  const addNewObject = () => {
+    const updatedArray = [...cartItems].concat(addCart); // Create new array with spread and concat
+    setCartItems(updatedArray);
+  };
   const [orderNumber, setOrderNumber] = useState(
     Math.floor(Math.random() * 1000000)
   );
@@ -43,6 +57,10 @@ function MealPlanShopCart() {
     // Replace this with your desired logic (e.g., navigate, open modal)
     console.log("Clicked item:", item);
   };
+
+  useEffect(() => {
+    addNewObject();
+  }, []);
 
   return (
     <div
