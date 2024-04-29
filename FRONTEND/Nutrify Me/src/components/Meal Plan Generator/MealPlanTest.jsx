@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function MealPlanTest() {
-  const url = "https://jsonplaceholder.typicode.com/users";
+  //  const url = "https://jsonplaceholder.typicode.com/users";
+
+  const url =
+    "https://api.edamam.com/api/food-database/v2/parser?app_id=1b18b1dd&app_key=%20c3e3062bccb813d56ae4d31b97be79c1&nutrition-type=cooking";
+
   const [data, setData] = useState([]);
 
   const fetchInfo = async () => {
@@ -51,7 +55,7 @@ function MealPlanTest() {
                 marginBlock: 10,
               }}
             >
-              <p style={{ fontSize: 20, color: "#ffffff" }}>{dataObj.name}</p>
+              <p style={{ fontSize: 20, color: "#ffffff" }}>{dataObj}</p>
             </div>
           );
         })}
