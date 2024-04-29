@@ -7,6 +7,7 @@ import UserNotLogInNavBar from "./components/NavBars/UserNotLogInNavBar";
 import AboutUsUser from "./components/AboutUsUser";
 import FoodJournalHome from "./components/Food Journal/FoodJournalHome";
 import MealPlangeneratorHome from "./components/Meal Plan Generator/MealPlangeneratorHome";
+
 import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
 import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
 import MealPlanShopMealPlanHistory from "./components/Meal Plan Shop/MealPlanShopMealPlanHistory";
@@ -32,6 +33,7 @@ import NutritionistNavBar from "./components/NavBars/NutritionistNavBar";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import UserFooter from "./components/UserFooter";
+import MealPlanTest from "./components/Meal Plan Generator/MealPlanTest";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -215,6 +217,16 @@ function App() {
               <>
                 <MainUserNavBar />
                 <MealPlangeneratorHome />{" "}
+              </>
+            }
+          />
+
+          <Route
+            path="/test"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanTest />{" "}
               </>
             }
           />
