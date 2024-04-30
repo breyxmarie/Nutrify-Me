@@ -7,7 +7,7 @@ import UserNotLogInNavBar from "./components/NavBars/UserNotLogInNavBar";
 import AboutUsUser from "./components/AboutUsUser";
 import FoodJournalHome from "./components/Food Journal/FoodJournalHome";
 import MealPlangeneratorHome from "./components/Meal Plan Generator/MealPlangeneratorHome";
-
+import MealPlanSelection from "./components/Meal Plan Generator/MealPlanSelection";
 import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
 import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
 import MealPlanShopMealPlanHistory from "./components/Meal Plan Shop/MealPlanShopMealPlanHistory";
@@ -230,6 +230,18 @@ function App() {
               </>
             }
           />
+
+          <Route
+            path="/selection"
+            element={
+              <>
+                <MainUserNavBar />
+                <MealPlanSelection />{" "}
+              </>
+            }
+          />
+
+          {/* FOOD JOURNAL */}
           <Route
             path="/food-journal-home"
             element={
@@ -252,7 +264,7 @@ function App() {
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />
 
-          {/* Nutritionist screen  NutritionistNavBar */}
+          {/* Nutritionist screen  */}
 
           <Route
             path="/nutritionist-home"

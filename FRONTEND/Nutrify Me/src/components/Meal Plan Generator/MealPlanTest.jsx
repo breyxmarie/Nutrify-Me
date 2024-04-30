@@ -4,9 +4,13 @@ import axios from "axios";
 function MealPlanTest() {
   //  const url = "https://jsonplaceholder.typicode.com/users";
 
-  const url =
-    "https://api.edamam.com/api/food-database/v2/parser?app_id=1b18b1dd&app_key=%20c3e3062bccb813d56ae4d31b97be79c1&nutrition-type=cooking";
+  // const url =
+  // "https://api.edamam.com/api/food-database/v2/parser?app_id=1b18b1dd&app_key=%20c3e3062bccb813d56ae4d31b97be79c1&nutrition-type=cooking";
 
+  //const url = "https://api.edamam.com/api/meal-planner/v1/1b18b1dd/select";
+
+  const url =
+    "https://api.edamam.com/api/recipes/v2?type=public&q=chicken&app_id=7214c06e&app_key=e416de0a15a1c071de5c2493e20197d5";
   const [data, setData] = useState([]);
 
   const fetchInfo = async () => {
@@ -61,23 +65,24 @@ function MealPlanTest() {
     <div>
       <h1 style={{ color: "green" }}>using Axios Library to Fetch Data</h1>
       <center>
-        {data.hints.map((dataObj, index) => {
-          return (
-            <div
-              style={{
-                width: "15em",
-                backgroundColor: "#CD8FFD",
-                padding: 2,
-                borderRadius: 10,
-                marginBlock: 10,
-              }}
-            >
-              <p style={{ fontSize: 20, color: "#ffffff" }}>
-                {dataObj.food.label}
-              </p>
-            </div>
-          );
-        })}
+        {data.hits.slice(0, 1).map((dataObj, index) => (
+          <div
+            key={index}
+            style={{
+              backgroundColor: "#CD8FFD",
+              padding: 2,
+              borderRadius: 10,
+              marginBlock: 10,
+            }}
+          >
+            {dataObj.recipe.label}
+            {dataObj.recipe.ingredients.map((ingredient, index) => (
+              <div key={index} style={{ fontSize: "20px" }}>
+                {ingredient.text && ingredient.text}{" "}
+              </div>
+            ))}
+          </div>
+        ))}
       </center>
     </div>
   );
