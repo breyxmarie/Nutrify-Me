@@ -76,6 +76,7 @@ function MealPlanTest() {
             }}
           >
             {dataObj.recipe.label}
+            {dataObj.recipe.dietLabels}
             {dataObj.recipe.ingredients.map((ingredient, index) => (
               <div key={index} style={{ fontSize: "20px" }}>
                 {ingredient.text && ingredient.text}{" "}
