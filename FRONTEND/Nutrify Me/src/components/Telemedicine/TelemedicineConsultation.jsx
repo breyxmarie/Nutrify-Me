@@ -49,7 +49,7 @@ function TelemedicineConsultation() {
   //another try
   const APP_ID = "da6708a41b464c7fb30a7bb85468663b";
   const TOKEN =
-    "007eJxTYGCZk6/x3Kb/l63VW5f0w/8kOxV/P+OXmlj3r1ufZ53S26UKDCmJZuYGFokmhkkmZibJ5mlJxgaJ5klJFqYmZhZmZsZJ4cp6aQ2BjAy2QoksjAwQCOLzMDjn5xWX5pQklmTm5zEwAAAcESEA";
+    "007eJxTYGgyejMlNCPJdoGr1ZOjc5/vfeO3U++uwPaG47vn9gSVNH5RYEhJNDM3sEg0MUwyMTNJNk9LMjZINE9KsjA1MbMwMzNO2mtnkNYQyMhwR9uKlZEBAkF8Hgbn/Lzi0pySxJLM/DwGBgD2wiQk";
   const CHANNEL = "Consultation";
 
   const clients = AgoraRTC.createClient({

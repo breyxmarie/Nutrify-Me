@@ -10,9 +10,26 @@ function MealPlanTest() {
   const [data, setData] = useState([]);
 
   const fetchInfo = async () => {
-    const res = await axios.get(url);
-    // Update state using a function that receives the fetched data
-    setData((prevData) => [...prevData, ...res.data]);
+    try {
+      const response = await fetch(url);
+      console.log("Response:", response); // Log the response object
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      console.log("Parsed Data:", data); // Log the parsed data
+
+      setData(data);
+      // Log the filtered data
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+    console.log("test", data);
+    // const res = await axios.get(url);
+    // // Update state using a function that receives the fetched data
+    // setData((prevData) => [...prevData, ...res.data]);
 
     // const options = {
     //   method: "GET",
@@ -44,7 +61,7 @@ function MealPlanTest() {
     <div>
       <h1 style={{ color: "green" }}>using Axios Library to Fetch Data</h1>
       <center>
-        {data.map((dataObj, index) => {
+        {data.hints.map((dataObj, index) => {
           return (
             <div
               style={{
@@ -55,7 +72,9 @@ function MealPlanTest() {
                 marginBlock: 10,
               }}
             >
-              <p style={{ fontSize: 20, color: "#ffffff" }}>{dataObj}</p>
+              <p style={{ fontSize: 20, color: "#ffffff" }}>
+                {dataObj.food.label}
+              </p>
             </div>
           );
         })}
