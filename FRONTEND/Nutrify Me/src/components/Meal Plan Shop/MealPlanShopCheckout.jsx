@@ -473,24 +473,27 @@ function MealPlanShopCheckout() {
       </Box>
       <br />
       <br />
-      <Button
-        sx={{
-          background: "#E66253",
-          color: "#ffffff",
-          ml: 2,
-          height: "100%",
-          px: 2,
-          fontSize: "15px",
-          "&:hover": {
-            backgroundColor: "#ffffff",
-            color: "#E66253",
-            border: 1,
-          },
-        }}
-      >
-        {" "}
-        PLACE ORDER
-      </Button>
+
+      <Link to={"/meal-plan-shop-home"}>
+        <Button
+          sx={{
+            background: "#E66253",
+            color: "#ffffff",
+            ml: 2,
+            height: "100%",
+            px: 2,
+            fontSize: "15px",
+            "&:hover": {
+              backgroundColor: "#ffffff",
+              color: "#E66253",
+              border: 1,
+            },
+          }}
+        >
+          {" "}
+          PLACE ORDER
+        </Button>
+      </Link>
     </div>
   );
 }

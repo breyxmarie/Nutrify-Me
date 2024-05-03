@@ -15,8 +15,8 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 
 const pages = [
-  { names: "JOURNAL", links: "/meal-plan-shop-home" },
-  { names: " PROGRESS REPORT  ", links: "/meal-plan-shop-meal-plans" },
+  { names: "JOURNAL", links: "/food-journal-home" },
+  { names: " PROGRESS REPORT  ", links: "/food-journal-progress-report" },
 ];
 
 function FoodJournalNavBar() {

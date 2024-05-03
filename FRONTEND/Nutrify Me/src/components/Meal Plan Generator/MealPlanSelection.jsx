@@ -2,6 +2,7 @@ import { useState } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import { NavLink, Link, useLocation } from "react-router-dom";
 
 function MealPlanSelection() {
   const [recipe, setRecipe] = useState();
@@ -22,12 +23,34 @@ function MealPlanSelection() {
 
   const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [selectedRecipeIndex, setSelectedRecipeIndex] = useState(null); // Track selected recipe index
+  const [selectedDietIndex, setSelectedDietIndex] = useState(null);
+  const [selectedCuisineIndex, setSelectedCuisineIndex] = useState(null);
+  const [selectedTypeIndex, setSelectedTypeIndex] = useState(null);
 
   const handleClick = (clickedIndex) => {
     setSelectedRecipeIndex(clickedIndex); // Update selected index on click
     setRecipe(recipeChoices[clickedIndex].text);
     console.log(recipeChoices[clickedIndex].text);
   };
+
+  const handleClickDiet = (clickedIndex) => {
+    setSelectedDietIndex(clickedIndex); // Update selected index on click
+    setDiet(choiceDiet[clickedIndex]);
+    console.log(choiceDiet[clickedIndex]);
+  };
+
+  const handleClickCuisine = (clickedIndex) => {
+    setSelectedCuisineIndex(clickedIndex); // Update selected index on click
+    setCuisine(choiceCuisine[clickedIndex]);
+    console.log(choiceCuisine[clickedIndex]);
+  };
+
+  const handleClickType = (clickedIndex) => {
+    setSelectedTypeIndex(clickedIndex); // Update selected index on click
+    setType(choiceMealType[clickedIndex]);
+    console.log(choiceMealType[clickedIndex]);
+  };
+
   const [isActive, setIsActive] = useState(false);
 
   const handleClicks = () => {
@@ -52,8 +75,14 @@ function MealPlanSelection() {
               onClick={() => handleClick(index)}
               sx={{
                 background:
-                  selectedRecipeIndex === index ? "#456789" : "#ffffff", // Update background color directly
+                  selectedRecipeIndex === index ? "#a9a9a9a9" : "#ffffff", // Update background color directly
                 opacity: selectedRecipeIndex === index ? 0.5 : 1, // Opacity for visual feedback
+                transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
+                "&:hover": {
+                  // Target the element on hover
+                  background: "#d3d3d3d3",
+                  boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", // Add box-shadow property
+                },
               }}
             >
               <h3>{item.text}</h3>
@@ -69,20 +98,91 @@ function MealPlanSelection() {
         <br />
         <br />
         <Grid container spacing={2}>
-          {/* {choiceDiet.map((item, index) => (
+          {choiceDiet.map((item, index) => (
             <Grid
               xs={3}
-              onClick={() => handleClicks()}
+              onClick={() => handleClickDiet(index)}
               sx={{
-                backgroundColor: isActive ? "salmon" : "",
-                color: isActive ? "#567890" : "",
+                background:
+                  selectedDietIndex === index ? "#a9a9a9a9" : "#ffffff", // Update background color directly
+                opacity: selectedDietIndex === index ? 0.5 : 1, // Opacity for visual feedback
+                transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
+                "&:hover": {
+                  // Target the element on hover
+                  background: "#d3d3d3d3",
+                  boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", // Add box-shadow property
+                },
               }}
             >
               <h3>{item}</h3>
             </Grid>
-          ))} */}
+          ))}
         </Grid>
       </Box>
+
+      <Box>
+        Cuisine
+        <br />
+        <br />
+        <br />
+        <br />
+        <Grid container spacing={2}>
+          {choiceCuisine.map((item, index) => (
+            <Grid
+              xs={3}
+              onClick={() => handleClickCuisine(index)}
+              sx={{
+                background:
+                  selectedCuisineIndex === index ? "#a9a9a9a9" : "#ffffff", // Update background color directly
+                opacity: selectedCuisineIndex === index ? 0.5 : 1, // Opacity for visual feedback
+                transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
+                "&:hover": {
+                  // Target the element on hover
+                  background: "#d3d3d3d3",
+                  boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", // Add box-shadow property
+                },
+              }}
+            >
+              <h3>{item}</h3>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      <Box>
+        Type
+        <br />
+        <br />
+        <br />
+        <br />
+        <Grid container spacing={2}>
+          {choiceMealType.map((item, index) => (
+            <Grid
+              xs={3}
+              onClick={() => handleClickType(index)}
+              sx={{
+                background:
+                  selectedTypeIndex === index ? "#a9a9a9a9" : "#ffffff", // Update background color directly
+                opacity: selectedTypeIndex === index ? 0.5 : 1, // Opacity for visual feedback
+                transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
+                "&:hover": {
+                  // Target the element on hover
+                  background: "#d3d3d3d3",
+                  boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", // Add box-shadow property
+                },
+              }}
+            >
+              <h3>{item}</h3>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+      <br />
+      <br />
+      <Link to={"/test"}>
+        <Button>Generate Meal</Button>
+      </Link>
     </div>
   );
 }

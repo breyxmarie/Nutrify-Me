@@ -193,6 +193,13 @@ function MainUserNavbar() {
                 sx={{
                   textcolor: "#99756E",
                   display: "block",
+                  transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
+
+                  "&:hover": {
+                    // Target the element on hover
+                    background: "#d3d3d3d3",
+                    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", // Add box-shadow property
+                  },
                 }}
                 style={{
                   color: "#99756E",
@@ -200,19 +207,24 @@ function MainUserNavbar() {
                   //height: "50px",
                   display: "block",
                   transition: "background-color 0.2s ease-in-out",
+                  paddingTop: "20px",
+                  paddingBottom: "20px",
+                  "&:hover": {
+                    // Target the element on hover
+                    background: "#000000",
+                    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
+                  },
                 }}
-                onMouseEnter={(e) => (e.target.style.background = "#b9a09b")}
-                onMouseLeave={(e) => (e.target.style.background = "#FFFFFF")}
-                className="activeLink"
+                onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
+                onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
+                className="activeLink border w-full h-full px-4 centered"
                 //activeClassName="StyledLink" // Define your active class in CSS
                 // className="normalLink"
                 component={Link}
                 to={page.links}
                 selected={page.links === path}
               >
-                <p className="border w-full h-full px-4 centered">
-                  {page.names}
-                </p>
+                {page.names}
               </NavLink>
             ))}
           </Box>

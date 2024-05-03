@@ -185,26 +185,26 @@ function TelemedicineHome() {
   const userVideo = useRef();
   const connectionRef = useRef();
 
-  useEffect(() => {
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        setStream(stream);
-        myVideo.current.srcObject = stream;
-      });
+  // useEffect(() => {
+  //   navigator.mediaDevices
+  //     .getUserMedia({ video: true, audio: true })
+  //     .then((stream) => {
+  //       setStream(stream);
+  //       myVideo.current.srcObject = stream;
+  //     });
 
-    socket.on("me", (id) => {
-      setMe(id);
-      console.log("me nom", id);
-    });
+  //   socket.on("me", (id) => {
+  //     setMe(id);
+  //     console.log("me nom", id);
+  //   });
 
-    socket.on("callUser", (data) => {
-      setReceivingCall(true);
-      setCaller(data.from);
-      setName(data.name);
-      setCallerSignal(data.signal);
-    });
-  }, []);
+  //   socket.on("callUser", (data) => {
+  //     setReceivingCall(true);
+  //     setCaller(data.from);
+  //     setName(data.name);
+  //     setCallerSignal(data.signal);
+  //   });
+  // }, []);
 
   const callUser = (id) => {
     const peer = new Peer({
@@ -507,7 +507,7 @@ function TelemedicineHome() {
             >
               <h2>No Scheduled Consultation </h2>
               {/* <p>Aubrey</p>
-              <p>Time: 10:00 am</p>
+              <p>Time: 10:20 pm</p>
               <p>Dietitian: Bea</p>
 
               <center>

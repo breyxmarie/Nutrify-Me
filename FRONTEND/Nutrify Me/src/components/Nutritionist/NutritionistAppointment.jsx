@@ -15,25 +15,25 @@ function NutritionistAppointment() {
     {
       name: "Aubrey",
       kind: "New Patient",
-      Date: "April 27, 2024",
+      Date: "May 2, 2024",
       Time: "2:00 PM",
     },
     {
       name: "John",
       kind: "New Patient",
-      Date: "April 27, 2024",
+      Date: "May 3, 2024",
       Time: "2:00 PM",
     },
     {
       name: "John",
       kind: "New Patient",
-      Date: "April 27, 2024",
+      Date: "May 4, 2024",
       Time: "2:00 PM",
     },
     {
       name: "John",
       kind: "New Patient",
-      Date: "April 27, 2024",
+      Date: "May, 2024",
       Time: "2:00 PM",
     },
   ];
@@ -61,14 +61,11 @@ function NutritionistAppointment() {
 
 
             <Typography>Date of Appointment</Typography>
-            <Typography>April 27, 2023</Typography>
+            <Typography>May 1, 2024</Typography>
 
-            <Typography>Date of Appointment</Typography>
-            <Typography>April 27, 2023</Typography>
+         
 
-            <Button>Call</Button> */}
-
-            <h2>No Scheduled Consultation </h2>
+      
 
             {!joined && (
               <Link
@@ -77,9 +74,11 @@ function NutritionistAppointment() {
                   color: "#ffffff",
                 }}
               >
-                <button onClick={() => setJoined(true)}>Join Room</button>{" "}
+                <button onClick={() => setJoined(true)}>Call</button>{" "}
               </Link>
-            )}
+            )}*/}
+
+            <h2>No Scheduled Consultation </h2>
 
             {joined && <VideoRoom />}
           </Box>

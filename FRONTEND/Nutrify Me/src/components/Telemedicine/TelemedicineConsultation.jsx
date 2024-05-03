@@ -49,7 +49,7 @@ function TelemedicineConsultation() {
   //another try
   const APP_ID = "da6708a41b464c7fb30a7bb85468663b";
   const TOKEN =
-    "007eJxTYGgyejMlNCPJdoGr1ZOjc5/vfeO3U++uwPaG47vn9gSVNH5RYEhJNDM3sEg0MUwyMTNJNk9LMjZINE9KsjA1MbMwMzNO2mtnkNYQyMhwR9uKlZEBAkF8Hgbn/Lzi0pySxJLM/DwGBgD2wiQk";
+    "007eJxTYNgo7/7gmKK17tGmvXNZXURTHti8Dvs+55Ts1bPfFZ3FDtkrMKQkmpkbWCSaGCaZmJkkm6clGRskmiclWZiamFmYmRkn/VcySmsIZGSIDZdgZmSAQBCfh8E5P6+4NKcksSQzP4+BAQAvoyGl";
   const CHANNEL = "Consultation";
 
   const clients = AgoraRTC.createClient({
@@ -78,39 +78,39 @@ function TelemedicineConsultation() {
     );
   };
 
-  useEffect(() => {
-    clients.on("user-published", handleUserJoined);
-    clients.on("user-left", handleUserLeft);
+  // useEffect(() => {
+  //   clients.on("user-published", handleUserJoined);
+  //   clients.on("user-left", handleUserLeft);
 
-    clients
-      .join(APP_ID, CHANNEL, TOKEN, null)
-      .then((uid) =>
-        Promise.all([AgoraRTC.createMicrophoneAndCameraTracks(), uid])
-      )
-      .then(([tracks, uid]) => {
-        const [audioTrack, videoTrack] = tracks;
-        setLocalTracks(tracks);
-        setUsers((previousUsers) => [
-          ...previousUsers,
-          {
-            uid,
-            videoTrack,
-            audioTrack,
-          },
-        ]);
-        clients.publish(tracks);
-      });
+  //   clients
+  //     .join(APP_ID, CHANNEL, TOKEN, null)
+  //     .then((uid) =>
+  //       Promise.all([AgoraRTC.createMicrophoneAndCameraTracks(), uid])
+  //     )
+  //     .then(([tracks, uid]) => {
+  //       const [audioTrack, videoTrack] = tracks;
+  //       setLocalTracks(tracks);
+  //       setUsers((previousUsers) => [
+  //         ...previousUsers,
+  //         {
+  //           uid,
+  //           videoTrack,
+  //           audioTrack,
+  //         },
+  //       ]);
+  //       clients.publish(tracks);
+  //     });
 
-    return () => {
-      for (let localTrack of localTracks) {
-        localTrack.stop();
-        localTrack.close();
-      }
-      clients.off("user-published", handleUserJoined);
-      clients.off("user-left", handleUserLeft);
-      clients.unpublish(localTracks).then(() => clients.leave());
-    };
-  }, []);
+  //   return () => {
+  //     for (let localTrack of localTracks) {
+  //       localTrack.stop();
+  //       localTrack.close();
+  //     }
+  //     clients.off("user-published", handleUserJoined);
+  //     clients.off("user-left", handleUserLeft);
+  //     clients.unpublish(localTracks).then(() => clients.leave());
+  //   };
+  // }, []);
   //
 
   return (
@@ -123,7 +123,7 @@ function TelemedicineConsultation() {
       }}
     >
       {/* another try gumana na plsss */}
-      <div
+      {/* <div
         style={{
           display: "grid",
           gridTemplateColumns: "repeat(2, 700px)",
@@ -132,7 +132,7 @@ function TelemedicineConsultation() {
         {users.map((user) => (
           <VideoPlayer key={user.uid} user={user} style={{ padding: "20px" }} />
         ))}
-      </div>
+      </div> */}
       {/*  */}
       {/* <StreamVideo client={client}>
         <StreamCall call={call}>try</StreamCall>

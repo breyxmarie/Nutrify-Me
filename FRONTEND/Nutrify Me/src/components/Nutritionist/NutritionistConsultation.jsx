@@ -5,7 +5,7 @@ import { VideoPlayer } from "./VideoPlayer";
 function NutritionistHome() {
   const APP_ID = "da6708a41b464c7fb30a7bb85468663b";
   const TOKEN =
-    "007eJxTYGCZk6/x3Kb/l63VW5f0w/8kOxV/P+OXmlj3r1ufZ53S26UKDCmJZuYGFokmhkkmZibJ5mlJxgaJ5klJFqYmZhZmZsZJ4cp6aQ2BjAy2QoksjAwQCOLzMDjn5xWX5pQklmTm5zEwAAAcESEA";
+    "007eJxTYNgo7/7gmKK17tGmvXNZXURTHti8Dvs+55Ts1bPfFZ3FDtkrMKQkmpkbWCSaGCaZmJkkm6clGRskmiclWZiamFmYmRkn/VcySmsIZGSIDZdgZmSAQBCfh8E5P6+4NKcksSQzP4+BAQAvoyGl";
   const CHANNEL = "Consultation";
 
   const clients = AgoraRTC.createClient({
