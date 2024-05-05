@@ -9,6 +9,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { axisClasses } from "@mui/x-charts/ChartsAxis";
+import Box from "@mui/material/Box";
+import { LineChart } from "@mui/x-charts/LineChart";
 
 function FoodJournalProgressReport() {
   const settings = ["Daily", "Weekly", "Monthly", "Yearly"];
@@ -46,6 +48,7 @@ function FoodJournalProgressReport() {
 
   const valueFormatter = (value) => `${value}mm`;
 
+  // * documentation: https://mui.com/x/react-charts/bars/
   const chartSetting = {
     series: [{ dataKey: "seoul", label: "Seoul rainfall", valueFormatter }],
     height: 300,
@@ -55,6 +58,7 @@ function FoodJournalProgressReport() {
       },
     },
   };
+
   return (
     <div
       className="content"
@@ -65,6 +69,9 @@ function FoodJournalProgressReport() {
         color: "#000000",
       }}
     >
+      <br />
+      <br />
+
       <Grid container spacing={2}>
         <Grid xs={6}>MY CALORIE INTAKE</Grid>
         <Grid xs={6}>
@@ -111,6 +118,7 @@ function FoodJournalProgressReport() {
       <div style={{ width: "100%" }}>
         <BarChart
           dataset={dataset}
+          xAxis={[{ scaleType: "band", dataKey: "month" }]}
           {...chartSetting}
           slotProps={{
             bar: {
@@ -119,6 +127,203 @@ function FoodJournalProgressReport() {
           }}
         />
       </div>
+
+      <BarChart
+        xAxis={[
+          {
+            scaleType: "band",
+            data: ["group A", "group B", "group C"],
+            colorMap: {
+              type: "piecewise",
+              thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+              colors: ["#E66253"],
+            },
+          },
+        ]}
+        series={[{ data: [4, 3, 5] }]}
+        width={500}
+        height={300}
+        slotProps={{
+          bar: {
+            clipPath: `inset(0px round 10px 10px 0px 0px)`,
+          },
+        }}
+      />
+
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          {" "}
+          <Typography
+            sx={{ color: "#99756E", fontSize: "30px", fontWeight: "bold" }}
+          >
+            WHAT I ATE?{" "}
+          </Typography>
+        </Grid>
+        <Grid xs={6}>
+          {" "}
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Button
+                variant="contained"
+                className="userButton"
+                onMouseEnter={(e) => (e.target.style.background = "#E66253")}
+                onMouseLeave={(e) => (e.target.style.background = "#E66253")}
+                sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+              >
+                <img src="/images/filter.png" height="20px" />
+                FILTER BY: WEEK
+              </Button>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Grid>
+      </Grid>
+      <br />
+      <br />
+      <br />
+
+      <Box sx={{ color: "#99756E", mx: 30 }}>
+        <Box>
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/breakfast.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[BREAKFAST]</Grid>
+            <Grid xs={3}>375 kcal</Grid>
+          </Grid>
+        </Box>
+
+        <hr />
+        <br />
+        <Box>
+          {" "}
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/lunch.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[LUNCH]</Grid>
+            <Grid xs={3}>375 kcal</Grid>
+          </Grid>
+        </Box>
+        <hr />
+        <br />
+        <Box>
+          {" "}
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/snacks.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[SNACK]</Grid>
+            <Grid xs={3}>375 kcal</Grid>
+          </Grid>
+        </Box>
+        <hr />
+        <br />
+        <Box>
+          {" "}
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/dinner.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[DINNER]</Grid>
+            <Grid xs={3}>375 kcal</Grid>
+          </Grid>
+        </Box>
+      </Box>
+      <br />
+      <br />
+
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          <Typography
+            sx={{ color: "#99756E", fontWeight: "bold", fontSize: "30px" }}
+          >
+            FOOD PROGRESS REPORT{" "}
+          </Typography>
+        </Grid>
+        <Grid xs={6}>
+          <Tooltip title="Open settings">
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Button
+                variant="contained"
+                className="userButton"
+                onMouseEnter={(e) => (e.target.style.background = "#E66253")}
+                onMouseLeave={(e) => (e.target.style.background = "#E66253")}
+                sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+              >
+                <img src="/images/filter.png" height="20px" />
+                FILTER BY: WEEK
+              </Button>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: "45px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Grid>
+      </Grid>
+
+      <center>
+        <LineChart
+          xAxis={[
+            {
+              data: [1, 2, 3, 5, 8, 10],
+              colorMap: {
+                type: "piecewise",
+                thresholds: [0, 10],
+                colors: ["#898246", "#898246"],
+              },
+            },
+          ]}
+          series={[
+            {
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+            },
+          ]}
+          width={1000}
+          height={300}
+          sx={{ border: 1 }}
+        />
+      </center>
     </div>
   );
 }

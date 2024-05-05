@@ -31,6 +31,7 @@ import TeleMedNavBar from "./components/NavBars/TeleMedNavBar";
 import FoodJournalNavBar from "./components/NavBars/FoodJournalNavBar";
 import MealPlanShopNavBar from "./components/NavBars/MealPlanShopNavBar";
 import NutritionistNavBar from "./components/NavBars/NutritionistNavBar";
+import UserProfile from "./components/Profiles/UserProfile";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import UserFooter from "./components/UserFooter";
@@ -77,6 +78,19 @@ function App() {
               </>
             }
           />
+
+          {/* //* Profiles */}
+          <Route
+            path="/user-profile"
+            element={
+              <>
+                <MainUserNavBar />
+                <UserProfile /> <UserFooter />{" "}
+              </>
+            }
+          />
+          {/*  */}
+
           {/* Telemedicine  */}
           <Route
             path="/telemedicine-meet-us"
