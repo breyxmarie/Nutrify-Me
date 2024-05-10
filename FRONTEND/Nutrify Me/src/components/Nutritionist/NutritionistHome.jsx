@@ -158,8 +158,11 @@ function NutritionistHome() {
       }}
     >
       <Grid container spacing={2} sx={{ mx: 5 }}>
-        <Grid xs={6} sx={{ color: "#99756E", border: 1 }}>
-          <Box>
+        <Grid
+          xs={6}
+          sx={{ color: "#99756E", border: 1, borderColor: "#898246" }}
+        >
+          <Box sx={{ m: 5 }}>
             <Typography
               sx={{ fontWeight: "bold", fontSize: "30px", float: "left" }}
             >

@@ -44,6 +44,8 @@ function NutritionistAppointment() {
         paddingBottom: "40px",
         marginTop: "80px",
         color: "#99756E",
+        marginLeft: "60px",
+        marginRight: "160px",
       }}
     >
       <Grid container spacing={2}>
@@ -90,8 +92,40 @@ function NutritionistAppointment() {
         </Grid>
       </Grid>
 
-      <Box>
-        Schedule of Appointments
+      <Box sx={{ border: 1 }}>
+        <br />
+        <br />
+
+        <Grid container spacing={2} sx={{ mx: "10px" }}>
+          <Grid xs={7} sx={{ textAlign: "left" }}>
+            Schedule of Appointments Log
+          </Grid>
+          <Grid xs={2}>
+            <Button
+              sx={{
+                background: "#E66253",
+                borderRadius: 5,
+                color: "#ffffff",
+                px: 5,
+              }}
+            >
+              EDIT
+            </Button>
+          </Grid>
+          <Grid xs={2}>
+            <Button
+              sx={{
+                background: "#E66253",
+                borderRadius: 5,
+                color: "#ffffff",
+                px: 5,
+              }}
+            >
+              FILTER BY
+            </Button>
+          </Grid>
+        </Grid>
+
         <br />
         <br />
         <Grid container spacing={2}>

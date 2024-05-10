@@ -24,6 +24,7 @@ import TelemedicineConsultation from "./components/Telemedicine/TelemedicineCons
 import NutritionistConsultation from "./components/Nutritionist/NutritionistConsultation";
 import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment";
 import NutritionistHome from "./components/Nutritionist/NutritionistHome";
+import NutritionistPatient from "./components/Nutritionist/NutritionistPatient";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/NavBars/MainUserNavbar";
@@ -57,7 +58,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/about-us"
             element={
@@ -78,7 +78,6 @@ function App() {
               </>
             }
           />
-
           {/* //* Profiles */}
           <Route
             path="/user-profile"
@@ -90,7 +89,6 @@ function App() {
             }
           />
           {/*  */}
-
           {/* Telemedicine  */}
           <Route
             path="/telemedicine-meet-us"
@@ -132,7 +130,6 @@ function App() {
               </>
             }
           />
-
           {/* meal plan shop*/}
           <Route
             path="/meal-plan-shop-home"
@@ -144,7 +141,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-meal-plans"
             element={
@@ -155,7 +151,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-meal-plan-history"
             element={
@@ -166,7 +161,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-customize-meal"
             element={
@@ -177,7 +171,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-track-orders"
             element={
@@ -188,7 +181,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-cart"
             element={
@@ -199,7 +191,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-checkout/:cartId?"
             element={
@@ -211,7 +202,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/meal-plan-shop-order/:orderId?"
             element={
@@ -223,9 +213,7 @@ function App() {
               </>
             }
           />
-
           {/* meal plan generator  */}
-
           <Route
             path="/meal-plan-generator-home"
             element={
@@ -235,7 +223,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/test"
             element={
@@ -245,7 +232,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/selection"
             element={
@@ -255,7 +241,6 @@ function App() {
               </>
             }
           />
-
           {/* FOOD JOURNAL  */}
           <Route
             path="/food-journal-home"
@@ -267,7 +252,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/food-journal-progress-report"
             element={
@@ -278,7 +262,6 @@ function App() {
               </>
             }
           />
-
           {/*  */}
           <Route
             path="/about-us-user"
@@ -288,12 +271,9 @@ function App() {
               </>
             }
           />
-
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />
-
           {/* Nutritionist screen  */}
-
           <Route
             path="/nutritionist-home"
             element={
@@ -302,7 +282,6 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/nutritionist-consultation"
             element={
@@ -311,12 +290,21 @@ function App() {
               </>
             }
           />
-
           <Route
             path="/nutritionist-appointment"
             element={
               <>
                 <NutritionistNavBar /> <NutritionistAppointment />{" "}
+              </>
+            }
+          />
+          NutritionistPatient
+          <Route
+            path="/nutritionist-patient"
+            element={
+              <>
+                <NutritionistNavBar />
+                <NutritionistPatient />
               </>
             }
           />
