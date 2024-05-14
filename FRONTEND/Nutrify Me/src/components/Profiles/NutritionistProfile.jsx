@@ -4,7 +4,7 @@ import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 
-function UserProfile() {
+function NutritionistProfile() {
   return (
     <div
       className="content"
@@ -103,7 +103,7 @@ function UserProfile() {
           <Typography
             sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left" }}
           >
-            Passowrd:{" "}
+            Password:{" "}
           </Typography>
 
           <Typography sx={{ color: "#99756E", textAlign: "left" }}>
@@ -159,6 +159,20 @@ function UserProfile() {
             EDIT
           </Button>
         </Grid>
+      </Grid>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid xs={2} sx={{ ml: "30%" }}>
+          <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left" }}
+          >
+            License Number
+          </Typography>
+
+          <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+            *********
+          </Typography>
+        </Grid>
+        <Grid xs={6}> </Grid>
       </Grid>
       <Box sx={{ ml: "21%", mt: "50px" }}>
         <Typography
@@ -217,4 +231,4 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;
+export default NutritionistProfile;

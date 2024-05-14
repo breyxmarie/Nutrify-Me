@@ -25,6 +25,7 @@ import NutritionistConsultation from "./components/Nutritionist/NutritionistCons
 import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment";
 import NutritionistHome from "./components/Nutritionist/NutritionistHome";
 import NutritionistPatient from "./components/Nutritionist/NutritionistPatient";
+import NutritionistMealPlanHistory from "./components/Nutritionist/NutritionistMealPlanHistory";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
 import MainUserNavBar from "./components/NavBars/MainUserNavbar";
@@ -33,10 +34,21 @@ import FoodJournalNavBar from "./components/NavBars/FoodJournalNavBar";
 import MealPlanShopNavBar from "./components/NavBars/MealPlanShopNavBar";
 import NutritionistNavBar from "./components/NavBars/NutritionistNavBar";
 import UserProfile from "./components/Profiles/UserProfile";
+import NutritionistProfile from "./components/Profiles/NutritionistProfile";
 import LogIn from "./components/LogIn";
 import Registration from "./components/Registration";
 import UserFooter from "./components/UserFooter";
+import Footer from "./components/Footer";
 import MealPlanTest from "./components/Meal Plan Generator/MealPlanTest";
+import HomePage from "./components/Admin/HomePage";
+import Verification from "./components/Admin/Verification";
+import Patients from "./components/Admin/Patients";
+import Dietician from "./components/Admin/Dietician";
+import AdminNavbBar from "./components/NavBars/AdminNavBar";
+import SellerNavBar from "./components/NavBars/SellerNavBar";
+import SellerHome from "./components/Seller/SellerHome";
+import SellerCreateMealPlan from "./components/Seller/SellerCreateMealPlan";
+import SellerMenuItems from "./components/Seller/SellerMenuItems";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -273,12 +285,23 @@ function App() {
           />
           <Route path="/Log-In" element={<LogIn />} />
           <Route path="/Register" element={<Registration />} />
-          {/* Nutritionist screen  */}
+
+          {/* // ! Nutritionist screen   */}
+          <Route
+            path="/nutritionist-profile"
+            element={
+              <>
+                <NutritionistNavBar /> <NutritionistProfile />
+                <Footer />
+              </>
+            }
+          />
           <Route
             path="/nutritionist-home"
             element={
               <>
                 <NutritionistNavBar /> <NutritionistHome />
+                <Footer />
               </>
             }
           />
@@ -287,6 +310,7 @@ function App() {
             element={
               <>
                 <NutritionistNavBar /> <NutritionistConsultation />
+                <Footer />
               </>
             }
           />
@@ -294,20 +318,115 @@ function App() {
             path="/nutritionist-appointment"
             element={
               <>
-                <NutritionistNavBar /> <NutritionistAppointment />{" "}
+                <NutritionistNavBar /> <NutritionistAppointment />
+                <Footer />
               </>
             }
           />
-          NutritionistPatient
+
           <Route
             path="/nutritionist-patient"
             element={
               <>
                 <NutritionistNavBar />
                 <NutritionistPatient />
+                <Footer />
               </>
             }
           />
+
+          <Route
+            path="/nutritionist-mealPlanHistory"
+            element={
+              <>
+                <NutritionistNavBar />
+                <NutritionistMealPlanHistory />
+                <Footer />
+              </>
+            }
+          />
+
+          {/* //* Admin */}
+          <Route
+            path="/admin-home"
+            element={
+              <>
+                <AdminNavbBar />
+                <HomePage />
+                <Footer />
+              </>
+            }
+          />
+
+          <Route
+            path="/admin-verification"
+            element={
+              <>
+                <AdminNavbBar />
+                <Verification />
+                <Footer />
+              </>
+            }
+          />
+
+          <Route
+            path="/admin-patients"
+            element={
+              <>
+                <AdminNavbBar />
+                <Patients />
+                <Footer />
+              </>
+            }
+          />
+
+          <Route
+            path="/admin-dietician"
+            element={
+              <>
+                <AdminNavbBar />
+                <Dietician />
+                <Footer />
+              </>
+            }
+          />
+
+          {/*  */}
+
+          {/* //*Seller */}
+          <Route
+            path="/seller-home"
+            element={
+              <>
+                <SellerNavBar />
+                <SellerHome />
+                <Footer />
+              </>
+            }
+          />
+
+          <Route
+            path="/seller-menu-items"
+            element={
+              <>
+                <SellerNavBar />
+                <SellerMenuItems />
+                <Footer />
+              </>
+            }
+          />
+
+          <Route
+            path="/seller-createMealPlan"
+            element={
+              <>
+                <SellerNavBar />
+                <SellerCreateMealPlan />
+                <Footer />
+              </>
+            }
+          />
+          {/*  */}
         </Routes>
       </BrowserRouter>
     </div>

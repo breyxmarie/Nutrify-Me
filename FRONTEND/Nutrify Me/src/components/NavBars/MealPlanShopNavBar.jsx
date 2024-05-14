@@ -152,8 +152,8 @@ function MealPlanShopNavBar() {
                   //height: "50px",
                   display: "block",
                 }}
-                onMouseEnter={(e) => (e.target.style.background = "#b9a09b")}
-                onMouseLeave={(e) => (e.target.style.background = "#FFFFFF")}
+                onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
+                onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
                 className="activeLink"
                 //activeClassName="StyledLink" // Define your active class in CSS
                 // className="normalLink"

@@ -59,7 +59,7 @@ function MealPlanShopCart() {
   };
 
   useEffect(() => {
-    addNewObject();
+    // addNewObject();
   }, []);
 
   return (

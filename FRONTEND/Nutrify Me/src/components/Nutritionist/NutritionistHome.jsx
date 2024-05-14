@@ -210,145 +210,162 @@ function NutritionistHome() {
           </LocalizationProvider>{" "}
         </Grid>
       </Grid>
-      <Grid container spacing={2} sx={{ mt: 5, mx: 2 }}>
-        <Grid xs={6}>
-          <Box
-            sx={{
-              backgroundImage: "url('/images/nutritionist home page.png')",
-              width: "100%",
-              height: "250px",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              px: "0",
-              justifyContent: "center",
-              objectFit: "cover",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "30px" }}>
-                <Box display="flex" justifyContent="flex-start">
-                  <Typography
-                    sx={{
-                      color: "#898246",
-                      fontWeight: "bold",
-                      fontSize: "30px",
-                    }}
-                  >
-                    READY TO TALK TO YOUR PATIENTS?
-                    <Button
-                      sx={{
-                        background: "#E66253",
-                        borderRadius: 3,
-                        color: "#ffffff",
-                        px: 4,
-                      }}
-                    >
-                      GO TO TELEMEDICINE
-                    </Button>
-                  </Typography>
-                  <br />
-                </Box>
-              </Grid>
-              <Grid xs={6}></Grid>
-            </Grid>
-          </Box>
-          <Box
-            sx={{
-              backgroundImage: "url('/images/nutritionist home page 2.png')",
-              width: "100%",
-              height: "250px",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              px: "0",
-              justifyContent: "center",
-              objectFit: "cover",
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Grid container spacing={2}>
-              <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "30px" }}>
-                <Box display="flex" justifyContent="flex-start">
-                  <Typography
-                    sx={{
-                      color: "#898246",
-                      fontWeight: "bold",
-                      fontSize: "30px",
-                    }}
-                  >
-                    RECAP & EDIT YOUR PATIENT’S MEAL PLAN!
-                    <br />
-                    <Button
-                      sx={{
-                        background: "#E66253",
-                        borderRadius: 3,
-                        color: "#ffffff",
-                        px: 4,
-                      }}
-                    >
-                      VIEW HISTORY
-                    </Button>
-                    <br />
-                    <Button
-                      sx={{
-                        background: "#E66253",
-                        borderRadius: 3,
-                        color: "#ffffff",
-                        px: 4,
-                      }}
-                    >
-                      EDIT MEAL PLAN
-                    </Button>
-                  </Typography>
-                  <br />
-                </Box>
-              </Grid>
-              <Grid xs={6}></Grid>
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid xs={6}>
-          {" "}
-          <Box sx={{ border: 1 }}>
-            <Typography>
-              Upcoming Appointments
-              <Button sx={{ color: "#B3B3B3", textDecoration: "underline" }}>
-                View More
-              </Button>
-            </Typography>
-            <br />
-            {appointments.map((item, index) => (
-              <>
-                <Grid container spacing={2} sx={{ border: 1, ml: 5, mr: 5 }}>
-                  <Grid xs={2}>
-                    <img src={item.image} height="80px" />
-                  </Grid>
-                  <Grid xs={6}>
-                    <Typography>{item.username}</Typography>
+      <Box sx={{ mt: 5, mx: 5 }}>
+        <Grid container spacing={2}>
+          <Grid xs={5} sx={{ mx: 6 }}>
+            <Box
+              sx={{
+                backgroundImage: "url('/images/nutritionist home page.png')",
+
+                width: "100%",
+                height: "250px",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                px: "0",
+                justifyContent: "center",
+                objectFit: "cover",
+                display: "flex",
+                alignItems: "center",
+                borderRadius: 5,
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "30px" }}>
+                  <Box display="flex" justifyContent="flex-start">
                     <Typography
                       sx={{
                         color: "#898246",
-                        textDecoration: "underline",
-                        mt: "30px",
+                        fontWeight: "bold",
+                        fontSize: "30px",
                       }}
                     >
-                      {item.type}
+                      READY TO TALK TO YOUR PATIENTS?
+                      <br />
+                      <Button
+                        sx={{
+                          background: "#E66253",
+                          borderRadius: 3,
+                          color: "#ffffff",
+                          px: 4,
+                        }}
+                      >
+                        GO TO TELEMEDICINE
+                      </Button>
                     </Typography>
-                  </Grid>
-                  <Grid xs={4}>
-                    <Typography>
-                      {item.date} <br /> {item.time}
-                    </Typography>
-                  </Grid>
+                    <br />
+                  </Box>
                 </Grid>
-                <br />
-              </>
-            ))}
-          </Box>
+                <Grid xs={6}></Grid>
+              </Grid>
+            </Box>
+            <Box
+              sx={{
+                backgroundImage: "url('/images/nutritionist home page 2.png')",
+                width: "100%",
+                height: "250px",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                px: "0",
+                justifyContent: "center",
+                objectFit: "cover",
+                display: "flex",
+                alignItems: "center",
+                mt: 3,
+                borderRadius: 5,
+                border: 0,
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "30px" }}>
+                  <Box display="flex" justifyContent="flex-start">
+                    <Typography
+                      sx={{
+                        color: "#898246",
+                        fontWeight: "bold",
+                        fontSize: "30px",
+                      }}
+                    >
+                      RECAP & EDIT YOUR PATIENT’S MEAL PLAN!
+                      <br />
+                      <Button
+                        sx={{
+                          background: "#E66253",
+                          borderRadius: 3,
+                          color: "#ffffff",
+                          px: 4,
+                        }}
+                      >
+                        VIEW HISTORY
+                      </Button>
+                      <br />
+                      <Button
+                        sx={{
+                          background: "#E66253",
+                          borderRadius: 3,
+                          color: "#ffffff",
+                          px: 4,
+                        }}
+                      >
+                        EDIT MEAL PLAN
+                      </Button>
+                    </Typography>
+                    <br />
+                  </Box>
+                </Grid>
+                <Grid xs={6}></Grid>
+              </Grid>
+            </Box>
+          </Grid>
+          <Grid xs={5} sx={{ mx: 5 }}>
+            {" "}
+            <Box sx={{ border: 2, borderRadius: 5, borderColor: "#898246" }}>
+              <Typography>
+                Upcoming Appointments
+                <Button sx={{ color: "#B3B3B3", textDecoration: "underline" }}>
+                  View More
+                </Button>
+              </Typography>
+              <br />
+              {appointments.map((item, index) => (
+                <Box
+                  sx={{
+                    border: 2,
+                    ml: 2,
+                    mr: 2,
+                    my: 1,
+                    borderRadius: 5,
+                    borderColor: "#898246",
+                  }}
+                >
+                  <Grid container spacing={2} sx={{ my: 2 }}>
+                    <Grid xs={1} sx={{ ml: 3 }}>
+                      <img src={item.image} height="80px" />
+                    </Grid>
+                    <Grid xs={6}>
+                      <Typography>{item.username}</Typography>
+                      <Typography
+                        sx={{
+                          color: "#898246",
+                          textDecoration: "underline",
+                          mt: "30px",
+                        }}
+                      >
+                        {item.type}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={4}>
+                      <Typography>
+                        {item.date} <br /> {item.time}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                  <br />
+                </Box>
+              ))}
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </div>
   );
 }

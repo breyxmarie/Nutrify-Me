@@ -1,12 +1,14 @@
+import { Typography } from "@mui/material";
+import { useState } from "react";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
+//data: [2, 5.5, 2, 8.5, 1.5, 5],
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
@@ -14,13 +16,8 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 
-const pages = [
-  { names: "HOME", links: "/nutritionist-home" },
-  { names: "APPOINTMENTS", links: "/nutritionist-appointment" },
-  { names: "PATIENTS", links: "/meal-plan-shop-home" },
-];
-
-const StyledLink = `
+function AdminNavBar() {
+  const StyledLink = `
   color: #99756e; /* Default styles */
   display: block;
   text-decoration: none;
@@ -36,9 +33,13 @@ const StyledLink = `
   }
 `;
 
-const settings = ["Profile", "Logout"];
+  const settings = ["Profile", "Logout"];
 
-function NutritionistNavBar() {
+  const pages = [
+    { names: "HOME", links: "/admin-home" },
+    { names: "VERIFICATION", links: "/admin-verification" },
+  ];
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -163,7 +164,7 @@ function NutritionistNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 7,
-              mx: 9,
+              mx: "30%",
             }}
           >
             {pages.map((page) => (
@@ -190,6 +191,13 @@ function NutritionistNavBar() {
                 sx={{
                   textcolor: "#99756E",
                   display: "block",
+                  transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
+
+                  "&:hover": {
+                    // Target the element on hover
+                    background: "#d3d3d3d3",
+                    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)", // Add box-shadow property
+                  },
                 }}
                 style={{
                   color: "#99756E",
@@ -197,19 +205,24 @@ function NutritionistNavBar() {
                   //height: "50px",
                   display: "block",
                   transition: "background-color 0.2s ease-in-out",
+                  paddingTop: "20px",
+                  paddingBottom: "20px",
+                  "&:hover": {
+                    // Target the element on hover
+                    background: "#000000",
+                    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
+                  },
                 }}
                 onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
                 onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
-                className="activeLink"
+                className="activeLink border w-full h-full px-4 centered"
                 //activeClassName="StyledLink" // Define your active class in CSS
                 // className="normalLink"
                 component={Link}
                 to={page.links}
                 selected={page.links === path}
               >
-                <p className="border w-full h-full px-4 centered">
-                  {page.names}
-                </p>
+                {page.names}
               </NavLink>
             ))}
           </Box>
@@ -220,11 +233,11 @@ function NutritionistNavBar() {
                 <Button
                   variant="contained"
                   className="userButton"
-                  onMouseOver={(e) => (e.target.style.background = "#E66253")}
-                  onMouseOut={(e) => (e.target.style.background = "#E66253")}
+                  onMouseEnter={(e) => (e.target.style.background = "#E66253")}
+                  onMouseLeave={(e) => (e.target.style.background = "#E66253")}
                   sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
                 >
-                  WELCOME, NUTRITIONIST!
+                  WELCOME ADMIN!
                 </Button>
               </IconButton>
             </Tooltip>
@@ -256,4 +269,5 @@ function NutritionistNavBar() {
     </AppBar>
   );
 }
-export default NutritionistNavBar;
+
+export default AdminNavBar;
