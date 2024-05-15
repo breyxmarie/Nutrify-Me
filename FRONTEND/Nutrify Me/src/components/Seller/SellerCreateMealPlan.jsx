@@ -287,6 +287,9 @@ function SellerCreateMealPlan() {
   //   },
   // ];
 
+  //* modal
+
+  // *
   return (
     <div
       className="content"
@@ -303,18 +306,6 @@ function SellerCreateMealPlan() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid xs={2}>
-              {" "}
-              <img src="/images/food journal icon.png" />
-            </Grid>
-            <Grid xs={8}>Add Food Information</Grid>
-            <Grid xs={2}>
-              <Button sx={{ float: "right" }} onClick={handleClose}>
-                <img src="/images/close.png" height="10" weight="10" />
-              </Button>
-            </Grid>
-          </Grid>
           <Grid container spacing={2} sx={{ my: 3 }}>
             <Grid xs={6}>Type of Meal: </Grid>
             <Grid xs={6}>Stocks</Grid>

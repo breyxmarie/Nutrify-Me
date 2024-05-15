@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import Modal from "@mui/material/Modal";
+import { Modal, Tab, Tabs } from "@mui/material";
 import TextField from "@mui/material/TextField";
 
 function SellerMenuItems() {
@@ -318,7 +318,7 @@ function SellerMenuItems() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 500,
+    width: 800,
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -332,6 +332,539 @@ function SellerMenuItems() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+  const [selectMeal, setSelectMeal] = useState({
+    day: "Tuesday", // Optional: Add a day property for reference
+    meals: {
+      Breakfast: {
+        food: "oatmeal with berries2",
+        calories: 3600,
+        carbs: 40,
+        fat: 5,
+        protein: 10,
+        description: "A healthy and energizing start",
+        image: "/images/food.png",
+      },
+      Lunch: {
+        food: "chicken salad sandwich",
+        calories: 450,
+        carbs: 40,
+        fat: 25,
+        protein: 30,
+        description: "A light and flavorful lunch",
+        image: "/images/food.png",
+      },
+      Snack: {
+        food: "chicken salad sandwich",
+        calories: 450,
+        carbs: 40,
+        fat: 25,
+        protein: 30,
+        description: "A light and flavorful lunch",
+        image: "/images/food.png",
+      },
+      Dinner: {
+        food: "salmon with roasted vegetables",
+        calories: 500,
+        carbs: 40,
+        fat: 30,
+        protein: 40,
+        description: "A protein-rich and balanced dinner",
+        image: "/images/food.png",
+      },
+    },
+  });
+
+  const tabMeal = (meals) => {
+    // setSelectMeal(meal);
+    handleOpen();
+  };
+
+  const handleTabChange = (event, newActiveTab) => {
+    setActiveTab(newActiveTab);
+  };
+
+  const tabContent = [
+    {
+      title: "BREAKFAST",
+      content: (param) => (
+        <div>
+          <Typography>
+            {/* {param[0].meal[0].day}
+            {console.log(param[0].meal[0].day)} */}
+            {console.log("try tryrt", param.meals)}
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              Name: <br />
+              <TextField
+                id="outlined-multiline-flexible"
+                sx={{
+                  width: "70%",
+                  background: "#ffffff",
+                  borderRadius: 0,
+                }}
+                value={param.meals.Breakfast.food}
+                name="name"
+              />
+              <Typography>Upload Image</Typography>
+            </Grid>
+            <Grid xs={6}>
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Calories]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Breakfast.calories}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> Fats</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Fat]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Breakfast.fat}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> CArbs</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Carbs]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Breakfast.carbs}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> Protein</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Protein]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Breakfast.protein}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+          <center>
+            <Button
+              sx={{
+                background: "#ffffff",
+                color: "#E66253",
+                fontWeight: "bold",
+                px: 7,
+                borderRadius: 5,
+                fontSize: "20px",
+                "&:hover": {
+                  backgroundColor: "#E66253",
+                  color: "#ffffff",
+                  border: 0.5,
+                  borderColor: "#ffffff",
+                },
+              }}
+            >
+              NEXT
+            </Button>
+          </center>
+        </div>
+      ),
+    },
+    {
+      title: "LUNCH",
+      content: (param) => (
+        <div>
+          <Typography>
+            {/* {param[0].meal[0].day}
+            {console.log(param[0].meal[0].day)} */}
+            {console.log(param.meals)}
+            try
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              Name: <br />
+              <TextField
+                id="outlined-multiline-flexible"
+                sx={{
+                  width: "70%",
+                  background: "#ffffff",
+                  borderRadius: 0,
+                }}
+                value={param.meals.Lunch.food}
+                name="name"
+              />
+              <Typography>Upload Image</Typography>
+            </Grid>
+            <Grid xs={6}>
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Calories]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Lunch.calories}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> Fats</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Fat]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Lunch.fat}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> CArbs</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Carbs]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Lunch.carbs}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ mx: 1 }}>
+                <Typography sx={{ fontWeight: "bold" }}> Protein</Typography>
+                <Grid container spacing={2} sx={{ mb: 2 }}>
+                  <Grid xs={5}>
+                    [Protein]
+                    <img
+                      src="/images/arrow.png"
+                      width="40px"
+                      style={{ marginLeft: "35px", marginTop: "25px" }}
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    <br />
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "100%",
+                        background: "#ffffff",
+                        borderRadius: 2,
+                      }}
+                      value={param.meals.Lunch.protein}
+                    />
+                  </Grid>
+                  <Grid xs={1}>
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 5,
+                        mt: 1,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      OK
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
+          </Grid>
+          <center>
+            <Button
+              sx={{
+                background: "#ffffff",
+                color: "#E66253",
+                fontWeight: "bold",
+                px: 7,
+                borderRadius: 5,
+                fontSize: "20px",
+                "&:hover": {
+                  backgroundColor: "#E66253",
+                  color: "#ffffff",
+                  border: 0.5,
+                  borderColor: "#ffffff",
+                },
+              }}
+            >
+              NEXT
+            </Button>
+          </center>
+        </div>
+      ),
+    },
+    // {
+    //   title: "LUNCH",
+    //   content: <div></div>,
+    // },
+    {
+      title: "SNACK",
+      content: (param) => (
+        <div>
+          <Typography>Test</Typography>
+        </div>
+      ),
+    },
+    // {
+    //   title: "DINNER",
+    //   content: <div></div>,
+    // },
+  ];
 
   //*
 
@@ -391,8 +924,8 @@ function SellerMenuItems() {
 
   const mealContent = (item, index) => {
     //const [calories, setCalories] = useState(0);
-    console.log(item?.meals.Breakfast);
-
+    console.log(item);
+    setSelectMeal(item);
     const { breakfast, lunch, snack, dinner } = item?.meals;
     //console.log("try", meals[0]), console.log("tries", meals)
 
@@ -629,88 +1162,97 @@ function SellerMenuItems() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Grid container spacing={2} sx={{ mb: 3 }}>
+          <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
             <Grid xs={2}>
               {" "}
               <img src="/images/food journal icon.png" />
             </Grid>
-            <Grid xs={8}>Add Food Information</Grid>
+            <Grid xs={8}>Edit Food Information</Grid>
             <Grid xs={2}>
               <Button sx={{ float: "right" }} onClick={handleClose}>
                 <img src="/images/close.png" height="10" weight="10" />
               </Button>
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{ my: 3 }}>
-            <Grid xs={6}>Type of Meal: </Grid>
-            <Grid xs={6}>Stocks</Grid>
-          </Grid>
-          Upload Image:
-          {/* // * upload image */}
-          <br />
-          <br />
-          <Box sx={{ mx: 1 }}>
-            <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid xs={5}>
-                [Calories]
-                <img
-                  src="/images/arrow.png"
-                  width="40px"
-                  style={{ marginLeft: "35px", marginTop: "25px" }}
-                />
-              </Grid>
-              <Grid xs={4}>
-                <br />
-                <TextField
-                  id="outlined-multiline-flexible"
-                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-                  placeholder="Type message here"
-                />
-              </Grid>
-              <Grid xs={1}>
-                <br />
-                <Button
-                  sx={{
-                    background: "#ffffff",
-                    color: "#E66253",
-                    ml: 5,
-                    mt: 1,
-                    "&:hover": {
-                      backgroundColor: "#E66253",
-                      color: "#ffffff",
-                      border: 0.5,
-                      borderColor: "#ffffff",
-                    },
-                  }}
-                >
-                  OK
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-          <center>
-            <Button
-              sx={{
-                background: "#ffffff",
-                color: "#E66253",
-                fontWeight: "bold",
-                borderRadius: 5,
 
-                ml: 5,
-                mt: 1,
-                px: 10,
-                "&:hover": {
-                  backgroundColor: "#E66253",
-                  color: "#ffffff",
-                  border: 0.5,
-                  borderColor: "#ffffff",
-                },
-              }}
-            >
-              DONE
-            </Button>
-          </center>
+          <Grid container spacing={2} sx={{ ml: 7 }}>
+            <Grid xs={4}>
+              <Typography sx={{ mt: 3, fontWeight: "bold", ml: 20 }}>
+                Week:
+              </Typography>
+            </Grid>
+            <Grid xs={4}>
+              {" "}
+              <TextField
+                id="outlined-multiline-flexible"
+                sx={{ width: "70%", background: "#ffffff", borderRadius: 0 }}
+                placeholder="Name"
+                name="name"
+                value={selectMeal.day}
+              />
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2} sx={{ ml: 7, my: 1 }}>
+            <Grid xs={4}>
+              <Typography sx={{ mt: 3, fontWeight: "bold", ml: 20 }}>
+                Day:
+              </Typography>
+            </Grid>
+            <Grid xs={4}>
+              {" "}
+              <TextField
+                id="outlined-multiline-flexible"
+                sx={{ width: "70%", background: "#ffffff", borderRadius: 0 }}
+                placeholder="Name"
+                name="name"
+              />
+            </Grid>
+          </Grid>
+          <Tabs
+            value={activeTab}
+            style={{
+              color: "#f00", // Change text color to red
+              fontSize: "18px", // Increase font size
+              fontWeight: "bold", // Make text bold
+            }}
+            onChange={handleTabChange}
+            indicatorColor="primary"
+            centered
+          >
+            <br />
+            <br />
+            <br />
+
+            {tabContent.map((tab, index) => (
+              <Tab
+                key={index}
+                label={tab.title}
+                style={{
+                  color: "#ffffff", // Change text color to red
+                  fontSize: "14px", // Increase font size
+                  //fontWeight: "bold", // Make text bold
+                }}
+              />
+            ))}
+          </Tabs>
+          {/* 
+          {Object.entries(item.meals).map((meals) => (
+          <Box>
+            <Typography sx={{ color: "#E66253", fontWeight: "bold" }}>
+              {meals[0]} 
+            </Typography>
+
+            <Typography sx={{ ml: 3 }}>{meals[1].food}</Typography>
+          </Box>
+        ))} */}
+
+          {tabContent.map((tab, index) => (
+            <Box key={index} hidden={activeTab !== index}>
+              {console.log(selectMeal)}
+              {tab.content(selectMeal)}
+            </Box>
+          ))}
         </Box>
       </Modal>
       <Typography sx={{ my: 7, fontSize: "200%", fontWeight: "bold" }}>
@@ -803,6 +1345,7 @@ function SellerMenuItems() {
                 borderColor: "#ffffff",
               },
             }}
+            onClick={() => tabMeal()}
           >
             EDIT
           </Button>
