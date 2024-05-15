@@ -5,11 +5,12 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Modal from "@mui/material/Modal";
+import TextField from "@mui/material/TextField";
 
 function SellerCreateMealPlan() {
   const [activeButtonIndex, setActiveButtonIndex] = useState(null);
 
-  const buttons = ["Sunday", "BREAKFAST", "LUNCH", "SNACK", "DINNER"];
+  const buttons = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
 
   const meal = [
     {
@@ -144,7 +145,7 @@ function SellerCreateMealPlan() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    width: 500,
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -302,7 +303,7 @@ function SellerCreateMealPlan() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ mb: 3 }}>
             <Grid xs={2}>
               {" "}
               <img src="/images/food journal icon.png" />
@@ -314,27 +315,65 @@ function SellerCreateMealPlan() {
               </Button>
             </Grid>
           </Grid>
-        </Box>
-      </Modal>
-      <Typography sx={{ my: "100px", fontSize: "200%", fontWeight: "bold" }}>
-        CREATE MEAL PLAN
-      </Typography>
-
-      <Grid container spacing={2}>
-        <Grid xs={8}>
-          {buttons.map((buttonLabel, index) => (
+          <Grid container spacing={2} sx={{ my: 3 }}>
+            <Grid xs={6}>Type of Meal: </Grid>
+            <Grid xs={6}>Stocks</Grid>
+          </Grid>
+          Upload Image:
+          {/* // * upload image */}
+          <br />
+          <br />
+          <Box sx={{ mx: 1 }}>
+            <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
+            <Grid container spacing={2} sx={{ mb: 2 }}>
+              <Grid xs={5}>
+                [Calories]
+                <img
+                  src="/images/arrow.png"
+                  width="40px"
+                  style={{ marginLeft: "35px", marginTop: "25px" }}
+                />
+              </Grid>
+              <Grid xs={4}>
+                <br />
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                  placeholder="Type message here"
+                />
+              </Grid>
+              <Grid xs={1}>
+                <br />
+                <Button
+                  sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    ml: 5,
+                    mt: 1,
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 0.5,
+                      borderColor: "#ffffff",
+                    },
+                  }}
+                >
+                  OK
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+          <center>
             <Button
-              key={index}
-              variant="contained" // Adjust variant as needed
-              onClick={() => changeDiv(index)}
               sx={{
-                borderColor: "#ffffff",
-                fontWeight: "bold",
-                boxShadow: 0,
-                mx: 5,
-                fontSize: "20px",
                 background: "#ffffff",
-                color: activeButtonIndex === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+                color: "#E66253",
+                fontWeight: "bold",
+                borderRadius: 5,
+
+                ml: 5,
+                mt: 1,
+                px: 10,
                 "&:hover": {
                   backgroundColor: "#E66253",
                   color: "#ffffff",
@@ -343,14 +382,60 @@ function SellerCreateMealPlan() {
                 },
               }}
             >
-              {buttonLabel}
+              DONE
             </Button>
-          ))}
+          </center>
+        </Box>
+      </Modal>
+      <Typography sx={{ my: 7, fontSize: "200%", fontWeight: "bold" }}>
+        CREATE MEAL PLAN
+      </Typography>
+
+      <Grid container spacing={2}>
+        <Grid xs={8}>
+          <Grid container spacing={2}>
+            {buttons.map((buttonLabel, index) => (
+              <Grid item xs={6} sm={4} md={1.5} key={index}>
+                <Button
+                  key={index}
+                  variant="contained" // Adjust variant as needed
+                  onClick={() => changeDiv(index)}
+                  sx={{
+                    borderColor: "#ffffff",
+                    fontWeight: "bold",
+                    boxShadow: 0,
+                    mx: 5,
+                    fontSize: "20px",
+                    background: "#ffffff",
+                    color: activeButtonIndex === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 0.5,
+                      borderColor: "#ffffff",
+                    },
+                  }}
+                >
+                  {buttonLabel}
+                </Button>
+              </Grid>
+            ))}
+          </Grid>
 
           <div>{divContent}</div>
         </Grid>
         <Grid xs={4} sx={{ color: "#99756E" }}>
-          <Typography> Meal Plan: [Name]</Typography>
+          <Typography
+            sx={{
+              textAlign: "left",
+              fontWeight: "bold",
+              fontSize: "30px",
+              my: 2,
+            }}
+          >
+            {" "}
+            Meal Plan: [Name]
+          </Typography>
 
           <Box
             sx={{
@@ -408,7 +493,16 @@ function SellerCreateMealPlan() {
             </Typography>
           </Box>
 
-          <Typography>Meal Value</Typography>
+          <Typography
+            sx={{
+              textAlign: "left",
+              fontWeight: "bold",
+              fontSize: "30px",
+              my: 2,
+            }}
+          >
+            Meal Value
+          </Typography>
           <Box
             sx={{
               border: 2.5,
@@ -419,7 +513,71 @@ function SellerCreateMealPlan() {
               mr: 5,
               py: 2,
             }}
-          ></Box>
+          >
+            <Typography sx={{ my: 1 }}>
+              <img src="/images/calories.png" />
+              240 calories
+            </Typography>
+
+            <Typography sx={{ my: 1 }}>
+              <img src="/images/fat.png" />
+              240 fat
+            </Typography>
+
+            <Typography sx={{ my: 1 }}>
+              <img src="/images/carbs.png" />
+              240 carbs
+            </Typography>
+
+            <Typography sx={{ my: 1 }}>
+              <img src="/images/protein.png" />
+              240 protein
+            </Typography>
+          </Box>
+
+          <Button
+            sx={{
+              border: 2.5,
+              background: "#ffffff",
+              borderColor: "#E66253",
+              color: "#E66253",
+              borderRadius: 10,
+              fontWeight: "bold",
+              px: 13,
+              fontSize: "20px",
+              my: 1.5,
+              "&:hover": {
+                backgroundColor: "#E66253",
+                color: "#ffffff",
+                border: 0.5,
+                borderColor: "#ffffff",
+              },
+            }}
+          >
+            START OVER
+          </Button>
+          <br />
+          <Button
+            sx={{
+              border: 2.5,
+              background: "#E66253",
+              borderColor: "#E66253",
+              color: "#ffffff",
+              borderRadius: 10,
+              fontWeight: "bold",
+              px: 10,
+              fontSize: "20px",
+              my: 1.5,
+              "&:hover": {
+                backgroundColor: "#ffffff",
+                color: "#E66253",
+                border: 0.5,
+                borderColor: "#E66253",
+              },
+            }}
+          >
+            SAVE MEAL PLAN
+          </Button>
         </Grid>
       </Grid>
     </div>
