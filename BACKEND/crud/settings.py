@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOWED_OROGINS = ['http://localhost:3000']
+
 ROOT_URLCONF = 'crud.urls'
 
 TEMPLATES = [
