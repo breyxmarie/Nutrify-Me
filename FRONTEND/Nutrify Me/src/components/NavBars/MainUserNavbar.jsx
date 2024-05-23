@@ -14,6 +14,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { useLoggedInUser } from "../LoggedInUserContext";
+import { useNavigate } from "react-router-dom";
 
 const pages = [
   { names: "HOME", links: "/user-home" },
@@ -48,6 +50,8 @@ function MainUserNavbar() {
   const activeLink = " bg-blue-100 text-black";
   const normalLink = "";
   const path = location.pathname;
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -60,7 +64,17 @@ function MainUserNavbar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
+    console.log(setting);
+    switch (setting) {
+      case "Logout":
+        setLoggedInUser(null);
+        navigate("/");
+        break;
+      case "Profile":
+        navigate("/user-profile");
+        break;
+    }
     setAnchorElUser(null);
   };
 
@@ -240,7 +254,7 @@ function MainUserNavbar() {
                   onMouseLeave={(e) => (e.target.style.background = "#E66253")}
                   sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
                 >
-                  WELCOME *USER!
+                  WELCOME {loggedInUser.first_name}!
                 </Button>
               </IconButton>
             </Tooltip>
@@ -261,8 +275,14 @@ function MainUserNavbar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    handleCloseUserMenu(setting);
+                  }}
+                >
                   <Typography textAlign="center">{setting}</Typography>
+                  <Link to={navigate}></Link>
                 </MenuItem>
               ))}
             </Menu>

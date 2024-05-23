@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainUserNavbar from "./NavBars/MainUserNavbar";
 import UserNotLogInNavBar from "./NavBars/UserNotLogInNavBar";
 import Box from "@mui/material/Box";
@@ -8,6 +8,11 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
+import AxiosInstance from "./forms/AxiosInstance";
+// import {
+//   MaterialReactTable,
+//   useMaterialReactTable,
+// } from "material-react-table";
 
 function Home() {
   const Item = styled(Paper)(({ theme }) => ({
@@ -17,11 +22,36 @@ function Home() {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }));
+
+  // ! try retriving data from database
+
+  const [data, setData] = useState();
+  const GetData = () => {
+    AxiosInstance.get(`user/`).then((res) => {
+      console.log(res.data);
+      setData(res.data);
+    });
+  };
+
+  useEffect(() => {
+    GetData();
+  }, []);
+  //!
   return (
     <div className="content" style={{ paddingBottom: "40px" }}>
       {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}
+
+      {/* //! Try Muna database  */}
+      {/* <MaterialReactTable data={data} /> */}
+
+      {/* {data.map((item, index) => (
+        <h3>{item.privilege}</h3>
+      ))} */}
+
+      {/* // !  */}
+
       <Box sx={{ px: "0px", py: 0 }}>
         <Box
           component="section"

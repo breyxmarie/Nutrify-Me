@@ -8,8 +8,12 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import UserFooter from "./UserFooter";
+import { useLoggedInUser } from "./LoggedInUserContext";
 
 function MainHome() {
+  const { loggedInUser } = useLoggedInUser();
+
+  console.log(loggedInUser);
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -19,6 +23,7 @@ function MainHome() {
   }));
   return (
     <div className="content" style={{ paddingBottom: "40px" }}>
+      <h1>hi {loggedInUser.first_name}</h1>
       {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}

@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 const pages = [
   { names: "HOME", links: "/nutritionist-home" },
@@ -39,6 +40,7 @@ const StyledLink = `
 const settings = ["Profile", "Logout"];
 
 function NutritionistNavBar() {
+  const { loggedInUser } = useLoggedInUser();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -224,7 +226,7 @@ function NutritionistNavBar() {
                   onMouseOut={(e) => (e.target.style.background = "#E66253")}
                   sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
                 >
-                  WELCOME, NUTRITIONIST!
+                  WELCOME {loggedInUser.first_name}!
                 </Button>
               </IconButton>
             </Tooltip>

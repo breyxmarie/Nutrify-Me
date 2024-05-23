@@ -27,6 +27,16 @@ import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { IconButton } from "@mui/material";
 import { TextField } from "@mui/material";
+import AxiosInstance from "../forms/AxiosInstance";
+import MySelectField from "../forms/MySelectField";
+import MyDatePicker from "../forms/MyDatePicker";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import Dayjs from "dayjs";
+import InputLabel from "@mui/material/InputLabel";
+import { useLoggedInUser } from "../LoggedInUserContext";
+
 //import AssignmentIcon from "@material-ui/icons/Assignment";
 //import PhoneIcon from "@material-ui/icons/Phone";
 
@@ -88,12 +98,18 @@ function ServerDay(props) {
 
 function TelemedicineHome() {
   //codes for consultation pop up in selecting nutritionist
-
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const options = [
-    { id: "", name: "None" },
-    { id: "Open", name: "Beatriz" },
-    { id: "In Progress", name: "Mary" },
-    { id: "Completed", name: "Marie" },
+    {
+      nutritionist_id: 1,
+      username: "randomname",
+      password: "123",
+      first_name: "fdassd",
+      last_name: "asdfasdf",
+      license_id: "324334",
+      schedule_day: "monday, wednesday",
+      schedule_time: "3:00 am - 4:00 am",
+    },
   ];
 
   // * codes for calendar
@@ -169,6 +185,128 @@ function TelemedicineHome() {
     textAlign: "center",
     color: theme.palette.text.secondary,
   }));
+
+  //! creating an appointment
+
+  const [date, setDate] = useState(initialValue);
+  const [time, setTime] = useState(
+    new Date().toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    })
+  );
+
+  const handleTime = () => {
+    const intervalId = setInterval(() => {
+      setTime(
+        new Date().toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        })
+      );
+    }, 1000); // Update time every second
+
+    return () => clearInterval(intervalId);
+  };
+  const [selectedNutritionist, setSelectedNutritionist] = useState("");
+
+  const handleChange = (event) => {
+    setSelectedNutritionist(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const schema = yup
+    .object({
+      nutritionist: yup
+        .string()
+        .required("Project Manager is a required field"),
+
+      selectedDate: yup
+        .date()
+        .required("date is a required field")
+        .min(
+          yup.ref(Dayjs(new Date()).format("YYYY-MM-DD")),
+          "date cannot be in the past"
+        ),
+    })
+    .required();
+
+  // const submission = () => {
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = useForm({
+  //   resolver: yupResolver(schema),
+  // });
+  // };
+
+  const { handleSubmit, control } = useForm({
+    // defaultValues: defaultValues,
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log("test", data);
+    try {
+      AxiosInstance.post(`appointment`, {
+        date: date,
+        time: time,
+        user_id: loggedInUser.user_id,
+        nutritionist_id: selectedNutritionist,
+      }).then((res) => {
+        // navigate(`/`);
+        handleClose();
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const defaultValues = {
+    name: "",
+    comments: "",
+    status: "",
+    // start_date: "",
+    // end_date: "",
+  };
+  // const { handleSubmit, control } = useForm({
+  //   defaultValues: defaultValues,
+  //   resolver: yupResolver(schema),
+  // });
+  const [nutritionist, setNutritionist] = useState([
+    {
+      nutritionist_id: 1,
+      username: "randomname",
+      password: "123",
+      first_name: "fdassd",
+      last_name: "asdfasdf",
+      license_id: "324334",
+      schedule_day: "monday, wednesday",
+      schedule_time: "3:00 am - 4:00 am",
+    },
+  ]);
+  const GetData = () => {
+    AxiosInstance.get(`nutritionist/`)
+      .then((res) => {
+        console.log(res.data);
+        setNutritionist(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        console.log("test", nutritionist);
+      });
+  };
+
+  useEffect(() => {
+    handleTime();
+    GetData();
+  }, []);
+  //!
 
   const socket = io.connect("http://localhost:5173");
   // * for video conferencing
@@ -385,7 +523,7 @@ function TelemedicineHome() {
             <h2>My Scheduled Appointments</h2>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
-                defaultValue={initialValue}
+                defaultValue={date}
                 loading={isLoading}
                 onMonthChange={handleMonthChange}
                 renderLoading={() => <DayCalendarSkeleton />}
@@ -429,68 +567,109 @@ function TelemedicineHome() {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box sx={style}>
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  Book a Consultation
-                </Typography>
-                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                  Nutritionist
-                </Typography>
-                <FormControl
-                  variant="standard"
-                  sx={{ width: "70%", background: "#ffffff" }}
-                >
-                  <Select
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    // value={value}
-                    // onChange={onChange}
-                    // error={!!error}
+              <form onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={style}>
+                  <Typography
+                    id="modal-modal-title"
+                    variant="h6"
+                    component="h2"
                   >
-                    {options.map((option) => (
-                      <MenuItem value={option.id}>{option.name}</MenuItem>
-                    ))}
-                  </Select>
-                  {/* <FormHelperText sx={{ color: "#d32f2f" }}>
-                    {error?.message}
-                  </FormHelperText> */}
-                </FormControl>
-                <br />
-                <br />
+                    Book a Consultation
+                  </Typography>
+                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                    Nutritionist
+                  </Typography>
 
-                <Grid container spacing={2}>
-                  <Grid xs={6}>
-                    {" "}
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Date of Consultation <br />
+                  {/* <MySelectField
+                    label="Nutritionist"
+                    name="nutritionist"
+                    control={control}
+                    width={"30%"}
+                    options={nutritionist}
+                  /> */}
+
+                  <FormControl
+                    variant="standard"
+                    sx={{ width: "70%", background: "#ffffff" }}
+                  >
+                    <InputLabel id="demo-simple-select-filled-label">
+                      Nutritionist
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      value={selectedNutritionist}
+                      onChange={handleChange}
+                      name="nutritionist"
+                    >
+                      {nutritionist.map((option) => (
+                        <MenuItem
+                          key={option.nutritionist_id}
+                          value={option.nutritionist_id}
+                        >
+                          {option.first_name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <br />
+                  <br />
+
+                  <Grid container spacing={2}>
+                    <Grid xs={6}>
+                      {" "}
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Date of Consultation <br />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            sx={{ background: "#ffffff" }}
+                            defaultValue={initialValue}
+                            onChange={(e) =>
+                              setDate(Dayjs(e["$d"]).format("YYYY-MM-DD"))
+                            }
+                            name="selectedDate"
+                          />
+                        </LocalizationProvider>
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}>
+                      {" "}
+                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Time of Consultation
+                      </Typography>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker sx={{ background: "#ffffff" }} />
+                        <DemoContainer
+                          components={["TimePicker"]}
+                          name="selectedDate"
+                        >
+                          <TimePicker
+                            label="With Time Clock"
+                            viewRenderers={{
+                              hours: renderTimeViewClock,
+                              minutes: renderTimeViewClock,
+                              seconds: renderTimeViewClock,
+                            }}
+                            defaultValue={time}
+                            onChange={(e) =>
+                              setTime(Dayjs(e["$d"]).format("HH:mm:ss"))
+                            }
+                            sx={{ background: "#ffffff" }}
+                            name="selectedTime"
+                          />
+                        </DemoContainer>
                       </LocalizationProvider>
-                    </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid xs={6}>
-                    {" "}
-                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                      Time of Consultation
-                    </Typography>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["TimePicker"]}>
-                        <TimePicker
-                          label="With Time Clock"
-                          viewRenderers={{
-                            hours: renderTimeViewClock,
-                            minutes: renderTimeViewClock,
-                            seconds: renderTimeViewClock,
-                          }}
-                          sx={{ background: "#ffffff" }}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </Grid>
-                </Grid>
 
-                <Button onClick={handleClose}>Book</Button>
-              </Box>
+                  {/* <Button onClick={submission}>Book</Button> */}
+                  <Button
+                    type="submit"
+                    onClick={() => handleSubmit(onSubmit())}
+                  >
+                    Submit
+                  </Button>
+                </Box>
+              </form>
             </Modal>
           </Grid>
           <Grid item xs={6} sx={{ textAlign: "left" }}>

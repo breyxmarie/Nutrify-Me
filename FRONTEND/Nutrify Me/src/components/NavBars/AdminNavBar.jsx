@@ -15,8 +15,10 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 function AdminNavBar() {
+  const { loggedInUser } = useLoggedInUser();
   const StyledLink = `
   color: #99756e; /* Default styles */
   display: block;
@@ -237,7 +239,7 @@ function AdminNavBar() {
                   onMouseLeave={(e) => (e.target.style.background = "#E66253")}
                   sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
                 >
-                  WELCOME ADMIN!
+                  WELCOME {loggedInUser.first_name}!
                 </Button>
               </IconButton>
             </Tooltip>

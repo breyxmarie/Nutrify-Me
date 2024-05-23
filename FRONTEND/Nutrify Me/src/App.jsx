@@ -49,387 +49,391 @@ import SellerNavBar from "./components/NavBars/SellerNavBar";
 import SellerHome from "./components/Seller/SellerHome";
 import SellerCreateMealPlan from "./components/Seller/SellerCreateMealPlan";
 import SellerMenuItems from "./components/Seller/SellerMenuItems";
+import { LoggedInUserProvider } from "./components/LoggedInUserContext";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
-    <div>
-      {/* <MainUserNavBar /> */}
-      {/* User Not Log In */}
-      <BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                {/* <MainUserNavBar /> */}
-                <UserNotLogInNavBar />
-                <Home />
-                <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/about-us"
-            element={
-              <>
-                <UserNotLogInNavBar />
-                <AboutUs />
-                <UserFooter />
-              </>
-            }
-          />
-          {/* User Log In */}
-          <Route
-            path="/user-home"
-            element={
-              <>
-                <MainUserNavBar />
-                <MainHome /> <UserFooter />
-              </>
-            }
-          />
-          {/* //* Profiles */}
-          <Route
-            path="/user-profile"
-            element={
-              <>
-                <MainUserNavBar />
-                <UserProfile /> <UserFooter />{" "}
-              </>
-            }
-          />
-          {/*  */}
-          {/* Telemedicine  */}
-          <Route
-            path="/telemedicine-meet-us"
-            element={
-              <>
-                <MainUserNavBar />
-                <TeleMedNavBar />
-                <TelemedicineMeetUs /> <UserFooter />{" "}
-              </>
-            }
-          />
-          <Route
-            path="/telemedicine-home"
-            element={
-              <>
-                <MainUserNavBar />
-                <TeleMedNavBar />
-                <TelemedicineHome /> <UserFooter />{" "}
-              </>
-            }
-          />
-          <Route
-            path="/telemedicine-messages"
-            element={
-              <>
-                <MainUserNavBar />
-                <TeleMedNavBar />
-                <TelemedicineMessages /> <UserFooter />{" "}
-              </>
-            }
-          />
-          <Route
-            path="/telemedicine-consultation"
-            element={
-              <>
-                <MainUserNavBar />
-                <TeleMedNavBar />
-                <TelemedicineConsultation /> <UserFooter />
-              </>
-            }
-          />
-          {/* meal plan shop*/}
-          <Route
-            path="/meal-plan-shop-home"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopHome /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-meal-plans"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopMealPlans /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-meal-plan-history"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopMealPlanHistory /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-customize-meal"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopCustomizeMeal /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-track-orders"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopTrackOrders /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-cart"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopCart /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-checkout/:cartId?"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopCheckout cartId={useParams().cartId} />{" "}
-                <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/meal-plan-shop-order/:orderId?"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanShopNavBar />
-                <MealPlanShopOrders orderId={useParams().orderId} />{" "}
-                <UserFooter />
-              </>
-            }
-          />
-          {/* meal plan generator  */}
-          <Route
-            path="/meal-plan-generator-home"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlangeneratorHome />{" "}
-              </>
-            }
-          />
-          <Route
-            path="/test"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanTest />{" "}
-              </>
-            }
-          />
-          <Route
-            path="/selection"
-            element={
-              <>
-                <MainUserNavBar />
-                <MealPlanSelection />{" "}
-              </>
-            }
-          />
-          {/* FOOD JOURNAL  */}
-          <Route
-            path="/food-journal-home"
-            element={
-              <>
-                {" "}
-                <MainUserNavBar /> <FoodJournalNavBar />
-                <FoodJournalHome /> <UserFooter />
-              </>
-            }
-          />
-          <Route
-            path="/food-journal-progress-report"
-            element={
-              <>
-                {" "}
-                <MainUserNavBar /> <FoodJournalNavBar />
-                <FoodJournalProgressReport /> <UserFooter />
-              </>
-            }
-          />
-          {/*  */}
-          <Route
-            path="/about-us-user"
-            element={
-              <>
-                <MainUserNavBar /> <AboutUsUser /> <UserFooter />
-              </>
-            }
-          />
-          <Route path="/Log-In" element={<LogIn />} />
-          <Route path="/Register" element={<Registration />} />
+    <LoggedInUserProvider>
+      <div>
+        {/* <MainUserNavBar /> */}
+        {/* User Not Log In */}
 
-          {/* // ! Nutritionist screen   */}
-          <Route
-            path="/nutritionist-profile"
-            element={
-              <>
-                <NutritionistNavBar /> <NutritionistProfile />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/nutritionist-home"
-            element={
-              <>
-                <NutritionistNavBar /> <NutritionistHome />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/nutritionist-consultation"
-            element={
-              <>
-                <NutritionistNavBar /> <NutritionistConsultation />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/nutritionist-appointment"
-            element={
-              <>
-                <NutritionistNavBar /> <NutritionistAppointment />
-                <Footer />
-              </>
-            }
-          />
+        <BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  {/* <MainUserNavBar /> */}
+                  <UserNotLogInNavBar />
+                  <Home />
+                  <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/about-us"
+              element={
+                <>
+                  <UserNotLogInNavBar />
+                  <AboutUs />
+                  <UserFooter />
+                </>
+              }
+            />
+            {/* User Log In */}
+            <Route
+              path="/user-home"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MainHome /> <UserFooter />
+                </>
+              }
+            />
+            {/* //* Profiles */}
+            <Route
+              path="/user-profile"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <UserProfile /> <UserFooter />{" "}
+                </>
+              }
+            />
+            {/*  */}
+            {/* Telemedicine  */}
+            <Route
+              path="/telemedicine-meet-us"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <TeleMedNavBar />
+                  <TelemedicineMeetUs /> <UserFooter />{" "}
+                </>
+              }
+            />
+            <Route
+              path="/telemedicine-home"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <TeleMedNavBar />
+                  <TelemedicineHome /> <UserFooter />{" "}
+                </>
+              }
+            />
+            <Route
+              path="/telemedicine-messages"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <TeleMedNavBar />
+                  <TelemedicineMessages /> <UserFooter />{" "}
+                </>
+              }
+            />
+            <Route
+              path="/telemedicine-consultation"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <TeleMedNavBar />
+                  <TelemedicineConsultation /> <UserFooter />
+                </>
+              }
+            />
+            {/* meal plan shop*/}
+            <Route
+              path="/meal-plan-shop-home"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopHome /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-meal-plans"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopMealPlans /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-meal-plan-history"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopMealPlanHistory /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-customize-meal"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopCustomizeMeal /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-track-orders"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopTrackOrders /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-cart"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopCart /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-checkout/:cartId?"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopCheckout cartId={useParams().cartId} />{" "}
+                  <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/meal-plan-shop-order/:orderId?"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanShopNavBar />
+                  <MealPlanShopOrders orderId={useParams().orderId} />{" "}
+                  <UserFooter />
+                </>
+              }
+            />
+            {/* meal plan generator  */}
+            <Route
+              path="/meal-plan-generator-home"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlangeneratorHome />{" "}
+                </>
+              }
+            />
+            <Route
+              path="/test"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanTest />{" "}
+                </>
+              }
+            />
+            <Route
+              path="/selection"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanSelection />{" "}
+                </>
+              }
+            />
+            {/* FOOD JOURNAL  */}
+            <Route
+              path="/food-journal-home"
+              element={
+                <>
+                  {" "}
+                  <MainUserNavBar /> <FoodJournalNavBar />
+                  <FoodJournalHome /> <UserFooter />
+                </>
+              }
+            />
+            <Route
+              path="/food-journal-progress-report"
+              element={
+                <>
+                  {" "}
+                  <MainUserNavBar /> <FoodJournalNavBar />
+                  <FoodJournalProgressReport /> <UserFooter />
+                </>
+              }
+            />
+            {/*  */}
+            <Route
+              path="/about-us-user"
+              element={
+                <>
+                  <MainUserNavBar /> <AboutUsUser /> <UserFooter />
+                </>
+              }
+            />
+            <Route path="/Log-In" element={<LogIn />} />
+            <Route path="/Register" element={<Registration />} />
 
-          <Route
-            path="/nutritionist-patient"
-            element={
-              <>
-                <NutritionistNavBar />
-                <NutritionistPatient />
-                <Footer />
-              </>
-            }
-          />
+            {/* // ! Nutritionist screen   */}
+            <Route
+              path="/nutritionist-profile"
+              element={
+                <>
+                  <NutritionistNavBar /> <NutritionistProfile />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/nutritionist-home"
+              element={
+                <>
+                  <NutritionistNavBar /> <NutritionistHome />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/nutritionist-consultation"
+              element={
+                <>
+                  <NutritionistNavBar /> <NutritionistConsultation />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/nutritionist-appointment"
+              element={
+                <>
+                  <NutritionistNavBar /> <NutritionistAppointment />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/nutritionist-mealPlanHistory"
-            element={
-              <>
-                <NutritionistNavBar />
-                <NutritionistMealPlanHistory />
-                <Footer />
-              </>
-            }
-          />
+            <Route
+              path="/nutritionist-patient"
+              element={
+                <>
+                  <NutritionistNavBar />
+                  <NutritionistPatient />
+                  <Footer />
+                </>
+              }
+            />
 
-          {/* //* Admin */}
-          <Route
-            path="/admin-home"
-            element={
-              <>
-                <AdminNavbBar />
-                <HomePage />
-                <Footer />
-              </>
-            }
-          />
+            <Route
+              path="/nutritionist-mealPlanHistory"
+              element={
+                <>
+                  <NutritionistNavBar />
+                  <NutritionistMealPlanHistory />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/admin-verification"
-            element={
-              <>
-                <AdminNavbBar />
-                <Verification />
-                <Footer />
-              </>
-            }
-          />
+            {/* //* Admin */}
+            <Route
+              path="/admin-home"
+              element={
+                <>
+                  <AdminNavbBar />
+                  <HomePage />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/admin-patients"
-            element={
-              <>
-                <AdminNavbBar />
-                <Patients />
-                <Footer />
-              </>
-            }
-          />
+            <Route
+              path="/admin-verification"
+              element={
+                <>
+                  <AdminNavbBar />
+                  <Verification />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/admin-dietician"
-            element={
-              <>
-                <AdminNavbBar />
-                <Dietician />
-                <Footer />
-              </>
-            }
-          />
+            <Route
+              path="/admin-patients"
+              element={
+                <>
+                  <AdminNavbBar />
+                  <Patients />
+                  <Footer />
+                </>
+              }
+            />
 
-          {/*  */}
+            <Route
+              path="/admin-dietician"
+              element={
+                <>
+                  <AdminNavbBar />
+                  <Dietician />
+                  <Footer />
+                </>
+              }
+            />
 
-          {/* //*Seller */}
-          <Route
-            path="/seller-home"
-            element={
-              <>
-                <SellerNavBar />
-                <SellerHome />
-                <Footer />
-              </>
-            }
-          />
+            {/*  */}
 
-          <Route
-            path="/seller-menu-items"
-            element={
-              <>
-                <SellerNavBar />
-                <SellerMenuItems />
-                <Footer />
-              </>
-            }
-          />
+            {/* //*Seller */}
+            <Route
+              path="/seller-home"
+              element={
+                <>
+                  <SellerNavBar />
+                  <SellerHome />
+                  <Footer />
+                </>
+              }
+            />
 
-          <Route
-            path="/seller-createMealPlan"
-            element={
-              <>
-                <SellerNavBar />
-                <SellerCreateMealPlan />
-                <Footer />
-              </>
-            }
-          />
-          {/*  */}
-        </Routes>
-      </BrowserRouter>
-    </div>
+            <Route
+              path="/seller-menu-items"
+              element={
+                <>
+                  <SellerNavBar />
+                  <SellerMenuItems />
+                  <Footer />
+                </>
+              }
+            />
+
+            <Route
+              path="/seller-createMealPlan"
+              element={
+                <>
+                  <SellerNavBar />
+                  <SellerCreateMealPlan />
+                  <Footer />
+                </>
+              }
+            />
+            {/*  */}
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </LoggedInUserProvider>
   );
 }
 
