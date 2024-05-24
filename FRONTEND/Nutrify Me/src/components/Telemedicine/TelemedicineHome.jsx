@@ -99,6 +99,7 @@ function ServerDay(props) {
 function TelemedicineHome() {
   //codes for consultation pop up in selecting nutritionist
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+
   const options = [
     {
       nutritionist_id: 1,
@@ -188,15 +189,13 @@ function TelemedicineHome() {
 
   //! creating an appointment
 
-  const [date, setDate] = useState(initialValue);
-  const [time, setTime] = useState(
-    new Date().toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
-    })
-  );
+  // const [date, setDate] = useState(initialValue);
+  const [date, setDate] = useState();
 
+  // const [time, setTime] = useState(Dayjs(initialValue).format("HH:mm:ss"));
+  const [time, setTime] = useState();
+
+  // console.log(time);
   const handleTime = () => {
     const intervalId = setInterval(() => {
       setTime(
@@ -212,9 +211,16 @@ function TelemedicineHome() {
   };
   const [selectedNutritionist, setSelectedNutritionist] = useState("");
 
+  const [nutritionistInformation, setNutritionistInformation] = useState();
+
   const handleChange = (event) => {
     setSelectedNutritionist(event.target.value);
-    console.log(event.target.value);
+
+    const tempNut = nutritionist.find(
+      (nut) => nut.nutritionist_id === event.target.value
+    );
+    console.log(tempNut);
+    setNutritionistInformation(<Box>{tempNut.first_name}</Box>);
   };
 
   const schema = yup
@@ -288,6 +294,21 @@ function TelemedicineHome() {
       schedule_time: "3:00 am - 4:00 am",
     },
   ]);
+
+  const [appointment, setAppointment] = useState([
+    {
+      date: "2024-05-25",
+      time: "19:30:10",
+      nutritionist_id: 2,
+      user_id: 4,
+    },
+  ]);
+
+  const handleTimeChange = (newValue) => {
+    const formattedTime = Dayjs(newValue["$d"]).format("HH:mm:ss"); // Format before passing
+    setTime(formattedTime);
+  };
+
   const GetData = () => {
     AxiosInstance.get(`nutritionist/`)
       .then((res) => {
@@ -298,12 +319,117 @@ function TelemedicineHome() {
         console.error("Error fetching data:", error);
         // Optionally display an error message to the user
         //setNutritionist(options);
-        console.log("test", nutritionist);
+        // console.log("test", nutritionist);
       });
   };
+  const [todayAppointment, setTodayAppointment] = useState();
+  // <h2>No Scheduled Consultation </h2>
+  const GetAppointmentData = () => {
+    AxiosInstance.get(`appointment`)
+      .then((res) => {
+        console.log(res.data);
+        // setAppointment(res.data);
 
+        const temp = res.data.find(
+          (appoint) =>
+            loggedInUser.user_id === appoint.user_id &&
+            Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
+        );
+
+        console.log("ito test na talaga", temp);
+
+        if (temp) {
+          setTodayAppointment(
+            <Box>
+              {" "}
+              <p>Aubrey</p>
+              <p>Time: {temp.time}</p>
+              <p>Dietitian: Bea</p>
+              <center>
+                <Link
+                  to="/telemedicine-consultation"
+                  style={{
+                    color: "#ffffff",
+                  }}
+                >
+                  <Button sx={{ background: "#E66253", color: "#ffffff" }}>
+                    Go to Consultation
+                  </Button>
+                </Link>
+              </center>
+              <Link
+                to="/telemedicine-consultation"
+                style={{
+                  color: "#ffffff",
+                }}
+              >
+                <Button sx={{ background: "#E66253", color: "#ffffff" }}>
+                  Go to Consultation
+                </Button>
+              </Link>{" "}
+            </Box>
+          );
+        } else {
+          setTodayAppointment(<h2>No Scheduled Consultation </h2>);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", appointment);
+      });
+
+    console.log("today", todayAppointment);
+  };
+
+  // const GetTodaysAgenda = () => {
+  //   const tempAppoint = appointment.find(
+  //     (appoint) =>
+  //       loggedInUser.user_id === appoint.user_id &&
+  //       Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
+  //   );
+  //   // setTodayAppointment(tempAppoint);
+  //   console.log(tempAppoint);
+
+  //   if (tempAppoint) {
+  //     setTodayAppointment(
+  //       <Box>
+  //         {" "}
+  //         <p>Aubrey</p>
+  //         <p>Time: {tempAppoint.time}</p>
+  //         <p>Dietitian: Bea</p>
+  //         <center>
+  //           <Link
+  //             to="/telemedicine-consultation"
+  //             style={{
+  //               color: "#ffffff",
+  //             }}
+  //           >
+  //             <Button sx={{ background: "#E66253", color: "#ffffff" }}>
+  //               Go to Consultation
+  //             </Button>
+  //           </Link>
+  //         </center>
+  //         <Link
+  //           to="/telemedicine-consultation"
+  //           style={{
+  //             color: "#ffffff",
+  //           }}
+  //         >
+  //           <Button sx={{ background: "#E66253", color: "#ffffff" }}>
+  //             Go to Consultation
+  //           </Button>
+  //         </Link>{" "}
+  //       </Box>
+  //     );
+  //   } else {
+  //     setTodayAppointment(<h2>No Scheduled Consultation </h2>);
+  //   }
+  // };
   useEffect(() => {
-    handleTime();
+    GetAppointmentData();
+
     GetData();
   }, []);
   //!
@@ -623,7 +749,7 @@ function TelemedicineHome() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           <DatePicker
                             sx={{ background: "#ffffff" }}
-                            defaultValue={initialValue}
+                            // defaultValue={initialValue}
                             onChange={(e) =>
                               setDate(Dayjs(e["$d"]).format("YYYY-MM-DD"))
                             }
@@ -649,10 +775,11 @@ function TelemedicineHome() {
                               minutes: renderTimeViewClock,
                               seconds: renderTimeViewClock,
                             }}
-                            defaultValue={time}
+                            // defaultValue={time}
                             onChange={(e) =>
                               setTime(Dayjs(e["$d"]).format("HH:mm:ss"))
                             }
+                            // onChange={(e) => handleTimeChange(e)}
                             sx={{ background: "#ffffff" }}
                             name="selectedTime"
                           />
@@ -668,6 +795,7 @@ function TelemedicineHome() {
                   >
                     Submit
                   </Button>
+                  {nutritionistInformation}
                 </Box>
               </form>
             </Modal>
@@ -684,9 +812,10 @@ function TelemedicineHome() {
                 mr: "150px",
               }}
             >
-              <h2>No Scheduled Consultation </h2>
-              {/* <p>Aubrey</p>
-              <p>Time: 10:20 pm</p>
+              {todayAppointment}
+              {/* <h2>No Scheduled Consultation </h2>
+              <p>Aubrey</p>
+              <p>Time: {todayAppointment.time}</p>
               <p>Dietitian: Bea</p>
 
               <center>
@@ -700,7 +829,7 @@ function TelemedicineHome() {
                     Go to Consultation
                   </Button>
                 </Link>
-              </center> */}
+              </center>
 
               <Link
                 to="/telemedicine-consultation"
@@ -711,7 +840,7 @@ function TelemedicineHome() {
                 <Button sx={{ background: "#E66253", color: "#ffffff" }}>
                   Go to Consultation
                 </Button>
-              </Link>
+              </Link> */}
             </Box>
             <center>
               <Link
