@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -19,8 +19,75 @@ import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
+import AxiosInstance from "../forms/AxiosInstance";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 function NutritionistHome() {
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  //! retrieving data.
+
+  const [appointmentData, setAppointmentData] = useState([
+    {
+      appointment_id: 1,
+      date: "2024-05-25",
+      time: "19:30:10",
+      user_id: 4,
+      nutritionist_id: 1,
+    },
+  ]);
+
+  const [users, setUsers] = useState([
+    {
+      user_id: 4,
+      username: "user3",
+      password: "123",
+      first_name: "random",
+      last_name: "randoms",
+      privilege: "User",
+    },
+    {
+      user_id: 4,
+      username: "user3",
+      password: "123",
+      first_name: "random",
+      last_name: "randoms",
+      privilege: "User",
+    },
+  ]);
+  const GetData = () => {
+    AxiosInstance.get(`appointment`).then((res) => {
+      {
+        res.data.map((item, index) =>
+          console.log(item.username, item.password)
+        );
+      }
+      console.log(res.data);
+
+      const condition = (item) => item.id > 1;
+      const filteredData = res.data.filter(
+        (item) => item.nutritionist_id === loggedInUser.user_id
+      );
+
+      console.log("try try", filteredData, loggedInUser.user_id);
+      setAppointmentData(filteredData);
+    });
+
+    AxiosInstance.get(`user`).then((res) => {
+      setUsers(res.data);
+    });
+  };
+
+  const [disusers, setDisusers] = useState();
+
+  function getUserInfo({ id }) {
+    const loggedInUser = users.find((user) => user.user_id === id);
+    setDisusers(loggedInUser);
+  }
+
+  useEffect(() => {
+    GetData();
+  }, []);
+  //!
   const appointments = [
     {
       username: "user",
@@ -326,7 +393,7 @@ function NutritionistHome() {
                 </Button>
               </Typography>
               <br />
-              {appointments.map((item, index) => (
+              {appointmentData.slice(3).map((item, index) => (
                 <Box
                   sx={{
                     border: 2,
@@ -337,12 +404,24 @@ function NutritionistHome() {
                     borderColor: "#898246",
                   }}
                 >
+                  {/* {getUserInfo(item.user_id)}
+                  {console.log(loggedInUser)} */}
+                  {console.log(
+                    users.find((user) => user.user_id === item.user_id)
+                      ?.first_name
+                  )}
+
                   <Grid container spacing={2} sx={{ my: 2 }}>
                     <Grid xs={1} sx={{ ml: 3 }}>
                       <img src={item.image} height="80px" />
                     </Grid>
                     <Grid xs={6}>
-                      <Typography>{item.username}</Typography>
+                      <Typography>
+                        {
+                          users.find((user) => user.user_id === item.user_id)
+                            ?.first_name
+                        }
+                      </Typography>
                       <Typography
                         sx={{
                           color: "#898246",

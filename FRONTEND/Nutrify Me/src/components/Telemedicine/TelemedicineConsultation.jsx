@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import * as React from "react";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useRef, useMemo } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CircleIcon from "@mui/icons-material/Circle";
@@ -20,6 +21,16 @@ import {
 
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { VideoPlayer } from "./VideoPlayer";
+// import { getMeetingId, getToken } from "./api";
+import {
+  MeetingProvider,
+  MeetingConsumer,
+  useMeeting,
+  useParticipant,
+} from "@videosdk.live/react-sdk";
+import { authToken, createMeeting } from "../api";
+import ReactPlayer from "react-player";
+import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
   // const apiKey = "mmhfdzb5evj2"; // the API key can be found in the "Credentials" section
@@ -113,37 +124,120 @@ function TelemedicineConsultation() {
   // }, []);
   //
 
-  return (
-    <div
-      className="content"
-      style={{
-        paddingBottom: "40px",
-        marginTop: "80px",
-        color: "#99756E",
-      }}
-    >
-      {/* another try gumana na plsss */}
-      {/* <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 700px)",
-        }}
-      >
-        {users.map((user) => (
-          <VideoPlayer key={user.uid} user={user} style={{ padding: "20px" }} />
-        ))}
-      </div> */}
-      {/*  */}
-      {/* <StreamVideo client={client}>
-        <StreamCall call={call}>try</StreamCall>
-        <MyUILayout />
-        <SpeakerLayout participantsBarPosition="bottom" />
-        <CallControls />
-      </StreamVideo> */}
-      {/* <MainUserNavbar />
-      <TeleMedNavBar /> */}
-      <Box sx={{ mx: 10 }}>
-        <Grid
+  // //! video conferencing ulit! sana naman gumana na
+  // const [token, setToken] = useState(null);
+  // const [meetingId, setMeetingId] = useState(null);
+  // const getMeetingToken = async () => {
+  //   const token = await getToken();
+  //   setToken(token);
+  //   const ID = await getMeetingId(token);
+  //   console.log("Id", ID);
+  //   setMeetingId(ID);
+  // };
+
+  // console.log("meetingId", meetingId);
+
+  // useEffect(() => {
+  //   getMeetingToken();
+  // }, []);
+  // //!
+
+  //!
+  const micRef = useRef(null);
+  // const { webcamStream, micStream, webcamOn, micOn } = useParticipant(
+  //   props.participantId
+  // );
+
+  // const webcamRef = useRef(null);
+  // const mediaStream = new MediaStream();
+  // mediaStream.addTrack(webcamStream.track);
+
+  // webcamRef.current.srcObject = mediaStream;
+  // webcamRef.current
+  //   .play()
+  //   .catch((error) => console.error("videoElem.current.play() failed", error));
+
+  function JoinScreen({ getMeetingAndToken }) {
+    const [meetingId, setMeetingId] = useState(null);
+    const onClick = async () => {
+      await getMeetingAndToken(meetingId);
+    };
+    return (
+      <div>
+        <input
+          type="text"
+          placeholder="Enter Meeting Id"
+          onChange={(e) => {
+            setMeetingId(e.target.value);
+          }}
+        />
+        <button onClick={onClick}>Join</button>
+        {" or "}
+        <button onClick={onClick}>Create Meeting</button>
+      </div>
+    );
+  }
+
+  // const webcamRef = useRef(null);
+
+  function ParticipantView(props) {
+    const micRef = useRef(null);
+    const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
+      useParticipant(props.participantId);
+
+    const videoStream = useMemo(() => {
+      if (webcamOn && webcamStream) {
+        const mediaStream = new MediaStream();
+        mediaStream.addTrack(webcamStream.track);
+        return mediaStream;
+      }
+    }, [webcamStream, webcamOn]);
+
+    useEffect(() => {
+      if (micRef.current) {
+        if (micOn && micStream) {
+          const mediaStream = new MediaStream();
+          mediaStream.addTrack(micStream.track);
+
+          micRef.current.srcObject = mediaStream;
+          micRef.current
+            .play()
+            .catch((error) =>
+              console.error("videoElem.current.play() failed", error)
+            );
+        } else {
+          micRef.current.srcObject = null;
+        }
+      }
+    }, [micStream, micOn]);
+
+    return (
+      <>
+        <p>
+          Participant: {displayName} | Webcam: {webcamOn ? "ON" : "OFF"} | Mic:{" "}
+          {micOn ? "ON" : "OFF"}
+        </p>
+        <audio ref={micRef} autoPlay playsInline muted={isLocal} />
+        {webcamOn && (
+          <ReactPlayer
+            //
+            playsinline // extremely crucial prop
+            pip={false}
+            light={false}
+            controls={false}
+            muted={true}
+            playing={true}
+            //
+            url={videoStream}
+            //
+            height={"300px"}
+            width={"700px"}
+            onError={(err) => {
+              console.log(err, "participant video error");
+            }}
+          />
+        )}
+        {/* <Grid
           container
           spacing={2}
           sx={{ textAlign: "none", pt: 1, border: 1 }}
@@ -168,28 +262,17 @@ function TelemedicineConsultation() {
           <Grid xs={8}>
             <Box sx={{ float: "right", mr: "150px" }}>
               11:11
-              <Button
-                sx={{ background: "#E66253", color: "#ffffff", px: 3, ml: 3 }}
-              >
-                <img
-                  src="/images/end-call.png"
-                  width="30px"
-                  height="30px"
-                  style={{ margin: 5 }}
-                />
-                Leave
-              </Button>
+            
+              <Leave />
             </Box>
           </Grid>
-          <br />
-          <hr />
         </Grid>
 
         <Grid container spacing={2} sx={{ mt: 0, border: 1 }}>
           <Grid xs={8}>
             <Box
               sx={{
-                backgroundImage: "url('/images/telemedPic.png')",
+                // backgroundImage: "url('/images/telemedPic.png')",
                 width: "100%",
                 height: "500px",
                 backgroundSize: "cover",
@@ -201,9 +284,30 @@ function TelemedicineConsultation() {
                 alignItems: "center",
               }}
             >
-              {users.map((user) => (
-                <VideoPlayer key={user.uid} user={user} />
-              ))}
+              <p>
+                Participant: {displayName} | Webcam: {webcamOn ? "ON" : "OFF"} |
+                Mic: {micOn ? "ON" : "OFF"}
+              </p>
+              <audio ref={micRef} autoPlay playsInline muted={isLocal} />
+              {webcamOn && (
+                <ReactPlayer
+                  //
+                  playsinline // extremely crucial prop
+                  pip={false}
+                  light={false}
+                  controls={false}
+                  muted={true}
+                  playing={true}
+                  //
+                  url={videoStream}
+                  //
+                  height={"300px"}
+                  width={"700px"}
+                  onError={(err) => {
+                    console.log(err, "participant video error");
+                  }}
+                />
+              )}
               <Grid
                 container
                 spacing={2}
@@ -218,14 +322,8 @@ function TelemedicineConsultation() {
                 }}
               >
                 <Grid xs={4}>
-                  <Button>
-                    <img
-                      src="/images/microphone.png"
-                      width="30px"
-                      height="30px"
-                      style={{ margin: 5 }}
-                    />
-                  </Button>
+      
+                  <Mute />
                 </Grid>
 
                 <Grid xs={4}>
@@ -240,58 +338,446 @@ function TelemedicineConsultation() {
                 </Grid>
 
                 <Grid xs={4}>
-                  <Button>
-                    <img
-                      src="/images/video.png"
-                      width="30px"
-                      height="30px"
-                      style={{ margin: 5 }}
-                    />
-                  </Button>
+          
+                  <Webcam />
                 </Grid>
               </Grid>
             </Box>
           </Grid>
+        </Grid> */}
+      </>
+    );
+  }
 
-          <Grid xs={4}>
-            <Grid container spacing={2} sx={{ mt: "450px", ml: "0px" }}>
-              <Grid xs={2}>
-                {" "}
-                <Button>
+  function Controls(props) {
+    const { leave, toggleMic, toggleWebcam } = useMeeting();
+    return (
+      <div>
+        {/* <Button
+          sx={{ background: "#E66253", color: "#ffffff", px: 3, ml: 3 }}
+          onClick={() => leave()}
+        >
+          <img
+            src="/images/end-call.png"
+            width="30px"
+            height="30px"
+            style={{ margin: 5 }}
+          />
+          Leave
+        </Button> */}
+        <button onClick={() => toggleMic()}>toggleMic</button>
+        <button onClick={() => toggleWebcam()}>toggleWebcam</button>
+      </div>
+    );
+  }
+
+  function Leave(props) {
+    const { leave, toggleMic, toggleWebcam } = useMeeting();
+    return (
+      <div>
+        <Button
+          sx={{ background: "#E66253", color: "#ffffff", px: 3, ml: 3 }}
+          onClick={() => leave()}
+        >
+          <img
+            src="/images/end-call.png"
+            width="30px"
+            height="30px"
+            style={{ margin: 5 }}
+          />
+          Leave
+        </Button>
+      </div>
+    );
+  }
+
+  const [micIconmute, setMicIconmute] = useState(
+    <img src="/images/+.png" width="30px" height="30px" style={{ margin: 5 }} />
+  );
+  function Mute(props) {
+    const { leave, toggleMic, toggleWebcam } = useMeeting();
+    const [isMuted, setIsMuted] = useState(false);
+    const [micIcon, setMicIcon] = useState("/images/microphone.png");
+
+    const handleClick = () => {
+      toggleMic();
+      setIsMuted(!isMuted);
+      setMicIcon(isMuted ? "/images/microphone.png" : "/images/+.png"); // Update icon based on muted state
+    };
+
+    return (
+      <Button onClick={() => handleClick()}>
+        <img src={micIcon} width="30px" height="30px" style={{ margin: 5 }} />
+      </Button>
+    );
+  }
+
+  function Webcam(props) {
+    const { leave, toggleMic, toggleWebcam } = useMeeting();
+    const [isOn, setIsOn] = useState(false);
+    const [webIcon, setWebIcon] = useState("/images/video.png");
+
+    const handleClicks = () => {
+      toggleWebcam();
+      setIsOn(!isOn);
+      setWebIcon(isOn ? "/images/video.png" : "/images/+.png"); // Update icon based on muted state
+    };
+
+    return (
+      <Button onClick={() => handleClicks()}>
+        <img src={webIcon} width="30px" height="30px" style={{ margin: 5 }} />
+      </Button>
+    );
+  }
+
+  function MeetingView(props) {
+    const [joined, setJoined] = useState(null);
+    const { leave, toggleMic, toggleWebcam } = useMeeting();
+    //Get the method which will be used to join the meeting.
+    //We will also get the participants list to display all participants
+    const { join, participants } = useMeeting({
+      //callback for when meeting is joined successfully
+      onMeetingJoined: () => {
+        setJoined("JOINED");
+      },
+      //callback for when meeting is left
+      onMeetingLeft: () => {
+        props.onMeetingLeave();
+      },
+    });
+    const joinMeeting = () => {
+      setJoined("JOINING");
+      join();
+    };
+
+    // //! participant view
+
+    // const micRef = useRef(null);
+    // const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
+    //   useParticipant(props.participantId);
+
+    // const videoStream = useMemo(() => {
+    //   if (webcamOn && webcamStream) {
+    //     const mediaStream = new MediaStream();
+    //     mediaStream.addTrack(webcamStream.track);
+    //     return mediaStream;
+    //   }
+    // }, [webcamStream, webcamOn]);
+
+    // useEffect(() => {
+    //   if (micRef.current) {
+    //     if (micOn && micStream) {
+    //       const mediaStream = new MediaStream();
+    //       mediaStream.addTrack(micStream.track);
+
+    //       micRef.current.srcObject = mediaStream;
+    //       micRef.current
+    //         .play()
+    //         .catch((error) =>
+    //           console.error("videoElem.current.play() failed", error)
+    //         );
+    //     } else {
+    //       micRef.current.srcObject = null;
+    //     }
+    //   }
+    // }, [micStream, micOn]);
+
+    // //!
+
+    return (
+      <div className="container">
+        <h3>Meeting Id: {props.meetingId}</h3>
+        {joined && joined == "JOINED" ? (
+          <div>
+            {/* <Controls /> */}
+            {/* //For rendering all the participants in the meeting */}
+            {/* {[...participants.keys()].map((participantId) => (
+              <ParticipantView
+                participantId={participantId}
+                key={participantId}
+              />
+            ))} */}
+
+            <Box sx={{ mx: 10 }}>
+              <Grid
+                container
+                spacing={2}
+                sx={{ textAlign: "none", pt: 1, border: 1 }}
+              >
+                <Grid xs={2}>
                   <img
-                    src="/images/clip 1.png"
-                    width="30px"
-                    height="30px"
-                    style={{ margin: 5 }}
+                    src="/images/logoCircle.png"
+                    width="60px"
+                    height="60px"
+                    style={{}}
                   />
-                </Button>
+                </Grid>
+                <Grid xs={2} sx={{ textAlign: "left" }}>
+                  Name: <br />
+                  <Grid container spacing={2} sx={{ mt: "5px" }}>
+                    <Grid xs={2}>
+                      <CircleIcon sx={{ mt: 1, width: 10, color: "green" }} />
+                    </Grid>
+                    <Grid sx={{ mt: "9px" }}>Active Now</Grid>
+                  </Grid>
+                </Grid>
+                <Grid xs={8}>
+                  <Box sx={{ float: "right", mr: "150px" }}>
+                    11:11
+                    {/* <Button
+                      sx={{
+                        background: "#E66253",
+                        color: "#ffffff",
+                        px: 3,
+                        ml: 3,
+                      }}
+                    >
+                      <img
+                        src="/images/end-call.png"
+                        width="30px"
+                        height="30px"
+                        style={{ margin: 5 }}
+                      />
+                      Leave
+                    </Button> */}
+                    <Leave />
+                  </Box>
+                </Grid>
+                <br />
+
+                <hr />
               </Grid>
-              <Grid xs={8}>
-                <TextField
-                  id="outlined-multiline-flexible"
-                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-                  multiline
-                  rows={1}
-                  placeholder="Type message here"
-                />
+
+              <Grid container spacing={2} sx={{ mt: 0, border: 1 }}>
+                <Grid xs={8}>
+                  <Box
+                    sx={{
+                      backgroundImage: "url('/images/telemedPic.png')",
+                      width: "100%",
+                      height: "500px",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      px: "0",
+                      justifyContent: "center",
+                      objectFit: "cover",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    {[...participants.keys()].map((participantId) => (
+                      <ParticipantView
+                        participantId={participantId}
+                        key={participantId}
+                      />
+                    ))}
+                    <br />
+                    <br />
+                    <br />
+                    <Grid
+                      container
+                      spacing={2}
+                      justify="center"
+                      alignItems="center"
+                      sx={{
+                        background: "#E66253",
+                        borderRadius: 5,
+                        mx: "35%",
+                        mt: "600px",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Grid xs={4}>
+                        {/* <Button onClick={() => toggleMic()}>
+                          <img
+                            src="/images/microphone.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button> */}
+                        <Mute />
+                      </Grid>
+
+                      <Grid xs={4}>
+                        <Button sx={{ background: "#ffffff" }}>
+                          <img
+                            src="/images/comment.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button>
+                      </Grid>
+
+                      <Grid xs={4}>
+                        {/* <Button onClick={() => toggleWebcam()}>
+                          <img
+                            src="/images/video.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button> */}
+                        <Webcam />
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Grid>
+
+                <Grid xs={4}>
+                  <Grid container spacing={2} sx={{ mt: "450px", ml: "0px" }}>
+                    <Grid xs={2}>
+                      {" "}
+                      <Button>
+                        <img
+                          src="/images/clip 1.png"
+                          width="30px"
+                          height="30px"
+                          style={{ margin: 5 }}
+                        />
+                      </Button>
+                    </Grid>
+                    <Grid xs={8}>
+                      <TextField
+                        id="outlined-multiline-flexible"
+                        sx={{
+                          width: "100%",
+                          background: "#ffffff",
+                          borderRadius: 2,
+                        }}
+                        multiline
+                        rows={1}
+                        placeholder="Type message here"
+                      />
+                    </Grid>
+                    <Grid xs={2}>
+                      {" "}
+                      <Button>
+                        <img
+                          src="/images/paper-plane (1) 1.png"
+                          width="30px"
+                          height="35px"
+                          style={{ margin: 5 }}
+                        />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </Grid>
-              <Grid xs={2}>
-                {" "}
-                <Button>
-                  <img
-                    src="/images/paper-plane (1) 1.png"
-                    width="30px"
-                    height="35px"
-                    style={{ margin: 5 }}
-                  />
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-      {/* Video conferencing */}
-      {/*  */}{" "}
+            </Box>
+          </div>
+        ) : joined && joined == "JOINING" ? (
+          <p>Joining the meeting...</p>
+        ) : (
+          <button onClick={joinMeeting}>Join</button>
+        )}
+      </div>
+    );
+  }
+
+  const [meetingId, setMeetingId] = useState("hykm-ec71-maf8");
+
+  //Getting the meeting id by calling the api we just wrote
+  const getMeetingAndToken = async (id) => {
+    const meetingId =
+      id == null ? await createMeeting({ token: authToken }) : id;
+    setMeetingId(meetingId);
+
+    return meetingId;
+  };
+
+  const goToMeeting = async (id) => {
+    const getMID = await AxiosInstance.get(`meeting`)
+      .then(async (res) => {
+        console.log("really meeting ba toh", res.data[0]);
+
+        if (res.data.length !== 0) {
+          console.log("wow may laman");
+        } else {
+          console.log("waleys");
+
+          try {
+            // Call getMeetingAndToken() to retrieve meeting ID and token
+            //await getMeetingAndToken(); // Ensure meeting ID and token are available
+            const tem = await getMeetingAndToken();
+            // Make the Axios reqest with async/await
+            //console.log(meetingId);
+
+            const response = await AxiosInstance.post(`meeting/`, {
+              meeting_id: tem,
+            });
+
+            // Handle successful response
+            console.log("Meeting joined successfully:", response.data); // Or navigate as needed
+          } catch (error) {
+            console.error("Error joining meeting:", error.response.data);
+          }
+        }
+        setMeetingId(res.data[0].meeting_id);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  };
+
+  useEffect(() => {
+    // getMeetingAndToken();
+    // goToMeeting();
+  }, []);
+
+  //This will set Meeting Id to null when meeting is left or ended
+  const onMeetingLeave = () => {
+    setMeetingId(null);
+  };
+
+  const meetingView = useMemo(() => {
+    if (authToken && meetingId) {
+      return (
+        <MeetingProvider
+          config={{
+            meetingId,
+            micEnabled: true,
+            webcamEnabled: true,
+            name: "C.V. Raman",
+          }}
+          token={authToken}
+        >
+          <MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
+        </MeetingProvider>
+      );
+    }
+    return <JoinScreen getMeetingAndToken={meetingId} />;
+  }, [authToken, meetingId]);
+
+  //!
+  return (
+    <div
+      className="content"
+      style={{
+        paddingBottom: "40px",
+        marginTop: "80px",
+        color: "#99756E",
+      }}
+    >
+      {/* {meetingView} */}
+      //!
+      {authToken && meetingId ? (
+        <MeetingProvider
+          config={{
+            meetingId,
+            micEnabled: true,
+            webcamEnabled: true,
+            name: "C.V. Raman",
+          }}
+          token={authToken}
+        >
+          <MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
+        </MeetingProvider>
+      ) : (
+        // <JoinScreen getMeetingAndToken={getMeetingAndToken} />
+        <JoinScreen getMeetingAndToken={meetingId} />
+      )}
+      //! {/* <ParticipantView props={getMeetingAndToken} /> */}
     </div>
   );
 }

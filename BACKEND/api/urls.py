@@ -11,5 +11,7 @@ urlpatterns = [
     path('nutritionist/<int:pk>', NutritionistAPI),
     path('appointment', AppointmentAPI),
     path('appointment/<int:pk>', AppointmentAPI),
+    #path('video_calls', VideoCallsAPI),
+    path('meeting/', MeetingAPI)
  
 ]

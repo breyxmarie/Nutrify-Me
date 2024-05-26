@@ -55,3 +55,17 @@ class Appointment(models.Model):
 
     class Meta:
         db_table = "Appointment"
+
+# class VideoCall(models.Model):
+#     video_id = models.AutoField(primary_key=True)
+#     meeting_id = models.CharField(max_length=100)
+
+#     class Meta:
+#         db_table = "VideoCall"
+
+class Meeting(models.Model):
+     video_id = models.AutoField(primary_key=True)
+     meeting_id = models.CharField(max_length=100)
+
+     class Meta:
+         db_table = "meeting"

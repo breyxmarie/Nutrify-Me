@@ -12,7 +12,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-import { NavLink, Link, useLocation } from "react-router-dom";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
 
 const pages = [
@@ -40,12 +40,13 @@ const StyledLink = `
 const settings = ["Profile", "Logout"];
 
 function NutritionistNavBar() {
-  const { loggedInUser } = useLoggedInUser();
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
   const normalLink = "";
   const path = location.pathname;
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -58,7 +59,17 @@ function NutritionistNavBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
+    console.log(setting);
+    switch (setting) {
+      case "Logout":
+        setLoggedInUser(null);
+        navigate("/");
+        break;
+      case "Profile":
+        navigate("/user-profile");
+        break;
+    }
     setAnchorElUser(null);
   };
 
@@ -247,8 +258,14 @@ function NutritionistNavBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    handleCloseUserMenu(setting);
+                  }}
+                >
                   <Typography textAlign="center">{setting}</Typography>
+                  <Link to={navigate}></Link>
                 </MenuItem>
               ))}
             </Menu>

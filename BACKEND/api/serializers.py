@@ -32,3 +32,15 @@ class AppointmentSerializer(serializers.ModelSerializer):
                   'time',
                   'user_id',
                   'nutritionist_id')
+
+# class VideoCallsSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = VideoCalls
+#         fields = ('video_id', 'meeting_id')
+
+
+
+class MeetingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Meeting
+        fields = ('video_id', 'meeting_id')

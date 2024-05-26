@@ -125,6 +125,88 @@ def AppointmentAPI(request, pk=0):
 
 
 
+# @csrf_exempt
+# def VideoCallAPI(request, pk=0):
+#     # if request.method == 'GET':
+#     #     users = User.objects.all()
+#     #     user_serializer = UserSerializer(users, many=True)
+#     #     return JsonResponse(user_serializer.data, safe=False)
+
+#     if request.method == 'GET':
+#         if pk == 0:  # Check if pk is not specified (meaning get all users)
+#             videoCalls = VideoCall.objects.all()
+#             serializer = VideoCallSerializer(videoCalls, many=True)  # Set many=True for multiple users
+#             return JsonResponse(serializer.data, safe=False)
+#         else:
+#             # Existing logic for fetching a single user using pk
+#             try:
+#                 videoCall = VideoCall.objects.get(pk=pk)
+#                 serializer = VideoCallSerializer(user)
+#                 return JsonResponse(serializer.data, safe=False)
+#             except VideoCall.DoesNotExist:
+#                 return JsonResponse({'error': 'Meeting ID not found'}, status=404)
+#     elif request.method == 'POST':
+#         videoCall_data = JSONParser().parse(request)
+#         videoCall_serializer = VideoCallSerializer(data = user_data)
+#         if videoCall_serializer.is_valid():
+#             videoCall_serializer.save()
+#             return JsonResponse("Meeting ID Added Successfully", safe=False)
+#         return JsonResponse("Failes to Add Meeting ID", safe=False)
+#     # elif request.method == 'PUT':
+#     #     videoCall_data = JSONParser().parse(request)
+#     #     videoCalls = VideoCall.objects.get(user_id=user_data['user_id'])
+#     #     user_serializer = UserSerializer(users, data = user_data)
+#     #     if user_serializer.is_valid():
+#     #         user_serializer.save()
+#     #         return JsonResponse("Update Successfully", safe=False)
+#     #     return JsonResponse("Faile to Update", safe=False)
+#     elif request.method == 'DELETE':
+#         videoCall = VideoCall.objects.get(user_id=pk)
+#         videoCall.delete()
+#         return JsonResponse("Meeting deleted Successfully", safe = False)
+
+
+@csrf_exempt
+def MeetingAPI(request, pk=0):
+    # if request.method == 'GET':
+    #     users = User.objects.all()
+    #     user_serializer = UserSerializer(users, many=True)
+    #     return JsonResponse(user_serializer.data, safe=False)
+
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            meetings = Meeting.objects.all()
+            serializer = MeetingSerializer(meetings, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                meeting = Meeting.objects.get(pk=pk)
+                serializer = MeetingSerializer(meeting)
+                return JsonResponse(serializer.data, safe=False)
+            except Meeting.DoesNotExist:
+                return JsonResponse({'error': 'Meeting ID not found'}, status=404)
+    elif request.method == 'POST':
+        meeting_data = JSONParser().parse(request)
+        meeting_serializer = MeetingSerializer(data = meeting_data)
+        if meeting_serializer.is_valid():
+            meeting_serializer.save()
+            return JsonResponse("Meeting ID Added Successfully", safe=False)
+        return JsonResponse("Failes to Add Meeting ID", safe=False)
+    # elif request.method == 'PUT':
+    #     videoCall_data = JSONParser().parse(request)
+    #     videoCalls = VideoCall.objects.get(user_id=user_data['user_id'])
+    #     user_serializer = UserSerializer(users, data = user_data)
+    #     if user_serializer.is_valid():
+    #         user_serializer.save()
+    #         return JsonResponse("Update Successfully", safe=False)
+    #     return JsonResponse("Faile to Update", safe=False)
+    elif request.method == 'DELETE':
+        meeting = Meeting.objects.get(user_id=pk)
+        meeting.delete()
+        return JsonResponse("Meeting deleted Successfully", safe = False)
+
+
 def home(request):
     return HttpResponse("This is the homepage")
 # Create your views here.
