@@ -44,3 +44,22 @@ class MeetingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Meeting
         fields = ('video_id', 'meeting_id')
+
+class ShopMealPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopMealPlan
+        fields = ('shop_mealplan_id', 'name', 'image', 'description')
+
+class ShopMealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopMeal
+        fields = ('shop_meal_id', 
+                  'mealplan_id', 
+                  'type', 
+                  'calories', 
+                  'fat', 
+                  'protein', 
+                  'food', 
+                  'image')
+
+

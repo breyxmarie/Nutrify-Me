@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
+import AxiosInstance from "../forms/AxiosInstance";
 
 function SellerCreateMealPlan() {
   const [activeButtonIndex, setActiveButtonIndex] = useState(null);
@@ -290,6 +291,41 @@ function SellerCreateMealPlan() {
   //* modal
 
   // *
+
+  const [file, setFile] = useState();
+
+  const handleFileUpload = async (event) => {
+    console.log(file);
+    event.preventDefault(); // Prevent default form submission behavior
+
+    if (!file) {
+      return alert("Please select a file to upload");
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    // const csrftoken = document.querySelector(
+    //   '[name="csrfmiddlewaretoken"]'
+    // ).value;
+    // axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
+
+    try {
+      const response = await AxiosInstance.post(
+        "shopmealplan/savefile",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data); // Handle successful response
+    } catch (error) {
+      console.error("Error uploading file:", error); // Handle errors
+    }
+  };
+
   return (
     <div
       className="content"
@@ -306,76 +342,88 @@ function SellerCreateMealPlan() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Grid container spacing={2} sx={{ my: 3 }}>
-            <Grid xs={6}>Type of Meal: </Grid>
-            <Grid xs={6}>Stocks</Grid>
-          </Grid>
-          Upload Image:
-          {/* // * upload image */}
-          <br />
-          <br />
-          <Box sx={{ mx: 1 }}>
-            <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
-            <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid xs={5}>
-                [Calories]
-                <img
-                  src="/images/arrow.png"
-                  width="40px"
-                  style={{ marginLeft: "35px", marginTop: "25px" }}
-                />
-              </Grid>
-              <Grid xs={4}>
-                <br />
-                <TextField
-                  id="outlined-multiline-flexible"
-                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-                  placeholder="Type message here"
-                />
-              </Grid>
-              <Grid xs={1}>
-                <br />
-                <Button
-                  sx={{
-                    background: "#ffffff",
-                    color: "#E66253",
-                    ml: 5,
-                    mt: 1,
-                    "&:hover": {
-                      backgroundColor: "#E66253",
-                      color: "#ffffff",
-                      border: 0.5,
-                      borderColor: "#ffffff",
-                    },
-                  }}
-                >
-                  OK
-                </Button>
-              </Grid>
+          <form onSubmit={handleFileUpload}>
+            <Grid container spacing={2} sx={{ my: 3 }}>
+              <Grid xs={6}>Type of Meal: </Grid>
+              <Grid xs={6}>Stocks</Grid>
             </Grid>
-          </Box>
-          <center>
-            <Button
-              sx={{
-                background: "#ffffff",
-                color: "#E66253",
-                fontWeight: "bold",
-                borderRadius: 5,
+            Upload Image:
+            {/* // * upload image */}
+            <input
+              type="file"
+              onChange={(evt) => setFile(evt.target.files[0])}
+            />
+            <br />
+            <br />
+            <Box sx={{ mx: 1 }}>
+              <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid xs={5}>
+                  [Calories]
+                  <img
+                    src="/images/arrow.png"
+                    width="40px"
+                    style={{ marginLeft: "35px", marginTop: "25px" }}
+                  />
+                </Grid>
+                <Grid xs={4}>
+                  <br />
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    sx={{
+                      width: "100%",
+                      background: "#ffffff",
+                      borderRadius: 2,
+                    }}
+                    placeholder="Type message here"
+                  />
+                </Grid>
+                <Grid xs={1}>
+                  <br />
+                  <Button
+                    sx={{
+                      background: "#ffffff",
+                      color: "#E66253",
+                      ml: 5,
+                      mt: 1,
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                  >
+                    OK
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+            <center>
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  fontWeight: "bold",
+                  borderRadius: 5,
 
-                ml: 5,
-                mt: 1,
-                px: 10,
-                "&:hover": {
-                  backgroundColor: "#E66253",
-                  color: "#ffffff",
-                  border: 0.5,
-                  borderColor: "#ffffff",
-                },
-              }}
-            >
-              DONE
-            </Button>
-          </center>
+                  ml: 5,
+                  mt: 1,
+                  px: 10,
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }}
+                type="submit"
+                // onClick={handleFileUpload}
+              >
+                DONE
+              </Button>
+            </center>
+          </form>
         </Box>
       </Modal>
       <Typography sx={{ my: 7, fontSize: "200%", fontWeight: "bold" }}>

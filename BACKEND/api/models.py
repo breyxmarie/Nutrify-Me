@@ -69,3 +69,30 @@ class Meeting(models.Model):
 
      class Meta:
          db_table = "meeting"
+
+def upload_meal_path(instance, filename):
+    return '/'.join(['meal_plan', str(instance.title), filename])
+
+
+class ShopMealPlan(models.Model):
+    shop_mealplan_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=50)
+    image = models.CharField(max_length=300)
+    # image = models.ImageField(blank=True, null=True, upload_to='Photos/meal_plan')
+    description= models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "shop_meal_plan"
+
+class ShopMeal(models.Model):
+    shop_meal_id = models.AutoField(primary_key=True)
+    mealplan_id = models.ForeignKey(ShopMealPlan, on_delete=models.CASCADE, related_name="listings")
+    type = models.CharField(max_length=30)
+    calories = models.IntegerField() 
+    fat= models.IntegerField()
+    protein= models.IntegerField()
+    food = models.CharField(max_length=70)
+    image = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "shop_meal"

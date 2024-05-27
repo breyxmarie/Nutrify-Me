@@ -7,5 +7,7 @@ admin.site.register(User)
 admin.site.register(Nutritionist)
 #admin.site.register(VideoCalls)
 admin.site.register(Meeting)
+admin.site.register(ShopMealPlan)
+admin.site.register(ShopMeal)
 
 # Register your models here.

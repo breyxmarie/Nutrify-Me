@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from .models import *
 from .serializers import *
+from django.core.files.storage import default_storage
 
 @csrf_exempt
 def UserAPI(request, pk=0):
@@ -124,48 +125,6 @@ def AppointmentAPI(request, pk=0):
         return JsonResponse("Appointment was deleted Successfully", safe = False)
 
 
-
-# @csrf_exempt
-# def VideoCallAPI(request, pk=0):
-#     # if request.method == 'GET':
-#     #     users = User.objects.all()
-#     #     user_serializer = UserSerializer(users, many=True)
-#     #     return JsonResponse(user_serializer.data, safe=False)
-
-#     if request.method == 'GET':
-#         if pk == 0:  # Check if pk is not specified (meaning get all users)
-#             videoCalls = VideoCall.objects.all()
-#             serializer = VideoCallSerializer(videoCalls, many=True)  # Set many=True for multiple users
-#             return JsonResponse(serializer.data, safe=False)
-#         else:
-#             # Existing logic for fetching a single user using pk
-#             try:
-#                 videoCall = VideoCall.objects.get(pk=pk)
-#                 serializer = VideoCallSerializer(user)
-#                 return JsonResponse(serializer.data, safe=False)
-#             except VideoCall.DoesNotExist:
-#                 return JsonResponse({'error': 'Meeting ID not found'}, status=404)
-#     elif request.method == 'POST':
-#         videoCall_data = JSONParser().parse(request)
-#         videoCall_serializer = VideoCallSerializer(data = user_data)
-#         if videoCall_serializer.is_valid():
-#             videoCall_serializer.save()
-#             return JsonResponse("Meeting ID Added Successfully", safe=False)
-#         return JsonResponse("Failes to Add Meeting ID", safe=False)
-#     # elif request.method == 'PUT':
-#     #     videoCall_data = JSONParser().parse(request)
-#     #     videoCalls = VideoCall.objects.get(user_id=user_data['user_id'])
-#     #     user_serializer = UserSerializer(users, data = user_data)
-#     #     if user_serializer.is_valid():
-#     #         user_serializer.save()
-#     #         return JsonResponse("Update Successfully", safe=False)
-#     #     return JsonResponse("Faile to Update", safe=False)
-#     elif request.method == 'DELETE':
-#         videoCall = VideoCall.objects.get(user_id=pk)
-#         videoCall.delete()
-#         return JsonResponse("Meeting deleted Successfully", safe = False)
-
-
 @csrf_exempt
 def MeetingAPI(request, pk=0):
     # if request.method == 'GET':
@@ -205,7 +164,121 @@ def MeetingAPI(request, pk=0):
         meeting = Meeting.objects.get(user_id=pk)
         meeting.delete()
         return JsonResponse("Meeting deleted Successfully", safe = False)
+    
 
+
+
+# @csrf_exempt
+# def ShopMealPlanAPI(request, pk=0):
+#     if request.method == 'GET':
+#         if pk == 0:  # Check if pk is not specified (meaning get all users)
+#             shopmealPlan = ShopMealPlan.objects.all()
+#             serializer = ShopMealPlanSerializer(shopmealPlan, many=True)  # Set many=True for multiple users
+#             return JsonResponse(serializer.data, safe=False)
+#         else:
+#             # Existing logic for fetching a single user using pk
+#             try:
+#                 shopmealPlan = ShopMealPlan.objects.get(pk=pk)
+#                 serializer = ShopMealPlanSerializer(shopmealPlan)
+#                 return JsonResponse(serializer.data, safe=False)
+#             except ShopMealPlan.DoesNotExist:
+#                 return JsonResponse({'error': 'Meal Plan not found'}, status=404)
+#     elif request.method == 'POST':
+#         shopmealPlan_data = JSONParser().parse(request)
+#         shopmealPlan_serializer = ShopMealPlanSerializer(data = shopmealPlan_data)
+#         if shopmealPlan_serializer.is_valid():
+#             shopmealPlan_serializer.save()
+#             return JsonResponse("Meal Plan Added Successfully", safe=False)
+#         return JsonResponse("Failed to Add Meal Plan", safe=False)
+#     elif request.method == 'PUT':
+#         shopmealPlan_data = JSONParser().parse(request)
+#         shopmealPlans = ShopMealPlan.objects.get(mealPlan_id=shopmealPlan_data['shop_mealplan_id'])
+#         shopmealPlan_serializer = NutritionistSerializer(shopmealPlans, data = shopmealPlan_data)
+#         if shopmealPlan_serializer.is_valid():
+#             shopmealPlan_serializer.save()
+#             return JsonResponse("Update Successfully", safe=False)
+#         return JsonResponse("Failed to Update", safe=False)
+#     elif request.method == 'DELETE':
+#         shopmealPlan = ShopMealPlan.objects.get(mealplan_id=pk)
+#         shopmealPlan.delete()
+#         return JsonResponse("Meal Plan was deleted Successfully", safe = False)
+
+@csrf_exempt
+def ShopMealPlanAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            shopMealPlan = ShopMealPlan.objects.all()
+            serializer = ShopMealPlanSerializer(shopMealPlan, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                shopMealPlan = ShopMealPlan.objects.get(pk=pk)
+                serializer = ShopMealPlanSerializer(shopMealPlan)
+                return JsonResponse(serializer.data, safe=False)
+            except ShopMealPlan.DoesNotExist:
+                return JsonResponse({'error': 'Meal Plan not found'}, status=404)
+    elif request.method == 'POST':
+        shopMealPlan_data = JSONParser().parse(request)
+        shopMealPlan_serializer = ShopMealPlanSerializer(data = shopMealPlan_data)
+        if shopMealPlan_serializer.is_valid():
+            shopMealPlan_serializer.save()
+            return JsonResponse("Meal Plan Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Meal Plan", safe=False)
+    elif request.method == 'PUT':
+        shopMealPlan_data = JSONParser().parse(request)
+        shopMealPlans = ShopMealPlan.objects.get(shop_mealplan_id=shopMealPlan_data['shop_mealplan_id'])
+        shopMealPlan_serializer = AppointmentSerializer(shopMealPlans, data = shopMealPlan_data)
+        if shopMealPlan_serializer.is_valid():
+            shopMealPlan_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        shopMealPlan = Appointment.objects.get(appointment_id=pk)
+        shopMealPlan.delete()
+        return JsonResponse("Appointment was deleted Successfully", safe = False)
+
+
+@csrf_exempt
+def ShopMealAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            shopmeal = ShopMeal.objects.all()
+            serializer = ShopMealSerializer(shopmeal, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                shopmeal = ShopMeal.objects.get(pk=pk)
+                serializer = ShopMealSerializer(shopmeal)
+                return JsonResponse(serializer.data, safe=False)
+            except ShopMeal.DoesNotExist:
+                return JsonResponse({'error': 'Meal not found'}, status=404)
+    elif request.method == 'POST':
+        shopmeal_data = JSONParser().parse(request)
+        shopmeal_serializer = ShopMealSerializer(data = shopmeal_data)
+        if shopmeal_serializer.is_valid():
+            shopmeal_serializer.save()
+            return JsonResponse("Meal Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Meal", safe=False)
+    elif request.method == 'PUT':
+        shopmeal_data = JSONParser().parse(request)
+        shopmeals = ShopMeal.objects.get(meal_id=shopmeal_data['meal_id'])
+        shopmeal_serializer = NutritionistSerializer(shopmeals, data = shopmeal_data)
+        if shopmeal_serializer.is_valid():
+            shopmeal_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        shopmeal = ShopMeal.objects.get(meal_id=pk)
+        shopmeal.delete()
+        return JsonResponse("Meal was deleted Successfully", safe = False)
+
+@csrf_exempt
+def SaveFile(request):
+    file=request.FILES['file']
+    file_name=default_storage.save(file.name, file)
+    return JsonResponse(file_name, safe=False)
 
 def home(request):
     return HttpResponse("This is the homepage")
