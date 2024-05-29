@@ -222,8 +222,9 @@ def ShopMealPlanAPI(request, pk=0):
         shopMealPlan_data = JSONParser().parse(request)
         shopMealPlan_serializer = ShopMealPlanSerializer(data = shopMealPlan_data)
         if shopMealPlan_serializer.is_valid():
-            shopMealPlan_serializer.save()
-            return JsonResponse("Meal Plan Added Successfully", safe=False)
+            shopMealPlan = shopMealPlan_serializer.save()
+            response_data = {"id": shopMealPlan.pk, "message": "Meal Plan Added Successfully"}
+            return JsonResponse(response_data , safe=False)
         return JsonResponse("Failed to Add Meal Plan", safe=False)
     elif request.method == 'PUT':
         shopMealPlan_data = JSONParser().parse(request)

@@ -80,6 +80,8 @@ class ShopMealPlan(models.Model):
     image = models.CharField(max_length=300)
     # image = models.ImageField(blank=True, null=True, upload_to='Photos/meal_plan')
     description= models.CharField(max_length=200)
+    start_week = models.DateField(auto_now=False)
+    end_week = models.DateField(auto_now=False)
 
     class Meta:
         db_table = "shop_meal_plan"
@@ -91,8 +93,10 @@ class ShopMeal(models.Model):
     calories = models.IntegerField() 
     fat= models.IntegerField()
     protein= models.IntegerField()
+    carbs = models.IntegerField()
     food = models.CharField(max_length=70)
     image = models.CharField(max_length=100)
+    day = models.CharField(max_length=15)
 
     class Meta:
         db_table = "shop_meal"

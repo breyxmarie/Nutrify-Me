@@ -11,7 +11,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import AxiosInstance from "../forms/AxiosInstance";
 import "pure-react-carousel/dist/react-carousel.es.css";
 
 import { Carousel } from "react-responsive-carousel";
