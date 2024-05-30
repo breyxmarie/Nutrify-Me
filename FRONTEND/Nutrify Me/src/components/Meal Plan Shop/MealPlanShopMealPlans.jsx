@@ -157,11 +157,12 @@ function MealPlanShopMealPlans() {
     AxiosInstance.get(``).then((res) => {
       setUsers(res.data);
     });
+  };
 
-    const getMealData = () => {
-      AxiosInstance.get(``).then((res) => {
-        setUsers(res.data);
-      });
+  const getMealData = () => {
+    AxiosInstance.get(``).then((res) => {
+      setUsers(res.data);
+    });
   };
   //!
 
