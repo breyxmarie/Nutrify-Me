@@ -21,6 +21,7 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 
 function SellerCreateMealPlan() {
+  const [indexmeal, setIndexmeal] = useState();
   const [tempMeal, setTempMeal] = useState([
     {
       day: "Sunday", // Optional: Add a day property for reference
@@ -145,6 +146,174 @@ function SellerCreateMealPlan() {
         },
       },
     },
+
+    {
+      day: "Wednesday", // Optional: Add a day property for reference
+      meals: {
+        Breakfast: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Lunch: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Snack: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Dinner: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+      },
+    },
+
+    {
+      day: "Thursday",
+      meals: {
+        Breakfast: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Lunch: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Snack: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Dinner: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+      },
+    },
+
+    {
+      day: "Friday",
+      meals: {
+        Breakfast: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Lunch: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Snack: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Dinner: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+      },
+    },
+
+    {
+      day: "Saturday", // Optional: Add a day property for reference
+      meals: {
+        Breakfast: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Lunch: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Snack: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+        Dinner: {
+          food: "",
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+          description: "",
+          image: "",
+        },
+      },
+    },
   ]);
   const [day, setDay] = useState();
   const schema = yup.object().shape({
@@ -223,6 +392,7 @@ function SellerCreateMealPlan() {
     const currentWeekStart = dayjs(value).startOf("week").format("YYYY-MM-DD");
     const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
     console.log(value, currentWeekStart, currentWeekEnd);
+    // const [mealplanId, setMealplanId] = useState();
     // try {
     //   AxiosInstance.post(`shopmealplan/`, {
     //     name: tempType,
@@ -273,12 +443,45 @@ function SellerCreateMealPlan() {
           // console.log(value, currentWeekStart, currentWeekEnd);
           AxiosInstance.post(`shopmealplan/`, {
             name: data.mealtype,
-            image: "http://127.0.0.1:8000/Photos/food.png",
-            description: "random",
+            image: "http://127.0.0.1:8000/Photos/" + response.data,
+            description: data.description,
             start_week: currentWeekStart,
             end_week: currentWeekEnd,
           }).then((res) => {
             console.log(res.data.id);
+            tempMeal.forEach((dayObject) => {
+              console.log("Day:", dayObject.day);
+
+              // dayObject.meals.forEach((meal) => {
+              //   // Access both day and meal data within the loop
+              //   console.log("Meal details:", { day: dayObject.day, ...meal });
+              // });
+
+              Object.keys(dayObject.meals).forEach((mealName) => {
+                const mealDetails = dayObject.meals[mealName];
+                console.log("Day (Meal Name):", mealName);
+                console.log("Meal details:", mealDetails);
+
+                try {
+                  AxiosInstance.post(`shopmeal/`, {
+                    mealplan_id: res.data.id,
+                    type: mealName,
+                    calories: mealDetails.calories,
+                    fat: mealDetails.fat,
+                    protein: mealDetails.protein,
+                    carbs: mealDetails.carbs,
+                    food: mealDetails.food,
+                    image: mealDetails.image,
+                    day: dayObject.day,
+                    //image: data.type,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response);
+                }
+              });
+            });
           });
         } catch (error) {
           console.log(error.response.data);
@@ -300,6 +503,22 @@ function SellerCreateMealPlan() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = (type) => {
     console.log(type);
+
+    switch (type) {
+      case "Breakfast":
+        setIndexmeal(0);
+        break;
+      case "Lunch":
+        setIndexmeal(1);
+        break;
+      case "Snack":
+        setIndexmeal(2);
+        break;
+      case "Dinner":
+        setIndexmeal(3);
+        break;
+    }
+
     setTempTypeForMeal(type);
     setOpen(true);
   };
@@ -413,6 +632,87 @@ function SellerCreateMealPlan() {
 
         setTempMeal(updateMeal(day, tempTypeForMeal, updatedMealInfo));
         handleReset();
+        setDivContent(
+          <Box sx={{ mx: 7 }}>
+            {Object.keys(tempMeal[indexmeal].meals).map((mealName) => (
+              <Box>
+                {" "}
+                <Typography
+                  sx={{
+                    color: "#E66253",
+                    fontWeight: "bold",
+                    fontSize: "200%",
+                    textAlign: "left",
+                    ml: 5,
+                    mt: 3,
+                  }}
+                >
+                  {mealName}
+                </Typography>
+                <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
+                  <Grid container spacing={2} sx={{ my: 2 }}>
+                    <Grid xs={4}>
+                      <img
+                        src={tempMeal[indexmeal].meals[mealName].image}
+                        height="150px"
+                      />{" "}
+                    </Grid>
+                    <Grid xs={6} sx={{ mx: 4, mt: 5 }}>
+                      <Typography
+                        sx={{
+                          color: "#99756E",
+                          fontWeight: "bold",
+                          fontSize: "25px",
+                          float: "left",
+                        }}
+                      >
+                        {tempMeal[indexmeal].meals[mealName].food}
+                      </Typography>
+
+                      <Grid container spacing={2}>
+                        <Grid xs={3}>
+                          <img src="/images/calories.png" />
+                          {tempMeal[indexmeal].meals[mealName].calories}{" "}
+                          calories |
+                        </Grid>
+                        <Grid xs={3}>
+                          <img src="/images/fat.png" />
+                          {tempMeal[indexmeal].meals[mealName].fat}g fat |
+                        </Grid>
+                        <Grid xs={3}>
+                          <img src="/images/carbs.png" />
+                          {tempMeal[indexmeal].meals[mealName].carbs}g carbs |
+                        </Grid>
+                        <Grid xs={3}>
+                          <img src="/images/protein.png" />
+                          {tempMeal[indexmeal].meals[mealName].protein}g protein
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid xs={1}>
+                      <Button
+                        sx={{
+                          background: "#E66253",
+                          color: "#ffffff",
+                          mt: 8,
+                          "&:hover": {
+                            backgroundColor: "#ffffff",
+                            color: "#E66253",
+                            border: 0.5,
+                            borderColor: "#E66253",
+                          },
+                        }}
+                        onClick={() => handleOpen(mealName)}
+                      >
+                        ADD
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        );
         handleClose();
         return;
       } catch (error) {
@@ -648,18 +948,9 @@ function SellerCreateMealPlan() {
 
     setActiveButtonIndex(index);
 
-    const breakfastItems = meal[index].meals.breakfast;
-    const lunchItems = meal[index].meals.lunch;
-    const snackItems = meal[index].meals.snack;
-    const dinnerItems = meal[index].meals.dinner;
-
-    const { breakfast, lunch, snack, dinner } = meal[index].meals;
-
-    console.log(breakfast);
-
     setDivContent(
       <Box sx={{ mx: 7 }}>
-        {Object.keys(meal[index].meals).map((mealName) => (
+        {Object.keys(tempMeal[index].meals).map((mealName) => (
           <Box>
             {" "}
             <Typography
@@ -677,7 +968,15 @@ function SellerCreateMealPlan() {
             <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
               <Grid container spacing={2} sx={{ my: 2 }}>
                 <Grid xs={2}>
-                  <img src={meal[index].meals[mealName].image} height="150px" />{" "}
+                  <img
+                    src={
+                      tempMeal[index]?.meals?.[mealName]?.image ||
+                      "/images/food.png"
+                    }
+                    height="150px"
+                    width="200px"
+                    alt="Meal Image" // Add an alt attribute for accessibility
+                  />
                 </Grid>
                 <Grid xs={8} sx={{ mx: 4, mt: 5 }}>
                   <Typography
@@ -688,25 +987,25 @@ function SellerCreateMealPlan() {
                       float: "left",
                     }}
                   >
-                    {meal[index].meals[mealName].food}
+                    {tempMeal[index].meals[mealName].food}
                   </Typography>
 
                   <Grid container spacing={2}>
                     <Grid xs={3}>
                       <img src="/images/calories.png" />
-                      {meal[index].meals[mealName].calories} calories |
+                      {tempMeal[index].meals[mealName].calories} calories |
                     </Grid>
                     <Grid xs={3}>
                       <img src="/images/fat.png" />
-                      {meal[index].meals[mealName].fat}g fat |
+                      {tempMeal[index].meals[mealName].fat}g fat |
                     </Grid>
                     <Grid xs={3}>
                       <img src="/images/carbs.png" />
-                      {meal[index].meals[mealName].carbs}g carbs |
+                      {tempMeal[index].meals[mealName].carbs}g carbs |
                     </Grid>
                     <Grid xs={3}>
                       <img src="/images/protein.png" />
-                      {meal[index].meals[mealName].protein}g protein
+                      {tempMeal[index].meals[mealName].protein}g protein
                     </Grid>
                   </Grid>
                 </Grid>
@@ -1241,7 +1540,7 @@ function SellerCreateMealPlan() {
               </Grid>
             </Grid>
 
-            <Box
+            {/* <Box
               sx={{
                 border: 2,
                 borderRadius: 3,
@@ -1295,17 +1594,17 @@ function SellerCreateMealPlan() {
                 [FOOD] <br />
                 [FOOD]
               </Typography>
-            </Box>
+            </Box> */}
 
-            <Box>
+            <Box sx={{ mr: 5 }}>
               Description <br />
               <TextField
+                sx={{ width: "100%" }}
                 id="description"
                 name="description"
                 label="Description"
                 multiline
                 minRows={4}
-                fullWidth
                 margin="dense"
                 {...register1("description")}
                 error={errors1.description ? true : false}
