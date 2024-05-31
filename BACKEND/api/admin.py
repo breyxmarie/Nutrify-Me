@@ -9,5 +9,6 @@ admin.site.register(Nutritionist)
 admin.site.register(Meeting)
 admin.site.register(ShopMealPlan)
 admin.site.register(ShopMeal)
+admin.site.register(Cart)
 
 # Register your models here.

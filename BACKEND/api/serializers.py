@@ -64,4 +64,9 @@ class ShopMealSerializer(serializers.ModelSerializer):
                   'image',
                   'day')
 
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ('cart_id','user_id','orders') 
+
 

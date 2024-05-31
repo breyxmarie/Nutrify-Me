@@ -284,3 +284,45 @@ def SaveFile(request):
 def home(request):
     return HttpResponse("This is the homepage")
 # Create your views here.
+
+
+
+@csrf_exempt
+def CartAPI(request, pk=0):
+    # if request.method == 'GET':
+    #     users = User.objects.all()
+    #     user_serializer = UserSerializer(users, many=True)
+    #     return JsonResponse(user_serializer.data, safe=False)
+
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            carts = Cart.objects.all()
+            serializer = CartSerializer(carts, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                cart = Cart.objects.get(pk=pk)
+                serializer = CartSerializer(cart)
+                return JsonResponse(serializer.data, safe=False)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'Cart not found'}, status=404)
+    elif request.method == 'POST':
+        cart_data = JSONParser().parse(request)
+        cart_serializer = CartSerializer(data = cart_data)
+        if cart_serializer.is_valid():
+            cart_serializer.save()
+            return JsonResponse("Cart Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Cart", safe=False)
+    elif request.method == 'PUT':
+        cart_data = JSONParser().parse(request)
+        carts = Cart.objects.get(cart_id=cart_data['cart_id'])
+        cart_serializer = CartSerializer(carts, data = cart_data)
+        if cart_serializer.is_valid():
+            cart_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        cart = Cart.objects.get(user_id=pk)
+        cart.delete()
+        return JsonResponse("Cart was deleted Successfully", safe = False)

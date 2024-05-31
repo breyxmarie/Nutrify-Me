@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.fields.json import JSONField
+
 
 # Create your models here.
 class Project(models.Model):
@@ -97,6 +99,13 @@ class ShopMeal(models.Model):
     food = models.CharField(max_length=70)
     image = models.CharField(max_length=100)
     day = models.CharField(max_length=15)
-
+    
     class Meta:
         db_table = "shop_meal"
+class Cart(models.Model):
+    cart_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingss")
+    orders = JSONField()
+
+    class Meta:
+        db_table = "cart"
