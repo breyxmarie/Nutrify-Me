@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -28,18 +28,87 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import ReactDOM from "react-dom";
 import { Modal, Tab, Tabs } from "@mui/material";
+import AxiosInstance from "../forms/AxiosInstance";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 function MealPlanShopCheckout() {
   const { cartId } = useParams();
 
   const location = useLocation();
   const { cartItems } = location.state || {};
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
+  //! get Cart data
 
+  const [cartData, setCartData] = useState([]);
+  const [shopMeal, setShopMeal] = useState([]);
+  const [cartMeal, setCartMeal] = useState([]);
+
+  const getCartData = async () => {
+    try {
+      const response = await AxiosInstance.get(`cart`);
+      const filteredData = response.data.filter(
+        (item) => item.user_id === loggedInUser.user_id
+      );
+      setCartData(filteredData);
+      console.log(cartData);
+      // getMealData();
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+    }
+  };
+
+  const getMealData = async () => {
+    try {
+      const response = await AxiosInstance.get(`shopmealplan`);
+
+      // const filteredData = response.data;
+      // filteredData.filter(
+      //   (item) => item.mealplan_id == cartData[0].orders
+      // );
+      const filteredItems = new Set();
+      const filteredData = response.data.filter((item) => {
+        // Check if item.mealplan_id is present in cartData[0].orders
+        if (
+          cartData[0].orders &&
+          cartData[0].orders.includes(item.shop_mealplan_id)
+        ) {
+          console.log("Condition met! Item:", item);
+          filteredItems.add(item); // Add item to the set
+        }
+
+        return true; // Include all items in the filtered data
+      });
+
+      // Update shopMeal state with the filtered items after the filter completes
+      setShopMeal(Array.from(filteredItems));
+
+      // setShopMeal(filteredData);
+    } catch (error) {
+      console.error("Error fetching meal data:", error);
+    }
+
+    // const response = await AxiosInstance.get(`shopmeal`);
+    // const filteredData = response.data;
+
+    // setShopMeal(filteredData);
+    // console.log(shopMeal);
+    // AxiosInstance.get(`shopmeal`).then((res) => {
+    //   setShopMeal(res.data);
+    //   // setShopMeal(res.data.filter((item) => item.mealplan_id == );
+    // });
+
+    // // {
+    // //   cartData[0].map((item, index) => console.log(item));
+    // // }
+  };
+
+  const getCartMealData = () => {};
+  //!
   cartItems.map((item) => console.log(item));
   const listAddress = [
     {
       fullName: "lorem ipsum",
-      address: "full random address",
+      address: "full randomsss addressqwe123",
       phoneNumber: "0123456",
     },
     {
@@ -109,6 +178,24 @@ function MealPlanShopCheckout() {
   const handleTabChange = (event, newActiveTab) => {
     setActiveTab(newActiveTab);
   };
+
+  useEffect(() => {
+    // addNewObject();
+
+    getCartData();
+  }, []);
+
+  useEffect(() => {
+    if (cartData.length > 0 && shopMeal.length === 0) {
+      getMealData();
+    }
+
+    console.log(cartData[0]);
+  }, [cartData]);
+
+  useEffect(() => {
+    console.log(shopMeal, "did it work");
+  }, [shopMeal]);
 
   const tabContent = [
     {
@@ -345,7 +432,7 @@ function MealPlanShopCheckout() {
       </Box>
       <br />
       <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
-        {cartItems.map((item, index) => (
+        {shopMeal.map((item, index) => (
           <Grid container spacing={2} sx={{ mt: "20px" }}>
             <Grid xs={4}>
               {" "}
@@ -353,7 +440,7 @@ function MealPlanShopCheckout() {
             </Grid>
             <Grid xs={4} sx={{ textAlign: "left" }}>
               <Typography sx={{ color: "#99756E", mt: 3 }}>
-                {item.product}
+                {item.name}
               </Typography>
               <Typography sx={{ color: "#E66253", mt: "12%" }}>
                 {" "}

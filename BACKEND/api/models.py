@@ -84,6 +84,7 @@ class ShopMealPlan(models.Model):
     description= models.CharField(max_length=200)
     start_week = models.DateField(auto_now=False)
     end_week = models.DateField(auto_now=False)
+    price = models.IntegerField()
 
     class Meta:
         db_table = "shop_meal_plan"
@@ -109,3 +110,11 @@ class Cart(models.Model):
 
     class Meta:
         db_table = "cart"
+
+class Address(models.Model):
+    address_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss")
+    phone = models.IntegerField()
+    address = models.CharField(max_length=500)
+    name = models.CharField(max_length=100)
+    default = models.BooleanField()

@@ -326,3 +326,41 @@ def CartAPI(request, pk=0):
         cart = Cart.objects.get(user_id=pk)
         cart.delete()
         return JsonResponse("Cart was deleted Successfully", safe = False)
+
+
+
+
+@csrf_exempt
+def AddressAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            nutritionist = Nutritionist.objects.all()
+            serializer = NutritionistSerializer(nutritionist, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                nutritionist = Nutritionist.objects.get(pk=pk)
+                serializer = NutritionistSerializer(nutritionist)
+                return JsonResponse(serializer.data, safe=False)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'Nutritionist not found'}, status=404)
+    elif request.method == 'POST':
+        nutritionist_data = JSONParser().parse(request)
+        nutritionist_serializer = NutritionistSerializer(data = nutritionist_data)
+        if nutritionist_serializer.is_valid():
+            nutritionist_serializer.save()
+            return JsonResponse("Nutritionist Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Nutritionist", safe=False)
+    elif request.method == 'PUT':
+        nutritionist_data = JSONParser().parse(request)
+        nutritionists = Nutritionist.objects.get(nutritionist_id=nutritionist_data['nutritionist_id'])
+        nutritionist_serializer = NutritionistSerializer(nutritionists, data = nutritionist_data)
+        if nutritionist_serializer.is_valid():
+            nutritionist_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        nutritionist = Nutritionist.objects.get(nutritionist_id=pk)
+        nutritionist.delete()
+        return JsonResponse("Nutritionist was deleted Successfully", safe = False)

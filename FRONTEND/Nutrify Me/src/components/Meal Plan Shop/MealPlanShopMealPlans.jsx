@@ -339,7 +339,7 @@ function MealPlanShopMealPlans() {
   };
 
   // ! cart functions
-  const [userCart, setUserCart] = useState();
+  const [userCart, setUserCart] = useState([]);
 
   const getCartData = () => {
     AxiosInstance.get(`cart`).then((res) => {
@@ -348,36 +348,43 @@ function MealPlanShopMealPlans() {
       );
     });
 
-    if (userCart) {
+    if (userCart.length !== 0) {
       console.log(userCart);
     } else {
       console.log("no cart");
     }
   };
 
-  const addToCart = () => {
-    if (userCart) {
+  const addToCart = (num) => {
+    const tempnum = 65;
+    if (userCart.length !== 0) {
       console.log(userCart);
-      AxiosInstance.get(`cart` + userCart.cart_id).then((res) => {
-        console.log(res.data);
-        try {
-          AxiosInstance.put(`cart/`, {
-            //image: data.type, dito get yun details for res chuchu and update add na si meal plan
-          }).then((res) => {
-            console.log(res, res.data);
-          });
-        } catch (error) {
-          console.log(error.response);
-        }
-      });
+      //  AxiosInstance.get(`cart/` + userCart[0].cart_id).then((res) => {
+      // console.log(res.data);
+      try {
+        AxiosInstance.put(`cart/`, {
+          cart_id: userCart[0].cart_id,
+          user_id: userCart[0].user_id,
+          orders: userCart[0].orders.concat(num),
+
+          //image: data.type, dito get yun details for res chuchu and update add na si meal plan
+        }).then((res) => {
+          console.log(res, res.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      //  });
     } else {
-      console.log("no cart");
+      console.log("no cart talaga");
 
       try {
         AxiosInstance.post(`cart/`, {
-          //image: data.type,
+          user_id: loggedInUser.user_id,
+          orders: [num],
         }).then((res) => {
           console.log(res, res.data);
+          getCartData();
         });
       } catch (error) {
         console.log(error.response);
@@ -471,7 +478,7 @@ function MealPlanShopMealPlans() {
                   px: 4,
                   py: 1,
                 }}
-                onClick={getCartData}
+                onClick={() => addToCart(plan.shop_mealplan_id)}
               >
                 ADD TO CART
               </Button>

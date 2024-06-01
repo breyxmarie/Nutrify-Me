@@ -48,7 +48,7 @@ class MeetingSerializer(serializers.ModelSerializer):
 class ShopMealPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShopMealPlan
-        fields = ('shop_mealplan_id', 'name', 'image', 'description', 'start_week', 'end_week')
+        fields = ('shop_mealplan_id', 'name', 'image', 'description', 'start_week', 'end_week', 'price')
 
 class ShopMealSerializer(serializers.ModelSerializer):
     class Meta:
@@ -68,5 +68,12 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ('cart_id','user_id','orders') 
+
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ('address_id','user_id','phone','address','name','default') 
+
 
 
