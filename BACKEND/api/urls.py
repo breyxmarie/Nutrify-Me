@@ -24,6 +24,9 @@ urlpatterns = [
     path('shopmeal/savefile', SaveFile),
     path('shopmealplan/savefile', SaveFile),
     path('cart/', CartAPI),
-    path('cart/<int:pk>', CartAPI)
+    path('cart/<int:pk>', CartAPI),
+    path('address/', AddressAPI),
+    path('address/<int:pk>', AddressAPI)
+
   #  path('SaveFile', SaveFile),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

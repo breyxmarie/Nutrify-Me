@@ -10,5 +10,6 @@ admin.site.register(Meeting)
 admin.site.register(ShopMealPlan)
 admin.site.register(ShopMeal)
 admin.site.register(Cart)
+admin.site.register(Address)
 
 # Register your models here.

@@ -18,8 +18,31 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import Calendar from "react-calendar";
 
 function FoodJournalHome() {
+  //! try
+  const [date, setDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const onChange = async (newDate) => {
+    setIsLoading(true);
+    // Fetch or update dates based on newDate
+    // ...
+
+    // Simulate loading delay (optional)
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+
+    setIsLoading(false);
+    setDate(newDate);
+    setIsPopupVisible(true);
+  };
+
+  const handlePopupClose = () => {
+    setIsPopupVisible(false);
+  };
+  //!
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
     borderRadius: 5,
@@ -145,6 +168,22 @@ function FoodJournalHome() {
         color: "#000000",
       }}
     >
+      <div className="calendar-app">
+        <div className="day-labels">{/* Days of the week */}</div>
+        <Calendar
+          onChange={onChange}
+          value={date}
+          className={isLoading ? "loading" : ""}
+        />
+        {isPopupVisible && (
+          <div className="popup">
+            <h3>Date: {date.toLocaleDateString()}</h3>
+            {/* Your specific popup content here */}
+            <button onClick={handlePopupClose}>Close</button>
+          </div>
+        )}
+      </div>
+
       <Box>Date</Box>
       <Box>
         <Box

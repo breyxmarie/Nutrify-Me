@@ -9,7 +9,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
-
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
@@ -30,13 +32,59 @@ import ReactDOM from "react-dom";
 import { Modal, Tab, Tabs } from "@mui/material";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import { useNavigate } from "react-router-dom";
 
 function MealPlanShopCheckout() {
   const { cartId } = useParams();
+  const navigate = useNavigate();
 
   const location = useLocation();
   const { cartItems } = location.state || {};
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
+  const [selectedAddress, setSelectedAddress] = useState(0);
+  const [notes, setNotes] = useState("None");
+  const [payment, setPayment] = useState("");
+
+  //! get Address Data
+
+  const [addressData, setAddressData] = useState([]);
+
+  const getAddressData = async () => {
+    try {
+      const response = await AxiosInstance.get(`address`);
+      const filteredData = response.data.filter(
+        (item) => item.user_id === loggedInUser.user_id
+      );
+      setAddressData(filteredData);
+      console.log(addressData);
+      // getMealData();
+    } catch (error) {
+      console.error("Error fetching address data:", error);
+    }
+  };
+
+  const addAddress = async () => {
+    try {
+      AxiosInstance.post(`address/`, {
+        user_id: loggedInUser.user_id,
+        phone: "012345678901",
+        address: "asdfasfdsfd random lorem ipsum",
+        name: "random namessssssss",
+        default: false,
+      }).then((res) => {
+        console.log(res, res.data);
+        getCartData();
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const handleReset = () => {
+    reset(); // Call reset function to clear form state and errors
+  };
+  //!
+
   //! get Cart data
 
   const [cartData, setCartData] = useState([]);
@@ -104,7 +152,97 @@ function MealPlanShopCheckout() {
 
   const getCartMealData = () => {};
   //!
-  cartItems.map((item) => console.log(item));
+  const setAddress = () => {
+    handleClose();
+  };
+  //! error handling for form
+  const handleChange = (event) => {
+    setPayment(event.target.value);
+  };
+  const schema = yup.object().shape({
+    //  .integer("Please enter an integer value"),
+    // Other fields
+
+    // password: yup.string().min(8).max(32).required(),
+
+    name: yup.string().required("Name is required"),
+    phone: yup.string().required("Phone is required"),
+    street: yup.string().required("Street is required"),
+    address2: yup.string().required("Address is required"),
+    postalcode: yup.string().required("Postal Code is required"),
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmitHandler = async (data) => {
+    try {
+      AxiosInstance.post(`address/`, {
+        user_id: loggedInUser.user_id,
+        phone: data.phone,
+        address: data.street + " " + data.address2,
+        name: data.name,
+        default: false,
+        postalcode: data.postalcode,
+      }).then((res) => {
+        console.log(res, res.data);
+        getAddressData();
+        handleReset();
+        setActiveTab(0);
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  const secondschema = yup.object().shape({
+    payment: yup.string().required("Payment Method is required"),
+
+    shipping: yup.string().required("Shipping is required"),
+    // .integer("Please enter an integer value"),
+    // Other fields
+
+    // password: yup.string().min(8).max(32).required(),
+  });
+  const {
+    register: register1,
+    formState: { errors: errors1 },
+    handleSubmit: handleSubmit1,
+    reset1,
+  } = useForm({
+    resolver: yupResolver(secondschema),
+  });
+
+  const onSubmitHandler1 = async (data) => {
+    console.log(payment);
+    navigate(
+      data.payment === "Paypal"
+        ? "/user-home"
+        : data.payment === "GCash"
+        ? "/user-home"
+        : "/meal-plan-shop-home"
+    );
+
+    try {
+      AxiosInstance.post(`address/`, {}).then((res) => {
+        console.log(res, res.data);
+        // getAddressData();
+        // handleReset();
+        // setActiveTab(0);
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
+  //!
+  // cartItems.map((item) => console.log(item));
   const listAddress = [
     {
       fullName: "lorem ipsum",
@@ -135,11 +273,15 @@ function MealPlanShopCheckout() {
 
   const handleShippingChange = (event) => {
     switch (event.target.value) {
-      case "J&T":
+      case "Lalamove":
         setShippingPrice(45);
         setTotalOrderPrice(() => subTotalPrices + 45);
         return;
-      case "Grab":
+      case "Grab Delivery":
+        setShippingPrice(105);
+        setTotalOrderPrice(() => subTotalPrices + 105);
+        return;
+      case "Move It":
         setShippingPrice(105);
         setTotalOrderPrice(() => subTotalPrices + 105);
         return;
@@ -183,6 +325,7 @@ function MealPlanShopCheckout() {
     // addNewObject();
 
     getCartData();
+    getAddressData();
   }, []);
 
   useEffect(() => {
@@ -224,11 +367,15 @@ function MealPlanShopCheckout() {
               defaultValue="female"
               name="radio-buttons-group"
             >
-              {listAddress.map((item, index) => (
+              {addressData.map((item, index) => (
                 <FormControlLabel
+                  onChange={() => setSelectedAddress(item.address_id)}
+                  // onChange={() =>
+                  //   setSelectedAddress(console.log(item.address_id))
+                  // }
                   value={item.address}
                   control={<Radio />}
-                  label={(item.fullName, item.address)}
+                  label={(item.Name, item.address)}
                   // onChange=
                 />
               ))}
@@ -250,6 +397,7 @@ function MealPlanShopCheckout() {
                   border: 1,
                 },
               }}
+              onClick={setAddress}
             >
               CHOOSE ADDRESS
             </Button>
@@ -261,89 +409,125 @@ function MealPlanShopCheckout() {
       title: "ADD ADDRESS",
       content: (
         <div>
-          <br />
-          <Grid container spacing={2} sx={{ ml: 5 }}>
-            <Grid xs={3}>
-              <img src="/images/location white.png" />
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
+            <br />
+            <Grid container spacing={2} sx={{ ml: 5 }}>
+              <Grid xs={3}>
+                <img src="/images/location white.png" />
+              </Grid>
+              <Grid xs={8}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Add New Address
+                </Typography>
+              </Grid>
             </Grid>
-            <Grid xs={8}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Add New Address
-              </Typography>
+            <br />
+            <Grid container spacing={2}>
+              <Grid xs={6}>
+                Full Name <br />
+                <TextField
+                  id="name"
+                  name="name"
+                  label="Full Name"
+                  fullWidth
+                  margin="dense"
+                  {...register("name")}
+                  error={errors.name ? true : false}
+                />
+                <Typography variant="inherit" color="textSecondary">
+                  {errors.name?.message}
+                </Typography>
+              </Grid>
+              <Grid xs={5} sx={{ ml: 4 }}>
+                Phone <br />
+                <TextField
+                  id="phone"
+                  name="phone"
+                  label="Phone"
+                  fullWidth
+                  margin="dense"
+                  {...register("phone")}
+                  error={errors.phone ? true : false}
+                />
+                <Typography variant="inherit" color="textSecondary">
+                  {errors.phone?.message}
+                </Typography>
+              </Grid>
             </Grid>
-          </Grid>
-          <br />
-          <Grid container spacing={2}>
-            <Grid xs={6}>
-              Full Name <br />
-              <TextField
-                id="outlined-multiline-flexible"
-                sx={{ width: "100%", background: "#ffffff", borderRadius: 0 }}
-                placeholder="Name"
-                name="name"
-              />
-            </Grid>
-            <Grid xs={5} sx={{ ml: 4 }}>
-              Phone <br />
-              <TextField
-                id="outlined-multiline-flexible"
-                sx={{ width: "100%", background: "#ffffff", borderRadius: 0 }}
-                placeholder="number"
-                name="phone number"
-              />
-            </Grid>
-          </Grid>
-          <Typography>Address</Typography>
+            <Typography>Address</Typography>
 
-          <TextField
-            id="outlined-multiline-flexible"
-            sx={{ width: "100%", background: "#ffffff", borderRadius: 0 }}
-            placeholder="Street Name, Building, House No."
-            name="address line 1"
-          />
-          <br />
-          <br />
-          <TextField
-            id="outlined-multiline-flexible"
-            sx={{ width: "100%", background: "#ffffff", borderRadius: 0 }}
-            placeholder="Barangay, City"
-            name="address line 2"
-          />
-          <br />
-          <br />
-          <TextField
-            id="outlined-multiline-flexible"
-            sx={{ width: "100%", background: "#ffffff", borderRadius: 0 }}
-            placeholder="Postal Code"
-            name="address line 3"
-          />
-
-          <br />
-          <br />
-          <center>
-            <Button
-              sx={{
-                background: "#ffffff",
-                color: "#E66253",
-                ml: 2,
-                height: "100%",
-                px: 2,
-                borderRadius: 5,
-                fontSize: "15px",
-                "&:hover": {
-                  backgroundColor: "#E66253",
-                  color: "#ffffff",
-                  border: 1,
-                },
-              }}
-            >
-              SUBMIT
-            </Button>
-          </center>
+            <TextField
+              id="street"
+              name="street"
+              label="Food Street Name, Building, House No."
+              placeholder="Street Name, Building, House No."
+              fullWidth
+              margin="dense"
+              {...register("street")}
+              error={errors.street ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.street?.message}
+            </Typography>
+            <br />
+            <br />
+            <TextField
+              id="address2"
+              name="address2"
+              label="Barangay, City"
+              placeholder="Barangay, City"
+              fullWidth
+              margin="dense"
+              {...register("address2")}
+              error={errors.address2 ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.address2?.message}
+            </Typography>
+            <br />
+            <br />
+            <TextField
+              id="postalcode"
+              name="postalcode"
+              label="Postal Code"
+              placeholder="Postal Code"
+              fullWidth
+              margin="dense"
+              {...register("postalcode")}
+              error={errors.postalcode ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.postalcode?.message}
+            </Typography>
+            <br />
+            <br />
+            <center>
+              <Button
+                type="submit"
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 2,
+                  height: "100%",
+                  px: 2,
+                  borderRadius: 5,
+                  fontSize: "15px",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 1,
+                  },
+                }}
+              >
+                SUBMIT
+              </Button>
+            </center>
+          </form>
         </div>
       ),
     },
   ];
+
   return (
     <div
       className="content"
@@ -354,215 +538,269 @@ function MealPlanShopCheckout() {
         color: "#000000",
       }}
     >
-      <Typography
-        sx={{ color: "#99756E", fontSize: "30px", fontWeight: "bold", m: 5 }}
-      >
-        CHECKOUT
-      </Typography>
+      <form onSubmit={handleSubmit1(onSubmitHandler1)}>
+        <Typography
+          sx={{ color: "#99756E", fontSize: "30px", fontWeight: "bold", m: 5 }}
+        >
+          CHECKOUT
+        </Typography>
 
-      <Box sx={{ borderRadius: 0, border: 1, mx: 20 }}>
-        <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
-          <Grid xs={2}>
-            <img src="/images/location.png" />
+        <Box sx={{ borderRadius: 0, border: 1, mx: 20 }}>
+          <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
+            <Grid xs={2}>
+              <img src="/images/location.png" />
+            </Grid>
+            <Grid
+              xs={8}
+              sx={{
+                textAlign: "left",
+                color: "#99756E",
+                fontWeight: "bold",
+              }}
+            >
+              Delivery Address
+              {addressData.length === 0 ? (
+                <Typography sx={{ color: "#000000" }}>Loading...</Typography>
+              ) : (
+                <>
+                  <Typography sx={{ color: "#000000" }}>
+                    {addressData[selectedAddress].name} |{" "}
+                    {addressData[selectedAddress].phone} <br />
+                    {addressData[selectedAddress].address}
+                  </Typography>
+                </>
+              )}
+              {/* <Typography sx={{ color: "#000000" }}>
+                {addressData[0].name} |{addressData[0].phone} <br />
+                {addressData[0].address}
+              </Typography> */}
+              {/* {addressData.slice(1).map((item, index) => (
+                <Typography sx={{ color: "#000000" }}>
+                  {item.name} |{item.phone} <br />
+                  {item.address}
+                </Typography>
+              ))} */}
+            </Grid>
+
+            <Grid xs={2}>
+              {" "}
+              <Button onClick={handleOpen}>
+                <img src="/images/right outline arrow.png" />
+              </Button>
+              <Modal
+                open={isOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box sx={style}>
+                  <Button sx={{ float: "right" }} onClick={handleClose}>
+                    <img src="/images/close.png" height="10" weight="10" />
+                  </Button>
+                  <Tabs
+                    value={activeTab}
+                    style={{
+                      color: "#f00", // Change text color to red
+                      fontSize: "18px", // Increase font size
+                      fontWeight: "bold", // Make text bold
+                    }}
+                    onChange={handleTabChange}
+                    indicatorColor="primary"
+                    centered
+                  >
+                    {tabContent.map((tab, index) => (
+                      <Tab
+                        key={index}
+                        label={tab.title}
+                        style={{
+                          color: "#ffffff", // Change text color to red
+                          fontSize: "14px", // Increase font size
+                          //fontWeight: "bold", // Make text bold
+                        }}
+                      />
+                    ))}
+                  </Tabs>
+                  {tabContent.map((tab, index) => (
+                    <Box key={index} hidden={activeTab !== index}>
+                      {tab.content}
+                    </Box>
+                  ))}
+                </Box>
+              </Modal>
+            </Grid>
           </Grid>
-          <Grid
-            xs={8}
+        </Box>
+        <br />
+        <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
+          {shopMeal.map((item, index) => (
+            <Grid container spacing={2} sx={{ mt: "20px" }}>
+              <Grid xs={4}>
+                {" "}
+                <img src={item.image} width="150" height="180" />
+              </Grid>
+              <Grid xs={4} sx={{ textAlign: "left" }}>
+                <Typography sx={{ color: "#99756E", mt: 3 }}>
+                  {item.name}
+                </Typography>
+                <Typography sx={{ color: "#E66253", mt: "12%" }}>
+                  {" "}
+                  Php {item.price}
+                </Typography>
+              </Grid>
+              <Grid xs={4} sx={{ mt: "5%" }}>
+                x {item.quantity}
+              </Grid>
+            </Grid>
+          ))}
+          <br />
+          <br />
+
+          <Box sx={{ mx: 5 }}>
+            <Typography sx={{ textAlign: "left", color: "#99756E" }}>
+              Order Notes (Optional)
+            </Typography>
+            <TextField
+              id="outlined-multiline-flexible"
+              sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+              multiline
+              rows={4}
+              placeholder="Type message here"
+              onChange={(event) => setNotes(event.target.value)}
+            />
+          </Box>
+        </Box>
+
+        <br />
+
+        <Box sx={{ textAlign: "left", border: 1, mx: 20, color: "#99756E" }}>
+          <Typography
+            sx={{ ml: 5, mt: 5, color: "#99756E", fontWeight: "bold" }}
+          >
+            PAYMENT OPTION{" "}
+          </Typography>
+          <br />
+          <FormControl sx={{ ml: 15, mb: 3 }}>
+            <FormLabel id="demo-radio-buttons-group-label">
+              Payment Method
+            </FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              name="payment"
+              value={payment} // Use the state variable for value
+              onChange={handleChange}
+              error={errors.payment ? true : false}
+            >
+              <FormControlLabel
+                value="cod"
+                control={<Radio />}
+                label="Cash on Delivery"
+                {...register("payment")} // Pass register to each Radio button
+                error={errors1.payment ? true : false}
+              />
+              <FormControlLabel
+                value="cc"
+                control={<Radio />}
+                label="Paypal"
+                {...register("payment")}
+                error={errors1.payment ? true : false}
+              />
+              <FormControlLabel
+                value="gcash"
+                control={<Radio />}
+                label="GCash"
+                {...register("payment")}
+                error={errors1.payment ? true : false}
+              />
+            </RadioGroup>
+            <Typography variant="inherit" color="textSecondary">
+              {errors1.payment?.message}
+            </Typography>
+          </FormControl>
+          <Button type="submit">Submit</Button>
+        </Box>
+        <br />
+        <br />
+        <Box sx={{ border: 1, mx: 20, color: "#99756E", fontSize: "20px" }}>
+          <Typography
             sx={{
-              textAlign: "left",
               color: "#99756E",
               fontWeight: "bold",
+              my: 5,
+              fontSize: "30px",
             }}
           >
-            Delivery Address
-            {listAddress.slice(1).map((item, index) => (
-              <Typography sx={{ color: "#000000" }}>
-                {item.fullName} |{item.phoneNumber} <br />
-                {item.address}
-              </Typography>
-            ))}
-          </Grid>
-
-          <Grid xs={2}>
-            {" "}
-            <Button onClick={handleOpen}>
-              <img src="/images/right outline arrow.png" />
-            </Button>
-            <Modal
-              open={isOpen}
-              onClose={handleClose}
-              aria-labelledby="modal-title"
-              aria-describedby="modal-description"
-            >
-              <Box sx={style}>
-                <Button sx={{ float: "right" }} onClick={handleClose}>
-                  <img src="/images/close.png" height="10" weight="10" />
-                </Button>
-                <Tabs
-                  value={activeTab}
-                  style={{
-                    color: "#f00", // Change text color to red
-                    fontSize: "18px", // Increase font size
-                    fontWeight: "bold", // Make text bold
-                  }}
-                  onChange={handleTabChange}
-                  indicatorColor="primary"
-                  centered
-                >
-                  {tabContent.map((tab, index) => (
-                    <Tab
-                      key={index}
-                      label={tab.title}
-                      style={{
-                        color: "#ffffff", // Change text color to red
-                        fontSize: "14px", // Increase font size
-                        //fontWeight: "bold", // Make text bold
-                      }}
-                    />
-                  ))}
-                </Tabs>
-                {tabContent.map((tab, index) => (
-                  <Box key={index} hidden={activeTab !== index}>
-                    {tab.content}
-                  </Box>
-                ))}
-              </Box>
-            </Modal>
-          </Grid>
-        </Grid>
-      </Box>
-      <br />
-      <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
-        {shopMeal.map((item, index) => (
-          <Grid container spacing={2} sx={{ mt: "20px" }}>
-            <Grid xs={4}>
-              {" "}
-              <img src={item.image} width="150" height="180" />
-            </Grid>
-            <Grid xs={4} sx={{ textAlign: "left" }}>
-              <Typography sx={{ color: "#99756E", mt: 3 }}>
-                {item.name}
-              </Typography>
-              <Typography sx={{ color: "#E66253", mt: "12%" }}>
-                {" "}
-                Php {item.price}
-              </Typography>
-            </Grid>
-            <Grid xs={4} sx={{ mt: "5%" }}>
-              x {item.quantity}
-            </Grid>
-          </Grid>
-        ))}
-        <br />
-        <br />
-
-        <Box sx={{ mx: 5 }}>
-          <Typography sx={{ textAlign: "left", color: "#99756E" }}>
-            Order Notes (Optional)
+            PAYMENT DETAILS
           </Typography>
-          <TextField
-            id="outlined-multiline-flexible"
-            sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-            multiline
-            rows={4}
-            placeholder="Type message here"
-          />
-        </Box>
-      </Box>
-
-      <br />
-
-      <Box sx={{ textAlign: "left", border: 1, mx: 20, color: "#99756E" }}>
-        <Typography sx={{ ml: 5, mt: 5, color: "#99756E", fontWeight: "bold" }}>
-          PAYMENT OPTION{" "}
-        </Typography>
-        <br />
-        <FormControl sx={{ ml: 15, mb: 3 }}>
-          <FormLabel id="demo-radio-buttons-group-label"></FormLabel>
-          <RadioGroup
-            aria-labelledby="demo-radio-buttons-group-label"
-            defaultValue="female"
-            name="radio-buttons-group"
-          >
-            <FormControlLabel
-              value="cod"
-              control={<Radio />}
-              label="Cash on Delivery"
-            />
-            <FormControlLabel
-              value="cc"
-              control={<Radio />}
-              label="Credit Card"
-            />
-            <FormControlLabel value="gcash" control={<Radio />} label="GCash" />
-          </RadioGroup>
-        </FormControl>
-      </Box>
-      <br />
-      <br />
-      <Box sx={{ border: 1, mx: 20, color: "#99756E", fontSize: "20px" }}>
-        <Typography
-          sx={{ color: "#99756E", fontWeight: "bold", my: 5, fontSize: "30px" }}
-        >
-          PAYMENT DETAILS
-        </Typography>
-        <hr />
-        <br />
-        <Grid container spacing={2} sx={{ my: 5 }}>
-          {" "}
-          <Grid xs={6}>ORDER SUBTOTAL</Grid>
-          <Grid xs={6}>Php {subTotalPrices}</Grid>
-        </Grid>
-
-        <hr />
-        <br />
-        <Grid container spacing={2} sx={{ my: 5 }}>
-          {" "}
-          <Grid xs={6}>SHIPPING</Grid>
-          <Grid xs={6}>
+          <hr />
+          <br />
+          <Grid container spacing={2} sx={{ my: 5 }}>
             {" "}
-            <FormControl sx={{ ml: 15, mb: 3 }}>
-              <FormLabel id="demo-radio-buttons-group-label"></FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue="female"
-                name="radio-buttons-group"
-              >
-                <FormControlLabel
-                  value="J&T"
-                  control={<Radio />}
-                  label="J & T"
-                  onChange={handleShippingChange}
-                />
-                <FormControlLabel
-                  value="Grab"
-                  control={<Radio />}
-                  label="Grab Delivery"
-                  onChange={handleShippingChange}
-                />
-              </RadioGroup>
-            </FormControl>
+            <Grid xs={6}>ORDER SUBTOTAL</Grid>
+            <Grid xs={6}>Php {subTotalPrices}</Grid>
           </Grid>
-        </Grid>
-        <hr />
+
+          <hr />
+          <br />
+          <Grid container spacing={2} sx={{ my: 5 }}>
+            {" "}
+            <Grid xs={6}>SHIPPING</Grid>
+            <Grid xs={6}>
+              {" "}
+              <FormControl sx={{ ml: 15, mb: 3 }}>
+                <FormLabel id="demo-radio-buttons-group-label"></FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="female"
+                  name="radio-buttons-group"
+                  {...register1("shipping")}
+                  error={errors1.shipping ? true : false}
+                >
+                  <FormControlLabel
+                    value="Grab Delivery"
+                    control={<Radio />}
+                    label="Grab Delivery"
+                    onChange={handleShippingChange}
+                  />
+                  <FormControlLabel
+                    value="Lalamove"
+                    control={<Radio />}
+                    label="Lalamove"
+                    onChange={handleShippingChange}
+                  />
+                  <FormControlLabel
+                    value="Move It"
+                    control={<Radio />}
+                    label="Grab Delivery"
+                    onChange={handleShippingChange}
+                  />
+                </RadioGroup>
+                <Typography variant="inherit" color="textSecondary">
+                  {errors1.shipping?.message}
+                </Typography>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <hr />
+          <br />
+          <Grid container spacing={2} sx={{ my: 5 }}>
+            {" "}
+            <Grid xs={6}>SHIPPING FEE</Grid>
+            <Grid xs={6}>Php {shippingPrice}</Grid>
+          </Grid>
+          <br />
+
+          <Grid container spacing={2}>
+            {" "}
+            <Grid xs={6}>TOTAL</Grid>
+            <Grid xs={6}>Php {totalOrderPrice}</Grid>
+          </Grid>
+        </Box>
         <br />
-        <Grid container spacing={2} sx={{ my: 5 }}>
-          {" "}
-          <Grid xs={6}>SHIPPING FEE</Grid>
-          <Grid xs={6}>Php {shippingPrice}</Grid>
-        </Grid>
         <br />
 
-        <Grid container spacing={2}>
-          {" "}
-          <Grid xs={6}>TOTAL</Grid>
-          <Grid xs={6}>Php {totalOrderPrice}</Grid>
-        </Grid>
-      </Box>
-      <br />
-      <br />
-
-      <Link to={"/meal-plan-shop-home"}>
+        {/* <Link to={"/meal-plan-shop-home"}> */}
         <Button
+          type="submit"
           sx={{
             background: "#E66253",
             color: "#ffffff",
@@ -580,7 +818,8 @@ function MealPlanShopCheckout() {
           {" "}
           PLACE ORDER
         </Button>
-      </Link>
+        {/* </Link> */}
+      </form>
     </div>
   );
 }

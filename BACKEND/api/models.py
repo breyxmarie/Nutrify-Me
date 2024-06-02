@@ -114,7 +114,11 @@ class Cart(models.Model):
 class Address(models.Model):
     address_id = models.AutoField(primary_key=True)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss")
-    phone = models.IntegerField()
+    phone = models.CharField(max_length=15)
     address = models.CharField(max_length=500)
     name = models.CharField(max_length=100)
-    default = models.BooleanField()
+    default = models.BooleanField(default=0)
+    postalcode = models.CharField(max_length=15)
+
+    class Meta:
+        db_table = "address"

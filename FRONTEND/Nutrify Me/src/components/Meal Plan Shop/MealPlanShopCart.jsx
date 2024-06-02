@@ -123,6 +123,9 @@ function MealPlanShopCart() {
   const getCartMealData = () => {};
   //!
 
+  //! get address details
+
+  //!
   const deleteItem = (item) => {
     // Handle click event for each slide item
     // Replace this with your desired logic (e.g., navigate, open modal)
