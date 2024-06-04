@@ -33,6 +33,9 @@ import { Modal, Tab, Tabs } from "@mui/material";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import PayPalPayment from "./PayPalPayment";
 
 function MealPlanShopCheckout() {
   const { cartId } = useParams();
@@ -41,9 +44,10 @@ function MealPlanShopCheckout() {
   const location = useLocation();
   const { cartItems } = location.state || {};
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
-  const [selectedAddress, setSelectedAddress] = useState(0);
-  const [notes, setNotes] = useState("None");
+  const [selectedAddress, setSelectedAddress] = useState(1);
+  const [notes, setNotes] = useState("n/a");
   const [payment, setPayment] = useState("");
+  const [shipping, setShipping] = useState("");
 
   //! get Address Data
 
@@ -157,8 +161,30 @@ function MealPlanShopCheckout() {
   };
   //! error handling for form
   const handleChange = (event) => {
+    console.log(event.target.value);
     setPayment(event.target.value);
   };
+
+  const handleChangeShipping = (event) => {
+    setShipping(event.target.value);
+    console.log(event.target.value);
+
+    switch (event.target.value) {
+      case "Lalamove":
+        setShippingPrice(45);
+        setTotalOrderPrice(() => subTotalPrices + 45);
+        return;
+      case "Grab Delivery":
+        setShippingPrice(105);
+        setTotalOrderPrice(() => subTotalPrices + 105);
+        return;
+      case "Move It":
+        setShippingPrice(105);
+        setTotalOrderPrice(() => subTotalPrices + 105);
+        return;
+    }
+  };
+
   const schema = yup.object().shape({
     //  .integer("Please enter an integer value"),
     // Other fields
@@ -230,14 +256,33 @@ function MealPlanShopCheckout() {
     );
 
     try {
-      AxiosInstance.post(`address/`, {}).then((res) => {
+      AxiosInstance.post(`order/`, {
+        user_id: loggedInUser.user_id,
+        orders: cartData[0].orders,
+        date: dayjs().format("YYYY-MM-DD"),
+        status: "Ordered",
+        address_id: selectedAddress,
+        payment: payment,
+        shipping: data.shipping,
+        notes: notes,
+        totalprice: subTotalPrices,
+        shipping_price: shippingPrice,
+        // shippingPrice
+      }).then((res) => {
         console.log(res, res.data);
+
+        try {
+          const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
+          console.log(response);
+        } catch (error) {
+          console.log(error);
+        }
         // getAddressData();
         // handleReset();
         // setActiveTab(0);
       });
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
   };
 
@@ -257,10 +302,7 @@ function MealPlanShopCheckout() {
   ];
 
   function calculateSubTotalPrice() {
-    const newTotal = cartItems.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
+    const newTotal = shopMeal.reduce((acc, item) => acc + item.price, 0);
     return newTotal;
   }
 
@@ -333,7 +375,7 @@ function MealPlanShopCheckout() {
       getMealData();
     }
 
-    console.log(cartData[0]);
+    console.log(cartData[0], "this is the cart");
   }, [cartData]);
 
   useEffect(() => {
@@ -528,6 +570,16 @@ function MealPlanShopCheckout() {
     },
   ];
 
+  //! paypal codes
+
+  const initialOptions = {
+    clientId:
+      "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
+    currency: "USD",
+    intent: "capture",
+  };
+  //!
+
   return (
     <div
       className="content"
@@ -564,9 +616,9 @@ function MealPlanShopCheckout() {
               ) : (
                 <>
                   <Typography sx={{ color: "#000000" }}>
-                    {addressData[selectedAddress].name} |{" "}
-                    {addressData[selectedAddress].phone} <br />
-                    {addressData[selectedAddress].address}
+                    {addressData[selectedAddress - 1].name} |{" "}
+                    {addressData[selectedAddress - 1].phone} <br />
+                    {addressData[selectedAddress - 1].address}
                   </Typography>
                 </>
               )}
@@ -679,6 +731,101 @@ function MealPlanShopCheckout() {
             PAYMENT OPTION{" "}
           </Typography>
           <br />
+          <PayPalScriptProvider options={initialOptions}>
+            <PayPalButtons
+              style={{
+                shape: "rect",
+                //color:'blue' change the default color of the buttons
+                layout: "vertical", //default value. Can be changed to horizontal
+              }}
+              createOrder={async () => {
+                try {
+                  const response = await fetch("/api/orders", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    // use the "body" param to optionally pass additional order information
+                    // like product ids and quantities
+                    body: JSON.stringify({
+                      cart: [
+                        {
+                          id: "YOUR_PRODUCT_ID",
+                          quantity: "YOUR_PRODUCT_QUANTITY",
+                        },
+                      ],
+                    }),
+                  });
+
+                  const orderData = await response.json();
+
+                  if (orderData.id) {
+                    return orderData.id;
+                  } else {
+                    const errorDetail = orderData?.details?.[0];
+                    const errorMessage = errorDetail
+                      ? `${errorDetail.issue} ${errorDetail.description} (${orderData.debug_id})`
+                      : JSON.stringify(orderData);
+
+                    throw new Error(errorMessage);
+                  }
+                } catch (error) {
+                  console.error(error);
+                  setMessage(`Could not initiate PayPal Checkout...${error}`);
+                }
+              }}
+              onApprove={async (data, actions) => {
+                try {
+                  const response = await fetch(
+                    `/api/orders/${data.orderID}/capture`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    }
+                  );
+
+                  const orderData = await response.json();
+                  // Three cases to handle:
+                  //   (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                  //   (2) Other non-recoverable errors -> Show a failure message
+                  //   (3) Successful transaction -> Show confirmation or thank you message
+
+                  const errorDetail = orderData?.details?.[0];
+
+                  if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
+                    // (1) Recoverable INSTRUMENT_DECLINED -> call actions.restart()
+                    // recoverable state, per https://developer.paypal.com/docs/checkout/standard/customize/handle-funding-failures/
+                    return actions.restart();
+                  } else if (errorDetail) {
+                    // (2) Other non-recoverable errors -> Show a failure message
+                    throw new Error(
+                      `${errorDetail.description} (${orderData.debug_id})`
+                    );
+                  } else {
+                    // (3) Successful transaction -> Show confirmation or thank you message
+                    // Or go to another URL:  actions.redirect('thank_you.html');
+                    const transaction =
+                      orderData.purchase_units[0].payments.captures[0];
+                    setMessage(
+                      `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
+                    );
+                    console.log(
+                      "Capture result",
+                      orderData,
+                      JSON.stringify(orderData, null, 2)
+                    );
+                  }
+                } catch (error) {
+                  console.error(error);
+                  setMessage(
+                    `Sorry, your transaction could not be processed...${error}`
+                  );
+                }
+              }}
+            />
+          </PayPalScriptProvider>
           <FormControl sx={{ ml: 15, mb: 3 }}>
             <FormLabel id="demo-radio-buttons-group-label">
               Payment Method
@@ -688,27 +835,30 @@ function MealPlanShopCheckout() {
               name="payment"
               value={payment} // Use the state variable for value
               onChange={handleChange}
-              error={errors.payment ? true : false}
+              error={errors1.payment ? true : false}
             >
               <FormControlLabel
-                value="cod"
+                value="Cash on Delivery"
                 control={<Radio />}
                 label="Cash on Delivery"
-                {...register("payment")} // Pass register to each Radio button
+                onChange={handleChange}
+                {...register1("payment")} // Pass register to each Radio button
                 error={errors1.payment ? true : false}
               />
               <FormControlLabel
-                value="cc"
+                value="Paypal"
                 control={<Radio />}
                 label="Paypal"
-                {...register("payment")}
+                onChange={handleChange}
+                {...register1("payment")}
                 error={errors1.payment ? true : false}
               />
               <FormControlLabel
-                value="gcash"
+                value="GCash"
                 control={<Radio />}
                 label="GCash"
-                {...register("payment")}
+                onChange={handleChange}
+                {...register1("payment")}
                 error={errors1.payment ? true : false}
               />
             </RadioGroup>
@@ -747,31 +897,39 @@ function MealPlanShopCheckout() {
             <Grid xs={6}>
               {" "}
               <FormControl sx={{ ml: 15, mb: 3 }}>
-                <FormLabel id="demo-radio-buttons-group-label"></FormLabel>
+                <FormLabel id="demo-radio-buttons-group-label">
+                  Shipping/Delivery
+                </FormLabel>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
-                  defaultValue="female"
-                  name="radio-buttons-group"
-                  {...register1("shipping")}
+                  name="shipping"
+                  value={shipping} // Use the state variable for value
+                  onChange={handleChangeShipping}
                   error={errors1.shipping ? true : false}
                 >
                   <FormControlLabel
                     value="Grab Delivery"
                     control={<Radio />}
                     label="Grab Delivery"
-                    onChange={handleShippingChange}
+                    onChange={handleChangeShipping}
+                    {...register1("shipping")}
+                    error={errors1.shipping ? true : false}
                   />
                   <FormControlLabel
                     value="Lalamove"
                     control={<Radio />}
                     label="Lalamove"
-                    onChange={handleShippingChange}
+                    onChange={handleChangeShipping}
+                    {...register1("shipping")}
+                    error={errors1.shipping ? true : false}
                   />
                   <FormControlLabel
                     value="Move It"
                     control={<Radio />}
-                    label="Grab Delivery"
-                    onChange={handleShippingChange}
+                    label="Move It"
+                    onChange={handleChangeShipping}
+                    {...register1("shipping")}
+                    error={errors1.shipping ? true : false}
                   />
                 </RadioGroup>
                 <Typography variant="inherit" color="textSecondary">

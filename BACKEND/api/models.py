@@ -122,3 +122,19 @@ class Address(models.Model):
 
     class Meta:
         db_table = "address"
+
+class Order(models.Model):
+    order_id = models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss1")
+    orders= JSONField()
+    date = models.DateField()
+    status = models.CharField(max_length=35)
+    address_id  = models.ForeignKey(Address, on_delete=models.CASCADE, related_name="listingsss1")
+    payment  = models.CharField(max_length=35)
+    shipping  = models.CharField(max_length=35)
+    notes = models.CharField(max_length=(400))
+    totalprice = models.IntegerField()
+    shipping_price = models.IntegerField()
+
+    class Meta:
+        db_table = "order"

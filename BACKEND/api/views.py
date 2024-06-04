@@ -305,7 +305,7 @@ def CartAPI(request, pk=0):
                 cart = Cart.objects.get(pk=pk)
                 serializer = CartSerializer(cart)
                 return JsonResponse(serializer.data, safe=False)
-            except User.DoesNotExist:
+            except Cart.DoesNotExist:
                 return JsonResponse({'error': 'Cart not found'}, status=404)
     elif request.method == 'POST':
         cart_data = JSONParser().parse(request)
@@ -323,7 +323,7 @@ def CartAPI(request, pk=0):
             return JsonResponse("Update Successfully", safe=False)
         return JsonResponse("Failed to Update", safe=False)
     elif request.method == 'DELETE':
-        cart = Cart.objects.get(user_id=pk)
+        cart = Cart.objects.get(cart_id=pk)
         cart.delete()
         return JsonResponse("Cart was deleted Successfully", safe = False)
 
@@ -364,3 +364,39 @@ def AddressAPI(request, pk=0):
         address = Address.objects.get(address_id=pk)
         address.delete()
         return JsonResponse("Address was deleted Successfully", safe = False)
+    
+
+@csrf_exempt
+def OrderAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            order = Order.objects.all()
+            serializer = OrderSerializer(order, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                order = Order.objects.get(pk=pk)
+                serializer = OrderSerializer(order)
+                return JsonResponse(serializer.data, safe=False)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'Order not found'}, status=404)
+    elif request.method == 'POST':
+        order_data = JSONParser().parse(request)
+        order_serializer = OrderSerializer(data = order_data)
+        if order_serializer.is_valid():
+            order_serializer.save()
+            return JsonResponse("Order Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Order", safe=False)
+    elif request.method == 'PUT':
+        order_data = JSONParser().parse(request)
+        orders = Order.objects.get(order_id=order_data['order_id'])
+        order_serializer = OrderSerializer(orders, data = order_data)
+        if order_serializer.is_valid():
+            order_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        order = Order.objects.get(order_id=pk)
+        order.delete()
+        return JsonResponse("Order was deleted Successfully", safe = False)

@@ -19,6 +19,19 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Calendar from "react-calendar";
+import {
+  format,
+  subMonths,
+  addMonths,
+  startOfWeek,
+  addDays,
+  isSameDay,
+  lastDayOfWeek,
+  getWeek,
+  addWeeks,
+  subWeeks,
+} from "date-fns";
+import "./style.css";
 
 function FoodJournalHome() {
   //! try
@@ -43,6 +56,137 @@ function FoodJournalHome() {
     setIsPopupVisible(false);
   };
   //!
+
+  //! weekly trial
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentWeek, setCurrentWeek] = useState(getWeek(currentMonth));
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const changeMonthHandle = (btnType) => {
+    if (btnType === "prev") {
+      setCurrentMonth(subMonths(currentMonth, 1));
+    }
+    if (btnType === "next") {
+      setCurrentMonth(addMonths(currentMonth, 1));
+    }
+  };
+
+  const changeWeekHandle = (btnType) => {
+    //console.log("current week", currentWeek);
+    if (btnType === "prev") {
+      //console.log(subWeeks(currentMonth, 1));
+      setCurrentMonth(subWeeks(currentMonth, 1));
+      setCurrentWeek(getWeek(subWeeks(currentMonth, 1)));
+    }
+    if (btnType === "next") {
+      //console.log(addWeeks(currentMonth, 1));
+      setCurrentMonth(addWeeks(currentMonth, 1));
+      setCurrentWeek(getWeek(addWeeks(currentMonth, 1)));
+    }
+  };
+
+  const onDateClickHandle = (day, dayStr) => {
+    setSelectedDate(day);
+    showDetailsHandle(dayStr);
+  };
+
+  const renderHeader = () => {
+    const dateFormat = "MMM yyyy";
+    // console.log("selected day", selectedDate);
+    return (
+      <div className="header row flex-middle">
+        <div className="col col-start">
+          {/* <div className="icon" onClick={() => changeMonthHandle("prev")}>
+            prev month
+          </div> */}
+        </div>
+        <div className="col col-center">
+          <span>{format(currentMonth, dateFormat)}</span>
+        </div>
+        <div className="col col-end">
+          {/* <div className="icon" onClick={() => changeMonthHandle("next")}>next month</div> */}
+        </div>
+      </div>
+    );
+  };
+  const renderDays = () => {
+    const dateFormat = "EEE";
+    const days = [];
+    let startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
+    for (let i = 0; i < 7; i++) {
+      days.push(
+        <div className="col col-center" key={i}>
+          {format(addDays(startDate, i), dateFormat)}
+        </div>
+      );
+    }
+    return <div className="days row">{days}</div>;
+  };
+  const renderCells = () => {
+    const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
+    const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
+    const dateFormat = "d";
+    const rows = [];
+    let days = [];
+    let day = startDate;
+    let formattedDate = "";
+    while (day <= endDate) {
+      for (let i = 0; i < 7; i++) {
+        formattedDate = format(day, dateFormat);
+        const cloneDay = day;
+        days.push(
+          <div
+            className={`col cell ${
+              isSameDay(day, new Date())
+                ? "today"
+                : isSameDay(day, selectedDate)
+                ? "selected"
+                : ""
+            }`}
+            key={day}
+            onClick={() => {
+              const dayStr = format(cloneDay, "ccc dd MMM yy");
+              onDateClickHandle(cloneDay, dayStr);
+            }}
+          >
+            <span className="number">{formattedDate}</span>
+            <span className="bg">{formattedDate}</span>
+          </div>
+        );
+        day = addDays(day, 1);
+      }
+
+      rows.push(
+        <div className="row" key={day}>
+          {days}
+        </div>
+      );
+      days = [];
+    }
+    return <div className="body">{rows}</div>;
+  };
+  const renderFooter = () => {
+    return (
+      <div className="header row flex-middle">
+        <div className="col col-start">
+          <div className="icon" onClick={() => changeWeekHandle("prev")}>
+            prev week
+          </div>
+        </div>
+        <div>{currentWeek}</div>
+        <div className="col col-end" onClick={() => changeWeekHandle("next")}>
+          <div className="icon">next week</div>
+        </div>
+      </div>
+    );
+  };
+
+  const showDetailsHandle = (dayStr) => {
+    // Your logic for handling date details
+    console.log("Date details:", dayStr);
+    setJournalEntries();
+  };
+  //!
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 10,
     borderRadius: 5,
@@ -59,10 +203,10 @@ function FoodJournalHome() {
   // array for food
 
   const meals = [
-    { type: "Breakfast", meal: "Egg Omelette", calories: "375" },
-    { type: "Lunch", meal: "Egg Omelette", calories: "375" },
-    { type: "Snack", meal: "Egg Omelette", calories: "375" },
-    { type: "Dinner", meal: "Egg Omelette", calories: "375" },
+    { type: "Breakfast", meal: "Egg Omelette1", calories: "375" },
+    { type: "Lunch", meal: "Egg Omelette2", calories: "375" },
+    { type: "Snack", meal: "Egg Omelette3", calories: "375" },
+    { type: "Dinner", meal: "Egg Omelette4", calories: "375" },
   ];
   //
 
@@ -156,36 +300,312 @@ function FoodJournalHome() {
         return "/images/dinner.png";
     }
   }
-  return (
-    <div
-      className="content"
-      style={{
-        paddingBottom: "40px",
-        marginTop: "80px",
-        fontFamily: "Poppins",
-        marginLeft: "10px",
-        marginRight: "10px",
-        color: "#000000",
-      }}
-    >
-      <div className="calendar-app">
-        <div className="day-labels">{/* Days of the week */}</div>
-        <Calendar
-          onChange={onChange}
-          value={date}
-          className={isLoading ? "loading" : ""}
-        />
-        {isPopupVisible && (
-          <div className="popup">
-            <h3>Date: {date.toLocaleDateString()}</h3>
-            {/* Your specific popup content here */}
-            <button onClick={handlePopupClose}>Close</button>
-          </div>
-        )}
-      </div>
 
-      <Box>Date</Box>
+  const [details, setDetails] = useState();
+  // <Box>
+  //   <Box>Date</Box>
+  //   <Box
+  //     sx={{
+  //       borderRadius: 0,
+  //       background: "#898246",
+  //       color: "#ffffff",
+  //       display: "inline-block",
+  //       justifyItems: "right",
+  //       p: 5,
+  //     }}
+  //   >
+  //     {" "}
+  //     <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+  //       <img src="images/fire.png" /> Today's Food Intake
+  //     </Typography>
+  //     <br />
+  //     <Box
+  //       sx={{
+  //         background: "#ffffff",
+  //         color: "#898246",
+  //         mx: "20px",
+  //         borderRadius: 2,
+  //       }}
+  //     >
+  //       Calories
+  //       <BorderLinearProgress variant="determinate" value={70} />
+  //     </Box>
+  //     <br />
+  //     <br />
+  //     <Grid container spacing={2}>
+  //       <Grid xs={4} sx={{ borderRadius: 5 }}>
+  //         CARBS{" "}
+  //         <Box
+  //           sx={{
+  //             background: "#ffffff",
+  //             color: "#898246",
+  //             borderRadius: 2,
+  //             mx: 5,
+  //           }}
+  //         >
+  //           31g
+  //         </Box>
+  //       </Grid>
+  //       <Grid xs={4}>
+  //         PROTEIN{" "}
+  //         <Box
+  //           sx={{
+  //             background: "#ffffff",
+  //             color: "#E66253",
+  //             borderRadius: 2,
+  //             mx: 5,
+  //           }}
+  //         >
+  //           31g
+  //         </Box>
+  //       </Grid>
+  //       <Grid xs={4}>
+  //         FATS{" "}
+  //         <Box
+  //           sx={{
+  //             background: "#ffffff",
+  //             color: "#898246",
+  //             borderRadius: 2,
+  //             mx: 5,
+  //           }}
+  //         >
+  //           31g
+  //         </Box>
+  //       </Grid>
+  //     </Grid>
+  //   </Box>
+
+  //   <br />
+  //   <br />
+  //   <br />
+
+  //   <br />
+
+  //   <Grid container spacing={2}>
+  //     <Grid xs={6}>Meal Plan: </Grid>
+  //     <Grid xs={6}>
+  //       <Button
+  //         sx={{
+  //           background: "#E66253",
+  //           borderRadius: 3,
+  //           color: "#ffffff",
+  //           px: 5,
+  //         }}
+  //         onClick={handleOpen}
+  //       >
+  //         + NEW JOURNAL ENTRY
+  //       </Button>
+
+  //       <Modal
+  //         open={open}
+  //         onClose={handleClose}
+  //         aria-labelledby="modal-modal-title"
+  //         aria-describedby="modal-modal-description"
+  //       >
+  //         <Box sx={style}>
+  //           <Grid container spacing={2}>
+  //             <Grid xs={2}>
+  //               {" "}
+  //               <img src="/images/food journal icon.png" />
+  //             </Grid>
+  //             <Grid xs={8}>New Food Journal Entry</Grid>
+  //             <Grid xs={2}>
+  //               <Button sx={{ float: "right" }} onClick={handleClose}>
+  //                 <img src="/images/close.png" height="10" weight="10" />
+  //               </Button>
+  //             </Grid>
+  //           </Grid>
+  //           <Grid container spacing={2}>
+  //             <Grid xs={6}>
+  //               Type of Meal
+  //               <br />
+  //               <Select
+  //                 labelId="demo-simple-select-filled-label"
+  //                 id="demo-simple-select-filled"
+  //                 // value={value}
+  //                 // onChange={onChange}
+  //                 // error={!!error}
+  //               >
+  //                 {options.map((option) => (
+  //                   <MenuItem value={option.id}>{option.name}</MenuItem>
+  //                 ))}
+  //               </Select>
+  //             </Grid>
+  //             <Grid xs={6}>
+  //               {" "}
+  //               Date ofEntry <br />
+  //               <LocalizationProvider dateAdapter={AdapterDayjs}>
+  //                 <DatePicker sx={{ background: "#ffffff" }} />
+  //               </LocalizationProvider>
+  //             </Grid>
+  //           </Grid>
+  //           Meal Plan: <br />
+  //           <Select
+  //             labelId="demo-simple-select-filled-label"
+  //             id="demo-simple-select-filled"
+  //             // value={value}
+  //             // onChange={onChange}
+  //             // error={!!error}
+  //           >
+  //             {options.map((option) => (
+  //               <MenuItem value={option.id}>{option.name}</MenuItem>
+  //             ))}
+  //           </Select>
+  //           <br />
+  //           Food Eaten:
+  //           <br />
+  //           <Select
+  //             labelId="demo-simple-select-filled-label"
+  //             id="demo-simple-select-filled"
+  //             // value={value}
+  //             // onChange={onChange}
+  //             // error={!!error}
+  //           >
+  //             {options.map((option) => (
+  //               <MenuItem value={option.id}>{option.name}</MenuItem>
+  //             ))}
+  //           </Select>
+  //           <br />
+  //           <Button
+  //             sx={{
+  //               background: "#ffffff",
+  //               color: "#E66253",
+  //               backgroundRadius: 10,
+  //             }}
+  //           >
+  //             SUBMIT
+  //           </Button>
+  //         </Box>
+  //       </Modal>
+  //     </Grid>
+  //   </Grid>
+
+  //   <br />
+  //   <br />
+
+  //   <br />
+
+  //   <br />
+
+  //   <br />
+
+  //   {meals.map((meal, index) => (
+  //     <Grid container spacing={2} sx={{ mb: "60px" }}>
+  //       <Grid xs={4}>
+  //         <img src={getMealPic(index)} height="100px" />
+  //       </Grid>
+  //       <Grid xs={6}>
+  //         {meal.type}
+  //         <br />
+  //         <br />
+  //         <br />
+  //         <br />
+
+  //         {meal.meal}
+  //       </Grid>
+  //       <Grid xs={2}>
+  //         <Button
+  //           sx={{ color: "#E66253", textDecoration: "underline" }}
+  //           onClick={() => handleSelectMeal(meal)}
+  //         >
+  //           View Details{" "}
+  //         </Button>
+
+  //         <Modal
+  //           open={opens}
+  //           onClose={handleCloses}
+  //           aria-labelledby="modal-modal-title"
+  //           aria-describedby="modal-modal-description"
+  //         >
+  //           <Box sx={styles}>
+  //             <Grid container spacing={2}>
+  //               <Grid xs={2}>
+  //                 {" "}
+  //                 <img src="/images/food journal icon.png" />
+  //               </Grid>
+  //               <Grid xs={8}>[Date]</Grid>
+  //               <Grid xs={2}>
+  //                 <Button
+  //                   key={index}
+  //                   sx={{ float: "right" }}
+  //                   onClick={() => handleClose()}
+  //                 >
+  //                   <img src="/images/close.png" height="10" weight="10" />
+  //                 </Button>
+  //               </Grid>
+  //             </Grid>
+  //             {modalContent}
+  //           </Box>
+  //         </Modal>
+  //       </Grid>
+  //     </Grid>
+  //   ))}
+  // </Box>
+
+  const newJournalModal = () => {
+    return (
       <Box>
+        {meals.map((meal, index) => (
+          <Grid container spacing={2} sx={{ mb: "60px" }}>
+            <Grid xs={4}>
+              <img src={getMealPic(index)} height="100px" />
+            </Grid>
+            <Grid xs={6}>
+              {meal.type}
+              <br />
+              <br />
+              <br />
+              <br />
+
+              {meal.meal}
+            </Grid>
+            <Grid xs={2}>
+              <Button
+                sx={{ color: "#E66253", textDecoration: "underline" }}
+                onClick={() => handleSelectMeal(meal)}
+              >
+                View Details{" "}
+              </Button>
+
+              <Modal
+                open={opens}
+                onClose={handleCloses}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={styles}>
+                  <Grid container spacing={2}>
+                    <Grid xs={2}>
+                      {" "}
+                      <img src="/images/food journal icon.png" />
+                    </Grid>
+                    <Grid xs={8}>[Date]</Grid>
+                    <Grid xs={2}>
+                      <Button
+                        key={index}
+                        sx={{ float: "right" }}
+                        onClick={() => handleClose()}
+                      >
+                        <img src="/images/close.png" height="10" weight="10" />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  {modalContent}
+                </Box>
+              </Modal>
+            </Grid>
+          </Grid>
+        ))}
+      </Box>
+    );
+  };
+
+  const setJournalEntries = () => {
+    const nums = "test";
+    setDetails(
+      <Box>
+        <Box>Date</Box>
+        {nums}
         <Box
           sx={{
             borderRadius: 0,
@@ -256,13 +676,10 @@ function FoodJournalHome() {
             </Grid>
           </Grid>
         </Box>
-
         <br />
         <br />
         <br />
-
         <br />
-
         <Grid container spacing={2}>
           <Grid xs={6}>Meal Plan: </Grid>
           <Grid xs={6}>
@@ -277,7 +694,7 @@ function FoodJournalHome() {
             >
               + NEW JOURNAL ENTRY
             </Button>
-
+            {/* {newJournalModal} */}
             <Modal
               open={open}
               onClose={handleClose}
@@ -361,16 +778,12 @@ function FoodJournalHome() {
             </Modal>
           </Grid>
         </Grid>
-
         <br />
         <br />
-
         <br />
-
         <br />
-
         <br />
-
+        {/* {newJournalModal} */}
         {meals.map((meal, index) => (
           <Grid container spacing={2} sx={{ mb: "60px" }}>
             <Grid xs={4}>
@@ -423,6 +836,382 @@ function FoodJournalHome() {
           </Grid>
         ))}
       </Box>
+    );
+  };
+  return (
+    <div
+      className="content"
+      style={{
+        paddingBottom: "40px",
+        marginTop: "80px",
+        fontFamily: "Poppins",
+        marginLeft: "10px",
+        marginRight: "10px",
+        color: "#000000",
+      }}
+    >
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Grid container spacing={2}>
+            <Grid xs={2}>
+              {" "}
+              <img src="/images/food journal icon.png" />
+            </Grid>
+            <Grid xs={8}>New Food Journal Entry</Grid>
+            <Grid xs={2}>
+              <Button sx={{ float: "right" }} onClick={handleClose}>
+                <img src="/images/close.png" height="10" weight="10" />
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              Type of Meal
+              <br />
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                // value={value}
+                // onChange={onChange}
+                // error={!!error}
+              >
+                {options.map((option) => (
+                  <MenuItem value={option.id}>{option.name}</MenuItem>
+                ))}
+              </Select>
+            </Grid>
+            <Grid xs={6}>
+              {" "}
+              Date ofEntry <br />
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker sx={{ background: "#ffffff" }} />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
+          Meal Plan: <br />
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            // value={value}
+            // onChange={onChange}
+            // error={!!error}
+          >
+            {options.map((option) => (
+              <MenuItem value={option.id}>{option.name}</MenuItem>
+            ))}
+          </Select>
+          <br />
+          Food Eaten:
+          <br />
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            // value={value}
+            // onChange={onChange}
+            // error={!!error}
+          >
+            {options.map((option) => (
+              <MenuItem value={option.id}>{option.name}</MenuItem>
+            ))}
+          </Select>
+          <br />
+          <Button
+            sx={{
+              background: "#ffffff",
+              color: "#E66253",
+              backgroundRadius: 10,
+            }}
+          >
+            SUBMIT
+          </Button>
+        </Box>
+      </Modal>
+      {/* //! modal for details */}
+      {/* <Modal
+        open={opens}
+        onClose={handleCloses}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={styles}>
+          <Grid container spacing={2}>
+            <Grid xs={2}>
+              {" "}
+              <img src="/images/food journal icon.png" />
+            </Grid>
+            <Grid xs={8}>[Date]</Grid>
+            <Grid xs={2}>
+              <Button
+                key={index}
+                sx={{ float: "right" }}
+                onClick={() => handleClose()}
+              >
+                <img src="/images/close.png" height="10" weight="10" />
+              </Button>
+            </Grid>
+          </Grid>
+          {modalContent}
+        </Box>
+      </Modal> */}
+      {/*  //! */}
+      <div className="calendar-app">
+        <div className="day-labels">{/* Days of the week */}</div>
+        <Calendar
+          onChange={onChange}
+          value={date}
+          className={isLoading ? "loading" : ""}
+        />
+        {isPopupVisible && (
+          <div className="popup">
+            <h3>Date: {date.toLocaleDateString()}</h3>
+            {/* Your specific popup content here */}
+            <button onClick={handlePopupClose}>Close</button>
+          </div>
+        )}
+      </div>
+      //! weekly
+      <div className="calendar">
+        {renderHeader()}
+        {renderDays()}
+        {renderCells()}
+        {renderFooter()}
+      </div>
+      //!
+      {details}
+      <Box>Date</Box>
+      <Box
+        sx={{
+          borderRadius: 0,
+          background: "#898246",
+          color: "#ffffff",
+          display: "inline-block",
+          justifyItems: "right",
+          p: 5,
+        }}
+      >
+        {" "}
+        <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+          <img src="images/fire.png" /> Today's Food Intake
+        </Typography>
+        <br />
+        <Box
+          sx={{
+            background: "#ffffff",
+            color: "#898246",
+            mx: "20px",
+            borderRadius: 2,
+          }}
+        >
+          Calories
+          <BorderLinearProgress variant="determinate" value={70} />
+        </Box>
+        <br />
+        <br />
+        <Grid container spacing={2}>
+          <Grid xs={4} sx={{ borderRadius: 5 }}>
+            CARBS{" "}
+            <Box
+              sx={{
+                background: "#ffffff",
+                color: "#898246",
+                borderRadius: 2,
+                mx: 5,
+              }}
+            >
+              31g
+            </Box>
+          </Grid>
+          <Grid xs={4}>
+            PROTEIN{" "}
+            <Box
+              sx={{
+                background: "#ffffff",
+                color: "#E66253",
+                borderRadius: 2,
+                mx: 5,
+              }}
+            >
+              31g
+            </Box>
+          </Grid>
+          <Grid xs={4}>
+            FATS{" "}
+            <Box
+              sx={{
+                background: "#ffffff",
+                color: "#898246",
+                borderRadius: 2,
+                mx: 5,
+              }}
+            >
+              31g
+            </Box>
+          </Grid>
+        </Grid>
+      </Box>
+      <br />
+      <br />
+      <br />
+      <br />
+      <Grid container spacing={2}>
+        <Grid xs={6}>Meal Plan: </Grid>
+        <Grid xs={6}>
+          <Button
+            sx={{
+              background: "#E66253",
+              borderRadius: 3,
+              color: "#ffffff",
+              px: 5,
+            }}
+            onClick={handleOpen}
+          >
+            + NEW JOURNAL ENTRY
+          </Button>
+
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Grid container spacing={2}>
+                <Grid xs={2}>
+                  {" "}
+                  <img src="/images/food journal icon.png" />
+                </Grid>
+                <Grid xs={8}>New Food Journal Entry</Grid>
+                <Grid xs={2}>
+                  <Button sx={{ float: "right" }} onClick={handleClose}>
+                    <img src="/images/close.png" height="10" weight="10" />
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  Type of Meal
+                  <br />
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    // value={value}
+                    // onChange={onChange}
+                    // error={!!error}
+                  >
+                    {options.map((option) => (
+                      <MenuItem value={option.id}>{option.name}</MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid xs={6}>
+                  {" "}
+                  Date ofEntry <br />
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker sx={{ background: "#ffffff" }} />
+                  </LocalizationProvider>
+                </Grid>
+              </Grid>
+              Meal Plan: <br />
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                // value={value}
+                // onChange={onChange}
+                // error={!!error}
+              >
+                {options.map((option) => (
+                  <MenuItem value={option.id}>{option.name}</MenuItem>
+                ))}
+              </Select>
+              <br />
+              Food Eaten:
+              <br />
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                // value={value}
+                // onChange={onChange}
+                // error={!!error}
+              >
+                {options.map((option) => (
+                  <MenuItem value={option.id}>{option.name}</MenuItem>
+                ))}
+              </Select>
+              <br />
+              <Button
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  backgroundRadius: 10,
+                }}
+              >
+                SUBMIT
+              </Button>
+            </Box>
+          </Modal>
+        </Grid>
+      </Grid>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      {meals.map((meal, index) => (
+        <Grid container spacing={2} sx={{ mb: "60px" }}>
+          <Grid xs={4}>
+            <img src={getMealPic(index)} height="100px" />
+          </Grid>
+          <Grid xs={6}>
+            {meal.type}
+            <br />
+            <br />
+            <br />
+            <br />
+
+            {meal.meal}
+          </Grid>
+          <Grid xs={2}>
+            <Button
+              sx={{ color: "#E66253", textDecoration: "underline" }}
+              onClick={() => handleSelectMeal(meal)}
+            >
+              View Details{" "}
+            </Button>
+
+            <Modal
+              open={opens}
+              onClose={handleCloses}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={styles}>
+                <Grid container spacing={2}>
+                  <Grid xs={2}>
+                    {" "}
+                    <img src="/images/food journal icon.png" />
+                  </Grid>
+                  <Grid xs={8}>[Date]</Grid>
+                  <Grid xs={2}>
+                    <Button
+                      key={index}
+                      sx={{ float: "right" }}
+                      onClick={() => handleClose()}
+                    >
+                      <img src="/images/close.png" height="10" weight="10" />
+                    </Button>
+                  </Grid>
+                </Grid>
+                {modalContent}
+              </Box>
+            </Modal>
+          </Grid>
+        </Grid>
+      ))}
     </div>
   );
 }

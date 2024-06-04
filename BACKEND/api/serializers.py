@@ -75,5 +75,8 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
         fields = ('address_id','user_id','phone','address','name','default', 'postalcode') 
 
-
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ('order_id','user_id','orders','date','status','address_id','payment','shipping', 'notes', 'totalprice', 'shipping_price')
 

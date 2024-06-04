@@ -11,5 +11,5 @@ admin.site.register(ShopMealPlan)
 admin.site.register(ShopMeal)
 admin.site.register(Cart)
 admin.site.register(Address)
-
+admin.site.register(Order)
 # Register your models here.

@@ -257,8 +257,11 @@ function MealPlanShopCart() {
               <Grid xs={2}>{item.price}</Grid>
             </Grid>
           ))
+        ) : cartData.length === 0 ? (
+          // Display "Cart is empty" message if data is empty
+          <p>Your cart is empty.</p>
         ) : (
-          // Display loading message or placeholder while data is being fetched
+          // Display loading message while data is being fetched
           <p>Loading cart data...</p>
         )}
 
