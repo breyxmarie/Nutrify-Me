@@ -29,6 +29,10 @@ urlpatterns = [
     path('address/<int:pk>', AddressAPI),
     path('order/', OrderAPI),
     path('order/<int:pk>', OrderAPI),
+    path('journalentry/', JournalEntryAPI),
+    path('journalentry/<int:pk>', JournalEntryAPI),  
+    path('foodentry/', FoodEntryAPI),
+    path('foodentry/<int:pk>', FoodEntryAPI),
 
   #  path('SaveFile', SaveFile), 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

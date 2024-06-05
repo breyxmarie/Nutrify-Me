@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -32,12 +32,77 @@ import {
   subWeeks,
 } from "date-fns";
 import "./style.css";
+import AxiosInstance from "../forms/AxiosInstance";
+import { useLoggedInUser } from "../LoggedInUserContext";
+import dayjs from "dayjs";
 
 function FoodJournalHome() {
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
+  //! get data
+
+  const [carbs, setCarbs] = useState(0);
+  const [protein, setProtein] = useState(0);
+  const [fat, setFat] = useState(0);
+  const [calories, setCalories] = useState(0);
+  const [journalEntry, setJournalEntry] = useState([]);
+  const [foodEntry, setFoodEntry] = useState([]);
+
+  const getJournalData = async (day) => {
+    await AxiosInstance.get(`journalentry`).then((res) => {
+      setJournalEntry(res.data.filter((item) => item.date == day));
+
+      try {
+        getfoodEntryData(
+          res.data.filter((item) => item.date == day)[0].journal_id
+        );
+      } catch {
+        setFoodEntry([]);
+      }
+    });
+  };
+
+  const getfoodEntryData = (id) => {
+    AxiosInstance.get(`foodentry`).then((res) => {
+      setFoodEntry(res.data.filter((item) => item.journal_id == id));
+      setCarbs(
+        res.data
+          .filter((item) => item.journal_id == id)
+          .reduce((acc, item) => acc + item.carbs, 0)
+      );
+      setProtein(
+        res.data
+          .filter((item) => item.journal_id == id)
+          .reduce((acc, item) => acc + item.protein, 0)
+      );
+      setFat(
+        res.data
+          .filter((item) => item.journal_id == id)
+          .reduce((acc, item) => acc + item.fat, 0)
+      );
+      const temp = res.data
+        .filter((item) => item.journal_id == id)
+        .reduce((acc, item) => acc + item.calories, 0);
+      console.log(temp);
+      setCalories((temp / 1200) * 100);
+    });
+  };
+
+  useEffect(() => {
+    getJournalData(dayjs().format("YYYY-MM-DD"));
+    console.log(journalEntry);
+  }, []);
+
+  useEffect(() => {
+    //getfoodEntryData(journalEntry.journal_id);
+    console.log(foodEntry);
+  }, [journalEntry]);
+  //!
+
   //! try
   const [date, setDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [nums, setNums] = useState("test");
 
   const onChange = async (newDate) => {
     setIsLoading(true);
@@ -145,7 +210,8 @@ function FoodJournalHome() {
             }`}
             key={day}
             onClick={() => {
-              const dayStr = format(cloneDay, "ccc dd MMM yy");
+              // const day = format(cloneDay);
+              const dayStr = format(cloneDay, "yyyy-MM-dd");
               onDateClickHandle(cloneDay, dayStr);
             }}
           >
@@ -184,7 +250,10 @@ function FoodJournalHome() {
   const showDetailsHandle = (dayStr) => {
     // Your logic for handling date details
     console.log("Date details:", dayStr);
-    setJournalEntries();
+    // setJournalEntries();
+    setNums("change");
+
+    getJournalData(dayStr);
   };
   //!
   const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -196,7 +265,7 @@ function FoodJournalHome() {
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 5,
-      backgroundColor: theme.palette.mode === "light" ? "#1a90ff" : "#308fe8",
+      backgroundColor: theme.palette.mode === "light" ? "#898246" : "#308fe8",
     },
   }));
 
@@ -255,7 +324,7 @@ function FoodJournalHome() {
       <Typography>Type of Meal</Typography>
       <Typography>{selectedMeal?.type}</Typography>
       <Typography>Meal Plan</Typography>
-      <Typography>{selectedMeal?.meal}</Typography>
+      <Typography>{selectedMeal?.food}</Typography>
       <Typography>Calories</Typography>
       <Typography>{selectedMeal?.calories}</Typography>
     </Box>
@@ -838,6 +907,7 @@ function FoodJournalHome() {
       </Box>
     );
   };
+
   return (
     <div
       className="content"
@@ -846,7 +916,7 @@ function FoodJournalHome() {
         marginTop: "80px",
         fontFamily: "Poppins",
         marginLeft: "10px",
-        marginRight: "10px",
+        marginRight: "20px",
         color: "#000000",
       }}
     >
@@ -887,7 +957,7 @@ function FoodJournalHome() {
             </Grid>
             <Grid xs={6}>
               {" "}
-              Date ofEntry <br />
+              Date of Entry <br />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker sx={{ background: "#ffffff" }} />
               </LocalizationProvider>
@@ -984,82 +1054,89 @@ function FoodJournalHome() {
       //!
       {details}
       <Box>Date</Box>
-      <Box
-        sx={{
-          borderRadius: 0,
-          background: "#898246",
-          color: "#ffffff",
-          display: "inline-block",
-          justifyItems: "right",
-          p: 5,
-        }}
-      >
-        {" "}
-        <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
-          <img src="images/fire.png" /> Today's Food Intake
-        </Typography>
-        <br />
+      {foodEntry.length > 0 ? (
         <Box
           sx={{
-            background: "#ffffff",
-            color: "#898246",
-            mx: "20px",
-            borderRadius: 2,
+            borderRadius: 0,
+            background: "#898246",
+            color: "#ffffff",
+            display: "inline-block",
+            justifyItems: "right",
+            p: 5,
+            width: "100%",
           }}
         >
-          Calories
-          <BorderLinearProgress variant="determinate" value={70} />
+          {" "}
+          <Typography sx={{ fontSize: "30px", fontWeight: "bold" }}>
+            <img src="images/fire.png" /> Today's Food Intake
+          </Typography>
+          <br />
+          <Box
+            sx={{
+              background: "#ffffff",
+              color: "#898246",
+              mx: "20px",
+              borderRadius: 2,
+              p: 4,
+            }}
+          >
+            Calories
+            <BorderLinearProgress variant="determinate" value={calories} />
+          </Box>
+          <br />
+          <br />
+          <Grid container spacing={2}>
+            <Grid xs={4} sx={{ borderRadius: 5 }}>
+              {nums}
+              CARBS{" "}
+              <Box
+                sx={{
+                  background: "#ffffff",
+                  color: "#898246",
+                  borderRadius: 2,
+                  mx: 5,
+                }}
+              >
+                {carbs}g
+              </Box>
+            </Grid>
+            <Grid xs={4}>
+              PROTEIN{" "}
+              <Box
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  borderRadius: 2,
+                  mx: 5,
+                }}
+              >
+                {protein} g
+              </Box>
+            </Grid>
+            <Grid xs={4}>
+              FATS{" "}
+              <Box
+                sx={{
+                  background: "#ffffff",
+                  color: "#898246",
+                  borderRadius: 2,
+                  mx: 5,
+                }}
+              >
+                {fat} g
+              </Box>
+            </Grid>
+          </Grid>
         </Box>
-        <br />
-        <br />
-        <Grid container spacing={2}>
-          <Grid xs={4} sx={{ borderRadius: 5 }}>
-            CARBS{" "}
-            <Box
-              sx={{
-                background: "#ffffff",
-                color: "#898246",
-                borderRadius: 2,
-                mx: 5,
-              }}
-            >
-              31g
-            </Box>
-          </Grid>
-          <Grid xs={4}>
-            PROTEIN{" "}
-            <Box
-              sx={{
-                background: "#ffffff",
-                color: "#E66253",
-                borderRadius: 2,
-                mx: 5,
-              }}
-            >
-              31g
-            </Box>
-          </Grid>
-          <Grid xs={4}>
-            FATS{" "}
-            <Box
-              sx={{
-                background: "#ffffff",
-                color: "#898246",
-                borderRadius: 2,
-                mx: 5,
-              }}
-            >
-              31g
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
+      ) : (
+        <div>You haven't added any food entries yet.</div>
+      )}
       <br />
       <br />
       <br />
       <br />
       <Grid container spacing={2}>
-        <Grid xs={6}>Meal Plan: </Grid>
+        <Grid xs={6}> </Grid>
         <Grid xs={6}>
           <Button
             sx={{
@@ -1161,57 +1238,61 @@ function FoodJournalHome() {
       <br />
       <br />
       <br />
-      {meals.map((meal, index) => (
-        <Grid container spacing={2} sx={{ mb: "60px" }}>
-          <Grid xs={4}>
-            <img src={getMealPic(index)} height="100px" />
-          </Grid>
-          <Grid xs={6}>
-            {meal.type}
-            <br />
-            <br />
-            <br />
-            <br />
+      {foodEntry.length > 0 ? (
+        foodEntry.map((meal, index) => (
+          <Grid container spacing={2} sx={{ mb: "60px" }}>
+            <Grid xs={4}>
+              <img src={getMealPic(index)} height="100px" />
+            </Grid>
+            <Grid xs={6}>
+              {meal.type}
+              <br />
+              <br />
+              <br />
+              <br />
 
-            {meal.meal}
-          </Grid>
-          <Grid xs={2}>
-            <Button
-              sx={{ color: "#E66253", textDecoration: "underline" }}
-              onClick={() => handleSelectMeal(meal)}
-            >
-              View Details{" "}
-            </Button>
+              {meal.food}
+            </Grid>
+            <Grid xs={2}>
+              <Button
+                sx={{ color: "#E66253", textDecoration: "underline" }}
+                onClick={() => handleSelectMeal(meal)}
+              >
+                View Details{" "}
+              </Button>
 
-            <Modal
-              open={opens}
-              onClose={handleCloses}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={styles}>
-                <Grid container spacing={2}>
-                  <Grid xs={2}>
-                    {" "}
-                    <img src="/images/food journal icon.png" />
+              <Modal
+                open={opens}
+                onClose={handleCloses}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={styles}>
+                  <Grid container spacing={2}>
+                    <Grid xs={2}>
+                      {" "}
+                      <img src="/images/food journal icon.png" />
+                    </Grid>
+                    <Grid xs={8}>[Date]</Grid>
+                    <Grid xs={2}>
+                      <Button
+                        key={index}
+                        sx={{ float: "right" }}
+                        onClick={() => handleClose()}
+                      >
+                        <img src="/images/close.png" height="10" weight="10" />
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid xs={8}>[Date]</Grid>
-                  <Grid xs={2}>
-                    <Button
-                      key={index}
-                      sx={{ float: "right" }}
-                      onClick={() => handleClose()}
-                    >
-                      <img src="/images/close.png" height="10" weight="10" />
-                    </Button>
-                  </Grid>
-                </Grid>
-                {modalContent}
-              </Box>
-            </Modal>
+                  {modalContent}
+                </Box>
+              </Modal>
+            </Grid>
           </Grid>
-        </Grid>
-      ))}
+        ))
+      ) : (
+        <div>You haven't added any food entries yet.</div>
+      )}
     </div>
   );
 }

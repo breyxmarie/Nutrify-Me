@@ -80,3 +80,13 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = ('order_id','user_id','orders','date','status','address_id','payment','shipping', 'notes', 'totalprice', 'shipping_price')
 
+class JournalEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JournalEntry
+        fields = ('journal_id','date','title','entry','systolic','diastolic')
+
+
+class FoodEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FoodEntry
+        fields = ('foodentry_id', 'type','food','calories','fat','protein','carbs','journal_id' )

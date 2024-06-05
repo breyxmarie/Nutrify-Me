@@ -400,3 +400,76 @@ def OrderAPI(request, pk=0):
         order = Order.objects.get(order_id=pk)
         order.delete()
         return JsonResponse("Order was deleted Successfully", safe = False)
+    
+
+
+@csrf_exempt
+def JournalEntryAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            journalEntry = JournalEntry.objects.all()
+            serializer = JournalEntrySerializer(journalEntry, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                journalEntry = JournalEntry.objects.get(pk=pk)
+                serializer = JournalEntrySerializer(journalEntry)
+                return JsonResponse(serializer.data, safe=False)
+            except JournalEntry.DoesNotExist:
+                return JsonResponse({'error': 'Journal Entry not found'}, status=404)
+    elif request.method == 'POST':
+        journalEntry_data = JSONParser().parse(request)
+        journalEntry_serializer = JournalEntrySerializer(data = journalEntry_data)
+        if journalEntry_serializer.is_valid():
+            journalEntry_serializer.save()
+            return JsonResponse("Journal Entry Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Journal Entry", safe=False)
+    elif request.method == 'PUT':
+        journalEntry_data = JSONParser().parse(request)
+        journalEntrys = JournalEntry.objects.get(journal_id=journalEntry_data['journal_id'])
+        journalEntry_serializer = JournalEntrySerializer(journalEntrys, data = journalEntry_data)
+        if journalEntry_serializer.is_valid():
+            journalEntry_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        journalEntry = JournalEntry.objects.get(journal_id=pk)
+        journalEntry.delete()
+        return JsonResponse("Journal Entry was deleted Successfully", safe = False)
+    
+
+@csrf_exempt
+def FoodEntryAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            foodEntry = FoodEntry.objects.all()
+            serializer = FoodEntrySerializer(foodEntry, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                foodEntry = FoodEntry.objects.get(pk=pk)
+                serializer = FoodEntrySerializer(foodEntry)
+                return JsonResponse(serializer.data, safe=False)
+            except JournalEntry.DoesNotExist:
+                return JsonResponse({'error': 'Food Entry not found'}, status=404)
+    elif request.method == 'POST':
+        foodEntry_data = JSONParser().parse(request)
+        foodEntry_serializer = FoodEntrySerializer(data = foodEntry_data)
+        if foodEntry_serializer.is_valid():
+            foodEntry_serializer.save()
+            return JsonResponse("Food Entry Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Food Entry", safe=False)
+    elif request.method == 'PUT':
+        foodEntry_data = JSONParser().parse(request)
+        foodEntrys = FoodEntry.objects.get(foodentry_id=foodEntry_data['foodentry_id'])
+        foodEntry_serializer = FoodEntrySerializer(foodEntrys, data = foodEntry_data)
+        if foodEntry_serializer.is_valid():
+            foodEntry_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        foodEntry = FoodEntry.objects.get(foodentry_id=pk)
+        foodEntry.delete()
+        return JsonResponse("Food Entry was deleted Successfully", safe = False)

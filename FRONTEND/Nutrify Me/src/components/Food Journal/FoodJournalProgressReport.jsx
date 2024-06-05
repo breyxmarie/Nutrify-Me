@@ -21,9 +21,21 @@ function FoodJournalProgressReport() {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
+    console.log(setting, "test");
+
+    switch (setting) {
+      case "Daily":
+        console.log(setting);
+        break;
+    }
+    setBarGraphDiv(setting);
     setAnchorElUser(null);
   };
+
+  // const handleCloseUserMenu = () => {
+  //   setAnchorElUser(null);
+  // };
 
   const dataset = [
     [330, 57, 386, 321, "Jan"],
@@ -46,6 +58,85 @@ function FoodJournalProgressReport() {
     month,
   }));
 
+  //! Bar graph
+
+  const [barGraph, setBarGraph] = useState(
+    <div style={{ width: "100%" }}>
+      <BarChart
+        xAxis={[
+          {
+            scaleType: "band",
+            data: [
+              "group A",
+              "group B",
+              "group C",
+              "Group D",
+              "Group E",
+              "Group F",
+              "Group G",
+              "Group H",
+              "Group I",
+            ],
+            colorMap: {
+              type: "piecewise",
+              thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+              colors: ["#E66253"],
+            },
+          },
+        ]}
+        series={[{ data: [4, 3, 5, 11] }]}
+        height={300}
+        slotProps={{
+          bar: {
+            clipPath: `inset(0px round 10px 10px 0px 0px)`,
+          },
+        }}
+      />
+    </div>
+  );
+
+  const setBarGraphDiv = (condition) => {
+    console.log(condition);
+    switch (condition) {
+      case "Weekly":
+        setBarGraph(
+          <div style={{ width: "100%" }}>
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: "band",
+                  data: [
+                    "group A",
+                    "group B",
+                    "group C",
+                    "Group D",
+                    "Group E",
+                    "Group F",
+                    "Group G",
+                    "Group H",
+                    "Group I",
+                  ],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#E66253"],
+                  },
+                },
+              ]}
+              series={[{ data: [4, 3, 5, 11] }]}
+              height={300}
+              slotProps={{
+                bar: {
+                  clipPath: `inset(0px round 10px 10px 0px 0px)`,
+                },
+              }}
+            />
+          </div>
+        );
+        break;
+    }
+  };
+  //!
   const valueFormatter = (value) => `${value}mm`;
 
   // * documentation: https://mui.com/x/react-charts/bars/
@@ -107,7 +198,12 @@ function FoodJournalProgressReport() {
             onClose={handleCloseUserMenu}
           >
             {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <MenuItem
+                key={setting}
+                onClick={() => {
+                  handleCloseUserMenu(setting);
+                }}
+              >
                 <Typography textAlign="center">{setting}</Typography>
               </MenuItem>
             ))}
@@ -128,28 +224,7 @@ function FoodJournalProgressReport() {
         />
       </div>
 
-      <BarChart
-        xAxis={[
-          {
-            scaleType: "band",
-            data: ["group A", "group B", "group C"],
-            colorMap: {
-              type: "piecewise",
-              thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-              colors: ["#E66253"],
-            },
-          },
-        ]}
-        series={[{ data: [4, 3, 5] }]}
-        width={500}
-        height={300}
-        slotProps={{
-          bar: {
-            clipPath: `inset(0px round 10px 10px 0px 0px)`,
-          },
-        }}
-      />
-
+      {barGraph}
       <Grid container spacing={2}>
         <Grid xs={6}>
           {" "}

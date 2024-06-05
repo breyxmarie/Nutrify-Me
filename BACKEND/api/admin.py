@@ -12,4 +12,7 @@ admin.site.register(ShopMeal)
 admin.site.register(Cart)
 admin.site.register(Address)
 admin.site.register(Order)
+admin.site.register(JournalEntry)
+admin.site.register(FoodEntry)
+
 # Register your models here.

@@ -138,3 +138,27 @@ class Order(models.Model):
 
     class Meta:
         db_table = "order"
+
+class JournalEntry(models.Model):
+    journal_id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    title = models.CharField(max_length=100)
+    entry = models.CharField(max_length=500)
+    systolic = models.IntegerField()
+    diastolic  = models.IntegerField()
+
+    class Meta:
+        db_table = "journal_entry"
+
+class FoodEntry(models.Model):
+    foodentry_id = models.AutoField(primary_key=True)
+    journal_id = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="listingsss2")
+    type = models.CharField(max_length=25)
+    food = models.CharField(max_length=100)
+    calories = models.IntegerField()
+    fat = models.IntegerField()
+    protein = models.IntegerField()
+    carbs= models.IntegerField() 
+
+    class Meta:
+        db_table = "food_entry"
