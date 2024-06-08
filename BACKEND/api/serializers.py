@@ -83,7 +83,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class JournalEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = JournalEntry
-        fields = ('journal_id','date','title','entry','systolic','diastolic')
+        fields = ('journal_id','date','title','entry','systolic','diastolic', 'user_id')
 
 
 class FoodEntrySerializer(serializers.ModelSerializer):

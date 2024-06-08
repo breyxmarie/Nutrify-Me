@@ -49,7 +49,16 @@ function FoodJournalHome() {
 
   const getJournalData = async (day) => {
     await AxiosInstance.get(`journalentry`).then((res) => {
-      setJournalEntry(res.data.filter((item) => item.date == day));
+      setJournalEntry(
+        res.data.filter(
+          (item) => item.date == day && item.user_id == loggedInUser.user_id
+        )
+      );
+      console.log(
+        res.data.filter(
+          (item) => item.date == day && item.user_id == loggedInUser.user_id
+        )
+      );
 
       try {
         getfoodEntryData(

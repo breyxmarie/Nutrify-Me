@@ -146,6 +146,7 @@ class JournalEntry(models.Model):
     entry = models.CharField(max_length=500)
     systolic = models.IntegerField()
     diastolic  = models.IntegerField()
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss4")
 
     class Meta:
         db_table = "journal_entry"
