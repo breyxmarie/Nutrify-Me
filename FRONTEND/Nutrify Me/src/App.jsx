@@ -8,6 +8,11 @@ import AboutUsUser from "./components/AboutUsUser";
 import FoodJournalHome from "./components/Food Journal/FoodJournalHome";
 import FoodJournalProgressReport from "./components/Food Journal/FoodJournalProgressReport";
 import MealPlangeneratorHome from "./components/Meal Plan Generator/MealPlangeneratorHome";
+import MealPlanGeneratorQuestion from "./components/Meal Plan Generator/MealPlanGeneratorQuestion";
+import MealPlanGeneratorConsent from "./components/Meal Plan Generator/MealPlanGeneratorCOnsent";
+
+import MealPlanGeneratorGeneratedMeal from "./components/Meal Plan Generator/MealPlanGeneratorGeneratedMeal";
+
 import MealPlanSelection from "./components/Meal Plan Generator/MealPlanSelection";
 import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
 import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
@@ -32,6 +37,7 @@ import MainUserNavBar from "./components/NavBars/MainUserNavbar";
 import TeleMedNavBar from "./components/NavBars/TeleMedNavBar";
 import FoodJournalNavBar from "./components/NavBars/FoodJournalNavBar";
 import MealPlanShopNavBar from "./components/NavBars/MealPlanShopNavBar";
+import MealPlanGeneratorNavBar from "./components/NavBars/MealPlanGeneratorNavBar";
 import NutritionistNavBar from "./components/NavBars/NutritionistNavBar";
 import UserProfile from "./components/Profiles/UserProfile";
 import NutritionistProfile from "./components/Profiles/NutritionistProfile";
@@ -234,10 +240,49 @@ function App() {
               element={
                 <>
                   <MainUserNavBar />
-                  <MealPlangeneratorHome />{" "}
+                  <MealPlanGeneratorNavBar />
+                  <MealPlangeneratorHome />
+                  <UserFooter />
                 </>
               }
             />
+
+            <Route
+              path="/meal-plan-generator-consent"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanGeneratorNavBar />
+                  <MealPlanGeneratorConsent />
+                  <UserFooter />
+                </>
+              }
+            />
+
+            <Route
+              path="/meal-plan-generator-questions"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanGeneratorNavBar />
+                  <MealPlanGeneratorQuestion />
+                  <UserFooter />
+                </>
+              }
+            />
+
+            <Route
+              path="/meal-plan-generator-generated"
+              element={
+                <>
+                  <MainUserNavBar />
+                  <MealPlanGeneratorNavBar />
+                  <MealPlanGeneratorGeneratedMeal />
+                  <UserFooter />
+                </>
+              }
+            />
+
             <Route
               path="/test"
               element={

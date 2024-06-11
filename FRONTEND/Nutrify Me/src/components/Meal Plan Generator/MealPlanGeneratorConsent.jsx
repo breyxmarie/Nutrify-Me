@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
 
-function MealPlangeneratorHome() {
+function MealPlanGeneratorConsent() {
   return (
     <div
       className="content"
@@ -31,4 +31,4 @@ function MealPlangeneratorHome() {
   );
 }
 
-export default MealPlangeneratorHome;
+export default MealPlanGeneratorConsent;
