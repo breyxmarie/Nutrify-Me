@@ -9,7 +9,7 @@ import FoodJournalHome from "./components/Food Journal/FoodJournalHome";
 import FoodJournalProgressReport from "./components/Food Journal/FoodJournalProgressReport";
 import MealPlangeneratorHome from "./components/Meal Plan Generator/MealPlangeneratorHome";
 import MealPlanGeneratorQuestion from "./components/Meal Plan Generator/MealPlanGeneratorQuestion";
-import MealPlanGeneratorConsent from "./components/Meal Plan Generator/MealPlanGeneratorCOnsent";
+import MealPlanGeneratorConsent from "./components/Meal Plan Generator/MealPlanGeneratorConsent";
 
 import MealPlanGeneratorGeneratedMeal from "./components/Meal Plan Generator/MealPlanGeneratorGeneratedMeal";
 
