@@ -11,7 +11,8 @@ import axios from "axios";
 
 function MealPlanGeneratorQuestion() {
   //! parameters needed
-  const [diet, setDiet] = useState();
+  const [diet, setDiet] = useState("balanced");
+  const [health, setHealth] = useState("DASH");
   const [gender, setGender] = useState("Female");
   const [caloriesGoal, setCaloriesGoal] = useState(1000);
   const [minCalories, setMinCalories] = useState(500);
@@ -25,6 +26,7 @@ function MealPlanGeneratorQuestion() {
   const [dish, setDish] = useState("main");
   const [meal, setMeal] = useState("lunch");
   const [fat, setFat] = useState(100);
+
   const [protein, setProtein] = useState(100);
   const [carbs, setCarbs] = useState(1000);
   const [retrievedData, setRetrievedData] = useState([]);
@@ -34,6 +36,7 @@ function MealPlanGeneratorQuestion() {
 
   //! choices
   const allergens = [
+    "None",
     "Tree-Nut-Free",
     "Peanut-Free",
     "Soy-Free",
@@ -51,7 +54,7 @@ function MealPlanGeneratorQuestion() {
   const dietChoices = [
     "Vegetarian",
     "Paleo",
-    "High Protein",
+    "High-Protein",
     "High Blood Friendly",
   ];
 
@@ -106,7 +109,8 @@ function MealPlanGeneratorQuestion() {
     protein,
     carbs,
     dish,
-    cuisine
+    cuisine,
+    diet
   ) {
     let tempCalories;
     let tempProtein;
@@ -116,7 +120,8 @@ function MealPlanGeneratorQuestion() {
     try {
       await axios
         .get(
-          URL + `q=&dishType=${dish}&mealType=breakfast&cuisineType=${cuisine}&`
+          URL +
+            `q=&dishType=${dish}&mealType=breakfast&cuisineType=${cuisine}&health=${diet}`
         )
         .then((res) => {
           console.log(res.data.hits);
@@ -329,59 +334,307 @@ function MealPlanGeneratorQuestion() {
 
   // const getDinnerMeal = () => {};
 
-  useEffect(() => {
+  async function getMealsWithoutAllergens(
+    dish,
+    type,
+    cuisine,
+    health,
+    diet,
+    caloriesGoal,
+    // minCalories,
+    fat,
+    protein,
+    carbs
+  ) {
     let tempCalories = [];
     let tempProtein = [];
     let tempFat = [];
     let tempCarbs = [];
-    getBreakfastMeal();
-    axios
-      .get(
-        "https://api.edamam.com/search?q=&dishType=main&mealType=breakfast&calories=100&fat=100&carbs=2&protein=20&from=1&to=100&app_id=c4463c1b&app_key=271feabad8974932420da2460b71ae78"
-        // "https://api.edamam.com/api/recipes/v2?q=&dishType=main Course&cuisineType=korean&mealType=lunch&calories=100.10-500.02&protein=100&fat=40&health=DASH&app_id=c4463c1b&app_key=271feabad8974932420da2460b71ae78&type=public&from=5&to=10"
-      )
-      .then((res) => {
-        // setBreakfast(res.data.hits);
-        //  console.log(res.data.hits);
 
-        setRetrievedData(res.data.hits);
-        // setRetrievedData(res.data.hits);
+    try {
+      await axios
+        .get(
+          URL +
+            `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&health=${health}&diet=${diet}&`
+        )
+        .then((res) => {
+          console.log(res.data.hits);
 
-        // // {
-        // //   res.data.hits.map((item) => console.log(item.recipe.calories));
-        // // }
+          tempCalories = res.data.hits.filter(
+            (item) =>
+              // item.recipe.calories <= caloriesGoal &&
+              // item.recipe.calories >= minCalories
 
-        // tempCalories = res.data.hits.filter(
-        //   (item) =>
-        //     item.recipe.calories <= caloriesGoal &&
-        //     item.recipe.calories >= minCalories
-        // );
+              item.recipe.calories <= caloriesGoal
+          );
 
-        // tempFat = tempCalories.filter((item) =>
-        //   item.recipe.digest.find(
-        //     (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
-        //   )
-        // );
+          tempFat = tempCalories.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+            )
+          );
 
-        // tempProtein = tempFat.filter((item) =>
-        //   item.recipe.digest.find(
-        //     (nutrient) =>
-        //       nutrient.label === "Protein" && nutrient.total < protein
-        //   )
-        // );
+          tempProtein = tempFat.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) =>
+                nutrient.label === "Protein" && nutrient.total < protein
+            )
+          );
 
-        // tempCarbs = tempProtein.filter((item) =>
-        //   item.recipe.digest.find(
-        //     (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
-        //   )
-        // );
+          tempCarbs = tempProtein.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+            )
+          );
 
-        // setSelectedMeals(tempCarbs);
-      })
-      .catch(console.log);
+          console.log(tempCarbs);
+          setSelectedBreakfastMeals(tempCarbs);
+        })
 
-    // console.log(selectedMeals);
-  }, []);
+        .catch(console.log);
+      return tempCarbs;
+    } catch {}
+  }
+
+  async function getProteinMealsWithoutAllergens(
+    dish,
+    type,
+    cuisine,
+    diet,
+    caloriesGoal,
+    // minCalories,
+    fat,
+    protein,
+    carbs
+  ) {
+    let tempCalories = [];
+    let tempProtein = [];
+    let tempFat = [];
+    let tempCarbs = [];
+
+    try {
+      await axios
+        .get(
+          URL +
+            `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&diet=${diet}&`
+        )
+        .then((res) => {
+          console.log(res.data.hits);
+
+          tempCalories = res.data.hits.filter(
+            (item) =>
+              // item.recipe.calories <= caloriesGoal &&
+              // item.recipe.calories >= minCalories
+
+              item.recipe.calories <= caloriesGoal
+          );
+
+          tempFat = tempCalories.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+            )
+          );
+
+          tempProtein = tempFat.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) =>
+                nutrient.label === "Protein" && nutrient.total < protein
+            )
+          );
+
+          tempCarbs = tempProtein.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+            )
+          );
+
+          console.log(tempCarbs);
+          setSelectedBreakfastMeals(tempCarbs);
+        })
+
+        .catch(console.log);
+      return tempCarbs;
+    } catch {}
+  }
+
+  async function getMealsWithAllergens(
+    dish,
+    type,
+    cuisine,
+    health,
+    diet,
+    allergens,
+    caloriesGoal,
+    // minCalories,
+    fat,
+    protein,
+    carbs
+  ) {
+    let tempCalories = [];
+    let tempProtein = [];
+    let tempFat = [];
+    let tempCarbs = [];
+
+    try {
+      await axios
+        .get(
+          URL +
+            `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&health=${health}&health=${allergens}&diet=${diet}&`
+        )
+        .then((res) => {
+          console.log(res.data.hits);
+
+          tempCalories = res.data.hits.filter(
+            (item) =>
+              // item.recipe.calories <= caloriesGoal &&
+              // item.recipe.calories >= minCalories
+
+              item.recipe.calories <= caloriesGoal
+          );
+
+          tempFat = tempCalories.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+            )
+          );
+
+          tempProtein = tempFat.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) =>
+                nutrient.label === "Protein" && nutrient.total < protein
+            )
+          );
+
+          tempCarbs = tempProtein.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+            )
+          );
+
+          console.log(tempCarbs);
+          setSelectedBreakfastMeals(tempCarbs);
+        })
+
+        .catch(console.log);
+      return tempCarbs;
+    } catch {}
+  }
+
+  async function getProteinMealsWithAllergens(
+    dish,
+    type,
+    cuisine,
+    diet,
+    allergens,
+    caloriesGoal,
+    // minCalories,
+    fat,
+    protein,
+    carbs
+  ) {
+    let tempCalories = [];
+    let tempProtein = [];
+    let tempFat = [];
+    let tempCarbs = [];
+
+    try {
+      await axios
+        .get(
+          URL +
+            `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&diet=${diet}&health=${allergens}`
+        )
+        .then((res) => {
+          console.log(res.data.hits);
+
+          tempCalories = res.data.hits.filter(
+            (item) =>
+              // item.recipe.calories <= caloriesGoal &&
+              // item.recipe.calories >= minCalories
+
+              item.recipe.calories <= caloriesGoal
+          );
+
+          tempFat = tempCalories.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+            )
+          );
+
+          tempProtein = tempFat.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) =>
+                nutrient.label === "Protein" && nutrient.total < protein
+            )
+          );
+
+          tempCarbs = tempProtein.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+            )
+          );
+
+          console.log(tempCarbs);
+          setSelectedBreakfastMeals(tempCarbs);
+        })
+
+        .catch(console.log);
+      return tempCarbs;
+    } catch {}
+  }
+
+  // useEffect(() => {
+  //   let tempCalories = [];
+  //   let tempProtein = [];
+  //   let tempFat = [];
+  //   let tempCarbs = [];
+  //   // getBreakfastMeal();
+  //   axios
+  //     .get(
+  //       "https://api.edamam.com/search?q=&dishType=main&mealType=lunch&cuisineType=american&health=DASH&from=1&to=100&app_id=c4463c1b&app_key=271feabad8974932420da2460b71ae78"
+  //       // "https://api.edamam.com/api/recipes/v2?q=&dishType=main Course&cuisineType=korean&mealType=lunch&calories=100.10-500.02&protein=100&fat=40&health=DASH&app_id=c4463c1b&app_key=271feabad8974932420da2460b71ae78&type=public&from=5&to=10"
+  //     )
+  //     .then((res) => {
+  //       // setBreakfast(res.data.hits);
+  //       console.log(res.data.hits);
+
+  //       //  setRetrievedData(res.data.hits);
+  //       // setRetrievedData(res.data.hits);
+
+  //       // // {
+  //       // //   res.data.hits.map((item) => console.log(item.recipe.calories));
+  //       // // }
+
+  //       // tempCalories = res.data.hits.filter(
+  //       //   (item) =>
+  //       //     item.recipe.calories <= caloriesGoal &&
+  //       //     item.recipe.calories >= minCalories
+  //       // );
+
+  //       // tempFat = tempCalories.filter((item) =>
+  //       //   item.recipe.digest.find(
+  //       //     (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+  //       //   )
+  //       // );
+
+  //       // tempProtein = tempFat.filter((item) =>
+  //       //   item.recipe.digest.find(
+  //       //     (nutrient) =>
+  //       //       nutrient.label === "Protein" && nutrient.total < protein
+  //       //   )
+  //       // );
+
+  //       // tempCarbs = tempProtein.filter((item) =>
+  //       //   item.recipe.digest.find(
+  //       //     (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+  //       //   )
+  //       // );
+
+  //       // setSelectedMeals(tempCarbs);
+  //     })
+  //     .catch(console.log);
+
+  //   // console.log(selectedMeals);
+  // }, []);
 
   //!
 
@@ -625,63 +878,318 @@ function MealPlanGeneratorQuestion() {
 
     console.log(caloriesGoal + " : " + breakfastCalories);
 
-    let breakfast = await getBreakfastMeal(
-      breakfastCalories,
-      fat,
-      protein,
-      carbs,
-      dish,
-      data.cuisine
-    );
+    if (data.allergens === "None") {
+      if (data.diet === "High-Protein") {
+        console.log("protein baby");
+        let breakfast = await getProteinMealsWithoutAllergens(
+          dish,
+          "breakfast",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          breakfastCalories,
+          fat,
+          protein,
+          carbs
+        );
 
-    console.log(
-      await getBreakfastMeal(
-        breakfastCalories,
-        fat,
-        protein,
-        carbs,
-        dish,
-        data.cuisine
-      )
-    );
+        console.log(breakfast);
 
-    let lunch = await getLunchMeal(
-      lunchCalories,
-      fat,
-      protein,
-      carbs,
-      dish,
-      data.cuisine
-    );
+        let lunch = await getProteinMealsWithoutAllergens(
+          dish,
+          "lunch",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          lunchCalories,
+          fat,
+          protein,
+          carbs
+        );
 
-    let snack = await getSnackMeal(
-      snackCalories,
-      fat,
-      protein,
-      carbs,
-      dish,
-      data.cuisine
-    );
+        let snack = await getProteinMealsWithoutAllergens(
+          dish,
+          "snack",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          snackCalories,
+          fat,
+          protein,
+          carbs
+        );
 
-    let dinner = await getDinnerMeal(
-      dinnerCalories,
-      fat,
-      protein,
-      carbs,
-      dish,
-      data.cuisine
-    );
+        let dinner = await getProteinMealsWithoutAllergens(
+          dish,
+          "dinner",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          dinnerCalories,
+          fat,
+          protein,
+          carbs
+        );
 
-    console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
 
-    let meals = [];
+        let meals = [];
 
-    meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-    meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
-    meals.push(snack[getRandomInRange(0, snack.length - 1)]);
-    meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
+        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
+        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
 
-    console.log(meals);
+        console.log(meals);
+      } else if (data.diet === "High Blood Friendly") {
+        let breakfast = await getMealsWithoutAllergens(
+          dish,
+          "breakfast",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          breakfastCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast);
+
+        let lunch = await getMealsWithoutAllergens(
+          dish,
+          "lunch",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          lunchCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let snack = await getMealsWithoutAllergens(
+          dish,
+          "snack",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          snackCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let dinner = await getMealsWithoutAllergens(
+          dish,
+          "dinner",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          dinnerCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+
+        let meals = [];
+
+        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
+        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
+        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+
+        console.log(meals);
+      } else {
+        let breakfast = await getMealsWithoutAllergens(
+          dish,
+          "breakfast",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          breakfastCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast);
+
+        let lunch = await getMealsWithoutAllergens(
+          dish,
+          "lunch",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          lunchCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let snack = await getMealsWithoutAllergens(
+          dish,
+          "snack",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          snackCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let dinner = await getMealsWithoutAllergens(
+          dish,
+          "dinner",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          dinnerCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+
+        let meals = [];
+
+        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
+        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
+        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+
+        console.log(meals);
+      }
+    } else {
+      if (data.diet !== "High-Protein") {
+        let breakfast = await getMealsWithAllergens(
+          dish,
+          "breakfast",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          data.allergens.toLowerCase(),
+          breakfastCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast);
+
+        let lunch = await getMealsWithAllergens(
+          dish,
+          "lunch",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          data.allergens.toLowerCase(),
+          lunchCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let snack = await getMealsWithAllergens(
+          dish,
+          "snack",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          data.allergens.toLowerCase(),
+          snackCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let dinner = await getMealsWithAllergens(
+          dish,
+          "dinner",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          `balanced`,
+          data.allergens.toLowerCase(),
+          dinnerCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+
+        let meals = [];
+
+        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
+        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
+        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+
+        console.log(meals);
+      } else {
+        console.log("protein baby");
+        let breakfast = await getProteinMealsWithAllergens(
+          dish,
+          "breakfast",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          data.allergens.toLowerCase(),
+          breakfastCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast);
+
+        let lunch = await getProteinMealsWithAllergens(
+          dish,
+          "lunch",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          data.allergens.toLowerCase(),
+          lunchCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let snack = await getProteinMealsWithAllergens(
+          dish,
+          "snack",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          data.allergens.toLowerCase(),
+          snackCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        let dinner = await getProteinMealsWithAllergens(
+          dish,
+          "dinner",
+          data.cuisine,
+          data.diet.toLowerCase(),
+          data.allergens.toLowerCase(),
+          dinnerCalories,
+          fat,
+          protein,
+          carbs
+        );
+
+        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+
+        let meals = [];
+
+        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
+        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
+        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+
+        console.log(meals);
+      }
+    }
   };
 
   //!
@@ -885,6 +1393,8 @@ function MealPlanGeneratorQuestion() {
           <button type="submit">Generate</button>
         </form>
       </Box>
+
+      <Box>For High Blood Diet Plans</Box>
     </div>
   );
 }
