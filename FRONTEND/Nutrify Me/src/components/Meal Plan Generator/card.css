@@ -1,0 +1,29 @@
+.swipe-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300px; /* Adjust as needed */
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  will-change: transform; /* Optimize performance */
+  transform: translateX(-50%); /* Initial offset */
+}
+
+.card.center {
+  transform: translateX(0); /* Centered card */
+}
+
+.card.left {
+  transform: translateX(-100%); /* Leftward card */
+}
+
+.card.right {
+  transform: translateX(100%); /* Rightward card */
+}

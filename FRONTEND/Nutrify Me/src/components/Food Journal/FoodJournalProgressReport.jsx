@@ -452,35 +452,72 @@ function FoodJournalProgressReport() {
     }
     setBarGraph(
       <div style={{ width: "100%" }}>
-        <BarChart
-          xAxis={[
-            {
-              scaleType: "band",
-              data: [
-                "Sunday",
-                "Monday",
-                "Tuesday",
-                "Wednesday",
-                "Thursday",
-                "Friday",
-                "Saturday",
-              ],
-              colorMap: {
-                type: "piecewise",
-                thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                colors: ["#E66253"],
-              },
-            },
-          ]}
-          // series={[{ data: [4, 3, 5, 11] }]}
-          series={[{ data: weeks.map((item) => [item.calorie]) }]}
-          height={300}
-          slotProps={{
-            bar: {
-              clipPath: `inset(0px round 10px 10px 0px 0px)`,
-            },
-          }}
-        />
+        <Grid container spacing={2}>
+          <Grid xs={6}>
+            {" "}
+            <BarChart
+              layout="horizontal"
+              yAxis={[
+                {
+                  scaleType: "band",
+                  data: [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#898246"],
+                  },
+                },
+              ]}
+              // series={[{ data: [4, 3, 5, 11] }]}
+              series={[{ data: weeks.map((item) => [item.calorie]) }]}
+              height={300}
+              // slotProps={{
+              //   bar: {
+              //     clipPath: `inset(0px round 10px 10px 0px 0px)`,
+              //   },
+              // }}
+            />
+            CARBS
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: "band",
+                  data: [
+                    "Sunday",
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                  ],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#898246"],
+                  },
+                },
+              ]}
+              // series={[{ data: [4, 3, 5, 11] }]}
+              series={[{ data: weeks.map((item) => [item.carbs]) }]}
+              height={300}
+              // slotProps={{
+              //   bar: {
+              //     clipPath: `inset(0px round 10px 10px 0px 0px)`,
+              //   },
+              // }}
+            />
+          </Grid>
+          <Grid xs={6}></Grid>
+        </Grid>
       </div>
     );
     return weeks;

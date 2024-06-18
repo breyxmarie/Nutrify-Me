@@ -8,6 +8,9 @@ import Typography from "@mui/material/Typography";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Grid from "@mui/material/Grid";
 
 function MealPlanGeneratorQuestion() {
   //! parameters needed
@@ -26,36 +29,39 @@ function MealPlanGeneratorQuestion() {
   const [dish, setDish] = useState("main");
   const [meal, setMeal] = useState("lunch");
   const [fat, setFat] = useState(100);
-
+  const [selectedCuisine, setSelectedCuisine] = useState([]);
   const [protein, setProtein] = useState(100);
   const [carbs, setCarbs] = useState(1000);
   const [retrievedData, setRetrievedData] = useState([]);
   const [BMR, setBMR] = useState();
   const [TDEE, setTDEE] = useState();
   const [activity, setActivity] = useState();
+  const [generatedMeal, setGeneratedMeal] = useState([]);
+  const [selectedDiet, setSelectedDiet] = useState(null);
+  const [selectedAllergen, setSelectedAllergen] = useState(null);
 
   //! choices
   const allergens = [
-    "None",
-    "Tree-Nut-Free",
-    "Peanut-Free",
-    "Soy-Free",
-    "No oil added",
-    "Dairy-Free",
-    "Pork-Free",
-    "Red-Meat-Free",
-    "Fish-Free",
-    "Sugar-Conscious",
-    "Immuno-Supportive",
-    "Egg-Free",
-    "Gluten-Free",
+    { label: "None", image: "/images/calories.png" },
+    { label: "Tree-Nut-Free", image: "/images/tree-nut-free.png" },
+    { label: "Peanut-Free", image: "/images/peanut-free.png" },
+    { label: "Soy-Free", image: "/images/soy-free.png" },
+    { label: "No-oil-added", image: "/images/no oil added.png" },
+    { label: "Dairy-Free", image: "/images/dairy-free.png" },
+    { label: "Pork-Free", image: "/images/pork-free.png" },
+    { label: "Red-Meat-Free", image: "/images/red-meat-free.png" },
+    { label: "Fish-Free", image: "/images/fish-free.png" },
+    { label: "Sugar-Conscious", image: "/images/sugar-conscious.png" },
+    { label: "Immuno-Supportive", image: "/images/immuno-supportive.png" },
+    { label: "Egg-Free", image: "/images/egg-free.png" },
+    { label: "Gluten-Free", image: "/images/gluten-free.png" },
   ];
 
   const dietChoices = [
-    "Vegetarian",
-    "Paleo",
-    "High-Protein",
-    "High Blood Friendly",
+    { label: "Vegetarian", image: "/images/vegetarian.png" },
+    { label: "Paleo", image: "/images/paleo.png" },
+    { label: "High-Protein", image: "/images/high protein.png" },
+    { label: "High Blood Friendly", image: "/images/high blood friendly.png" },
   ];
 
   const activityChoices = [
@@ -70,17 +76,17 @@ function MealPlanGeneratorQuestion() {
   const goalChoice = ["Weight Loss", "Muscle Gain", "None"];
 
   const cuisineChoice = [
-    "American",
-    "Asian",
-    "British",
-    "Chinese",
-    "French",
-    "Greek",
-    "Indian",
-    "Italian",
-    "Japanese",
-    "Korean",
-    "Middle eastern",
+    { label: "American", image: "/images/american.png" },
+    { label: "Asian", image: "/images/asian.png" },
+    { label: "British", image: "/images/british.png" },
+    { label: "Chinese", image: "/images/chinese.png" },
+    { label: "French", image: "/images/french.png" },
+    { label: "Greek", image: "/images/greek.png" },
+    { label: "Indian", image: "/images/indian.png" },
+    { label: "Italian", image: "/images/italian.png" },
+    { label: "Japanese", image: "/images/japanese.png" },
+    { label: "Korean", image: "/images/korean.png" },
+    { label: "Middle eastern", image: "/images/middle eastern.png" },
   ];
 
   //!
@@ -124,8 +130,6 @@ function MealPlanGeneratorQuestion() {
             `q=&dishType=${dish}&mealType=breakfast&cuisineType=${cuisine}&health=${diet}`
         )
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -158,8 +162,6 @@ function MealPlanGeneratorQuestion() {
         .catch(console.log);
       return tempCarbs;
     } catch {}
-
-    console.log(tempCarbs);
   }
 
   async function getLunchMeal(
@@ -180,8 +182,6 @@ function MealPlanGeneratorQuestion() {
       await axios
         .get(URL + `q=&dishType=${dish}&mealType=lunch&cuisineType=${cuisine}&`)
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -209,7 +209,6 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
           setSelectedBreakfastMeals(tempCarbs);
         })
 
@@ -236,8 +235,6 @@ function MealPlanGeneratorQuestion() {
       await axios
         .get(URL + `q=&dishType=${dish}&mealType=snack&cuisineType=${cuisine}&`)
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -264,7 +261,6 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
           setSelectedBreakfastMeals(tempCarbs);
         })
         .catch(console.log);
@@ -291,8 +287,6 @@ function MealPlanGeneratorQuestion() {
           URL + `q=&dishType=${dish}&mealType=dinner&cuisineType=${cuisine}&`
         )
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -320,7 +314,6 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
           setSelectedBreakfastMeals(tempCarbs);
         })
         .catch(console.log);
@@ -358,8 +351,6 @@ function MealPlanGeneratorQuestion() {
             `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&health=${health}&diet=${diet}&`
         )
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -387,7 +378,122 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
+          setSelectedBreakfastMeals(tempCarbs);
+        })
+
+        .catch(console.log);
+      return tempCarbs;
+    } catch {}
+  }
+
+  async function getHighBloodFriendlyMealsWithoutAllergens(
+    dish,
+    type,
+    cuisine,
+
+    caloriesGoal,
+    // minCalories,
+    fat,
+    protein,
+    carbs
+  ) {
+    let tempCalories = [];
+    let tempProtein = [];
+    let tempFat = [];
+    let tempCarbs = [];
+
+    try {
+      await axios
+        .get(
+          URL +
+            `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&health=DASH&diet=low-sodium`
+        )
+        .then((res) => {
+          tempCalories = res.data.hits.filter(
+            (item) =>
+              // item.recipe.calories <= caloriesGoal &&
+              // item.recipe.calories >= minCalories
+
+              item.recipe.calories <= caloriesGoal
+          );
+
+          tempFat = tempCalories.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+            )
+          );
+
+          tempProtein = tempFat.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) =>
+                nutrient.label === "Protein" && nutrient.total < protein
+            )
+          );
+
+          tempCarbs = tempProtein.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+            )
+          );
+
+          setSelectedBreakfastMeals(tempCarbs);
+        })
+
+        .catch(console.log);
+      return tempCarbs;
+    } catch {}
+  }
+
+  async function getHighBloodFriendlyMealsWithAllergens(
+    dish,
+    type,
+    cuisine,
+    health,
+    caloriesGoal,
+    // minCalories,
+    fat,
+    protein,
+    carbs
+  ) {
+    let tempCalories = [];
+    let tempProtein = [];
+    let tempFat = [];
+    let tempCarbs = [];
+
+    try {
+      await axios
+        .get(
+          URL +
+            `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&health=DASH&health=${health}&diet=low-sodium`
+        )
+        .then((res) => {
+          tempCalories = res.data.hits.filter(
+            (item) =>
+              // item.recipe.calories <= caloriesGoal &&
+              // item.recipe.calories >= minCalories
+
+              item.recipe.calories <= caloriesGoal
+          );
+
+          tempFat = tempCalories.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
+            )
+          );
+
+          tempProtein = tempFat.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) =>
+                nutrient.label === "Protein" && nutrient.total < protein
+            )
+          );
+
+          tempCarbs = tempProtein.filter((item) =>
+            item.recipe.digest.find(
+              (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
+            )
+          );
+
           setSelectedBreakfastMeals(tempCarbs);
         })
 
@@ -419,8 +525,6 @@ function MealPlanGeneratorQuestion() {
             `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&diet=${diet}&`
         )
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -448,7 +552,6 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
           setSelectedBreakfastMeals(tempCarbs);
         })
 
@@ -482,8 +585,6 @@ function MealPlanGeneratorQuestion() {
             `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&health=${health}&health=${allergens}&diet=${diet}&`
         )
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -511,7 +612,6 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
           setSelectedBreakfastMeals(tempCarbs);
         })
 
@@ -544,8 +644,6 @@ function MealPlanGeneratorQuestion() {
             `q=&dishType=${dish}&mealType=${type}&cuisineType=${cuisine}&diet=${diet}&health=${allergens}`
         )
         .then((res) => {
-          console.log(res.data.hits);
-
           tempCalories = res.data.hits.filter(
             (item) =>
               // item.recipe.calories <= caloriesGoal &&
@@ -573,7 +671,6 @@ function MealPlanGeneratorQuestion() {
             )
           );
 
-          console.log(tempCarbs);
           setSelectedBreakfastMeals(tempCarbs);
         })
 
@@ -581,60 +678,6 @@ function MealPlanGeneratorQuestion() {
       return tempCarbs;
     } catch {}
   }
-
-  // useEffect(() => {
-  //   let tempCalories = [];
-  //   let tempProtein = [];
-  //   let tempFat = [];
-  //   let tempCarbs = [];
-  //   // getBreakfastMeal();
-  //   axios
-  //     .get(
-  //       "https://api.edamam.com/search?q=&dishType=main&mealType=lunch&cuisineType=american&health=DASH&from=1&to=100&app_id=c4463c1b&app_key=271feabad8974932420da2460b71ae78"
-  //       // "https://api.edamam.com/api/recipes/v2?q=&dishType=main Course&cuisineType=korean&mealType=lunch&calories=100.10-500.02&protein=100&fat=40&health=DASH&app_id=c4463c1b&app_key=271feabad8974932420da2460b71ae78&type=public&from=5&to=10"
-  //     )
-  //     .then((res) => {
-  //       // setBreakfast(res.data.hits);
-  //       console.log(res.data.hits);
-
-  //       //  setRetrievedData(res.data.hits);
-  //       // setRetrievedData(res.data.hits);
-
-  //       // // {
-  //       // //   res.data.hits.map((item) => console.log(item.recipe.calories));
-  //       // // }
-
-  //       // tempCalories = res.data.hits.filter(
-  //       //   (item) =>
-  //       //     item.recipe.calories <= caloriesGoal &&
-  //       //     item.recipe.calories >= minCalories
-  //       // );
-
-  //       // tempFat = tempCalories.filter((item) =>
-  //       //   item.recipe.digest.find(
-  //       //     (nutrient) => nutrient.label === "Fat" && nutrient.total < fat
-  //       //   )
-  //       // );
-
-  //       // tempProtein = tempFat.filter((item) =>
-  //       //   item.recipe.digest.find(
-  //       //     (nutrient) =>
-  //       //       nutrient.label === "Protein" && nutrient.total < protein
-  //       //   )
-  //       // );
-
-  //       // tempCarbs = tempProtein.filter((item) =>
-  //       //   item.recipe.digest.find(
-  //       //     (nutrient) => nutrient.label === "Carbs" && nutrient.total < carbs
-  //       //   )
-  //       // );
-
-  //       // setSelectedMeals(tempCarbs);
-  //     })
-  //     .catch(console.log);
-
-  //   // console.log(selectedMeals);
-  // }, []);
 
   //!
 
@@ -676,7 +719,7 @@ function MealPlanGeneratorQuestion() {
       const upperBoundGrams = Math.floor(calories * range[1]);
       macros[macro] = Math.min(lowerBoundGrams, upperBoundGrams);
     }
-    console.log(macros);
+
     //return macros;
     // const carbs = calories * 0.5;
     // const fat = calories * 0.25;
@@ -750,7 +793,6 @@ function MealPlanGeneratorQuestion() {
 
         break;
     }
-    console.log(minCalories, maxCalories);
 
     return [minCalories, maxCalories];
   };
@@ -828,13 +870,12 @@ function MealPlanGeneratorQuestion() {
     resolver: yupResolver(calculatorSchema),
   });
   const onSubmitHandler = (data) => {
-    console.log(data);
     const bmr = calculateBMR(data.weight, data.height, data.age, data.gender);
     //const calories = TotalTER(bmr, data.activity);
     const [minCalories, maxCalories] = calculateTDEE(bmr, data.activity);
 
     const calories = (minCalories + maxCalories) / 2;
-    console.log(minCalories, maxCalories, calories);
+
     const [carbs, fat, protein] = calculateFPC(calories, data.goal);
     setCaloriesGoal(calories);
     setFat(fat);
@@ -845,9 +886,9 @@ function MealPlanGeneratorQuestion() {
 
   //! error handling for meal plan generator
   const generatorSchema = yup.object().shape({
-    cuisine: yup.string().required("Cuisine is required"),
-    diet: yup.string().required("Diet is required"),
-    allergens: yup.string().required("Allergens is required"),
+    // cuisine: yup.string().required("Cuisine is required"),
+    // diet: yup.string().required("Diet is required"),
+    // allergens: yup.string().required("Allergens is required"),
   });
   const {
     register: register1,
@@ -862,337 +903,3230 @@ function MealPlanGeneratorQuestion() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  const onSubmitHandlerGenerator = async (data) => {
-    console.log(data);
+  const handleCuisineClick = (item) => {
+    // Handle click event for each slide item
+    // Replace this with your desired logic (e.g., navigate, open modal)
+    console.log("Clicked item:", item);
+    const newSelectedCuisine = [...selectedCuisine]; // Create a copy
 
+    if (newSelectedCuisine.includes(item)) {
+      // Cuisine already selected, remove it
+      const cuisineIndex = newSelectedCuisine.indexOf(item);
+      newSelectedCuisine.splice(cuisineIndex, 1);
+    } else {
+      // Cuisine not selected, add it
+      newSelectedCuisine.push(item);
+    }
+
+    setSelectedCuisine(newSelectedCuisine);
+  };
+
+  const handleDietClick = (item) => {
+    setSelectedDiet(item);
+    console.log(item);
+  };
+
+  const handleAllergensClick = (item) => {
+    setSelectedAllergen(item);
+    console.log(item);
+  };
+
+  const generate = async () => {
+    console.log("click");
     //? distribute calories to meals
     //? 25-30% of daily calories for breakfast 27.5
-
     //? 35-40% of daily calories for lunch  37.5
     // ?5-10% of daily calories for snack  7.5
     //? 25-30% of daily calories for dinner 27.5
+
     const breakfastCalories = caloriesGoal * 0.275;
     const lunchCalories = caloriesGoal * 0.275;
     const snackCalories = caloriesGoal * 0.075;
     const dinnerCalories = caloriesGoal * 0.375;
 
-    console.log(caloriesGoal + " : " + breakfastCalories);
+    // for (let i = 0; i < 7; i++) {
+    if (selectedDiet !== null && selectedAllergen !== null) {
+      if (selectedAllergen === "None") {
+        if (selectedDiet === "High-Protein") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-    if (data.allergens === "None") {
-      if (data.diet === "High-Protein") {
-        console.log("protein baby");
-        let breakfast = await getProteinMealsWithoutAllergens(
-          dish,
-          "breakfast",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          breakfastCalories,
-          fat,
-          protein,
-          carbs
-        );
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        console.log(breakfast);
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        let lunch = await getProteinMealsWithoutAllergens(
-          dish,
-          "lunch",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          lunchCalories,
-          fat,
-          protein,
-          carbs
-        );
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        let snack = await getProteinMealsWithoutAllergens(
-          dish,
-          "snack",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          snackCalories,
-          fat,
-          protein,
-          carbs
-        );
+            console.log(meals);
 
-        let dinner = await getProteinMealsWithoutAllergens(
-          dish,
-          "dinner",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          dinnerCalories,
-          fat,
-          protein,
-          carbs
-        );
+            cuisineFood.push({ cuisine, meals });
+          }
 
-        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+          console.log(cuisineFood);
 
-        let meals = [];
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
 
-        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
-        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
-        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
 
-        console.log(meals);
-      } else if (data.diet === "High Blood Friendly") {
-        let breakfast = await getMealsWithoutAllergens(
-          dish,
-          "breakfast",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          breakfastCalories,
-          fat,
-          protein,
-          carbs
-        );
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
 
-        console.log(breakfast);
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
 
-        let lunch = await getMealsWithoutAllergens(
-          dish,
-          "lunch",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          lunchCalories,
-          fat,
-          protein,
-          carbs
-        );
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
 
-        let snack = await getMealsWithoutAllergens(
-          dish,
-          "snack",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          snackCalories,
-          fat,
-          protein,
-          carbs
-        );
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
 
-        let dinner = await getMealsWithoutAllergens(
-          dish,
-          "dinner",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          dinnerCalories,
-          fat,
-          protein,
-          carbs
-        );
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
 
-        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
 
-        let meals = [];
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
 
-        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
-        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
-        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
 
-        console.log(meals);
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else if (selectedDiet === "High Blood Friendly") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "snack",
+                cuisine,
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        }
       } else {
-        let breakfast = await getMealsWithoutAllergens(
-          dish,
-          "breakfast",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          breakfastCalories,
-          fat,
-          protein,
-          carbs
-        );
+        if (selectedDiet === "High-Protein") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        console.log(breakfast);
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        let lunch = await getMealsWithoutAllergens(
-          dish,
-          "lunch",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          lunchCalories,
-          fat,
-          protein,
-          carbs
-        );
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        let snack = await getMealsWithoutAllergens(
-          dish,
-          "snack",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          snackCalories,
-          fat,
-          protein,
-          carbs
-        );
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
 
-        let dinner = await getMealsWithoutAllergens(
-          dish,
-          "dinner",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          dinnerCalories,
-          fat,
-          protein,
-          carbs
-        );
+            console.log(meals);
 
-        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
+            cuisineFood.push({ cuisine, meals });
+          }
 
-        let meals = [];
+          console.log(cuisineFood);
 
-        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
-        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
-        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
 
-        console.log(meals);
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else if (selectedDiet === "High Blood Friendly") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        }
       }
     } else {
-      if (data.diet !== "High-Protein") {
-        let breakfast = await getMealsWithAllergens(
-          dish,
-          "breakfast",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          data.allergens.toLowerCase(),
-          breakfastCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        console.log(breakfast);
-
-        let lunch = await getMealsWithAllergens(
-          dish,
-          "lunch",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          data.allergens.toLowerCase(),
-          lunchCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        let snack = await getMealsWithAllergens(
-          dish,
-          "snack",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          data.allergens.toLowerCase(),
-          snackCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        let dinner = await getMealsWithAllergens(
-          dish,
-          "dinner",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          `balanced`,
-          data.allergens.toLowerCase(),
-          dinnerCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-
-        let meals = [];
-
-        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
-        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
-        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
-
-        console.log(meals);
-      } else {
-        console.log("protein baby");
-        let breakfast = await getProteinMealsWithAllergens(
-          dish,
-          "breakfast",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          data.allergens.toLowerCase(),
-          breakfastCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        console.log(breakfast);
-
-        let lunch = await getProteinMealsWithAllergens(
-          dish,
-          "lunch",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          data.allergens.toLowerCase(),
-          lunchCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        let snack = await getProteinMealsWithAllergens(
-          dish,
-          "snack",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          data.allergens.toLowerCase(),
-          snackCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        let dinner = await getProteinMealsWithAllergens(
-          dish,
-          "dinner",
-          data.cuisine,
-          data.diet.toLowerCase(),
-          data.allergens.toLowerCase(),
-          dinnerCalories,
-          fat,
-          protein,
-          carbs
-        );
-
-        console.log(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-
-        let meals = [];
-
-        meals.push(breakfast[getRandomInRange(0, breakfast.length - 1)]);
-        meals.push(lunch[getRandomInRange(0, lunch.length - 1)]);
-        meals.push(snack[getRandomInRange(0, snack.length - 1)]);
-        meals.push(dinner[getRandomInRange(0, dinner.length - 1)]);
-
-        console.log(meals);
-      }
+      toast("Wow so easy!");
     }
   };
 
+  const onSubmitHandlerGenerator = async (data) => {
+    console.log("click");
+    //? distribute calories to meals
+    //? 25-30% of daily calories for breakfast 27.5
+    //? 35-40% of daily calories for lunch  37.5
+    // ?5-10% of daily calories for snack  7.5
+    //? 25-30% of daily calories for dinner 27.5
+
+    const breakfastCalories = caloriesGoal * 0.275;
+    const lunchCalories = caloriesGoal * 0.275;
+    const snackCalories = caloriesGoal * 0.075;
+    const dinnerCalories = caloriesGoal * 0.375;
+
+    // for (let i = 0; i < 7; i++) {
+    if (selectedDiet !== null && selectedAllergen !== null) {
+      if (selectedAllergen === "None") {
+        if (selectedDiet === "High-Protein") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getProteinMealsWithoutAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else if (selectedDiet === "High Blood Friendly") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "snack",
+                cuisine,
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithoutAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        }
+      } else {
+        if (selectedDiet === "High-Protein") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getProteinMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else if (selectedDiet === "High Blood Friendly") {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getHighBloodFriendlyMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        } else {
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "breakfast",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                breakfastCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "lunch",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                lunchCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "snack",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                snackCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            meals.push(
+              await getMealsWithAllergens(
+                dish,
+                "dinner",
+                cuisine,
+                selectedDiet.toLowerCase(),
+                `balanced`,
+                selectedAllergen.toLowerCase(),
+                dinnerCalories,
+                fat,
+                protein,
+                carbs
+              )
+            );
+
+            console.log(meals);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+
+          console.log(cuisineFood);
+
+          let mealPlan = [];
+          for (let i = 0; i < 7; i++) {
+            let meals = [];
+            let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let BtempMeal =
+              cuisineFood[tempNum].meals[0][
+                getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+              ];
+            if (BtempMeal) {
+              meals.push({ Meal: "Breakfast", details: BtempMeal });
+            } else {
+              while (BtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                BtempMeal =
+                  cuisineFood[tempNum].meals[0][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[0].length - 1
+                    )
+                  ];
+
+                if (BtempMeal) {
+                  meals.push({ Meal: "Breakfast", details: BtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let LtempMeal =
+              cuisineFood[tempNum].meals[1][
+                getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+              ];
+            if (LtempMeal) {
+              meals.push({ Meal: "Lunch", details: LtempMeal });
+            } else {
+              while (LtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                LtempMeal =
+                  cuisineFood[tempNum].meals[1][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[1].length - 1
+                    )
+                  ];
+
+                if (LtempMeal) {
+                  meals.push({ Meal: " Lunch", details: LtempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let StempMeal =
+              cuisineFood[tempNum].meals[2][
+                getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+              ];
+            if (StempMeal) {
+              meals.push({ Meal: "Snack", details: StempMeal });
+            } else {
+              while (StempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                StempMeal =
+                  cuisineFood[tempNum].meals[2][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[2].length - 1
+                    )
+                  ];
+
+                if (StempMeal) {
+                  meals.push({ Meal: "Snack", details: StempMeal });
+                }
+              }
+            }
+
+            tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+            let DtempMeal =
+              cuisineFood[tempNum].meals[3][
+                getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+              ];
+            if (DtempMeal) {
+              meals.push({ Meal: "Dinner", details: DtempMeal });
+            } else {
+              while (DtempMeal === undefined) {
+                tempNum = getRandomInRange(0, cuisineFood.length - 1);
+                DtempMeal =
+                  cuisineFood[tempNum].meals[3][
+                    getRandomInRange(
+                      0,
+                      cuisineFood[tempNum].meals[3].length - 1
+                    )
+                  ];
+
+                if (DtempMeal) {
+                  meals.push({ Meal: "Dinner", details: DtempMeal });
+                }
+              }
+            }
+
+            //console.log(meals);
+            let Day = "Day " + (i + 1);
+            mealPlan.push({ Day, meals });
+          }
+
+          console.log(mealPlan);
+
+          setGeneratedMeal(mealPlan);
+        }
+      }
+    } else {
+      toast("Please select a diet/allergens!");
+    }
+
+    // console.log(data);
+    // //? distribute calories to meals
+    // //? 25-30% of daily calories for breakfast 27.5
+
+    // //? 35-40% of daily calories for lunch  37.5
+    // // ?5-10% of daily calories for snack  7.5
+    // //? 25-30% of daily calories for dinner 27.5
+    // const breakfastCalories = caloriesGoal * 0.275;
+    // const lunchCalories = caloriesGoal * 0.275;
+    // const snackCalories = caloriesGoal * 0.075;
+    // const dinnerCalories = caloriesGoal * 0.375;
+
+    // // for (let i = 0; i < 7; i++) {
+    // if (data.allergens === "None") {
+    //   if (data.diet === "High-Protein") {
+    //     let cuisineFood = [];
+    //     for (const cuisine of selectedCuisine) {
+    //       let meals = [];
+    //       meals.push(
+    //         await getProteinMealsWithoutAllergens(
+    //           dish,
+    //           "breakfast",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           breakfastCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getProteinMealsWithoutAllergens(
+    //           dish,
+    //           "lunch",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           lunchCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getProteinMealsWithoutAllergens(
+    //           dish,
+    //           "snack",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           snackCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getProteinMealsWithoutAllergens(
+    //           dish,
+    //           "dinner",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           dinnerCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       console.log(meals);
+
+    //       cuisineFood.push({ cuisine, meals });
+    //     }
+
+    //     console.log(cuisineFood);
+
+    //     let mealPlan = [];
+    //     for (let i = 0; i < 7; i++) {
+    //       let meals = [];
+    //       let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let BtempMeal =
+    //         cuisineFood[tempNum].meals[0][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //         ];
+    //       if (BtempMeal) {
+    //         meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //       } else {
+    //         while (BtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           BtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //             ];
+
+    //           if (BtempMeal) {
+    //             meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let LtempMeal =
+    //         cuisineFood[tempNum].meals[1][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //         ];
+    //       if (LtempMeal) {
+    //         meals.push({ Meal: "Lunch", details: LtempMeal });
+    //       } else {
+    //         while (LtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           LtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //             ];
+
+    //           if (LtempMeal) {
+    //             meals.push({ Meal: " Lunch", details: LtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let StempMeal =
+    //         cuisineFood[tempNum].meals[2][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //         ];
+    //       if (StempMeal) {
+    //         meals.push({ Meal: "Snack", details: StempMeal });
+    //       } else {
+    //         while (StempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           StempMeal =
+    //             cuisineFood[tempNum].meals[2][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //             ];
+
+    //           if (StempMeal) {
+    //             meals.push({ Meal: "Snack", details: StempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let DtempMeal =
+    //         cuisineFood[tempNum].meals[3][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //         ];
+    //       if (DtempMeal) {
+    //         meals.push({ Meal: "Dinner", details: DtempMeal });
+    //       } else {
+    //         while (DtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           DtempMeal =
+    //             cuisineFood[tempNum].meals[3][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //             ];
+
+    //           if (DtempMeal) {
+    //             meals.push({ Meal: "Dinner", details: DtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       //console.log(meals);
+    //       let Day = "Day " + (i + 1);
+    //       mealPlan.push({ Day, meals });
+    //     }
+
+    //     console.log(mealPlan);
+
+    //     setGeneratedMeal(mealPlan);
+    //   } else if (data.diet === "High Blood Friendly") {
+    //     let cuisineFood = [];
+    //     for (const cuisine of selectedCuisine) {
+    //       let meals = [];
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithoutAllergens(
+    //           dish,
+    //           "breakfast",
+    //           cuisine,
+
+    //           breakfastCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithoutAllergens(
+    //           dish,
+    //           "lunch",
+    //           cuisine,
+    //           lunchCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithoutAllergens(
+    //           dish,
+    //           "snack",
+    //           cuisine,
+    //           snackCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithoutAllergens(
+    //           dish,
+    //           "dinner",
+    //           cuisine,
+    //           dinnerCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       console.log(meals);
+
+    //       cuisineFood.push({ cuisine, meals });
+    //     }
+
+    //     console.log(cuisineFood);
+
+    //     let mealPlan = [];
+    //     for (let i = 0; i < 7; i++) {
+    //       let meals = [];
+    //       let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let BtempMeal =
+    //         cuisineFood[tempNum].meals[0][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //         ];
+    //       if (BtempMeal) {
+    //         meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //       } else {
+    //         while (BtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           BtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //             ];
+
+    //           if (BtempMeal) {
+    //             meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let LtempMeal =
+    //         cuisineFood[tempNum].meals[1][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //         ];
+    //       if (LtempMeal) {
+    //         meals.push({ Meal: "Lunch", details: LtempMeal });
+    //       } else {
+    //         while (LtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           LtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //             ];
+
+    //           if (LtempMeal) {
+    //             meals.push({ Meal: " Lunch", details: LtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let StempMeal =
+    //         cuisineFood[tempNum].meals[2][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //         ];
+    //       if (StempMeal) {
+    //         meals.push({ Meal: "Snack", details: StempMeal });
+    //       } else {
+    //         while (StempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           StempMeal =
+    //             cuisineFood[tempNum].meals[2][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //             ];
+
+    //           if (StempMeal) {
+    //             meals.push({ Meal: "Snack", details: StempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let DtempMeal =
+    //         cuisineFood[tempNum].meals[3][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //         ];
+    //       if (DtempMeal) {
+    //         meals.push({ Meal: "Dinner", details: DtempMeal });
+    //       } else {
+    //         while (DtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           DtempMeal =
+    //             cuisineFood[tempNum].meals[3][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //             ];
+
+    //           if (DtempMeal) {
+    //             meals.push({ Meal: "Dinner", details: DtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       //console.log(meals);
+    //       let Day = "Day " + (i + 1);
+    //       mealPlan.push({ Day, meals });
+    //     }
+
+    //     console.log(mealPlan);
+
+    //     setGeneratedMeal(mealPlan);
+    //   } else {
+    //     let cuisineFood = [];
+    //     for (const cuisine of selectedCuisine) {
+    //       let meals = [];
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "breakfast",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           breakfastCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "lunch",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           lunchCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "snack",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           snackCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "dinner",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           dinnerCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       console.log(meals);
+
+    //       cuisineFood.push({ cuisine, meals });
+    //     }
+
+    //     console.log(cuisineFood);
+
+    //     let mealPlan = [];
+    //     for (let i = 0; i < 7; i++) {
+    //       let meals = [];
+    //       let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let BtempMeal =
+    //         cuisineFood[tempNum].meals[0][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //         ];
+    //       if (BtempMeal) {
+    //         meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //       } else {
+    //         while (BtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           BtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //             ];
+
+    //           if (BtempMeal) {
+    //             meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let LtempMeal =
+    //         cuisineFood[tempNum].meals[1][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //         ];
+    //       if (LtempMeal) {
+    //         meals.push({ Meal: "Lunch", details: LtempMeal });
+    //       } else {
+    //         while (LtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           LtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //             ];
+
+    //           if (LtempMeal) {
+    //             meals.push({ Meal: " Lunch", details: LtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let StempMeal =
+    //         cuisineFood[tempNum].meals[2][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //         ];
+    //       if (StempMeal) {
+    //         meals.push({ Meal: "Snack", details: StempMeal });
+    //       } else {
+    //         while (StempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           StempMeal =
+    //             cuisineFood[tempNum].meals[2][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //             ];
+
+    //           if (StempMeal) {
+    //             meals.push({ Meal: "Snack", details: StempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let DtempMeal =
+    //         cuisineFood[tempNum].meals[3][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //         ];
+    //       if (DtempMeal) {
+    //         meals.push({ Meal: "Dinner", details: DtempMeal });
+    //       } else {
+    //         while (DtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           DtempMeal =
+    //             cuisineFood[tempNum].meals[3][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //             ];
+
+    //           if (DtempMeal) {
+    //             meals.push({ Meal: "Dinner", details: DtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       //console.log(meals);
+    //       let Day = "Day " + (i + 1);
+    //       mealPlan.push({ Day, meals });
+    //     }
+
+    //     console.log(mealPlan);
+
+    //     setGeneratedMeal(mealPlan);
+    //   }
+    // } else {
+    //   if (data.diet === "High-Protein") {
+    //     let cuisineFood = [];
+    //     for (const cuisine of selectedCuisine) {
+    //       let meals = [];
+    //       meals.push(
+    //         await getProteinMealsWithAllergens(
+    //           dish,
+    //           "breakfast",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           data.allergens.toLowerCase(),
+    //           breakfastCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getProteinMealsWithAllergens(
+    //           dish,
+    //           "lunch",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           data.allergens.toLowerCase(),
+    //           lunchCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getProteinMealsWithAllergens(
+    //           dish,
+    //           "snack",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           data.allergens.toLowerCase(),
+    //           snackCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getProteinMealsWithAllergens(
+    //           dish,
+    //           "dinner",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           data.allergens.toLowerCase(),
+    //           dinnerCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       console.log(meals);
+
+    //       cuisineFood.push({ cuisine, meals });
+    //     }
+
+    //     console.log(cuisineFood);
+
+    //     let mealPlan = [];
+    //     for (let i = 0; i < 7; i++) {
+    //       let meals = [];
+    //       let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let BtempMeal =
+    //         cuisineFood[tempNum].meals[0][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //         ];
+    //       if (BtempMeal) {
+    //         meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //       } else {
+    //         while (BtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           BtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //             ];
+
+    //           if (BtempMeal) {
+    //             meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let LtempMeal =
+    //         cuisineFood[tempNum].meals[1][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //         ];
+    //       if (LtempMeal) {
+    //         meals.push({ Meal: "Lunch", details: LtempMeal });
+    //       } else {
+    //         while (LtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           LtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //             ];
+
+    //           if (LtempMeal) {
+    //             meals.push({ Meal: " Lunch", details: LtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let StempMeal =
+    //         cuisineFood[tempNum].meals[2][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //         ];
+    //       if (StempMeal) {
+    //         meals.push({ Meal: "Snack", details: StempMeal });
+    //       } else {
+    //         while (StempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           StempMeal =
+    //             cuisineFood[tempNum].meals[2][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //             ];
+
+    //           if (StempMeal) {
+    //             meals.push({ Meal: "Snack", details: StempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let DtempMeal =
+    //         cuisineFood[tempNum].meals[3][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //         ];
+    //       if (DtempMeal) {
+    //         meals.push({ Meal: "Dinner", details: DtempMeal });
+    //       } else {
+    //         while (DtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           DtempMeal =
+    //             cuisineFood[tempNum].meals[3][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //             ];
+
+    //           if (DtempMeal) {
+    //             meals.push({ Meal: "Dinner", details: DtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       //console.log(meals);
+    //       let Day = "Day " + (i + 1);
+    //       mealPlan.push({ Day, meals });
+    //     }
+
+    //     console.log(mealPlan);
+
+    //     setGeneratedMeal(mealPlan);
+    //   } else if (data.diet === "High Blood Friendly") {
+    //     let cuisineFood = [];
+    //     for (const cuisine of selectedCuisine) {
+    //       let meals = [];
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithAllergens(
+    //           dish,
+    //           "breakfast",
+    //           cuisine,
+    //           data.allergens.toLowerCase(),
+    //           breakfastCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithAllergens(
+    //           dish,
+    //           "lunch",
+    //           cuisine,
+    //           data.allergens.toLowerCase(),
+    //           lunchCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithAllergens(
+    //           dish,
+    //           "snack",
+    //           cuisine,
+    //           data.allergens.toLowerCase(),
+    //           snackCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getHighBloodFriendlyMealsWithAllergens(
+    //           dish,
+    //           "dinner",
+    //           cuisine,
+    //           data.allergens.toLowerCase(),
+    //           dinnerCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       console.log(meals);
+
+    //       cuisineFood.push({ cuisine, meals });
+    //     }
+
+    //     console.log(cuisineFood);
+
+    //     let mealPlan = [];
+    //     for (let i = 0; i < 7; i++) {
+    //       let meals = [];
+    //       let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let BtempMeal =
+    //         cuisineFood[tempNum].meals[0][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //         ];
+    //       if (BtempMeal) {
+    //         meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //       } else {
+    //         while (BtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           BtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //             ];
+
+    //           if (BtempMeal) {
+    //             meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let LtempMeal =
+    //         cuisineFood[tempNum].meals[1][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //         ];
+    //       if (LtempMeal) {
+    //         meals.push({ Meal: "Lunch", details: LtempMeal });
+    //       } else {
+    //         while (LtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           LtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //             ];
+
+    //           if (LtempMeal) {
+    //             meals.push({ Meal: " Lunch", details: LtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let StempMeal =
+    //         cuisineFood[tempNum].meals[2][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //         ];
+    //       if (StempMeal) {
+    //         meals.push({ Meal: "Snack", details: StempMeal });
+    //       } else {
+    //         while (StempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           StempMeal =
+    //             cuisineFood[tempNum].meals[2][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //             ];
+
+    //           if (StempMeal) {
+    //             meals.push({ Meal: "Snack", details: StempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let DtempMeal =
+    //         cuisineFood[tempNum].meals[3][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //         ];
+    //       if (DtempMeal) {
+    //         meals.push({ Meal: "Dinner", details: DtempMeal });
+    //       } else {
+    //         while (DtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           DtempMeal =
+    //             cuisineFood[tempNum].meals[3][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //             ];
+
+    //           if (DtempMeal) {
+    //             meals.push({ Meal: "Dinner", details: DtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       //console.log(meals);
+    //       let Day = "Day " + (i + 1);
+    //       mealPlan.push({ Day, meals });
+    //     }
+
+    //     console.log(mealPlan);
+
+    //     setGeneratedMeal(mealPlan);
+    //   } else {
+    //     let cuisineFood = [];
+    //     for (const cuisine of selectedCuisine) {
+    //       let meals = [];
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "breakfast",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           breakfastCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "lunch",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           lunchCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "snack",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           snackCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       meals.push(
+    //         await getMealsWithAllergens(
+    //           dish,
+    //           "dinner",
+    //           cuisine,
+    //           data.diet.toLowerCase(),
+    //           `balanced`,
+    //           data.allergens.toLowerCase(),
+    //           dinnerCalories,
+    //           fat,
+    //           protein,
+    //           carbs
+    //         )
+    //       );
+
+    //       console.log(meals);
+
+    //       cuisineFood.push({ cuisine, meals });
+    //     }
+
+    //     console.log(cuisineFood);
+
+    //     let mealPlan = [];
+    //     for (let i = 0; i < 7; i++) {
+    //       let meals = [];
+    //       let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let BtempMeal =
+    //         cuisineFood[tempNum].meals[0][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //         ];
+    //       if (BtempMeal) {
+    //         meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //       } else {
+    //         while (BtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           BtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+    //             ];
+
+    //           if (BtempMeal) {
+    //             meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let LtempMeal =
+    //         cuisineFood[tempNum].meals[1][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //         ];
+    //       if (LtempMeal) {
+    //         meals.push({ Meal: "Lunch", details: LtempMeal });
+    //       } else {
+    //         while (LtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           LtempMeal =
+    //             cuisineFood[tempNum].meals[0][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+    //             ];
+
+    //           if (LtempMeal) {
+    //             meals.push({ Meal: " Lunch", details: LtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let StempMeal =
+    //         cuisineFood[tempNum].meals[2][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //         ];
+    //       if (StempMeal) {
+    //         meals.push({ Meal: "Snack", details: StempMeal });
+    //       } else {
+    //         while (StempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           StempMeal =
+    //             cuisineFood[tempNum].meals[2][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+    //             ];
+
+    //           if (StempMeal) {
+    //             meals.push({ Meal: "Snack", details: StempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
+    //       let DtempMeal =
+    //         cuisineFood[tempNum].meals[3][
+    //           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //         ];
+    //       if (DtempMeal) {
+    //         meals.push({ Meal: "Dinner", details: DtempMeal });
+    //       } else {
+    //         while (DtempMeal === undefined) {
+    //           tempNum = getRandomInRange(0, cuisineFood.length - 1);
+    //           DtempMeal =
+    //             cuisineFood[tempNum].meals[3][
+    //               getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+    //             ];
+
+    //           if (DtempMeal) {
+    //             meals.push({ Meal: "Dinner", details: DtempMeal });
+    //           }
+    //         }
+    //       }
+
+    //       //console.log(meals);
+    //       let Day = "Day " + (i + 1);
+    //       mealPlan.push({ Day, meals });
+    //     }
+
+    //     console.log(mealPlan);
+
+    //     setGeneratedMeal(mealPlan);
+    //   }
+    // }
+  };
+
   //!
+
+  // ?
+  const isSelectedCuisine = (cuisineName) => {
+    return selectedCuisine.includes(cuisineName);
+  };
+
+  const isSelectedDiet = (item) => {
+    // Your logic to check if item is selected (e.g., checks selectedDiet)
+    return selectedDiet === item;
+  };
+
+  const isSelectedAllergen = (item) => {
+    // Your logic to check if item is selected (e.g., checks selectedDiet)
+    return selectedAllergen === item;
+  };
+  //?
+
   return (
     <div
       className="content"
@@ -1329,8 +4263,37 @@ function MealPlanGeneratorQuestion() {
         <form onSubmit={handleSubmit1(onSubmitHandlerGenerator)}>
           Meal Plan Generator Questionnaire
           <br />
+          Cuisine
+          <Grid container spacing={2}>
+            {cuisineChoice.map((item, index) => (
+              <Grid item xs={6} sm={4} md={2} key={index}>
+                <div
+                  key={index}
+                  onClick={() => handleCuisineClick(item.label)}
+                  style={{
+                    background: isSelectedCuisine(item.label)
+                      ? "#D4CE98"
+                      : "white",
+                  }}
+                >
+                  <center>
+                    {/* <img src={item.image} width="40%" height="40%" /> */}
+                  </center>
+                  <Typography
+                    sx={{
+                      color: "#000000",
+                    }}
+                  >
+                    <img src={item.image} height="50" weight="50" />
+                    <br />
+                    {item.label}
+                  </Typography>
+                </div>
+              </Grid>
+            ))}
+          </Grid>
           Cuisine:{" "}
-          <Select
+          {/* <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
             // value={selectedNutritionist}
@@ -1348,9 +4311,39 @@ function MealPlanGeneratorQuestion() {
           </Select>
           <Typography variant="inherit" color="textSecondary">
             {errors1.cuisine?.message}
-          </Typography>
+          </Typography> */}
           Diet{" "}
-          <Select
+          <Grid container spacing={2}>
+            {dietChoices.map((item, index) => (
+              <Grid item xs={6} sm={4} md={3} key={index}>
+                <div
+                  key={item}
+                  item={item}
+                  onClick={() => handleDietClick(item.label)}
+                  isSelectedDiet={() => selectedDiet === item.label}
+                  style={{
+                    background: isSelectedDiet(item.label)
+                      ? "lightblue"
+                      : "white",
+                  }}
+                >
+                  <center>
+                    {/* <img src={item.image} width="40%" height="40%" /> */}
+                  </center>
+                  <Typography
+                    sx={{
+                      color: "#000000",
+                    }}
+                  >
+                    <img src={item.image} height="50" weight="50" />
+                    <br />
+                    {item.label}
+                  </Typography>
+                </div>
+              </Grid>
+            ))}
+          </Grid>
+          {/* <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
             // value={selectedNutritionist}
@@ -1368,10 +4361,40 @@ function MealPlanGeneratorQuestion() {
           </Select>
           <Typography variant="inherit" color="textSecondary">
             {errors1.diet?.message}
-          </Typography>
+          </Typography> */}
           <br />
           Allergens
-          <Select
+          <Grid container spacing={2}>
+            {allergens.map((item, index) => (
+              <Grid item xs={6} sm={4} md={2} key={index}>
+                <div
+                  key={item}
+                  item={item}
+                  onClick={() => handleAllergensClick(item.label)}
+                  isSelectedDiet={() => selectedDiet === item.label}
+                  style={{
+                    background: isSelectedAllergen(item.label)
+                      ? "pink"
+                      : "white",
+                  }}
+                >
+                  <center>
+                    {/* <img src={item.image} width="40%" height="40%" /> */}
+                  </center>
+                  <Typography
+                    sx={{
+                      color: "#000000",
+                    }}
+                  >
+                    <img src={item.image} height="50" weight="50" />
+                    <br />
+                    {item.label}
+                  </Typography>
+                </div>
+              </Grid>
+            ))}
+          </Grid>
+          {/* <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
             // value={selectedNutritionist}
@@ -1389,12 +4412,77 @@ function MealPlanGeneratorQuestion() {
           </Select>
           <Typography variant="inherit" color="textSecondary">
             {errors1.allergens?.message}
-          </Typography>
+          </Typography> */}
           <button type="submit">Generate</button>
+          {/* <button onClick={generate}>Generate</button> */}
+          <ToastContainer />
         </form>
       </Box>
 
       <Box>For High Blood Diet Plans</Box>
+
+      {generatedMeal.length === 0 ? (
+        <Typography>Loading...</Typography>
+      ) : (
+        generatedMeal.map((item) => (
+          <Box>
+            <Typography>{item.Day}</Typography>
+            {item.meals.map((items) => (
+              <>
+                <br />
+                <Grid container spacing={2}>
+                  <Grid xs={3}>
+                    {" "}
+                    <img src={items.details.recipe.image} />
+                  </Grid>
+                  <Grid xs={6}>
+                    {items.Meal} <br /> {items.details.recipe.label}
+                  </Grid>
+
+                  <Grid xs={3}>
+                    <Grid container spacing={2}>
+                      <Grid xs={6}>
+                        <img
+                          src="/images/calories.png"
+                          width="20px"
+                          height="20px"
+                        />{" "}
+                        {Math.floor(items.details.recipe.calories)}
+                        &nbsp; calories
+                        <br />
+                        <img
+                          src="/images/carbs.png"
+                          width="20px"
+                          height="20px"
+                        />{" "}
+                        {Math.floor(items.details.recipe.digest[1].total)}g
+                        carbs
+                      </Grid>
+                      <Grid xs={6}>
+                        {" "}
+                        <img src="/images/fat.png" width="20px" height="20px" />
+                        {Math.floor(items.details.recipe.digest[0].total)}g fat
+                        <br />
+                        <img
+                          src="/images/protein.png"
+                          width="20px"
+                          height="20px"
+                        />
+                        {Math.floor(items.details.recipe.digest[2].total)}g
+                        protein
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </>
+            ))}
+          </Box>
+        ))
+      )}
+
+      {/* {Object.keys(generatedMeal.meals).forEach((meal) => {
+        console.log(meal);
+      })} */}
     </div>
   );
 }
