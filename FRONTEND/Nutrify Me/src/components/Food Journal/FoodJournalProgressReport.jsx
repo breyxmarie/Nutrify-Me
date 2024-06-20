@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import * as React from "react";
+import { Line } from "react-chartjs-2";
 import Tooltip from "@mui/material/Tooltip";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -14,6 +15,7 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import AxiosInstance from "../forms/AxiosInstance";
 import dayjs from "dayjs";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import { PieChart } from "@mui/x-charts/PieChart";
 
 function FoodJournalProgressReport() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
@@ -285,6 +287,7 @@ function FoodJournalProgressReport() {
   useEffect(() => {
     forWeek();
     getMealWeeklyInfo();
+    forWeekBP();
     //console.log(getMealWeeklyInfo());
   }, [overallFood]);
 
@@ -404,6 +407,58 @@ function FoodJournalProgressReport() {
     return months;
   };
 
+  const forWeekBP = () => {
+    let weeks = [];
+    for (let day = 0; day < 7; day++) {
+      const date = dayjs().startOf("week").add(day, "day").format("YYYY-MM-DD");
+
+      let filteredEntries = overallJournal.filter(
+        (item) => item.user_id === loggedInUser.user_id
+      );
+
+      if (date) {
+        const targetDate = dayjs(date);
+        filteredEntries = filteredEntries.filter((item) => {
+          const appointmentDate = dayjs(item.date);
+          return appointmentDate.isSame(targetDate, "day"); // Check for the same day
+        });
+      }
+
+      weeks.push(filteredEntries);
+    }
+
+    console.log(weeks);
+
+    // let temp = [];
+
+    // for (const itemID of filteredEntries) {
+    //   const filteredEntries = overallFood.filter(
+    //     (item) => item.journal_id === itemID.journal_id
+    //   );
+    //   temp.push(...filteredEntries);
+    // }
+
+    // setCarbs(temp.reduce((acc, item) => acc + item.carbs, 0));
+    // const carbss = temp.reduce((acc, item) => acc + item.carbs, 0);
+    // setProtein(temp.reduce((acc, item) => acc + item.protein, 0));
+    // const proteins = temp.reduce((acc, item) => acc + item.protein, 0);
+    // setFat(temp.reduce((acc, item) => acc + item.fat, 0));
+    // const fats = temp.reduce((acc, item) => acc + item.fat, 0);
+    // const temps = temp.reduce((acc, item) => acc + item.calories, 0);
+    // console.log(temps);
+    // setCalories((temps / 1200) * 100);
+
+    // console.log(carbss, " ", protein, " ", fat, " ", calories);
+    // const newData = {
+    //   carbs: carbss,
+    //   protein: proteins,
+    //   fat: fats,
+    //   calorie: (temps / 1200) * 100,
+    // };
+
+    // weeks.push(newData);
+  };
+
   const forWeek = () => {
     let weeks = [];
     for (let day = 0; day < 7; day++) {
@@ -516,7 +571,23 @@ function FoodJournalProgressReport() {
               // }}
             />
           </Grid>
-          <Grid xs={6}></Grid>
+          <Grid xs={6}>
+            <PieChart
+              series={[
+                {
+                  data: [10, 20, 50, 60],
+                  innerRadius: 30,
+                  outerRadius: 100,
+                  paddingAngle: 5,
+                  cornerRadius: 5,
+                  startAngle: -90,
+                  endAngle: 180,
+                  cx: 150,
+                  cy: 150,
+                },
+              ]}
+            />
+          </Grid>
         </Grid>
       </div>
     );
@@ -1387,6 +1458,48 @@ function FoodJournalProgressReport() {
     },
   };
 
+  // ? Line chart
+  // const data = {
+  //   labels: ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"],
+  //   datasets: [
+  //     {
+  //       label: "Line 1",
+  //       fill: true, // Enable area fill
+  //       lineTension: 0.1, // Adjust line smoothness
+  //       backgroundColor: "rgba(75, 192, 192, 0.4)", // Area fill color
+  //       borderColor: "rgba(75, 192, 192, 1)", // Line border color
+  //       pointBorderColor: "rgba(75, 192, 192, 1)", // Point border color
+  //       pointBackgroundColor: "rgba(75, 192, 192, 1)", // Point background color
+  //       pointHoverBackgroundColor: "rgba(255, 99, 132, 1)", // Point hover background
+  //       pointHoverBorderColor: "rgba(255, 99, 132, 1)", // Point hover border
+  //       data: [6, 8, 3, 5, 8, 4, 8],
+  //     },
+  //     {
+  //       label: "Line 2",
+  //       fill: true, // Enable area fill
+  //       lineTension: 0.1, // Adjust line smoothness
+  //       backgroundColor: "rgba(255, 99, 132, 0.4)", // Area fill color
+  //       borderColor: "rgba(255, 99, 132, 1)", // Line border color
+  //       pointBorderColor: "rgba(255, 99, 132, 1)", // Point border color
+  //       pointBackgroundColor: "rgba(255, 99, 132, 1)", // Point background color
+  //       pointHoverBackgroundColor: "rgba(75, 192, 192, 1)", // Point hover background
+  //       pointHoverBorderColor: "rgba(75, 192, 192, 1)", // Point hover border
+  //       data: [1, 4, 2, 7, 2, 5, 7],
+  //     },
+  //   ],
+  // };
+
+  // const options = {
+  //   scales: {
+  //     yAxes: [
+  //       {
+  //         stacked: true, // Optional for stacked area (may improve visualization)
+  //       },
+  //     ],
+  //   },
+  // };
+
+  //?
   return (
     <div
       className="content"
@@ -1399,7 +1512,6 @@ function FoodJournalProgressReport() {
     >
       <br />
       <br />
-
       <Grid container spacing={2}>
         <Grid xs={6}>MY CALORIE INTAKE</Grid>
         <Grid xs={6}>
@@ -1447,7 +1559,6 @@ function FoodJournalProgressReport() {
           </Menu>
         </Grid>
       </Grid>
-
       {barGraph}
       <Grid container spacing={2}>
         <Grid xs={6}>
@@ -1506,12 +1617,10 @@ function FoodJournalProgressReport() {
       <br />
       <br />
       <br />
-
       {mealPlanDiv}
       <br />
       <br />
       <br />
-
       <br />
       <Grid container spacing={2}>
         <Grid xs={6}>
@@ -1563,8 +1672,8 @@ function FoodJournalProgressReport() {
           </Menu>
         </Grid>
       </Grid>
-
       <center>{pressureLineDiv}</center>
+      <Line data={data} options={options} />;
     </div>
   );
 }
