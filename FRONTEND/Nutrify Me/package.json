@@ -23,6 +23,7 @@
     "agora-rtc-sdk-ng": "^4.20.2",
     "axios": "^1.7.1",
     "chart.js": "^4.4.3",
+    "chartjs-plugin-datalabels": "^2.2.0",
     "cors": "^2.8.5",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",

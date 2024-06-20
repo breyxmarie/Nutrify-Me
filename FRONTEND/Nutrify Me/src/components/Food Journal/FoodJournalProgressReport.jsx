@@ -16,13 +16,16 @@ import AxiosInstance from "../forms/AxiosInstance";
 import dayjs from "dayjs";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import { PieChart } from "@mui/x-charts/PieChart";
+import { Doughnut } from "react-chartjs-2";
+import "chart.js/auto";
+import { ArcElement } from "chart.js";
 
 function FoodJournalProgressReport() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
 
   const [filterCondition, setFilterCondition] = useState("Weekly");
 
-  const settings = ["Daily", "Weekly", "Monthly", "Yearly"];
+  const settings = ["Weekly", "Monthly", "Yearly"];
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -55,24 +58,30 @@ function FoodJournalProgressReport() {
 
   const [anchorElNavBP, setAnchorElNavBP] = React.useState(null);
   const [anchorElUserBP, setAnchorElUserBP] = React.useState(null);
-  const settingsBP = ["Daily", "Weekly", "Monthly", "Yearly"];
+  const settingsBP = ["Weekly", "Monthly", "Yearly"];
 
   const handleOpenUserMenuBP = (event) => {
     setAnchorElUserBP(event.currentTarget);
   };
-
+  const [BPFilter, setBPFilter] = useState("Weekly");
   const handleCloseUserMenuBP = (setting) => {
     switch (setting) {
       case "Daily":
         console.log(setting);
         break;
       case "Weekly":
+        forWeekBP();
+        setBPFilter("Weekly");
         console.log(setting);
         break;
       case "Monthly":
         console.log(setting);
+        forMonthBP();
+        setBPFilter("Monthly");
         break;
       case "Yearly":
+        forYearBP();
+        setBPFilter("Yearly");
         console.log(setting);
         break;
     }
@@ -83,7 +92,7 @@ function FoodJournalProgressReport() {
   // ! meal view
   const [anchorElNavMeal, setAnchorElNavMeal] = React.useState(null);
   const [anchorElUserMeal, setAnchorElUserMeal] = React.useState(null);
-  const settingsMeal = ["Daily", "Weekly", "Monthly", "Yearly"];
+  const settingsMeal = ["Weekly", "Monthly", "Yearly"];
 
   const handleOpenUserMenuMeal = (event) => {
     setAnchorElUserMeal(event.currentTarget);
@@ -103,6 +112,7 @@ function FoodJournalProgressReport() {
         console.log(getMealMonthlyInfo());
         break;
       case "Yearly":
+        getMealYearlyInfo();
         console.log(setting);
         break;
     }
@@ -350,63 +360,507 @@ function FoodJournalProgressReport() {
 
       console.log(newData);
       months.push(newData);
-      // if (monthlyData <= 12) {
-      //   setMonth((prevState) => {
-      //     const sortedData = [...prevState, newData].sort((a, b) => {
-      //       // Sorting logic based on month (assuming month property)
-      //       const monthA = new Date(a.month).getMonth();
-      //       const monthB = new Date(b.month).getMonth();
-      //       return monthA - monthB;
-      //     });
-      //     return sortedData;
-      //   });
-      // }
     }
 
+    const data = {
+      labels: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ], // Adjust labels as needed
+      datasets: [
+        {
+          //label: "My Data",
+          //   data: [50, 30, 20, 40, 50, 60, 20], // Adjust data values
+
+          data: months.map((item) => [item.fat]),
+          backgroundColor: [
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+          ], // Color palette (optional)
+          hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
+          borderColor: "white", // Border color for slices (optional)
+          borderWidth: 1, // Border width for slices (optional)
+        },
+      ],
+    };
+
+    const proteinData = {
+      labels: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ], // Adjust labels as needed
+      datasets: [
+        {
+          //label: "My Data",
+          //   data: [50, 30, 20, 40, 50, 60, 20], // Adjust data values
+
+          data: months.map((item) => [item.protein]),
+          backgroundColor: [
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+          ], // Color palette (optional)
+          hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
+          borderColor: "white", // Border color for slices (optional)
+          borderWidth: 1, // Border width for slices (optional)
+        },
+      ],
+    };
+
+    const optionss = {
+      // legend: {
+      //   labels: {
+      //     display: false, // Hide legend labels
+      //   },
+      // },
+      // maintainAspectRatio: true, // Maintain aspect ratio (optional)
+      // responsive: true, // Respond to container size changes (optional)
+      // cutoutPercentage: 60, // Donut hole size (percentage)
+      // plugins: {
+      //   datalabels: {
+      //     anchor: "center", // Center the labels within slices
+      //     formatter: (value, context) => {
+      //       const label = context.dataset.label || ""; // Get label or empty string
+      //       const formattedValue = value.toString(); // Format value as string
+      //       return `<span class="math-inline">\{label\}\\n</span>{formattedValue}`; // Combine label and value with newline
+      //     },
+      //     color: "white", // Label text color
+      //     font: { weight: "bold" }, // Label font weight
+      //   },
+      // },
+      legend: {
+        labels: {
+          display: false,
+          filter: (legendItem, data) => {
+            const label = legendItem.text || ""; // Get label or empty string
+            const value =
+              data.datasets[legendItem.datasetIndex].data[legendItem.index]; // Get data value
+            legendItem.text = `${label}: ${value}`; // Format the label
+            return true; // Keep the legend item
+          },
+        },
+      },
+      // tooltips: {
+      //   callbacks: {
+      //     label: (context, index) => {
+      //       const label = context.dataset.label || ""; // Get label or empty string
+      //       const value = context.dataset.data[index]; // Get data value
+      //       return `${label}: ${value}`; // Combine label and value
+      //     },
+      //   },
+      // },
+    };
+
     setBarGraph(
-      <div style={{ width: "100%" }}>
-        {months.length === 0 ? ( // Check for loading and empty data
-          <div>Loading data...</div>
-        ) : (
-          <BarChart
-            xAxis={[
-              {
-                scaleType: "band",
-                data: [
-                  "January",
-                  "February",
-                  "March",
-                  "April",
-                  "May",
-                  "June",
-                  "July",
-                  "August",
-                  "September",
-                  "October",
-                  "November",
-                  "December",
-                ],
-                colorMap: {
-                  type: "piecewise",
-                  thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                  colors: ["#E66253"],
+      <div
+        style={{ width: "100%", marginBottom: "100px", marginLeft: "100px" }}
+      >
+        <Grid container spacing={2}>
+          <Grid xs={6}>
+            {" "}
+            <BarChart
+              layout="horizontal"
+              yAxis={[
+                {
+                  scaleType: "band",
+                  data: [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                  ],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#898246"],
+                  },
                 },
-              },
-            ]}
-            series={[{ data: months.map((item) => [item.calorie]) }]}
-            height={300}
-            slotProps={{
-              bar: {
-                clipPath: `inset(0px round 10px 10px 0px 0px)`,
-              },
-            }}
-          />
-        )}
+              ]}
+              // series={[{ data: [4, 3, 5, 11] }]}
+              series={[{ data: months.map((item) => [item.calorie]) }]}
+              height={300}
+              // slotProps={{
+              //   bar: {
+              //     clipPath: `inset(0px round 10px 10px 0px 0px)`,
+              //   },
+              // }}
+            />
+            CARBS
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: "band",
+                  data: [
+                    "January",
+                    "February",
+                    "March",
+                    "April",
+                    "May",
+                    "June",
+                    "July",
+                    "August",
+                    "September",
+                    "October",
+                    "November",
+                    "December",
+                  ],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#898246"],
+                  },
+                },
+              ]}
+              // series={[{ data: [4, 3, 5, 11] }]}
+              series={[{ data: months.map((item) => [item.carbs]) }]}
+              height={300}
+              // slotProps={{
+              //   bar: {
+              //     clipPath: `inset(0px round 10px 10px 0px 0px)`,
+              //   },
+              // }}
+            />
+          </Grid>
+          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+            <Box
+              sx={{ height: "45%", width: "100%", justifyContent: "center" }}
+            >
+              <Typography> FAT</Typography>
+              <Doughnut
+                data={data}
+                options={optionss}
+                width={400}
+                height={400}
+              />
+            </Box>
+
+            <Box sx={{ height: "45%", width: "100%" }}>
+              <Typography> PROTEIN</Typography>
+              <br />
+              <Doughnut data={proteinData} width={400} height={400} />
+            </Box>
+            {/* <PieChart
+              series={[
+                {
+                  data: [10, 20, 50, 60],
+                  innerRadius: 30,
+                  outerRadius: 100,
+                  paddingAngle: 5,
+                  cornerRadius: 5,
+                  startAngle: -90,
+                  endAngle: 180,
+                  cx: 150,
+                  cy: 150,
+                },
+              ]}
+            /> */}
+          </Grid>
+        </Grid>
       </div>
     );
+
     return months;
   };
 
+  const forYear = () => {
+    let months = [];
+    let yearData = [];
+    const currentDate = dayjs();
+
+    for (let year = 2023; year <= currentDate.year(); year++) {
+      months = [];
+      for (let month = 0; month < 12; month++) {
+        const monthStart = dayjs()
+          .year(year)
+          .month(month)
+          .startOf("month")
+          .format("YYYY-MM-DD");
+        const monthEnd = dayjs()
+          .year(year)
+          .month(month)
+          .endOf("month")
+          .format("YYYY-MM-DD");
+        //dates.push({ startDate, endDate }); // Include both start and end dates
+
+        let filteredEntries = overallJournal.filter(
+          (item) => item.user_id === loggedInUser.user_id
+        );
+
+        if (monthStart && monthEnd) {
+          filteredEntries = filteredEntries.filter((item) => {
+            const appointmentDate = dayjs(item.date);
+            return (
+              appointmentDate.isAfter(monthStart) &&
+              appointmentDate.isBefore(monthEnd)
+            );
+          });
+        }
+
+        let temp = [];
+        //  console.log(filteredEntries);
+
+        for (const itemID of filteredEntries) {
+          const filteredEntries = overallFood.filter(
+            (item) => item.journal_id === itemID.journal_id
+          );
+          temp.push(...filteredEntries);
+        }
+
+        setCarbs(temp.reduce((acc, item) => acc + item.carbs, 0));
+        const carbss = temp.reduce((acc, item) => acc + item.carbs, 0);
+        setProtein(temp.reduce((acc, item) => acc + item.protein, 0));
+        const proteins = temp.reduce((acc, item) => acc + item.protein, 0);
+        setFat(temp.reduce((acc, item) => acc + item.fat, 0));
+        const fats = temp.reduce((acc, item) => acc + item.fat, 0);
+        const temps = temp.reduce((acc, item) => acc + item.calories, 0);
+        console.log(temps);
+        setCalories((temps / 1200) * 100);
+        // ! add sort dito para sorted n ayun dates kapag ni call sa bar graph
+        console.log(carbss, " ", protein, " ", fat, " ", calories);
+        const newData = {
+          month: dayjs(monthStart).format("MM"),
+          carbs: carbss,
+          protein: proteins,
+          fat: fats,
+          calorie: (temps / 1200) * 100,
+        };
+
+        console.log(newData);
+        months.push(newData);
+      }
+
+      const tempData = {
+        carbs: months.reduce((acc, item) => acc + item.calorie, 0),
+        fat: months.reduce((acc, item) => acc + item.fat, 0),
+        protein: months.reduce((acc, item) => acc + item.protein, 0),
+        calorie: months.reduce((acc, item) => acc + item.calorie, 0),
+      };
+      yearData.push(tempData);
+    }
+
+    console.log(yearData);
+
+    const data = {
+      labels: ["2023", "2024"], // Adjust labels as needed
+      datasets: [
+        {
+          //label: "My Data",
+          //   data: [50, 30, 20, 40, 50, 60, 20], // Adjust data values
+
+          data: yearData.map((item) => [item.fat]),
+          backgroundColor: [
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+          ], // Color palette (optional)
+          hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
+          borderColor: "white", // Border color for slices (optional)
+          borderWidth: 1, // Border width for slices (optional)
+        },
+      ],
+    };
+
+    const proteinData = {
+      labels: ["2023", "2024"], // Adjust labels as needed
+      datasets: [
+        {
+          //label: "My Data",
+          //   data: [50, 30, 20, 40, 50, 60, 20], // Adjust data values
+
+          data: yearData.map((item) => [item.protein]),
+          backgroundColor: [
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+          ], // Color palette (optional)
+          hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
+          borderColor: "white", // Border color for slices (optional)
+          borderWidth: 1, // Border width for slices (optional)
+        },
+      ],
+    };
+
+    const optionss = {
+      // legend: {
+      //   labels: {
+      //     display: false, // Hide legend labels
+      //   },
+      // },
+      // maintainAspectRatio: true, // Maintain aspect ratio (optional)
+      // responsive: true, // Respond to container size changes (optional)
+      // cutoutPercentage: 60, // Donut hole size (percentage)
+      // plugins: {
+      //   datalabels: {
+      //     anchor: "center", // Center the labels within slices
+      //     formatter: (value, context) => {
+      //       const label = context.dataset.label || ""; // Get label or empty string
+      //       const formattedValue = value.toString(); // Format value as string
+      //       return `<span class="math-inline">\{label\}\\n</span>{formattedValue}`; // Combine label and value with newline
+      //     },
+      //     color: "white", // Label text color
+      //     font: { weight: "bold" }, // Label font weight
+      //   },
+      // },
+      legend: {
+        labels: {
+          display: false,
+          filter: (legendItem, data) => {
+            const label = legendItem.text || ""; // Get label or empty string
+            const value =
+              data.datasets[legendItem.datasetIndex].data[legendItem.index]; // Get data value
+            legendItem.text = `${label}: ${value}`; // Format the label
+            return true; // Keep the legend item
+          },
+        },
+      },
+      // tooltips: {
+      //   callbacks: {
+      //     label: (context, index) => {
+      //       const label = context.dataset.label || ""; // Get label or empty string
+      //       const value = context.dataset.data[index]; // Get data value
+      //       return `${label}: ${value}`; // Combine label and value
+      //     },
+      //   },
+      // },
+    };
+
+    setBarGraph(
+      <div
+        style={{ width: "100%", marginBottom: "100px", marginLeft: "100px" }}
+      >
+        <Grid container spacing={2}>
+          <Grid xs={6}>
+            {" "}
+            <BarChart
+              layout="horizontal"
+              yAxis={[
+                {
+                  scaleType: "band",
+                  data: ["2023", "2024"],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#898246"],
+                  },
+                },
+              ]}
+              // series={[{ data: [4, 3, 5, 11] }]}
+              series={[{ data: yearData.map((item) => [item.calorie]) }]}
+              height={300}
+              // slotProps={{
+              //   bar: {
+              //     clipPath: `inset(0px round 10px 10px 0px 0px)`,
+              //   },
+              // }}
+            />
+            CARBS
+            <BarChart
+              xAxis={[
+                {
+                  scaleType: "band",
+                  data: ["2023", "2024"],
+                  colorMap: {
+                    type: "piecewise",
+                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    colors: ["#898246"],
+                  },
+                },
+              ]}
+              // series={[{ data: [4, 3, 5, 11] }]}
+              series={[{ data: yearData.map((item) => [item.carbs]) }]}
+              height={300}
+              // slotProps={{
+              //   bar: {
+              //     clipPath: `inset(0px round 10px 10px 0px 0px)`,
+              //   },
+              // }}
+            />
+          </Grid>
+          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+            <Box
+              sx={{ height: "45%", width: "100%", justifyContent: "center" }}
+            >
+              <Typography> FAT</Typography>
+              <Doughnut
+                data={data}
+                options={optionss}
+                width={400}
+                height={400}
+              />
+            </Box>
+
+            <Box sx={{ height: "45%", width: "100%" }}>
+              <Typography> PROTEIN</Typography>
+              <br />
+              <Doughnut data={proteinData} width={400} height={400} />
+            </Box>
+            {/* <PieChart
+              series={[
+                {
+                  data: [10, 20, 50, 60],
+                  innerRadius: 30,
+                  outerRadius: 100,
+                  paddingAngle: 5,
+                  cornerRadius: 5,
+                  startAngle: -90,
+                  endAngle: 180,
+                  cx: 150,
+                  cy: 150,
+                },
+              ]}
+            /> */}
+          </Grid>
+        </Grid>
+      </div>
+    );
+
+    return months;
+  };
   const forWeekBP = () => {
     let weeks = [];
     for (let day = 0; day < 7; day++) {
@@ -429,34 +883,478 @@ function FoodJournalProgressReport() {
 
     console.log(weeks);
 
-    // let temp = [];
+    let sysData = [];
+    let diaData = [];
 
-    // for (const itemID of filteredEntries) {
-    //   const filteredEntries = overallFood.filter(
-    //     (item) => item.journal_id === itemID.journal_id
+    weeks.forEach((item) => {
+      if (item.length > 0) {
+        sysData.push(item[0].systolic);
+        diaData.push(item[0].diastolic);
+      } else {
+        sysData.push(0);
+        diaData.push(0);
+      }
+    });
+
+    console.log(sysData);
+
+    const data = {
+      labels: ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"],
+      datasets: [
+        {
+          label: "Systolic",
+
+          lineTension: 0.1, // Adjust line smoothness
+          backgroundColor: "#898246", // Area fill color
+          borderColor: "#898246", // Line border color
+          pointBorderColor: "#898246", // Point border color
+          pointBackgroundColor: "#898246", // Point background color
+          pointHoverBackgroundColor: "#E66253", // Point hover background
+          pointHoverBorderColor: "#E66253", // Point hover border
+          data: sysData,
+        },
+        {
+          label: "Diastolic",
+
+          lineTension: 0.1, // Adjust line smoothness
+          backgroundColor: "#E66253", // Area fill color
+          borderColor: "#E66253", // Line border color
+          pointBorderColor: "#E66253", // Point border color
+          pointBackgroundColor: "#E66253", // Point background color
+          pointHoverBackgroundColor: "#898246", // Point hover background
+          pointHoverBorderColor: "#898246", // Point hover border
+          data: diaData,
+        },
+      ],
+    };
+
+    const options = {
+      // ... other options
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const datasetLabel = tooltipItem.dataset.label; // Access dataset label
+            const dataPoint = tooltipItem.yLabel;
+            return `${datasetLabel}: ${dataPoint}`;
+          },
+        },
+      },
+      legend: {
+        labels: {
+          // Customize legend text with color information
+          generateLabels: (chart) => {
+            const datasets = chart.data.datasets;
+            return datasets.map((dataset) => {
+              const label = dataset.label;
+              const color = dataset.borderColor;
+              return `${label} (${color})`;
+            });
+          },
+        },
+      },
+      // scales: {
+      //   xAxes: [
+      //     {
+      //       ticks: {
+      //         autoSkip: false, // Show all labels (optional)
+      //       },
+      //       gridLines: {
+      //         display: false, // Hide grid lines on the x-axis (optional)
+      //       },
+      //       scaleLabel: {
+      //         display: true, // Show label for the x-axis
+      //         labelString: "X-Axis Label", // Customize the label text
+      //       },
+      //     },
+      //   ],
+      // },
+    };
+
+    const CustomLegend = ({ datasets }) => {
+      return (
+        <ul>
+          {datasets.map((dataset) => (
+            <li key={dataset.label}>
+              <span style={{ color: dataset.borderColor }}>●</span>{" "}
+              {dataset.label}
+            </li>
+          ))}
+        </ul>
+      );
+    };
+
+    setBPDiv(
+      <Box sx={{ mx: 10 }}>
+        <Line data={data} options={options} />
+        <CustomLegend datasets={data.datasets} />
+      </Box>
+    );
+  };
+
+  const forMonthBP = () => {
+    let months = [];
+    for (let month = 0; month < 12; month++) {
+      const monthStart = dayjs()
+        .startOf("year")
+        .add(month, "month")
+        .startOf("month")
+        .format("YYYY-MM-DD");
+      const monthEnd = dayjs()
+        .startOf("year")
+        .add(month, "month")
+        .endOf("month")
+        .format("YYYY-MM-DD");
+
+      let filteredEntries = overallJournal.filter(
+        (item) => item.user_id === loggedInUser.user_id
+      );
+
+      if (monthStart && monthEnd) {
+        filteredEntries = filteredEntries.filter((item) => {
+          const appointmentDate = dayjs(item.date);
+          return (
+            appointmentDate.isAfter(monthStart) &&
+            appointmentDate.isBefore(monthEnd)
+          );
+        });
+        console.log(filteredEntries);
+        months.push(filteredEntries);
+      }
+    }
+
+    console.log(months);
+    let sysData = [];
+    let diaData = [];
+
+    months.forEach((item) => {
+      if (item.length > 0) {
+        let nums = 0;
+        let diaNum = 0;
+
+        //  (nums += item.reduce((acc, item) => acc + item[0].systolic, 0)),
+
+        item.forEach(
+          (items) => ((nums += items.systolic), (diaNum += items.diastolic))
+          // console.log(nums)
+        );
+
+        nums = nums / item.length;
+        diaNum = diaNum / item.length;
+
+        sysData.push(nums);
+        diaData.push(diaNum);
+      } else {
+        sysData.push(0);
+        diaData.push(0);
+      }
+    });
+
+    console.log(sysData);
+
+    const data = {
+      labels: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sept",
+        "Oct",
+        "Nov",
+        "Dec",
+      ],
+      datasets: [
+        {
+          label: "Systolic",
+
+          lineTension: 0.1, // Adjust line smoothness
+          backgroundColor: "#898246", // Area fill color
+          borderColor: "#898246", // Line border color
+          pointBorderColor: "#898246", // Point border color
+          pointBackgroundColor: "#898246", // Point background color
+          pointHoverBackgroundColor: "#E66253", // Point hover background
+          pointHoverBorderColor: "#E66253", // Point hover border
+          data: sysData,
+        },
+        {
+          label: "Diastolic",
+
+          lineTension: 0.1, // Adjust line smoothness
+          backgroundColor: "#E66253", // Area fill color
+          borderColor: "#E66253", // Line border color
+          pointBorderColor: "#E66253", // Point border color
+          pointBackgroundColor: "#E66253", // Point background color
+          pointHoverBackgroundColor: "#898246", // Point hover background
+          pointHoverBorderColor: "#898246", // Point hover border
+          data: diaData,
+        },
+      ],
+    };
+
+    const options = {
+      // ... other options
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const datasetLabel = tooltipItem.dataset.label; // Access dataset label
+            const dataPoint = tooltipItem.yLabel;
+            return `${datasetLabel}: ${dataPoint}`;
+          },
+        },
+      },
+      legend: {
+        labels: {
+          // Customize legend text with color information
+          generateLabels: (chart) => {
+            const datasets = chart.data.datasets;
+            return datasets.map((dataset) => {
+              const label = dataset.label;
+              const color = dataset.borderColor;
+              return `${label} (${color})`;
+            });
+          },
+        },
+      },
+    };
+
+    const CustomLegend = ({ datasets }) => {
+      return (
+        <ul>
+          {datasets.map((dataset) => (
+            <li key={dataset.label}>
+              <span style={{ color: dataset.borderColor }}>●</span>{" "}
+              {dataset.label}
+            </li>
+          ))}
+        </ul>
+      );
+    };
+
+    setBPDiv(
+      <Box sx={{ mx: 10 }}>
+        <Line data={data} options={options} />
+        <CustomLegend datasets={data.datasets} />
+      </Box>
+    );
+  };
+
+  const forYearBP = () => {
+    // let months = [];
+    // for (let month = 0; month < 12; month++) {
+    //   const monthStart = dayjs()
+    //     .startOf("year")
+    //     .add(month, "month")
+    //     .startOf("month")
+    //     .format("YYYY-MM-DD");
+    //   const monthEnd = dayjs()
+    //     .startOf("year")
+    //     .add(month, "month")
+    //     .endOf("month")
+    //     .format("YYYY-MM-DD");
+
+    //   let filteredEntries = overallJournal.filter(
+    //     (item) => item.user_id === loggedInUser.user_id
     //   );
-    //   temp.push(...filteredEntries);
+
+    //   if (monthStart && monthEnd) {
+    //     filteredEntries = filteredEntries.filter((item) => {
+    //       const appointmentDate = dayjs(item.date);
+    //       return (
+    //         appointmentDate.isAfter(monthStart) &&
+    //         appointmentDate.isBefore(monthEnd)
+    //       );
+    //     });
+    //     console.log(filteredEntries);
+    //     months.push(filteredEntries);
+    //   }
     // }
+    const currentYearStart = dayjs(`${currentYear}-01-01`).format("YYYY-MM-DD"); // Jan 1st
+    const currentYearEnd = dayjs(`${currentYear}-12-31`).format("YYYY-MM-DD");
 
-    // setCarbs(temp.reduce((acc, item) => acc + item.carbs, 0));
-    // const carbss = temp.reduce((acc, item) => acc + item.carbs, 0);
-    // setProtein(temp.reduce((acc, item) => acc + item.protein, 0));
-    // const proteins = temp.reduce((acc, item) => acc + item.protein, 0);
-    // setFat(temp.reduce((acc, item) => acc + item.fat, 0));
-    // const fats = temp.reduce((acc, item) => acc + item.fat, 0);
-    // const temps = temp.reduce((acc, item) => acc + item.calories, 0);
-    // console.log(temps);
-    // setCalories((temps / 1200) * 100);
+    const currentDate = dayjs();
+    let years = [];
 
-    // console.log(carbss, " ", protein, " ", fat, " ", calories);
-    // const newData = {
-    //   carbs: carbss,
-    //   protein: proteins,
-    //   fat: fats,
-    //   calorie: (temps / 1200) * 100,
-    // };
+    let months = [];
+    let sysYears = [];
+    let diaYears = [];
+    for (let year = 2023; year <= currentDate.year(); year++) {
+      months = [];
 
-    // weeks.push(newData);
+      let totalsys = 0;
+      let totaldia = 0;
+      for (let month = 0; month < 12; month++) {
+        const monthStart = dayjs()
+          .year(year)
+          .month(month)
+          .startOf("month")
+          .format("YYYY-MM-DD");
+        const monthEnd = dayjs()
+          .year(year)
+          .month(month)
+          .endOf("month")
+          .format("YYYY-MM-DD");
+        //dates.push({ startDate, endDate }); // Include both start and end dates
+
+        let filteredEntries = overallJournal.filter(
+          (item) => item.user_id === loggedInUser.user_id
+        );
+
+        if (monthStart && monthEnd) {
+          filteredEntries = filteredEntries.filter((item) => {
+            const appointmentDate = dayjs(item.date);
+            return (
+              appointmentDate.isAfter(monthStart) &&
+              appointmentDate.isBefore(monthEnd)
+            );
+          });
+          console.log(filteredEntries);
+          months.push(filteredEntries);
+        }
+      }
+      let sysData = [];
+      let diaData = [];
+
+      months.forEach((item) => {
+        if (item.length > 0) {
+          let nums = 0;
+          let diaNum = 0;
+
+          //  (nums += item.reduce((acc, item) => acc + item[0].systolic, 0)),
+
+          item.forEach(
+            (items) => ((nums += items.systolic), (diaNum += items.diastolic))
+            // console.log(nums)
+          );
+
+          nums = nums / item.length;
+          diaNum = diaNum / item.length;
+
+          totalsys += totalsys + nums;
+          totaldia += totaldia + diaNum;
+
+          sysData.push(nums);
+          diaData.push(diaNum);
+        } else {
+          sysData.push(0);
+          diaData.push(0);
+        }
+      });
+
+      totalsys += totalsys / 12;
+      totaldia += totaldia / 12;
+      sysYears.push(totalsys);
+      diaYears.push(totaldia);
+      //  years.push(months);
+      console.log(year, " ", sysYears, " ", diaYears);
+    }
+
+    //  console.log(months);
+    let sysData = [];
+    let diaData = [];
+
+    // months.forEach((item) => {
+    //   if (item.length > 0) {
+    //     let nums = 0;
+    //     let diaNum = 0;
+
+    //     //  (nums += item.reduce((acc, item) => acc + item[0].systolic, 0)),
+
+    //     item.forEach(
+    //       (items) => ((nums += items.systolic), (diaNum += items.diastolic))
+    //       // console.log(nums)
+    //     );
+
+    //     nums = nums / item.length;
+    //     diaNum = diaNum / item.length;
+
+    //     sysData.push(nums);
+    //     diaData.push(diaNum);
+    //   } else {
+    //     sysData.push(0);
+    //     diaData.push(0);
+    //   }
+    // });
+
+    console.log(sysData);
+
+    const data = {
+      labels: ["2023", "2024"],
+      datasets: [
+        {
+          label: "Systolic",
+
+          lineTension: 0.1, // Adjust line smoothness
+          backgroundColor: "#898246", // Area fill color
+          borderColor: "#898246", // Line border color
+          pointBorderColor: "#898246", // Point border color
+          pointBackgroundColor: "#898246", // Point background color
+          pointHoverBackgroundColor: "#E66253", // Point hover background
+          pointHoverBorderColor: "#E66253", // Point hover border
+          data: sysYears,
+        },
+        {
+          label: "Diastolic",
+
+          lineTension: 0.1, // Adjust line smoothness
+          backgroundColor: "#E66253", // Area fill color
+          borderColor: "#E66253", // Line border color
+          pointBorderColor: "#E66253", // Point border color
+          pointBackgroundColor: "#E66253", // Point background color
+          pointHoverBackgroundColor: "#898246", // Point hover background
+          pointHoverBorderColor: "#898246", // Point hover border
+          data: diaYears,
+        },
+      ],
+    };
+
+    const options = {
+      // ... other options
+      tooltips: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const datasetLabel = tooltipItem.dataset.label; // Access dataset label
+            const dataPoint = tooltipItem.yLabel;
+            return `${datasetLabel}: ${dataPoint}`;
+          },
+        },
+      },
+      legend: {
+        labels: {
+          // Customize legend text with color information
+          generateLabels: (chart) => {
+            const datasets = chart.data.datasets;
+            return datasets.map((dataset) => {
+              const label = dataset.label;
+              const color = dataset.borderColor;
+              return `${label} (${color})`;
+            });
+          },
+        },
+      },
+    };
+
+    const CustomLegend = ({ datasets }) => {
+      return (
+        <ul>
+          {datasets.map((dataset) => (
+            <li key={dataset.label}>
+              <span style={{ color: dataset.borderColor }}>●</span>{" "}
+              {dataset.label}
+            </li>
+          ))}
+        </ul>
+      );
+    };
+
+    setBPDiv(
+      <Box sx={{ mx: 10 }}>
+        <Line data={data} options={options} />
+        <CustomLegend datasets={data.datasets} />
+      </Box>
+    );
   };
 
   const forWeek = () => {
@@ -505,8 +1403,116 @@ function FoodJournalProgressReport() {
 
       weeks.push(newData);
     }
+
+    const data = {
+      labels: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ], // Adjust labels as needed
+      datasets: [
+        {
+          //label: "My Data",
+          //   data: [50, 30, 20, 40, 50, 60, 20], // Adjust data values
+
+          data: weeks.map((item) => [item.fat]),
+          backgroundColor: [
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+          ], // Color palette (optional)
+          hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
+          borderColor: "white", // Border color for slices (optional)
+          borderWidth: 1, // Border width for slices (optional)
+        },
+      ],
+    };
+
+    const proteinData = {
+      labels: [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ], // Adjust labels as needed
+      datasets: [
+        {
+          //label: "My Data",
+          //   data: [50, 30, 20, 40, 50, 60, 20], // Adjust data values
+
+          data: weeks.map((item) => [item.protein]),
+          backgroundColor: [
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+            "#898246",
+            "#E66253",
+          ], // Color palette (optional)
+          hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
+          borderColor: "white", // Border color for slices (optional)
+          borderWidth: 1, // Border width for slices (optional)
+        },
+      ],
+    };
+
+    const optionss = {
+      legend: {
+        display: false, // Hide legend labels
+      },
+      // maintainAspectRatio: true, // Maintain aspect ratio (optional)
+      // responsive: true, // Respond to container size changes (optional)
+      // cutoutPercentage: 60, // Donut hole size (percentage)
+      // plugins: {
+      //   datalabels: {
+      //     anchor: "center", // Center the labels within slices
+      //     formatter: (value, context) => {
+      //       const label = context.dataset.label || ""; // Get label or empty string
+      //       const formattedValue = value.toString(); // Format value as string
+      //       return `<span class="math-inline">\{label\}\\n</span>{formattedValue}`; // Combine label and value with newline
+      //     },
+      //     color: "white", // Label text color
+      //     font: { weight: "bold" }, // Label font weight
+      //   },
+      // },
+      // legend: {
+      //   labels: {
+      //     filter: (legendItem, data) => {
+      //       const label = legendItem.text || ""; // Get label or empty string
+      //       const value =
+      //         data.datasets[legendItem.datasetIndex].data[legendItem.index]; // Get data value
+      //       legendItem.text = `${label}: ${value}`; // Format the label
+      //       return true; // Keep the legend item
+      //     },
+      //   },
+      // },
+      // tooltips: {
+      //   callbacks: {
+      //     label: (context, index) => {
+      //       const label = context.dataset.label || ""; // Get label or empty string
+      //       const value = context.dataset.data[index]; // Get data value
+      //       return `${label}: ${value}`; // Combine label and value
+      //     },
+      //   },
+      // },
+    };
+
     setBarGraph(
-      <div style={{ width: "100%" }}>
+      <div
+        style={{ width: "100%", marginBottom: "100px", marginLeft: "100px" }}
+      >
         <Grid container spacing={2}>
           <Grid xs={6}>
             {" "}
@@ -571,8 +1577,25 @@ function FoodJournalProgressReport() {
               // }}
             />
           </Grid>
-          <Grid xs={6}>
-            <PieChart
+          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+            <Box
+              sx={{ height: "45%", width: "100%", justifyContent: "center" }}
+            >
+              <Typography> FAT</Typography>
+              <Doughnut
+                data={data}
+                options={optionss}
+                width={400}
+                height={400}
+              />
+            </Box>
+
+            <Box sx={{ height: "45%", width: "100%" }}>
+              <Typography> PROTEIN</Typography>
+              <br />
+              <Doughnut data={proteinData} width={400} height={400} />
+            </Box>
+            {/* <PieChart
               series={[
                 {
                   data: [10, 20, 50, 60],
@@ -586,7 +1609,7 @@ function FoodJournalProgressReport() {
                   cy: 150,
                 },
               ]}
-            />
+            /> */}
           </Grid>
         </Grid>
       </div>
@@ -873,6 +1896,275 @@ function FoodJournalProgressReport() {
     let proteinD = 0;
     let calorieD = 0;
     let fatD = 0;
+
+    let mealInfo = [];
+
+    const currentDay = dayjs().month();
+    // for (let month = 0; month < 12; month++) {
+    const monthStart = dayjs()
+      .startOf("year")
+      .add(currentDay, "month")
+      .startOf("month")
+      .format("YYYY-MM-DD");
+    const monthEnd = dayjs()
+      .startOf("year")
+      .add(currentDay, "month")
+      .endOf("month")
+      .format("YYYY-MM-DD");
+
+    let filteredEntries = overallJournal;
+
+    if (monthStart && monthEnd) {
+      filteredEntries = filteredEntries.filter((item) => {
+        const appointmentDate = dayjs(item.date);
+        return (
+          appointmentDate.isAfter(monthStart) &&
+          appointmentDate.isBefore(monthEnd)
+        );
+      });
+    }
+
+    let tempBreakfast = [];
+
+    for (const itemID of filteredEntries) {
+      const filteredEntries = overallFood.filter(
+        (item) => item.journal_id === itemID.journal_id
+      );
+      tempBreakfast.push(...filteredEntries);
+    }
+
+    const carbssBreakfast = tempBreakfast
+      .filter((item) => item.type === "Breakfast")
+      .reduce((acc, item) => acc + item.carbs, 0);
+
+    const proteinsBreakfast = tempBreakfast
+      .filter((item) => item.type === "Breakfast")
+      .reduce((acc, item) => acc + item.protein, 0);
+
+    const fatsBreakfast = tempBreakfast
+      .filter((item) => item.type === "Breakfast")
+      .reduce((acc, item) => acc + item.fat, 0);
+    const caloriesBreakfast = tempBreakfast
+      .filter((item) => item.type === "Breakfast")
+      .reduce((acc, item) => acc + item.calories, 0);
+
+    carbL =
+      carbL +
+      tempBreakfast
+        .filter((item) => item.type === "Lunch")
+        .reduce((acc, item) => acc + item.carbs, 0);
+
+    proteinL =
+      proteinL +
+      tempBreakfast
+        .filter((item) => item.type === "Lunch")
+        .reduce((acc, item) => acc + item.protein, 0);
+
+    fatL =
+      fatL +
+      tempBreakfast
+        .filter((item) => item.type === "Lunch")
+        .reduce((acc, item) => acc + item.fat, 0);
+    calorieL =
+      calorieL +
+      tempBreakfast
+        .filter((item) => item.type === "Lunch")
+        .reduce((acc, item) => acc + item.calories, 0);
+
+    carbS =
+      carbS +
+      tempBreakfast
+        .filter((item) => item.type === "Snack")
+        .reduce((acc, item) => acc + item.carbs, 0);
+
+    proteinS =
+      proteinS +
+      tempBreakfast
+        .filter((item) => item.type === "Snack")
+        .reduce((acc, item) => acc + item.protein, 0);
+
+    fatS =
+      fatS +
+      tempBreakfast
+        .filter((item) => item.type === "Snack")
+        .reduce((acc, item) => acc + item.fat, 0);
+    calorieS =
+      calorieS +
+      tempBreakfast
+        .filter((item) => item.type === "Snack")
+        .reduce((acc, item) => acc + item.calories, 0);
+
+    carbD =
+      carbD +
+      tempBreakfast
+        .filter((item) => item.type === "Dinner")
+        .reduce((acc, item) => acc + item.carbs, 0);
+
+    proteinD =
+      proteinD +
+      tempBreakfast
+        .filter((item) => item.type === "Dinner")
+        .reduce((acc, item) => acc + item.protein, 0);
+
+    fatD =
+      fatD +
+      tempBreakfast
+        .filter((item) => item.type === "Dinner")
+        .reduce((acc, item) => acc + item.fat, 0);
+    calorieD =
+      calorieD +
+      tempBreakfast
+        .filter((item) => item.type === "Dinner")
+        .reduce((acc, item) => acc + item.calories, 0);
+
+    carbB = carbB + carbssBreakfast;
+    fatB = fatB + fatsBreakfast;
+    proteinB = proteinB + proteinsBreakfast;
+    calorieB = calorieB + caloriesBreakfast;
+
+    const newData = [
+      {
+        type: "Breakfast",
+        carbs: carbssBreakfast,
+        protein: proteinsBreakfast,
+        fat: fatsBreakfast,
+        calorie: caloriesBreakfast,
+      },
+      {
+        type: "Lunch",
+        carbs: carbssBreakfast,
+        protein: proteinsBreakfast,
+        fat: fatsBreakfast,
+        calorie: (caloriesBreakfast / 1200) * 100,
+      },
+    ];
+    mealInfo.push(newData);
+    // }
+
+    setMealPlanDiv(
+      <Box sx={{ color: "#99756E", mx: 30, width: "70%" }}>
+        <Box>
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/breakfast.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[BREAKFAST]</Grid>
+            <Grid xs={3}>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <img src="/images/calories.png" /> {calorieB} calories <br />
+                  <img src="/images/carbs.png" /> {carbB} g carbs
+                </Grid>
+                <Grid xs={6}>
+                  {" "}
+                  <img src="/images/fat.png" /> {fatB} g fat <br />
+                  <img src="/images/protein.png" /> {proteinB} g protein
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+
+        <hr />
+        <br />
+        <Box>
+          {" "}
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/lunch.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[LUNCH]</Grid>
+            <Grid xs={3}>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <img src="/images/calories.png" /> {calorieL} calories <br />
+                  <img src="/images/carbs.png" /> {carbL} g carbs
+                </Grid>
+                <Grid xs={6}>
+                  {" "}
+                  <img src="/images/fat.png" /> {fatL} g fat <br />
+                  <img src="/images/protein.png" /> {proteinL} g protein
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+        <hr />
+        <br />
+        <Box>
+          {" "}
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/snacks.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[SNACK]</Grid>
+            <Grid xs={3}>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <img src="/images/calories.png" /> {calorieS} calories <br />
+                  <img src="/images/carbs.png" /> {carbS} g carbs
+                </Grid>
+                <Grid xs={6}>
+                  {" "}
+                  <img src="/images/fat.png" /> {fatS} g fat <br />
+                  <img src="/images/protein.png" /> {proteinS} g protein
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+        <hr />
+        <br />
+        <Box>
+          {" "}
+          <Grid container spacing={2}>
+            <Grid xs={3}>
+              <img src="/images/dinner.png" height="80" />
+            </Grid>
+            <Grid xs={6}>[DINNER]</Grid>
+            <Grid xs={3}>
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <img src="/images/calories.png" /> {calorieD} calories <br />
+                  <img src="/images/carbs.png" /> {carbD} g carbs
+                </Grid>
+                <Grid xs={6}>
+                  {" "}
+                  <img src="/images/fat.png" /> {fatD} g fat <br />
+                  <img src="/images/protein.png" /> {proteinD} g protein
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+    );
+
+    return mealInfo;
+  };
+
+  const getMealYearlyInfo = () => {
+    setThisText("Yearly");
+    let carbB = 0;
+    let proteinB = 0;
+    let calorieB = 0;
+    let fatB = 0;
+
+    let carbL = 0;
+    let proteinL = 0;
+    let calorieL = 0;
+    let fatL = 0;
+
+    let carbS = 0;
+    let proteinS = 0;
+    let calorieS = 0;
+    let fatS = 0;
+
+    let carbD = 0;
+    let proteinD = 0;
+    let calorieD = 0;
+    let fatD = 0;
+    const currentDate = dayjs();
 
     let mealInfo = [];
     for (let month = 0; month < 12; month++) {
@@ -1415,32 +2707,34 @@ function FoodJournalProgressReport() {
         break;
 
       case "Yearly":
-        getJournalData(currentYearStart, currentYearEnd);
-        setFilterCondition("Monthly");
-        setBarGraph(
-          <div style={{ width: "100%" }}>
-            <BarChart
-              xAxis={[
-                {
-                  scaleType: "band",
-                  data: ["2024"],
-                  colorMap: {
-                    type: "piecewise",
-                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                    colors: ["#E66253"],
-                  },
-                },
-              ]}
-              series={[{ data: [4, 3, 5, 11] }]}
-              height={300}
-              slotProps={{
-                bar: {
-                  clipPath: `inset(0px round 10px 10px 0px 0px)`,
-                },
-              }}
-            />
-          </div>
-        );
+        forYear();
+        setFilterCondition("Yearly");
+        // getJournalData(currentYearStart, currentYearEnd);
+        // setFilterCondition("Monthly");
+        // setBarGraph(
+        //   <div style={{ width: "100%" }}>
+        //     <BarChart
+        //       xAxis={[
+        //         {
+        //           scaleType: "band",
+        //           data: ["2024"],
+        //           colorMap: {
+        //             type: "piecewise",
+        //             thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+        //             colors: ["#E66253"],
+        //           },
+        //         },
+        //       ]}
+        //       series={[{ data: [4, 3, 5, 11] }]}
+        //       height={300}
+        //       slotProps={{
+        //         bar: {
+        //           clipPath: `inset(0px round 10px 10px 0px 0px)`,
+        //         },
+        //       }}
+        //     />
+        //   </div>
+        // );
         break;
     }
   };
@@ -1459,45 +2753,98 @@ function FoodJournalProgressReport() {
   };
 
   // ? Line chart
-  // const data = {
-  //   labels: ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"],
-  //   datasets: [
-  //     {
-  //       label: "Line 1",
-  //       fill: true, // Enable area fill
-  //       lineTension: 0.1, // Adjust line smoothness
-  //       backgroundColor: "rgba(75, 192, 192, 0.4)", // Area fill color
-  //       borderColor: "rgba(75, 192, 192, 1)", // Line border color
-  //       pointBorderColor: "rgba(75, 192, 192, 1)", // Point border color
-  //       pointBackgroundColor: "rgba(75, 192, 192, 1)", // Point background color
-  //       pointHoverBackgroundColor: "rgba(255, 99, 132, 1)", // Point hover background
-  //       pointHoverBorderColor: "rgba(255, 99, 132, 1)", // Point hover border
-  //       data: [6, 8, 3, 5, 8, 4, 8],
-  //     },
-  //     {
-  //       label: "Line 2",
-  //       fill: true, // Enable area fill
-  //       lineTension: 0.1, // Adjust line smoothness
-  //       backgroundColor: "rgba(255, 99, 132, 0.4)", // Area fill color
-  //       borderColor: "rgba(255, 99, 132, 1)", // Line border color
-  //       pointBorderColor: "rgba(255, 99, 132, 1)", // Point border color
-  //       pointBackgroundColor: "rgba(255, 99, 132, 1)", // Point background color
-  //       pointHoverBackgroundColor: "rgba(75, 192, 192, 1)", // Point hover background
-  //       pointHoverBorderColor: "rgba(75, 192, 192, 1)", // Point hover border
-  //       data: [1, 4, 2, 7, 2, 5, 7],
-  //     },
-  //   ],
-  // };
 
-  // const options = {
-  //   scales: {
-  //     yAxes: [
-  //       {
-  //         stacked: true, // Optional for stacked area (may improve visualization)
-  //       },
-  //     ],
-  //   },
-  // };
+  const data = {
+    labels: ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"],
+    datasets: [
+      {
+        label: "Systolic",
+
+        lineTension: 0.1, // Adjust line smoothness
+        backgroundColor: "#898246", // Area fill color
+        borderColor: "#898246", // Line border color
+        pointBorderColor: "#898246", // Point border color
+        pointBackgroundColor: "#898246", // Point background color
+        pointHoverBackgroundColor: "#E66253", // Point hover background
+        pointHoverBorderColor: "#E66253", // Point hover border
+        data: [0, 0, 0, 0, 0, 0, 0],
+      },
+      {
+        label: "Diastolic",
+
+        lineTension: 0.1, // Adjust line smoothness
+        backgroundColor: "#E66253", // Area fill color
+        borderColor: "#E66253", // Line border color
+        pointBorderColor: "#E66253", // Point border color
+        pointBackgroundColor: "#E66253", // Point background color
+        pointHoverBackgroundColor: "#898246", // Point hover background
+        pointHoverBorderColor: "#898246", // Point hover border
+        data: [0, 0, 0, 0, 0, 0, 0],
+      },
+    ],
+  };
+
+  const options = {
+    // ... other options
+    tooltips: {
+      callbacks: {
+        label: (tooltipItem) => {
+          const datasetLabel = tooltipItem.dataset.label; // Access dataset label
+          const dataPoint = tooltipItem.yLabel;
+          return `${datasetLabel}: ${dataPoint}`;
+        },
+      },
+    },
+    legend: {
+      labels: {
+        // Customize legend text with color information
+        generateLabels: (chart) => {
+          const datasets = chart.data.datasets;
+          return datasets.map((dataset) => {
+            const label = dataset.label;
+            const color = dataset.borderColor;
+            return `${label} (${color})`;
+          });
+        },
+      },
+    },
+    // scales: {
+    //   xAxes: [
+    //     {
+    //       ticks: {
+    //         autoSkip: false, // Show all labels (optional)
+    //       },
+    //       gridLines: {
+    //         display: false, // Hide grid lines on the x-axis (optional)
+    //       },
+    //       scaleLabel: {
+    //         display: true, // Show label for the x-axis
+    //         labelString: "X-Axis Label", // Customize the label text
+    //       },
+    //     },
+    //   ],
+    // },
+  };
+
+  const CustomLegend = ({ datasets }) => {
+    return (
+      <ul>
+        {datasets.map((dataset) => (
+          <li key={dataset.label}>
+            <span style={{ color: dataset.borderColor }}>●</span>{" "}
+            {dataset.label}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+
+  const [BPDiv, setBPDiv] = useState(
+    <Box sx={{ mx: 10 }}>
+      <Line data={data} options={options} />
+      <CustomLegend datasets={data.datasets} />
+    </Box>
+  );
 
   //?
   return (
@@ -1641,7 +2988,7 @@ function FoodJournalProgressReport() {
                 sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
               >
                 <img src="/images/filter.png" height="20px" />
-                FILTER BY: WEEK
+                FILTER BY: {BPFilter}
               </Button>
             </IconButton>
           </Tooltip>
@@ -1672,8 +3019,12 @@ function FoodJournalProgressReport() {
           </Menu>
         </Grid>
       </Grid>
-      <center>{pressureLineDiv}</center>
-      <Line data={data} options={options} />;
+      {/* <center>{pressureLineDiv}</center> */}
+      {BPDiv}{" "}
+      {/* <Box sx={{ mx: 10 }}>
+        <Line data={data} options={options} />
+        <CustomLegend datasets={data.datasets} />
+      </Box> */}
     </div>
   );
 }
