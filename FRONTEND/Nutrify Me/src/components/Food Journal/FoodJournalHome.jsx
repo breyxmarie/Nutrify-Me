@@ -18,7 +18,14 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TextField } from "@mui/material";
+import Slider from "@mui/material/Slider";
+import MuiInput from "@mui/material/Input";
+import VolumeUp from "@mui/icons-material/VolumeUp";
 import Calendar from "react-calendar";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   format,
   subMonths,
@@ -54,11 +61,11 @@ function FoodJournalHome() {
           (item) => item.date == day && item.user_id == loggedInUser.user_id
         )
       );
-      console.log(
-        res.data.filter(
-          (item) => item.date == day && item.user_id == loggedInUser.user_id
-        )
-      );
+      // console.log(
+      //   res.data.filter(
+      //     (item) => item.date == day && item.user_id == loggedInUser.user_id
+      //   )
+      // );
 
       try {
         getfoodEntryData(
@@ -91,19 +98,19 @@ function FoodJournalHome() {
       const temp = res.data
         .filter((item) => item.journal_id == id)
         .reduce((acc, item) => acc + item.calories, 0);
-      console.log(temp);
+      // console.log(temp);
       setCalories((temp / 1200) * 100);
     });
   };
 
   useEffect(() => {
     getJournalData(dayjs().format("YYYY-MM-DD"));
-    console.log(journalEntry);
+    //  console.log(journalEntry);
   }, []);
 
   useEffect(() => {
     //getfoodEntryData(journalEntry.journal_id);
-    console.log(foodEntry);
+    // console.log(foodEntry);
   }, [journalEntry]);
   //!
 
@@ -258,7 +265,7 @@ function FoodJournalHome() {
 
   const showDetailsHandle = (dayStr) => {
     // Your logic for handling date details
-    console.log("Date details:", dayStr);
+    //console.log("Date details:", dayStr);
     // setJournalEntries();
     setNums("change");
 
@@ -294,18 +301,33 @@ function FoodJournalHome() {
   const handleClose = () => setOpen(false);
 
   const style = {
+    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto", // Enable vertical scrolling
     position: "absolute",
     top: "50%",
+    color: "#ffffff",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "0",
+    minWidth: "90%", // Adjust minimum width as needed
+    //bgcolor: "background.paper",
+    background: "#E66253",
     boxShadow: 24,
     p: 4,
-    background: "#E66253",
-    borderRadius: 5,
-    color: "#ffffff",
+    borderRadius: 4,
+    // position: "absolute",
+    // top: "50%",
+    // left: "50%",
+    // transform: "translate(-50%, -50%)",
+    // width: 400,
+    // bgcolor: "background.paper",
+    // border: "0",
+    // boxShadow: 24,
+    // p: 4,
+    // background: "#E66253",
+    // borderRadius: 5,
+    // color: "#ffffff",
   };
   //
 
@@ -340,7 +362,7 @@ function FoodJournalHome() {
   );
   const handleSelectMeal = (meal) => {
     setSelectedMeal(meal);
-    console.log(selectedMeal);
+    // console.log(selectedMeal);
     handleOpens();
   };
   const styles = {
@@ -348,22 +370,42 @@ function FoodJournalHome() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    minWidth: "70%", // Adjust minimum width as needed
     bgcolor: "background.paper",
-    border: "0",
     boxShadow: 24,
     p: 4,
-    background: "#E66253",
-    borderRadius: 5,
-    color: "#ffffff",
+    borderRadius: 4,
+
+    // position: "absolute",
+    // top: "50%",
+    // left: "50%",
+    // transform: "translate(-50%, -50%)",
+    // height: "50%",
+    // width: "40%",
+    // bgcolor: "background.paper",
+    // border: "0",
+    // boxShadow: 24,
+    // p: 4,
+    // background: "#E66253",
+    // borderRadius: 5,
+    // color: "#ffffff",
   };
   //
 
   const options = [
-    { id: "Breakfast", name: "Breakfast" },
-    { id: "Lunch", name: "Lunch" },
-    { id: "Snacks", name: "Snacks" },
-    { id: "Dinner", name: "Dinner" },
+    "None",
+    "Paleo",
+    "High Protein",
+    "Vegetarian",
+    "High Blood Friendly Meal",
+  ];
+
+  const planOptions = [
+    "None",
+    "Paleo",
+    "High Protein",
+    "Vegetarian",
+    "High Blood Friendly Meal",
   ];
 
   function getMealPic(type) {
@@ -808,13 +850,7 @@ function FoodJournalHome() {
                       ))}
                     </Select>
                   </Grid>
-                  <Grid xs={6}>
-                    {" "}
-                    Date ofEntry <br />
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker sx={{ background: "#ffffff" }} />
-                    </LocalizationProvider>
-                  </Grid>
+                  <Grid xs={6}></Grid>
                 </Grid>
                 Meal Plan: <br />
                 <Select
@@ -917,6 +953,336 @@ function FoodJournalHome() {
     );
   };
 
+  // TODO slider
+  const Input = styled(MuiInput)`
+    width: 42px;
+  `;
+
+  const [value, setValue] = React.useState(0);
+
+  const [caloriesBvalue, setCaloriesBvalue] = React.useState(0);
+  const [fatBvalue, setFatBvalue] = React.useState(0);
+  const [proteinBvalue, setProteinBvalue] = React.useState(0);
+  const [carbsBvalue, setCarbsBvalue] = React.useState(0);
+
+  const [caloriesLvalue, setCaloriesLvalue] = React.useState(0);
+  const [fatLvalue, setFatLvalue] = React.useState(0);
+  const [proteinLvalue, setProteinLvalue] = React.useState(0);
+  const [carbsLvalue, setCarbsLvalue] = React.useState(0);
+
+  const [caloriesSvalue, setCaloriesSvalue] = React.useState(0);
+  const [fatSvalue, setFatSvalue] = React.useState(0);
+  const [proteinSvalue, setProteinSvalue] = React.useState(0);
+  const [carbsSvalue, setCarbsSvalue] = React.useState(0);
+
+  const [caloriesDvalue, setCaloriesDvalue] = React.useState(0);
+  const [fatDvalue, setFatDvalue] = React.useState(0);
+  const [proteinDvalue, setProteinDvalue] = React.useState(0);
+  const [carbsDvalue, setCarbsDvalue] = React.useState(0);
+
+  const handleSliderChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleInputChange = (event) => {
+    setCaloriesBvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+
+  //? Breakfast values
+  const handleCaloriesBSliderChange = (event, newValue) => {
+    setCaloriesBvalue(newValue);
+  };
+  const handleCaloriesBInputChange = (event) => {
+    setCaloriesBvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleFatBSliderChange = (event, newValue) => {
+    setFatBvalue(newValue);
+  };
+  const handleFatBInputChange = (event) => {
+    setFatBvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleProteinBSliderChange = (event, newValue) => {
+    setProteinBvalue(newValue);
+  };
+  const handleProteinBInputChange = (event) => {
+    setProteinBvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleCarbsBSliderChange = (event, newValue) => {
+    setCarbsBvalue(newValue);
+  };
+  const handleCarbsBInputChange = (event) => {
+    setCarbsBvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleBlur = () => {
+    if (value < 0) {
+      setValue(0);
+    } else if (value > 100) {
+      setValue(100);
+    }
+  };
+
+  const handleCaloriesBBlur = () => {
+    if (caloriesBvalue < 0) {
+      setCaloriesBvalue(0);
+    } else if (caloriesBvalue > 100) {
+      setCaloriesBvalue(100);
+    }
+  };
+
+  const handleFatBBlur = () => {
+    if (fatBvalue < 0) {
+      setFatBvalue(0);
+    } else if (fatBvalue > 100) {
+      setFatBvalue(100);
+    }
+  };
+
+  const handleProteinBBlur = () => {
+    if (proteinBvalue < 0) {
+      setProteinBvalue(0);
+    } else if (proteinBvalue > 100) {
+      setProteinBvalue(100);
+    }
+  };
+
+  const handleCarbsBBlur = () => {
+    if (carbsBvalue < 0) {
+      setCarbsBvalue(0);
+    } else if (carbsBvalue > 100) {
+      setCarbsBvalue(100);
+    }
+  };
+
+  //? Lunch
+
+  const handleCaloriesLSliderChange = (event, newValue) => {
+    setCaloriesLvalue(newValue);
+  };
+  const handleCaloriesLInputChange = (event) => {
+    setCaloriesLvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleFatLSliderChange = (event, newValue) => {
+    setFatLvalue(newValue);
+  };
+  const handleFatLInputChange = (event) => {
+    setFatLvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleProteinLSliderChange = (event, newValue) => {
+    setProteinLvalue(newValue);
+  };
+  const handleProteinLInputChange = (event) => {
+    setProteinLvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleCarbsLSliderChange = (event, newValue) => {
+    setCarbsLvalue(newValue);
+  };
+  const handleCarbsLInputChange = (event) => {
+    setCarbsLvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  // const handleBlur = () => {
+  //   if (value < 0) {
+  //     setValue(0);
+  //   } else if (value > 100) {
+  //     setValue(100);
+  //   }
+  // };
+
+  const handleCaloriesLBlur = () => {
+    if (caloriesLvalue < 0) {
+      setCaloriesLvalue(0);
+    } else if (caloriesLvalue > 100) {
+      setCaloriesLvalue(100);
+    }
+  };
+
+  const handleFatLBlur = () => {
+    if (fatLvalue < 0) {
+      setFatLvalue(0);
+    } else if (fatLvalue > 100) {
+      setFatLvalue(100);
+    }
+  };
+
+  const handleProteinLBlur = () => {
+    if (proteinLvalue < 0) {
+      setProteinLvalue(0);
+    } else if (proteinLvalue > 100) {
+      setProteinLvalue(100);
+    }
+  };
+
+  const handleCarbsLBlur = () => {
+    if (carbsLvalue < 0) {
+      setCarbsLvalue(0);
+    } else if (carbsLvalue > 100) {
+      setCarbsLvalue(100);
+    }
+  };
+
+  //?Snack
+
+  const handleCaloriesSSliderChange = (event, newValue) => {
+    setCaloriesSvalue(newValue);
+  };
+  const handleCaloriesSInputChange = (event) => {
+    setCaloriesSvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleFatSSliderChange = (event, newValue) => {
+    setFatSvalue(newValue);
+  };
+  const handleFatSInputChange = (event) => {
+    setFatSvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleProteinSSliderChange = (event, newValue) => {
+    setProteinSvalue(newValue);
+  };
+  const handleProteinSInputChange = (event) => {
+    setProteinSvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleCarbsSSliderChange = (event, newValue) => {
+    setCarbsSvalue(newValue);
+  };
+  const handleCarbsSInputChange = (event) => {
+    setCarbsSvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleCaloriesSBlur = () => {
+    if (caloriesSvalue < 0) {
+      setCaloriesSvalue(0);
+    } else if (caloriesSvalue > 100) {
+      setCaloriesSvalue(100);
+    }
+  };
+
+  const handleFatSBlur = () => {
+    if (fatSvalue < 0) {
+      setFatSvalue(0);
+    } else if (fatSvalue > 100) {
+      setFatSvalue(100);
+    }
+  };
+
+  const handleProteinSBlur = () => {
+    if (proteinSvalue < 0) {
+      setProteinSvalue(0);
+    } else if (proteinSvalue > 100) {
+      setProteinSvalue(100);
+    }
+  };
+
+  const handleCarbsSBlur = () => {
+    if (carbsSvalue < 0) {
+      setCarbsSvalue(0);
+    } else if (carbsSvalue > 100) {
+      setCarbsSvalue(100);
+    }
+  };
+
+  //?Dinner
+
+  const handleCaloriesDSliderChange = (event, newValue) => {
+    setCaloriesDvalue(newValue);
+  };
+  const handleCaloriesDInputChange = (event) => {
+    setCaloriesDvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleFatDSliderChange = (event, newValue) => {
+    setFatDvalue(newValue);
+  };
+  const handleFatDInputChange = (event) => {
+    setFatDvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleProteinDSliderChange = (event, newValue) => {
+    setProteinDvalue(newValue);
+  };
+  const handleProteinDInputChange = (event) => {
+    setProteinDvalue(
+      event.target.value === "" ? 0 : Number(event.target.value)
+    );
+  };
+  const handleCarbsDSliderChange = (event, newValue) => {
+    setCarbsDvalue(newValue);
+  };
+  const handleCarbsDInputChange = (event) => {
+    setCarbsDvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
+  const handleCaloriesDBlur = () => {
+    if (caloriesDvalue < 0) {
+      setCaloriesDvalue(0);
+    } else if (caloriesDvalue > 100) {
+      setCaloriesDvalue(100);
+    }
+  };
+
+  const handleFatDBlur = () => {
+    if (fatDvalue < 0) {
+      setFatDvalue(0);
+    } else if (fatDvalue > 100) {
+      setFatDvalue(100);
+    }
+  };
+
+  const handleProteinDBlur = () => {
+    if (proteinDvalue < 0) {
+      setProteinDvalue(0);
+    } else if (proteinDvalue > 100) {
+      setProteinDvalue(100);
+    }
+  };
+
+  const handleCarbsDBlur = () => {
+    if (carbsDvalue < 0) {
+      setCarbsDvalue(0);
+    } else if (carbsDvalue > 100) {
+      setCarbsDvalue(100);
+    }
+  };
+  //?
+
+  // TODO
+
+  //? form handling
+  const schema = yup.object().shape({
+    // username: yup.string().required("username is required"),
+    // password: yup.string().required("Password is really a requirement"),
+    // password: yup.string().min(8).max(32).required(),
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmitHandler = (data) => {
+    console.log("test");
+  };
+  //?
   return (
     <div
       className="content"
@@ -1005,6 +1371,7 @@ function FoodJournalHome() {
               color: "#E66253",
               backgroundRadius: 10,
             }}
+            type="submit"
           >
             SUBMIT
           </Button>
@@ -1166,78 +1533,958 @@ function FoodJournalHome() {
             aria-describedby="modal-modal-description"
           >
             <Box sx={style}>
-              <Grid container spacing={2}>
-                <Grid xs={2}>
-                  {" "}
-                  <img src="/images/food journal icon.png" />
+              {" "}
+              <form onSubmit={handleSubmit(onSubmitHandler)}>
+                <Grid container spacing={2}>
+                  <Grid xs={2}>
+                    {" "}
+                    <img src="/images/food journal icon.png" />
+                  </Grid>
+                  <Grid xs={8}>New Food Journal Entry</Grid>
+                  <Grid xs={2}>
+                    <Button sx={{ float: "right" }} onClick={handleClose}>
+                      <img src="/images/close.png" height="10" weight="10" />
+                    </Button>
+                  </Grid>
+                </Grid>{" "}
+                <center>
+                  <Grid container spacing={2} sx={{ my: 2, mx: 0 }}>
+                    <Grid xs={6}>
+                      <Grid container spacing={2}>
+                        <Grid xs={2} sx={{ mt: 2 }}>
+                          {" "}
+                          Title:{" "}
+                        </Grid>
+                        <Grid xs={2}>
+                          {" "}
+                          <TextField
+                            id="filled-basic"
+                            label="Title"
+                            variant="filled"
+                            sx={{ mr: 2 }}
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                    <Grid xs={6}>
+                      {" "}
+                      <Grid container spacing={2}>
+                        <Grid xs={2}>
+                          {" "}
+                          <Typography sx={{ mt: 2 }}>Date of Entry</Typography>
+                        </Grid>
+                        <Grid xs={2}>
+                          {" "}
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                              sx={{ background: "#ffffff", width: "400%" }}
+                            />
+                          </LocalizationProvider>
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  </Grid>{" "}
+                </center>
+                <Grid container spacing={2} sx={{ m: 0 }}>
+                  <Grid xs={3.8} sx={{ mx: 1 }}>
+                    <center> Journal Entry</center>
+                    <br />
+                    <TextField
+                      id="filled-basic"
+                      label="Journal Entry"
+                      variant="filled"
+                      multiline
+                      rows={4}
+                      sx={{ width: "100%" }}
+                      // value={idToCall}
+                      // onChange={(e) => setIdToCall(e.target.value)}
+                    />
+                    <Typography>Blood Pressure</Typography>
+                    <Grid container spacing={2}>
+                      <Grid xs={6}>
+                        {" "}
+                        <TextField
+                          id="filled-basic"
+                          label="Systolic"
+                          variant="filled"
+                          sx={{ mx: 2 }}
+                          // value={idToCall}
+                          // onChange={(e) => setIdToCall(e.target.value)}
+                        />
+                      </Grid>
+                      <Grid xs={6}>
+                        {" "}
+                        <TextField
+                          id="filled-basic"
+                          label="Diastolic"
+                          variant="filled"
+                          sx={{ mx: 2 }}
+                          // value={idToCall}
+                          // onChange={(e) => setIdToCall(e.target.value)}
+                        />
+                      </Grid>
+                    </Grid>
+                    Meal Plan: <br />
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      // value={value}
+                      // onChange={onChange}
+                      // error={!!error}
+                    >
+                      {planOptions.map((option) => (
+                        <MenuItem value={option}>{option}</MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                  <Grid xs={7} sx={{ ml: 10 }}>
+                    Meals
+                    <Box>
+                      <Typography>Breakfast</Typography>
+                      <Grid container spacing={2} sx={{ my: 2 }}>
+                        <Grid xs={6}>
+                          <TextField
+                            id="filled-basic"
+                            label="Food Eaten:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              mr: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                        <Grid xs={6}>
+                          {" "}
+                          <TextField
+                            id="filled-basic"
+                            label="Meal Plan:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              ml: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>{" "}
+                        <Grid container spacing={2}>
+                          <Grid xs={6}>
+                            {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                            <br />
+                            <center>
+                              <Typography> Calories</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img
+                                  src="/images/calorieswhite.png"
+                                  height="25"
+                                />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof caloriesBvalue === "number"
+                                      ? caloriesBvalue
+                                      : 0
+                                  }
+                                  onChange={handleCaloriesBSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={caloriesBvalue}
+                                  size="small"
+                                  onChange={handleCaloriesBInputChange}
+                                  onBlur={handleCaloriesBBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                            <center>
+                              <Typography> Fat</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img src="/images/fatwhite.png" height="25" />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof fatBvalue === "number"
+                                      ? fatBvalue
+                                      : 0
+                                  }
+                                  onChange={handleFatBSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={fatBvalue}
+                                  size="small"
+                                  onChange={handleFatBInputChange}
+                                  onBlur={handleFatBBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                            {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                          </Grid>
+                          <Grid xs={6}>
+                            <br />{" "}
+                            <center>
+                              <Typography> Protein</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img
+                                  src="/images/proteinwhite.png"
+                                  height="25"
+                                />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof proteinBvalue === "number"
+                                      ? proteinBvalue
+                                      : 0
+                                  }
+                                  onChange={handleProteinBSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={proteinBvalue}
+                                  size="small"
+                                  onChange={handleProteinBInputChange}
+                                  onBlur={handleProteinBBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>{" "}
+                            <center>
+                              <Typography> Carbs</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img src="/images/carbswhite.png" height="25" />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof carbsBvalue === "number"
+                                      ? carbsBvalue
+                                      : 0
+                                  }
+                                  onChange={handleCarbsBSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={carbsBvalue}
+                                  size="small"
+                                  onChange={handleCarbsBInputChange}
+                                  onBlur={handleCarbsBBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    <Box sx={{ mt: 2 }}>
+                      Lunch
+                      <Grid container spacing={2} sx={{ my: 2 }}>
+                        <Grid xs={6}>
+                          <TextField
+                            id="filled-basic"
+                            label="Food Eaten:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              mr: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                        <Grid xs={6}>
+                          {" "}
+                          <TextField
+                            id="filled-basic"
+                            label="Meal Plan:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              ml: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                        <Grid container spacing={2}>
+                          <Grid xs={6}>
+                            {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                            <br />
+                            <center>
+                              <Typography> Calories</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img
+                                  src="/images/calorieswhite.png"
+                                  height="25"
+                                />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof caloriesLvalue === "number"
+                                      ? caloriesLvalue
+                                      : 0
+                                  }
+                                  onChange={handleCaloriesLSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={caloriesLvalue}
+                                  size="small"
+                                  onChange={handleCaloriesLInputChange}
+                                  onBlur={handleCaloriesLBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                            <center>
+                              <Typography> Fat</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img src="/images/fatwhite.png" height="25" />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof fatLvalue === "number"
+                                      ? fatLvalue
+                                      : 0
+                                  }
+                                  onChange={handleFatLSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={fatLvalue}
+                                  size="small"
+                                  onChange={handleFatLInputChange}
+                                  onBlur={handleFatLBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                            {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                          </Grid>
+                          <Grid xs={6}>
+                            <br />{" "}
+                            <center>
+                              <Typography> Protein</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img
+                                  src="/images/proteinwhite.png"
+                                  height="25"
+                                />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof proteinLvalue === "number"
+                                      ? proteinLvalue
+                                      : 0
+                                  }
+                                  onChange={handleProteinLSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={proteinLvalue}
+                                  size="small"
+                                  onChange={handleProteinLInputChange}
+                                  onBlur={handleProteinLBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>{" "}
+                            <center>
+                              <Typography> Carbs</Typography>
+                            </center>
+                            <Grid container spacing={2} alignItems="center">
+                              <br />
+                              <br />
+                              <Grid item>
+                                <img src="/images/carbswhite.png" height="25" />
+                              </Grid>
+                              <Grid item xs>
+                                <Slider
+                                  value={
+                                    typeof carbsLvalue === "number"
+                                      ? carbsLvalue
+                                      : 0
+                                  }
+                                  onChange={handleCarbsLSliderChange}
+                                  aria-labelledby="input-slider"
+                                  sx={{ color: "#898246" }}
+                                />
+                              </Grid>
+                              <Grid item>
+                                <Input
+                                  value={carbsLvalue}
+                                  size="small"
+                                  onChange={handleCarbsLInputChange}
+                                  onBlur={handleCarbsLBlur}
+                                  inputProps={{
+                                    step: 10,
+                                    min: 0,
+                                    max: 100,
+                                    type: "number",
+                                    "aria-labelledby": "input-slider",
+                                  }}
+                                />
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    Meals
+                    <Box>
+                      Snack
+                      <Grid container spacing={2} sx={{ my: 2 }}>
+                        <Grid xs={6}>
+                          <TextField
+                            id="filled-basic"
+                            label="Food Eaten:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              mr: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                        <Grid xs={6}>
+                          {" "}
+                          <TextField
+                            id="filled-basic"
+                            label="Meal Plan:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              ml: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid xs={6}>
+                          {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                          <br />
+                          <center>
+                            <Typography> Calories</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img
+                                src="/images/calorieswhite.png"
+                                height="25"
+                              />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof caloriesSvalue === "number"
+                                    ? caloriesSvalue
+                                    : 0
+                                }
+                                onChange={handleCaloriesSSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={caloriesSvalue}
+                                size="small"
+                                onChange={handleCaloriesSInputChange}
+                                onBlur={handleCaloriesSBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                          <center>
+                            <Typography> Fat</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img src="/images/fatwhite.png" height="25" />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof fatSvalue === "number" ? fatSvalue : 0
+                                }
+                                onChange={handleFatSSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={fatSvalue}
+                                size="small"
+                                onChange={handleFatSInputChange}
+                                onBlur={handleFatSBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                          {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                        </Grid>
+                        <Grid xs={6}>
+                          <br />{" "}
+                          <center>
+                            <Typography> Protein</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img src="/images/proteinwhite.png" height="25" />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof proteinSvalue === "number"
+                                    ? proteinSvalue
+                                    : 0
+                                }
+                                onChange={handleProteinSSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={proteinSvalue}
+                                size="small"
+                                onChange={handleProteinSInputChange}
+                                onBlur={handleProteinSBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>{" "}
+                          <center>
+                            <Typography> Carbs</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img src="/images/carbswhite.png" height="25" />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof carbsSvalue === "number"
+                                    ? carbsSvalue
+                                    : 0
+                                }
+                                onChange={handleCarbsSSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={carbsSvalue}
+                                size="small"
+                                onChange={handleCarbsSInputChange}
+                                onBlur={handleCarbsSBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                    <Box>
+                      Dinner
+                      <Grid container spacing={2} sx={{ my: 2 }}>
+                        <Grid xs={6}>
+                          <TextField
+                            id="filled-basic"
+                            label="Food Eaten:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              mr: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                        <Grid xs={6}>
+                          {" "}
+                          <TextField
+                            id="filled-basic"
+                            label="Meal Plan:"
+                            variant="filled"
+                            size="small"
+                            fullWidth
+                            InputLabelProps={{
+                              style: { color: "#000000" },
+                            }}
+                            sx={{
+                              ml: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid container spacing={2}>
+                        <Grid xs={6}>
+                          {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                          <br />
+                          <center>
+                            <Typography> Calories</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img
+                                src="/images/calorieswhite.png"
+                                height="25"
+                              />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof caloriesDvalue === "number"
+                                    ? caloriesDvalue
+                                    : 0
+                                }
+                                onChange={handleCaloriesDSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={caloriesDvalue}
+                                size="small"
+                                onChange={handleCaloriesDInputChange}
+                                onBlur={handleCaloriesDBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                          <center>
+                            <Typography> Fat</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img src="/images/fatwhite.png" height="25" />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof fatDvalue === "number" ? fatDvalue : 0
+                                }
+                                onChange={handleFatDSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={fatDvalue}
+                                size="small"
+                                onChange={handleFatDInputChange}
+                                onBlur={handleFatDBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                          {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                        </Grid>
+                        <Grid xs={6}>
+                          <br />{" "}
+                          <center>
+                            <Typography> Protein</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img src="/images/proteinwhite.png" height="25" />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof proteinDvalue === "number"
+                                    ? proteinDvalue
+                                    : 0
+                                }
+                                onChange={handleProteinDSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={proteinDvalue}
+                                size="small"
+                                onChange={handleProteinDInputChange}
+                                onBlur={handleProteinDBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>{" "}
+                          <center>
+                            <Typography> Carbs</Typography>
+                          </center>
+                          <Grid container spacing={2} alignItems="center">
+                            <br />
+                            <br />
+                            <Grid item>
+                              <img src="/images/carbswhite.png" height="25" />
+                            </Grid>
+                            <Grid item xs>
+                              <Slider
+                                value={
+                                  typeof carbsDvalue === "number"
+                                    ? carbsDvalue
+                                    : 0
+                                }
+                                onChange={handleCarbsDSliderChange}
+                                aria-labelledby="input-slider"
+                                sx={{ color: "#898246" }}
+                              />
+                            </Grid>
+                            <Grid item>
+                              <Input
+                                value={carbsDvalue}
+                                size="small"
+                                onChange={handleCarbsDInputChange}
+                                onBlur={handleCarbsDBlur}
+                                inputProps={{
+                                  step: 10,
+                                  min: 0,
+                                  max: 100,
+                                  type: "number",
+                                  "aria-labelledby": "input-slider",
+                                }}
+                              />
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </Grid>
                 </Grid>
-                <Grid xs={8}>New Food Journal Entry</Grid>
-                <Grid xs={2}>
-                  <Button sx={{ float: "right" }} onClick={handleClose}>
-                    <img src="/images/close.png" height="10" weight="10" />
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid container spacing={2}>
-                <Grid xs={6}>
-                  Type of Meal
-                  <br />
-                  <Select
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    // value={value}
-                    // onChange={onChange}
-                    // error={!!error}
-                  >
-                    {options.map((option) => (
-                      <MenuItem value={option.id}>{option.name}</MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-                <Grid xs={6}>
-                  {" "}
-                  Date ofEntry <br />
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker sx={{ background: "#ffffff" }} />
-                  </LocalizationProvider>
-                </Grid>
-              </Grid>
-              Meal Plan: <br />
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                // value={value}
-                // onChange={onChange}
-                // error={!!error}
-              >
-                {options.map((option) => (
-                  <MenuItem value={option.id}>{option.name}</MenuItem>
-                ))}
-              </Select>
-              <br />
-              Food Eaten:
-              <br />
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                // value={value}
-                // onChange={onChange}
-                // error={!!error}
-              >
-                {options.map((option) => (
-                  <MenuItem value={option.id}>{option.name}</MenuItem>
-                ))}
-              </Select>
-              <br />
-              <Button
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  backgroundRadius: 10,
-                }}
-              >
-                SUBMIT
-              </Button>
+                <button
+                  style={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    backgroundRadius: 10,
+                  }}
+                  type="submit"
+                >
+                  SUBMIT
+                </button>
+              </form>
             </Box>
           </Modal>
         </Grid>
