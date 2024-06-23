@@ -26,6 +26,7 @@ import Calendar from "react-calendar";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+
 import {
   format,
   subMonths,
@@ -1032,32 +1033,32 @@ function FoodJournalHome() {
   const handleCaloriesBBlur = () => {
     if (caloriesBvalue < 0) {
       setCaloriesBvalue(0);
-    } else if (caloriesBvalue > 100) {
-      setCaloriesBvalue(100);
+    } else if (caloriesBvalue > 1000) {
+      setCaloriesBvalue(1000);
     }
   };
 
   const handleFatBBlur = () => {
     if (fatBvalue < 0) {
       setFatBvalue(0);
-    } else if (fatBvalue > 100) {
-      setFatBvalue(100);
+    } else if (fatBvalue > 1000) {
+      setFatBvalue(1000);
     }
   };
 
   const handleProteinBBlur = () => {
     if (proteinBvalue < 0) {
       setProteinBvalue(0);
-    } else if (proteinBvalue > 100) {
-      setProteinBvalue(100);
+    } else if (proteinBvalue > 1000) {
+      setProteinBvalue(1000);
     }
   };
 
   const handleCarbsBBlur = () => {
     if (carbsBvalue < 0) {
       setCarbsBvalue(0);
-    } else if (carbsBvalue > 100) {
-      setCarbsBvalue(100);
+    } else if (carbsBvalue > 1000) {
+      setCarbsBvalue(1000);
     }
   };
 
@@ -1104,32 +1105,32 @@ function FoodJournalHome() {
   const handleCaloriesLBlur = () => {
     if (caloriesLvalue < 0) {
       setCaloriesLvalue(0);
-    } else if (caloriesLvalue > 100) {
-      setCaloriesLvalue(100);
+    } else if (caloriesLvalue > 1000) {
+      setCaloriesLvalue(1000);
     }
   };
 
   const handleFatLBlur = () => {
     if (fatLvalue < 0) {
       setFatLvalue(0);
-    } else if (fatLvalue > 100) {
-      setFatLvalue(100);
+    } else if (fatLvalue > 1000) {
+      setFatLvalue(1000);
     }
   };
 
   const handleProteinLBlur = () => {
     if (proteinLvalue < 0) {
       setProteinLvalue(0);
-    } else if (proteinLvalue > 100) {
-      setProteinLvalue(100);
+    } else if (proteinLvalue > 1000) {
+      setProteinLvalue(1000);
     }
   };
 
   const handleCarbsLBlur = () => {
     if (carbsLvalue < 0) {
       setCarbsLvalue(0);
-    } else if (carbsLvalue > 100) {
-      setCarbsLvalue(100);
+    } else if (carbsLvalue > 1000) {
+      setCarbsLvalue(1000);
     }
   };
 
@@ -1168,32 +1169,32 @@ function FoodJournalHome() {
   const handleCaloriesSBlur = () => {
     if (caloriesSvalue < 0) {
       setCaloriesSvalue(0);
-    } else if (caloriesSvalue > 100) {
-      setCaloriesSvalue(100);
+    } else if (caloriesSvalue > 1000) {
+      setCaloriesSvalue(1000);
     }
   };
 
   const handleFatSBlur = () => {
     if (fatSvalue < 0) {
       setFatSvalue(0);
-    } else if (fatSvalue > 100) {
-      setFatSvalue(100);
+    } else if (fatSvalue > 1000) {
+      setFatSvalue(1000);
     }
   };
 
   const handleProteinSBlur = () => {
     if (proteinSvalue < 0) {
       setProteinSvalue(0);
-    } else if (proteinSvalue > 100) {
-      setProteinSvalue(100);
+    } else if (proteinSvalue > 1000) {
+      setProteinSvalue(1000);
     }
   };
 
   const handleCarbsSBlur = () => {
     if (carbsSvalue < 0) {
       setCarbsSvalue(0);
-    } else if (carbsSvalue > 100) {
-      setCarbsSvalue(100);
+    } else if (carbsSvalue > 1000) {
+      setCarbsSvalue(1000);
     }
   };
 
@@ -1232,23 +1233,23 @@ function FoodJournalHome() {
   const handleCaloriesDBlur = () => {
     if (caloriesDvalue < 0) {
       setCaloriesDvalue(0);
-    } else if (caloriesDvalue > 100) {
-      setCaloriesDvalue(100);
+    } else if (caloriesDvalue > 1000) {
+      setCaloriesDvalue(1000);
     }
   };
 
   const handleFatDBlur = () => {
     if (fatDvalue < 0) {
       setFatDvalue(0);
-    } else if (fatDvalue > 100) {
-      setFatDvalue(100);
+    } else if (fatDvalue > 1000) {
+      setFatDvalue(1000);
     }
   };
 
   const handleProteinDBlur = () => {
     if (proteinDvalue < 0) {
       setProteinDvalue(0);
-    } else if (proteinDvalue > 100) {
+    } else if (proteinDvalue > 1000) {
       setProteinDvalue(100);
     }
   };
@@ -1256,8 +1257,8 @@ function FoodJournalHome() {
   const handleCarbsDBlur = () => {
     if (carbsDvalue < 0) {
       setCarbsDvalue(0);
-    } else if (carbsDvalue > 100) {
-      setCarbsDvalue(100);
+    } else if (carbsDvalue > 1000) {
+      setCarbsDvalue(1000);
     }
   };
   //?
@@ -1269,7 +1270,38 @@ function FoodJournalHome() {
     // username: yup.string().required("username is required"),
     // password: yup.string().required("Password is really a requirement"),
     // password: yup.string().min(8).max(32).required(),
+
+    title: yup.string(),
+    journal_entry: yup.string(),
+    systolic: yup.string(),
+    diastolic: yup.string(),
+    meal_plan: yup.string(),
+
+    breakfast_food: yup.string(),
+    breakfast_calories: yup.string(),
+    breakfast_fat: yup.string(),
+    breakfast_protein: yup.string(),
+    breakfast_carbs: yup.string(),
+
+    lunch_food: yup.string(),
+    lunch_calories: yup.string(),
+    lunch_fat: yup.string(),
+    lunch_protein: yup.string(),
+    lunch_carbs: yup.string(),
+
+    snack_food: yup.string(),
+    snack_calories: yup.string(),
+    snack_fat: yup.string(),
+    snack_protein: yup.string(),
+    snack_carbs: yup.string(),
+
+    dinner_food: yup.string(),
+    dinner_calories: yup.string(),
+    dinner_fat: yup.string(),
+    dinner_protein: yup.string(),
+    dinner_carbs: yup.string(),
   });
+
   const {
     register,
     handleSubmit,
@@ -1280,7 +1312,41 @@ function FoodJournalHome() {
   });
 
   const onSubmitHandler = (data) => {
-    console.log("test");
+    console.log(data);
+
+    try {
+      AxiosInstance.post(`journalentry/`, {
+        date: "2024-06-05",
+        title: "try",
+        entry: "asdfsdfasdf",
+        systolic: 25,
+        diastolic: 25,
+        user_id: 4,
+      }).then((res) => {
+        // res.data.id
+
+        try {
+          AxiosInstance.post(`shopmeal/`, {
+            mealplan_id: res.data.id,
+            type: mealName,
+            calories: mealDetails.calories,
+            fat: mealDetails.fat,
+            protein: mealDetails.protein,
+            carbs: mealDetails.carbs,
+            food: mealDetails.food,
+            image: mealDetails.image,
+            day: dayObject.day,
+            //image: data.type,
+          }).then((res) => {
+            console.log(res, res.data);
+          });
+        } catch (error) {
+          console.log(error.response);
+        }
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
   //?
   return (
@@ -1558,10 +1624,17 @@ function FoodJournalHome() {
                         <Grid xs={2}>
                           {" "}
                           <TextField
-                            id="filled-basic"
-                            label="Title"
-                            variant="filled"
-                            sx={{ mr: 2 }}
+                            id="title"
+                            name="title"
+                            label=""
+                            fullWidth
+                            margin="dense"
+                            {...register("title")}
+                            error={errors.title ? true : false}
+                            // id="filled-basic"
+                            // label="Title"
+                            // variant="filled"
+                            // sx={{ mr: 2 }}
                             // value={idToCall}
                             // onChange={(e) => setIdToCall(e.target.value)}
                           />
@@ -1592,9 +1665,13 @@ function FoodJournalHome() {
                     <center> Journal Entry</center>
                     <br />
                     <TextField
-                      id="filled-basic"
-                      label="Journal Entry"
-                      variant="filled"
+                      id="journal_entry"
+                      name="journal_entry"
+                      label=""
+                      fullWidth
+                      margin="dense"
+                      {...register("journal_entry")}
+                      error={errors.journal_entry ? true : false}
                       multiline
                       rows={4}
                       sx={{ width: "100%" }}
@@ -1606,10 +1683,15 @@ function FoodJournalHome() {
                       <Grid xs={6}>
                         {" "}
                         <TextField
-                          id="filled-basic"
+                          id="systolic"
+                          name="systolic"
+                          fullWidth
+                          margin="dense"
+                          {...register("systolic")}
+                          error={errors.systolic ? true : false}
                           label="Systolic"
                           variant="filled"
-                          sx={{ mx: 2 }}
+                          sx={{ mr: 4 }}
                           // value={idToCall}
                           // onChange={(e) => setIdToCall(e.target.value)}
                         />
@@ -1617,7 +1699,12 @@ function FoodJournalHome() {
                       <Grid xs={6}>
                         {" "}
                         <TextField
-                          id="filled-basic"
+                          id="diastolic"
+                          name="diastolic"
+                          fullWidth
+                          margin="dense"
+                          {...register("diastolic")}
+                          error={errors.diastolic ? true : false}
                           label="Diastolic"
                           variant="filled"
                           sx={{ mx: 2 }}
@@ -1646,11 +1733,15 @@ function FoodJournalHome() {
                       <Grid container spacing={2} sx={{ my: 2 }}>
                         <Grid xs={6}>
                           <TextField
-                            id="filled-basic"
+                            id="breakfast_food"
+                            name="breakfast_food"
+                            fullWidth
+                            margin="dense"
+                            {...register("breakfast_food")}
+                            error={errors.breakfast_food ? true : false}
                             label="Food Eaten:"
                             variant="filled"
                             size="small"
-                            fullWidth
                             InputLabelProps={{
                               style: { color: "#000000" },
                             }}
@@ -1703,6 +1794,18 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="breakfast_calories"
+                                  name="breakfast_calories"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  fullWidth
+                                  margin="dense"
+                                  {...register("breakfast_calories")}
+                                  // error={
+                                  //   errors.breakfast_calorie ? true : false
+                                  // }
                                   value={
                                     typeof caloriesBvalue === "number"
                                       ? caloriesBvalue
@@ -1720,9 +1823,9 @@ function FoodJournalHome() {
                                   onChange={handleCaloriesBInputChange}
                                   onBlur={handleCaloriesBBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 0,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -1740,6 +1843,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="breakfast_fat"
+                                  name="breakfast_fat"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("breakfast_fat")}
                                   value={
                                     typeof fatBvalue === "number"
                                       ? fatBvalue
@@ -1757,9 +1867,9 @@ function FoodJournalHome() {
                                   onChange={handleFatBInputChange}
                                   onBlur={handleFatBBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -1784,6 +1894,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="breakfast_protein"
+                                  name="breakfast_protein"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("breakfast_protein")}
                                   value={
                                     typeof proteinBvalue === "number"
                                       ? proteinBvalue
@@ -1801,9 +1918,9 @@ function FoodJournalHome() {
                                   onChange={handleProteinBInputChange}
                                   onBlur={handleProteinBBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -1821,6 +1938,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="breakfast_carbs"
+                                  name="breakfast_carbs"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("breakfast_carbs")}
                                   value={
                                     typeof carbsBvalue === "number"
                                       ? carbsBvalue
@@ -1838,9 +1962,9 @@ function FoodJournalHome() {
                                   onChange={handleCarbsBInputChange}
                                   onBlur={handleCarbsBBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -1856,7 +1980,11 @@ function FoodJournalHome() {
                       <Grid container spacing={2} sx={{ my: 2 }}>
                         <Grid xs={6}>
                           <TextField
-                            id="filled-basic"
+                            id="lunch_food"
+                            name="lunch_food"
+                            margin="dense"
+                            {...register("lunch_food")}
+                            error={errors.lunch_food ? true : false}
                             label="Food Eaten:"
                             variant="filled"
                             size="small"
@@ -1913,6 +2041,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="lunch_calories"
+                                  name="lunch_calories"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("lunch_calories")}
                                   value={
                                     typeof caloriesLvalue === "number"
                                       ? caloriesLvalue
@@ -1930,9 +2065,9 @@ function FoodJournalHome() {
                                   onChange={handleCaloriesLInputChange}
                                   onBlur={handleCaloriesLBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -1950,6 +2085,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="lunch_fat"
+                                  name="lunch_fat"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("lunch_fat")}
                                   value={
                                     typeof fatLvalue === "number"
                                       ? fatLvalue
@@ -1967,9 +2109,9 @@ function FoodJournalHome() {
                                   onChange={handleFatLInputChange}
                                   onBlur={handleFatLBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -1994,6 +2136,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="lunch_protein"
+                                  name="lunch_protein"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("lunch_protein")}
                                   value={
                                     typeof proteinLvalue === "number"
                                       ? proteinLvalue
@@ -2011,9 +2160,9 @@ function FoodJournalHome() {
                                   onChange={handleProteinLInputChange}
                                   onBlur={handleProteinLBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -2031,6 +2180,13 @@ function FoodJournalHome() {
                               </Grid>
                               <Grid item xs>
                                 <Slider
+                                  id="lunch_carbs"
+                                  name="lunch_carbs"
+                                  min={0}
+                                  step={1}
+                                  max={1000}
+                                  label=""
+                                  {...register("lunch_carbs")}
                                   value={
                                     typeof carbsLvalue === "number"
                                       ? carbsLvalue
@@ -2048,9 +2204,9 @@ function FoodJournalHome() {
                                   onChange={handleCarbsLInputChange}
                                   onBlur={handleCarbsLBlur}
                                   inputProps={{
-                                    step: 10,
+                                    step: 1,
                                     min: 0,
-                                    max: 100,
+                                    max: 1000,
                                     type: "number",
                                     "aria-labelledby": "input-slider",
                                   }}
@@ -2067,11 +2223,15 @@ function FoodJournalHome() {
                       <Grid container spacing={2} sx={{ my: 2 }}>
                         <Grid xs={6}>
                           <TextField
-                            id="filled-basic"
+                            id="snack_food"
+                            name="title"
+                            fullWidth
+                            margin="dense"
+                            {...register("snack_food")}
+                            error={errors.snack_food ? true : false}
                             label="Food Eaten:"
                             variant="filled"
                             size="small"
-                            fullWidth
                             InputLabelProps={{
                               style: { color: "#000000" },
                             }}
@@ -2125,6 +2285,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="snack_calories"
+                                name="snack_calories"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("snack_calories")}
                                 value={
                                   typeof caloriesSvalue === "number"
                                     ? caloriesSvalue
@@ -2142,9 +2309,9 @@ function FoodJournalHome() {
                                 onChange={handleCaloriesSInputChange}
                                 onBlur={handleCaloriesSBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2162,6 +2329,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="snack_fat"
+                                name="snack_fat"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("snack_fat")}
                                 value={
                                   typeof fatSvalue === "number" ? fatSvalue : 0
                                 }
@@ -2177,9 +2351,9 @@ function FoodJournalHome() {
                                 onChange={handleFatSInputChange}
                                 onBlur={handleFatSBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2201,6 +2375,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="snack_protein"
+                                name="snack_protein"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("snack_protein")}
                                 value={
                                   typeof proteinSvalue === "number"
                                     ? proteinSvalue
@@ -2218,9 +2399,9 @@ function FoodJournalHome() {
                                 onChange={handleProteinSInputChange}
                                 onBlur={handleProteinSBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2238,6 +2419,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="snack_carbs"
+                                name="snack_carbs"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("snack_carbs")}
                                 value={
                                   typeof carbsSvalue === "number"
                                     ? carbsSvalue
@@ -2255,9 +2443,9 @@ function FoodJournalHome() {
                                 onChange={handleCarbsSInputChange}
                                 onBlur={handleCarbsSBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2272,7 +2460,11 @@ function FoodJournalHome() {
                       <Grid container spacing={2} sx={{ my: 2 }}>
                         <Grid xs={6}>
                           <TextField
-                            id="filled-basic"
+                            id="dinner_food"
+                            name="dinner_food"
+                            margin="dense"
+                            {...register("dinner_food")}
+                            error={errors.title ? true : false}
                             label="Food Eaten:"
                             variant="filled"
                             size="small"
@@ -2330,6 +2522,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="dinner_calories"
+                                name="dinner_calories"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("dinner_calories")}
                                 value={
                                   typeof caloriesDvalue === "number"
                                     ? caloriesDvalue
@@ -2347,9 +2546,9 @@ function FoodJournalHome() {
                                 onChange={handleCaloriesDInputChange}
                                 onBlur={handleCaloriesDBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2367,6 +2566,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="dinner_fat"
+                                name="dinner_fat"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("dinner_fat")}
                                 value={
                                   typeof fatDvalue === "number" ? fatDvalue : 0
                                 }
@@ -2382,9 +2588,9 @@ function FoodJournalHome() {
                                 onChange={handleFatDInputChange}
                                 onBlur={handleFatDBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2406,6 +2612,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="dinner_protein"
+                                name="dinner_protein"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("dinner_protein")}
                                 value={
                                   typeof proteinDvalue === "number"
                                     ? proteinDvalue
@@ -2423,9 +2636,9 @@ function FoodJournalHome() {
                                 onChange={handleProteinDInputChange}
                                 onBlur={handleProteinDBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
@@ -2443,6 +2656,13 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid item xs>
                               <Slider
+                                id="dinner_carbs"
+                                name="dinner_carbs"
+                                min={0}
+                                step={1}
+                                max={1000}
+                                label=""
+                                {...register("dinner_carbs")}
                                 value={
                                   typeof carbsDvalue === "number"
                                     ? carbsDvalue
@@ -2460,9 +2680,9 @@ function FoodJournalHome() {
                                 onChange={handleCarbsDInputChange}
                                 onBlur={handleCarbsDBlur}
                                 inputProps={{
-                                  step: 10,
+                                  step: 1,
                                   min: 0,
-                                  max: 100,
+                                  max: 1000,
                                   type: "number",
                                   "aria-labelledby": "input-slider",
                                 }}
