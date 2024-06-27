@@ -34,10 +34,15 @@ def UserAPI(request, pk=0):
     elif request.method == 'POST':
         user_data = JSONParser().parse(request)
         user_serializer = UserSerializer(data = user_data)
+        # if user_serializer.is_valid():
+        #     user_serializer.save()
+        #     return JsonResponse("User Added Successfully", safe=False)
         if user_serializer.is_valid():
-            user_serializer.save()
-            return JsonResponse("User Added Successfully", safe=False)
-        return JsonResponse("Failes to Add User", safe=False)
+            userEntry = user_serializer.save()
+            response_data = {"id": userEntry.pk, "message": "user Added Successfully"}
+            return JsonResponse(response_data, safe=False)
+
+        return JsonResponse("Failed to Add User", safe=False)
     elif request.method == 'PUT':
         user_data = JSONParser().parse(request)
         users = User.objects.get(user_id=user_data['user_id'])
@@ -422,9 +427,10 @@ def JournalEntryAPI(request, pk=0):
         journalEntry_data = JSONParser().parse(request)
         journalEntry_serializer = JournalEntrySerializer(data = journalEntry_data)
         if journalEntry_serializer.is_valid():
-            journalEntry_serializer.save()
-            return JsonResponse("Journal Entry Added Successfully", safe=False)
-        return JsonResponse("Failed to Add Journal Entry", safe=False)
+            foodEntry = journalEntry_serializer.save()
+            response_data = {"id": foodEntry.pk, "message": "Journal Entry Added Successfully"}
+            return JsonResponse(response_data, safe=False)
+     
     elif request.method == 'PUT':
         journalEntry_data = JSONParser().parse(request)
         journalEntrys = JournalEntry.objects.get(journal_id=journalEntry_data['journal_id'])

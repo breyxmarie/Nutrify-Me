@@ -20,7 +20,7 @@ import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import emailjs from "@emailjs/browser";
 
-function UserFooter() {
+function UserFooterNotLogIn() {
   //! email stuff
   const form = useRef();
 
@@ -91,119 +91,11 @@ function UserFooter() {
           </Grid>
           <Grid
             item
-            xs={2}
+            xs={4}
             style={{
               textAlign: "left",
             }}
-          >
-            TELEMEDICINE <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Home
-            </Link>
-            <br />
-            <Link
-              to="/about"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Appointments
-            </Link>
-            <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Meet Us
-            </Link>
-            <br />
-            <Link
-              to="/about"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Services
-            </Link>
-            <br />
-            <br />
-            E-COMMERCE <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Shops
-            </Link>
-            <br />
-            <Link
-              to="/about"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Meal Plans
-            </Link>
-            <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Meal Plan History
-            </Link>
-          </Grid>
-          <Grid item xs={2} style={{ textAlign: "left" }}>
-            MEAL PLAN GENERATOR <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Meal Plan Generator
-            </Link>
-            <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Meal Plan History
-            </Link>
-            <br />
-            <br />
-            FOOD JOURNAL
-            <br />
-            <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Journal
-            </Link>
-            <br />
-            <Link
-              to="/contact"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Progress Report
-            </Link>
-          </Grid>
+          ></Grid>
           <Grid item xs={3} sx={{ textAlign: "left" }}>
             CONTACT US
             <br />
@@ -326,4 +218,4 @@ function UserFooter() {
   );
 }
 
-export default UserFooter;
+export default UserFooterNotLogIn;

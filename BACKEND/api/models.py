@@ -11,6 +11,7 @@ class Project(models.Model):
      status = models.CharField(max_length=100)
      created = models.DateField(auto_now_add=True)
      modified = models.DateField(auto_now=True)
+     image = models.CharField(max_length=300)
 
      def __str__(self):
         return self.name
@@ -22,6 +23,8 @@ class User(models.Model):
     first_name= models.CharField(max_length=50)
     last_name= models.CharField(max_length=50)
     privilege= models.CharField(max_length=30)
+    email=models.CharField(max_length=100)
+    image = models.CharField(max_length=300)
    # profile_pic = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     class Meta:

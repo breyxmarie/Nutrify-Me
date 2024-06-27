@@ -9,8 +9,26 @@ import AxiosInstance from "./forms/AxiosInstance";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "./LoggedInUserContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function LogIn() {
+  //? toast
+  const query = new URLSearchParams(window.location.search);
+  const myParam = query.get("success");
+  //const myParam = query.get("param");
+  console.log(myParam);
+  // if (myParam === "true") {
+  //   toast.success("Registered Successfully");
+  // }
+
+  if (myParam === "registered") {
+    toast.success("Registered Successfully");
+  }
+  if (myParam === "newPassword") {
+    toast.success("Password Changed");
+  }
+  //?
   //! retrieving data.
 
   const [userData, setUserData] = useState();
@@ -52,12 +70,18 @@ function LogIn() {
   const onSubmitHandler = (data) => {
     console.log({ data });
 
-    const userfound =
-      userData.some((item) => item.username === data.username) &&
-      ((item) => item.password === data.password);
+    // const userfound =
+    //   userData.some((item) => item.username === data.username) &&
+    //   ((item) => item.password === data.password);
+
+    const userfound = userData.some(
+      (item) =>
+        item.username === data.username && item.password === data.password
+    );
 
     userData.some((item, index) => console.log(item, index));
 
+    console.log(userfound);
     if (userfound) {
       const loggedInUser = userData.find(
         (user) =>
@@ -81,6 +105,7 @@ function LogIn() {
       // logIn = true;
     } else {
       console.log("Username or Password Incorrect");
+      toast.success("Username or Password Incorrect");
     }
 
     // reset();
@@ -108,6 +133,7 @@ function LogIn() {
         color: "#99756E",
       }}
     >
+      <ToastContainer />
       <form onSubmit={handleSubmit(onSubmitHandler)}>
         <h2>Lets sign you in.</h2>
         <br />
@@ -143,6 +169,9 @@ function LogIn() {
         {logIn && <Link to={navigate}>Sign In Successful!</Link>}
         <button type="submit">Sign in</button>
       </form>
+      <Link to="/ForgetPassword">
+        <button>Forget Password</button>
+      </Link>
     </div>
   );
 }

@@ -21,6 +21,7 @@ import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import moment from "moment";
 
 function NutritionistHome() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
@@ -65,7 +66,12 @@ function NutritionistHome() {
 
       const condition = (item) => item.id > 1;
       const filteredData = res.data.filter(
-        (item) => item.nutritionist_id === loggedInUser.user_id
+        (item) =>
+          item.nutritionist_id === loggedInUser.user_id &&
+          //  moment(item.date).isSameOrAfter(moment(), "day")
+          moment(item.date).isSame(moment(), "day")
+
+        //new Date(item.date) >= new Date()
       );
 
       console.log("try try", filteredData, loggedInUser.user_id);
@@ -393,7 +399,17 @@ function NutritionistHome() {
                 </Button>
               </Typography>
               <br />
-              {appointmentData.slice(3).map((item, index) => (
+              {appointmentData.length >= 3 ? (
+                appointmentData
+                  .slice(1)
+                  .map((item, index) => (
+                    <Box key={index}>{/* Your box content here */}</Box>
+                  ))
+              ) : (
+                <p>No upcoming appointments.</p>
+              )}
+
+              {appointmentData.map((item, index) => (
                 <Box
                   sx={{
                     border: 2,

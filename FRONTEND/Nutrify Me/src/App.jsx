@@ -42,8 +42,14 @@ import NutritionistNavBar from "./components/NavBars/NutritionistNavBar";
 import UserProfile from "./components/Profiles/UserProfile";
 import NutritionistProfile from "./components/Profiles/NutritionistProfile";
 import LogIn from "./components/LogIn";
+import Profiling from "./components/Profiling";
+import ForgetPassword from "./components/ForgetPassword";
+import ForgetPasswordNew from "./components/ForgetPasswordNew";
+import ForgetPasswordOTP from "./components/ForgetPasswordOTP";
 import Registration from "./components/Registration";
+import OTP from "./components/OTP";
 import UserFooter from "./components/UserFooter";
+import UserFooterNotLogIn from "./components/UserFooterNotLogIn";
 import Footer from "./components/Footer";
 import MealPlanTest from "./components/Meal Plan Generator/MealPlanTest";
 import HomePage from "./components/Admin/HomePage";
@@ -56,18 +62,28 @@ import SellerHome from "./components/Seller/SellerHome";
 import SellerCreateMealPlan from "./components/Seller/SellerCreateMealPlan";
 import SellerMenuItems from "./components/Seller/SellerMenuItems";
 import { LoggedInUserProvider } from "./components/LoggedInUserContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <LoggedInUserProvider>
+      <ToastContainer />
       <div>
         {/* <MainUserNavBar /> */}
         {/* User Not Log In */}
 
         <BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
           <Routes>
+            <Route path="/Log-In" element={<LogIn />} />
+            <Route path="/Register" element={<Registration />} />
+            <Route path="/Profiling" element={<Profiling />} />
+            <Route path="/OTP" element={<OTP />} />
+            <Route path="/ForgetPassword" element={<ForgetPassword />} />
+            <Route path="/ForgetPasswordOTP" element={<ForgetPasswordOTP />} />
+            <Route path="/ForgetPasswordNew" element={<ForgetPasswordNew />} />
             <Route
               path="/"
               element={
@@ -75,10 +91,11 @@ function App() {
                   {/* <MainUserNavBar /> */}
                   <UserNotLogInNavBar />
                   <Home />
-                  <UserFooter />
+
+                  <UserFooterNotLogIn />
                 </>
               }
-            />
+            />{" "}
             <Route
               path="/about-us"
               element={
@@ -246,7 +263,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/meal-plan-generator-consent"
               element={
@@ -258,7 +274,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/meal-plan-generator-questions"
               element={
@@ -270,7 +285,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/meal-plan-generator-generated"
               element={
@@ -282,7 +296,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/test"
               element={
@@ -331,9 +344,6 @@ function App() {
                 </>
               }
             />
-            <Route path="/Log-In" element={<LogIn />} />
-            <Route path="/Register" element={<Registration />} />
-
             {/* // ! Nutritionist screen   */}
             <Route
               path="/nutritionist-profile"
@@ -371,7 +381,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/nutritionist-patient"
               element={
@@ -382,7 +391,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/nutritionist-mealPlanHistory"
               element={
@@ -393,7 +401,6 @@ function App() {
                 </>
               }
             />
-
             {/* //* Admin */}
             <Route
               path="/admin-home"
@@ -405,7 +412,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/admin-verification"
               element={
@@ -416,7 +422,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/admin-patients"
               element={
@@ -427,7 +432,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/admin-dietician"
               element={
@@ -438,9 +442,7 @@ function App() {
                 </>
               }
             />
-
             {/*  */}
-
             {/* //*Seller */}
             <Route
               path="/seller-home"
@@ -452,7 +454,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/seller-menu-items"
               element={
@@ -463,7 +464,6 @@ function App() {
                 </>
               }
             />
-
             <Route
               path="/seller-createMealPlan"
               element={

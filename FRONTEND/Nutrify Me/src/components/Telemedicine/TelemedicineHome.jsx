@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
@@ -37,6 +38,7 @@ import * as yup from "yup";
 import Dayjs from "dayjs";
 import InputLabel from "@mui/material/InputLabel";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import Calendar from "react-calendar";
 
 //import AssignmentIcon from "@material-ui/icons/Assignment";
 //import PhoneIcon from "@material-ui/icons/Phone";
@@ -98,6 +100,57 @@ function ServerDay(props) {
 // *
 
 function TelemedicineHome() {
+  //! functions for calendar
+
+  const [modalDayContent, setModalDayContent] = useState(<div>try</div>);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const handlePopupClose = () => {
+    setIsPopupVisible(false);
+  };
+
+  const onChange = async (newDate) => {
+    setIsLoading(true);
+    // Fetch or update dates based on newDate
+    // ...
+
+    // Simulate loading delay (optional)
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+
+    setIsLoading(false);
+    setDate(newDate);
+    handleOpenDay();
+    setIsPopupVisible(true);
+    console.log(appointData);
+    const temp = appointData.find(
+      (data) => data.date === dayjs(newDate).format("YYYY-MM-DD")
+    );
+
+    if (temp) {
+      console.log(nutritionist);
+      const nutrition = nutritionist.find(
+        (data) => data.nutritionist_id === temp.nutritionist_id
+      );
+      setModalDayContent(
+        <div>
+          Scheduled Appointment: <br />
+          Date: {dayjs(newDate).format("MMMM DD YYYY")} <br />
+          Nutritionist: {nutrition.first_name} {nutrition.last_name}
+          <br />
+          Time: {temp.time}
+        </div>
+      );
+    } else {
+      console.log("No Appointment");
+      setModalDayContent(
+        <div>
+          {dayjs(newDate).format("MMMM DD YYYY")} <br />
+          No Appointment
+        </div>
+      );
+    }
+  };
+
+  //!
   //codes for consultation pop up in selecting nutritionist
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
 
@@ -117,6 +170,17 @@ function TelemedicineHome() {
 
   const handleCloseModal = () => {
     setOpenDate(false);
+  };
+
+  const [openDay, setOpenDay] = useState(false);
+
+  const handleOpenDay = (selectedDate) => {
+    // Optional: Do something with the selected date before opening the modal
+    setOpenDay(true);
+  };
+
+  const handleCloseDay = () => {
+    setOpenDay(false);
   };
 
   const handleDayClick = (date) => {
@@ -265,7 +329,7 @@ function TelemedicineHome() {
     return () => clearInterval(intervalId);
   };
   const [selectedNutritionist, setSelectedNutritionist] = useState("");
-
+  const [appointData, setAppointdata] = useState();
   const [nutritionistInformation, setNutritionistInformation] = useState();
 
   const handleChange = (event) => {
@@ -375,6 +439,24 @@ function TelemedicineHome() {
     AxiosInstance.get(`nutritionist/`)
       .then((res) => {
         setNutritionist(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+
+    AxiosInstance.get(`appointment`)
+      .then((res) => {
+        //  setNutritionist(res.data);
+
+        console.log(
+          res.data.filter((data) => data.user_id === loggedInUser.user_id)
+        );
+        setAppointdata(
+          res.data.filter((data) => data.user_id === loggedInUser.user_id)
+        );
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -738,6 +820,45 @@ function TelemedicineHome() {
               />
             </LocalizationProvider>
             {DateModal}
+
+            {/* //! Calendar */}
+            <div
+              className="calendar-app"
+              style={{ backgroundColor: "#f5f5f5" }}
+            >
+              <div className="day-labels" style={{ color: "#333" }}>
+                {/* Days of the week */}
+              </div>
+              <Calendar
+                onChange={onChange}
+                value={date}
+                className={isLoading ? "loading" : ""}
+                style={{
+                  border: "1px solid #898246",
+                  backgroundColor: "#f5f5f5",
+                }}
+              />
+              {/* {isPopupVisible && (
+                <div className="popup">
+                  <h3>Date: {date.toLocaleDateString()}</h3>
+               
+                  <button onClick={handlePopupClose}>Close</button>
+                </div>
+              )} */}
+            </div>
+
+            <Modal
+              open={openDay}
+              onClose={handleCloseDay}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description"
+            >
+              <Box sx={style}>
+                hii
+                {modalDayContent}
+              </Box>
+            </Modal>
+
             {/* // ! add calendar */}
             <Button
               onClick={handleOpen}

@@ -18,6 +18,8 @@ import MenuItem from "@mui/material/MenuItem";
 import dayjs from "dayjs";
 import Dayjs from "dayjs";
 
+import moment from "moment";
+
 function NutritionistAppointment() {
   //! retrieving data.
 
@@ -64,7 +66,9 @@ function NutritionistAppointment() {
 
       const condition = (item) => item.id > 1;
       const filteredData = res.data.filter(
-        (item) => item.nutritionist_id === loggedInUser.user_id
+        (item) =>
+          item.nutritionist_id === loggedInUser.user_id &&
+          moment(item.date).isSameOrAfter(moment(), "day")
       );
 
       console.log("try try", filteredData, loggedInUser.user_id);

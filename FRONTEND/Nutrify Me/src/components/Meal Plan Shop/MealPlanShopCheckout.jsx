@@ -34,7 +34,26 @@ import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import dotenv from "dotenv";
+import axios from "axios";
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  // PayPalCardFieldsProvider,
+  // PayPalNameField,
+  // PayPalNumberField,
+  // PayPalExpiryField,
+  // PayPalCVVField,
+  // usePayPalCardFields,
+} from "@paypal/react-paypal-js";
+import {
+  PayPalCardFieldsProvider,
+  PayPalNameField,
+  PayPalNumberField,
+  PayPalExpiryField,
+  PayPalCVVField,
+  usePayPalCardFields,
+} from "@paypal/react-paypal-js";
 import PayPalPayment from "./PayPalPayment";
 
 function MealPlanShopCheckout() {
@@ -571,13 +590,109 @@ function MealPlanShopCheckout() {
   ];
 
   //! paypal codes
+  //TODO figure out here how yun mga nasa cart malilink to paypal I give up na muna sayo
 
+  const clientID =
+    "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d";
+  const clientSecret =
+    "ECq1HNxPasGMTi0RCU-ei7FNK4BgKM2bnSaManCsX2XH5x3UQ8ijEQLjH46mFQRNEb_YiXYFVYjdOHrZ";
+  const baseURL = "https://api-m.sandbox.paypal.com";
   const initialOptions = {
+    //   clientId:
+    //     "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
     clientId:
-      "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
-    currency: "USD",
+      "AUcMPBLNq5ZPvQzgd-YTAwdx3xBdlt3HeoWHSSBkzmXpPD-SMWHxM6MYnXEFTyFmdwzLRB35Csq-rNua",
+    currency: "PHP",
     intent: "capture",
   };
+
+  async function generateAccessToken() {
+    const response = await axios({
+      url: baseURL + "/v1/oauth2/token",
+      method: "post",
+      data: "grant_type=client_credentials",
+      auth: {
+        username: clientID,
+        password: clientSecret,
+      },
+    });
+
+    return response.data.access_token;
+  }
+
+  const serverUrl = "http://localhost:5173/";
+  const createOrder = async (data, actions) => {
+    // console.log(process.env.BASE_URL);
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "PHP",
+            value: "0.01",
+          },
+        },
+      ],
+    });
+    // return fetch(`${serverUrl}/my-server/create-paypal-order`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // use the "body" param to optionally pass additional order information
+    //   // like product skus and quantities
+    //   body: JSON.stringify({
+    //     product: {
+    //       description: "Wood Candy Sofa",
+    //       cost: "399.0",
+    //     },
+    //   }),
+    // })
+    //   .then((response) => response.json())
+    //   .then((order) => order.id);
+  };
+
+  const capturePayment = async (orderId) => {};
+
+  const onApprove = async (data, actions) => {
+    // return fetch(`${serverUrl}/my-server/capture-paypal-order`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     orderID: data.orderID,
+    //   }),
+    // }).then((response) => response.json());
+
+    // return actions.order.capture().then(function (details) {
+    //   alert("Transaction completed by: " + "me");
+    // });
+
+    const order = await actions.order.capture();
+    console.log(order);
+  };
+
+  const SubmitPayment = () => {
+    const { cardFields, fields } = usePayPalCardFields();
+
+    function submitHandler() {
+      if (typeof cardFields.submit !== "function") return; // validate that `submit()` exists before using it
+
+      cardFields
+        .submit()
+        .then(() => {
+          // submit successful
+        })
+        .catch(() => {
+          // submission error
+        });
+    }
+    return <button onClick={submitHandler}>Pay</button>;
+  };
+
+  function onError() {
+    // merchant code
+  }
   //!
 
   return (
@@ -731,9 +846,40 @@ function MealPlanShopCheckout() {
             PAYMENT OPTION{" "}
           </Typography>
           <br />
+          {/* <PayPalScriptProvider options={initialOptions}>
+            <PayPalPayment /> 
+          </PayPalScriptProvider>   clientId:
+      "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
+    */}
+
           <PayPalScriptProvider options={initialOptions}>
-            <PayPalPayment />
+            <PayPalButtons
+              createOrder={(data, actions) => createOrder(data, actions)}
+              onApprove={(data, actions) => onApprove(data, actions)}
+            />
           </PayPalScriptProvider>
+
+          {/* <PayPalScriptProvider
+            options={{
+              clientId:
+                "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
+              components: "card-fields",
+            }}
+          >
+            {" "}
+            <PayPalCardFieldsProvider
+              createOrder={createOrder}
+              onApprove={onApprove}
+              onError={onError}
+            >
+              <PayPalNameField />
+              <PayPalNumberField />
+              <PayPalExpiryField />
+              <PayPalCVVField />
+
+              <SubmitPayment />
+            </PayPalCardFieldsProvider>
+          </PayPalScriptProvider> */}
           <FormControl sx={{ ml: 15, mb: 3 }}>
             <FormLabel id="demo-radio-buttons-group-label">
               Payment Method

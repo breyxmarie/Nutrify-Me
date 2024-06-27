@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'password',
                   'first_name',
                   'last_name',
-                  'privilege')
+                  'privilege', 'email', 'image')
         
 class NutritionistSerializer(serializers.ModelSerializer):
     class Meta:
