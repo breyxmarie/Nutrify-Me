@@ -41,8 +41,8 @@ class Nutritionist(models.Model):
     first_name= models.CharField(max_length=50)
     last_name= models.CharField(max_length=50)
     license_id = models.CharField(max_length=50)
-    schedule_day = models.CharField(max_length=300)
-    schedule_time = models.CharField(max_length=300)
+    schedule_day = JSONField()
+    schedule_time = JSONField()
 
     class Meta:
         db_table = "Nutritionist"
@@ -166,3 +166,14 @@ class FoodEntry(models.Model):
 
     class Meta:
         db_table = "food_entry"
+
+
+class ScheduleDeck(models.Model):
+    schedule_id = models.AutoField(primary_key=True)
+    nutritionist_id = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="listingsss3")
+    time = models.TimeField()
+    date = models.DateField()
+    type = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = "schedule_deck"

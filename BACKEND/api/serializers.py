@@ -90,3 +90,10 @@ class FoodEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodEntry
         fields = ('foodentry_id', 'type','food','calories','fat','protein','carbs','journal_id' )
+
+
+class ScheduleDeckSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ScheduleDeck
+        fiels = ('schedule_id', 'nutritionist_id', 'time', 'date', 'type')
+

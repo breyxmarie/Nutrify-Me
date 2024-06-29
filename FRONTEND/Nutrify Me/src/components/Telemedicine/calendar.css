@@ -1,0 +1,52 @@
+.calendar-wrapper {
+  position: relative;
+}
+
+.calendar-trigger {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calendar {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 300px; /* Adjust width as needed */
+  z-index: 10;
+  display: none; /* Initially hidden */
+}
+
+.calendar.active {
+  display: block; /* Show calendar on trigger click */
+}
+
+.calendar-header {
+  display: flex;
+}
+
+.calendar-day,
+.calendar-cell {
+  width: 42px;
+  height: 42px;
+  border: 1px solid transparent; /* Remove borders on inner cells */
+  text-align: center;
+  line-height: 42px;
+  cursor: pointer;
+}
+
+.unavailable {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.selected {
+  background-color: #ccc;
+}

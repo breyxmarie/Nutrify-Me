@@ -479,3 +479,40 @@ def FoodEntryAPI(request, pk=0):
         foodEntry = FoodEntry.objects.get(foodentry_id=pk)
         foodEntry.delete()
         return JsonResponse("Food Entry was deleted Successfully", safe = False)
+    
+
+@csrf_exempt
+def ScheduleDeckAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            scheduleDeck = ScheduleDeck.objects.all()
+            serializer = ScheduleDeckSerializer(foodEntry, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                scheduleDeck = ScheduleDeck.objects.get(pk=pk)
+                serializer = ScheduleDeckSerializer(scheduleDeck)
+                return JsonResponse(serializer.data, safe=False)
+            except ScheduleDeck.DoesNotExist:
+                return JsonResponse({'error': 'Schedule Deck not found'}, status=404)
+    elif request.method == 'POST':
+        scheduleDeck_data = JSONParser().parse(request)
+        scheduleDeck_serializer = ScheduleDeckSerializer(data = scheduleDeck_data)
+        if scheduleDeck_serializer.is_valid():
+            scheduleDeck_serializer.save()
+            return JsonResponse("Schedule Deck Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Schedule Deck", safe=False)
+    elif request.method == 'PUT':
+        scheduleDeck_data = JSONParser().parse(request)
+        scheduleDecks = ScheduleDeck.objects.get(scheduleDeck_id=scheduleDeck_data['schedule_id'])
+        scheduleDeck_serializer = FoodEntrySerializer(scheduleDecks, data = scheduleDeck_data)
+        if scheduleDeck_serializer.is_valid():
+            scheduleDeck_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        scheduleDeck = FoodEntry.objects.get(schedule_id=pk)
+        scheduleDeck.delete()
+        return JsonResponse("Food Entry was deleted Successfully", safe = False)
+    

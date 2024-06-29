@@ -33,6 +33,10 @@ urlpatterns = [
     path('journalentry/<int:pk>', JournalEntryAPI),  
     path('foodentry/', FoodEntryAPI),
     path('foodentry/<int:pk>', FoodEntryAPI),
+    path('scheduledeck/', ScheduleDeckAPI),
+    path('scheduledeck/<int:pk>', ScheduleDeckAPI),
 
   #  path('SaveFile', SaveFile), 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

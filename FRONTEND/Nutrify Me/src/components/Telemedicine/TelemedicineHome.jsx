@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
-
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
@@ -24,6 +23,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FormHelperText } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+//import DatePicker from "react-date-picker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -39,7 +39,8 @@ import Dayjs from "dayjs";
 import InputLabel from "@mui/material/InputLabel";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import Calendar from "react-calendar";
-
+import duration from "dayjs/plugin/duration";
+import "./calendar.css";
 //import AssignmentIcon from "@material-ui/icons/Assignment";
 //import PhoneIcon from "@material-ui/icons/Phone";
 
@@ -328,9 +329,142 @@ function TelemedicineHome() {
 
     return () => clearInterval(intervalId);
   };
+
+  // ? again
+  // const [date1, setDate1] = useState(dayjs());
+  // const availableWeekdays = ["Tuesday", "Thursday", "Saturday"];
+
+  // const isWeekdayAvailable = (date) => {
+  //   console.log(dayjs(date));
+  //   const dayjsDate = dayjs(date); // Convert to dayjs object
+  //   const weekday = dayjsDate.day(); // Use dayjs.day() for weekday index (0-6)
+  //   return availableWeekdays.includes(dayjs.WEEKDAYS[weekday]); // Use dayjs.WEEKDAYS for weekday names
+  // };
+
+  // const handleDateChanges = (newDate) => {
+  //   if (isWeekdayAvailable(newDate)) {
+  //     setDate1(newDate);
+  //   } else {
+  //     // Optional: Show an error message or notification
+  //   }
+  // };
+
+  const [selectedDates, setSelectedDates] = useState(null);
+
+  // Define your list of available days (e.g., "Tuesday", "Friday", "Saturday")
+  const [availableDays, setAvailableDays] = useState(["Wednesday"]);
+
+  const handleDateChanges = (date) => {
+    // Get the day of the week (e.g., "Tuesday")
+
+    console.log(date);
+    const year = date.$y;
+    const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+    const day = date.$d.getDate();
+
+    const convertedDate = new Date(date);
+    console.log(convertedDate);
+    const selectedDay = convertedDate.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+    console.log(selectedDay);
+    if (availableDays.includes(selectedDay)) {
+      console.log(date, "is it working ba");
+      setSelectedDates(date);
+      // Handle the selected date (e.g., update state, trigger an action, etc.)
+    } else {
+      // Display an error message or prevent selection
+      console.log("Please select a valid day.");
+      setSelectedDates(null);
+    }
+  };
+
+  function disableUnavailableDates(date) {
+    // Get the day of the week (e.g., "Tuesday")
+    const year = date.$y;
+    const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+    const day = date.$d.getDate();
+
+    const convertedDate = new Date(date);
+    const selectedDay = convertedDate.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+
+    // Check if the selected day is in the unavailable list
+    return !availableDays.includes(selectedDay);
+  }
+  //?
+
   const [selectedNutritionist, setSelectedNutritionist] = useState("");
   const [appointData, setAppointdata] = useState();
   const [nutritionistInformation, setNutritionistInformation] = useState();
+
+  function Time(hours, minutes, seconds = 0, milliseconds = 0) {
+    this.hours = hours;
+    this.minutes = minutes;
+    this.seconds = seconds;
+    this.milliseconds = milliseconds;
+
+    // Optional method to get total time in milliseconds
+    this.getTotalMilliseconds = function () {
+      return (
+        this.hours * 3600 * 1000 +
+        this.minutes * 60 * 1000 +
+        this.seconds * 1000 +
+        this.milliseconds
+      );
+    };
+  }
+
+  function calculateTotalHours(startTime, endTime) {
+    // Calculate difference in milliseconds using custom Time objects
+    const diffInMs =
+      endTime.getTotalMilliseconds() - startTime.getTotalMilliseconds();
+
+    // Convert milliseconds to hours (divide by 1000 for seconds, 3600 for hours)
+    const totalHours = diffInMs / (1000 * 3600);
+
+    return totalHours.toFixed(2); // Format to two decimal places
+  }
+
+  function parseTimeString(timeString) {
+    const timeRegex = /^(\d{1,2}):(\d{2})(AM|PM)?$/;
+    const match = timeString.trim().match(timeRegex);
+    console.log(match);
+    if (!match) {
+      throw new Error("Invalid time format. Please use HH:MM (AM/PM) format.");
+    }
+
+    const hours = parseInt(match[1], 10); // Convert hours string to number
+    const minutes = parseInt(match[2], 10); // Convert minutes string to number
+    const amPm = match[3] || "AM"; // Default to AM if not provided
+    console.log(hours, minutes, amPm);
+    return { hours, minutes, amPm };
+  }
+
+  function divideHoursIntoIntervals(dayjsObject, totalHours) {
+    // Validate input
+    if (!dayjsObject.isValid() || totalHours <= 0) {
+      throw new Error(
+        "Invalid Day.js object or total hours (must be positive)"
+      );
+    }
+
+    const intervals = [];
+    const startTime = dayjsObject; // Starting time is the Day.js object passed
+
+    // Loop through each 30-minute interval
+    for (let i = 0; i < totalHours * 2; i++) {
+      const currentInterval = startTime.add(i * 30, "minute"); // Add 30 minutes for each interval
+
+      // Format the time string (optional)
+      const formattedTime = currentInterval.format("h:mm A"); // Adjust format as needed (e.g., HH:mm)
+
+      intervals.push(formattedTime);
+    }
+
+    return intervals;
+  }
 
   const handleChange = (event) => {
     setSelectedNutritionist(event.target.value);
@@ -339,13 +473,74 @@ function TelemedicineHome() {
       (nut) => nut.nutritionist_id === event.target.value
     );
 
+    const startTimeString = "08:00AM"; // Replace with user-provided start time
+    const endTimeString = "12:00PM"; // Replace with user-provided end time
+    let totalHours = 0;
+    try {
+      const startTimeParsed = parseTimeString(startTimeString);
+      const endTimeParsed = parseTimeString(endTimeString);
+
+      const startTime = new Time(
+        startTimeParsed.hours === 12 && startTimeParsed.amPm === "AM"
+          ? 0 // Convert 12:00AM to 0 hours
+          : startTimeParsed.hours === 12 && startTimeParsed.amPm === "PM"
+          ? 12 // Keep 12:00PM as 12 hours
+          : startTimeParsed.amPm === "PM"
+          ? startTimeParsed.hours + 12 // Add 12 for PM hours
+          : startTimeParsed.hours, // Keep hours for AM
+        startTimeParsed.minutes
+      );
+
+      const endTime = new Time(
+        endTimeParsed.hours === 12 && endTimeParsed.amPm === "AM"
+          ? 0 // Convert 12:00AM to 0 hours
+          : endTimeParsed.hours === 12 && endTimeParsed.amPm === "PM"
+          ? 12 // Keep 12:00PM as 12 hours
+          : endTimeParsed.amPm === "PM"
+          ? endTimeParsed.hours + 12 // Add 12 for PM hours
+          : endTimeParsed.hours, // Keep hours for AM
+        endTimeParsed.minutes
+      );
+      console.log(startTimeParsed + " " + endTime);
+      totalHours = calculateTotalHours(startTime, endTime);
+      console.log("Total hours:", totalHours);
+    } catch (error) {
+      console.error("Error parsing time:", error.message);
+    }
+    console.log(dayjs("08:00 PM"));
+    const s = dayjs("8:00 PM", "HH:mm A/P");
+
+    let availableTime = [];
+    try {
+      const timeIntervals = divideHoursIntoIntervals(s, totalHours);
+      console.log("Time intervals for", totalHours, "hours:");
+      console.log(timeIntervals.join(", ")); // Join intervals with commas and space
+      availableTime = divideHoursIntoIntervals(s, totalHours);
+      console.log(availableTime);
+    } catch (error) {
+      console.error(error.message);
+    }
+
+    setAvailableDays(tempNut.schedule_day);
     setNutritionistInformation(
       <Box>
+        <img src={tempNut.image} />
         {tempNut.first_name} {tempNut.last_name}
         <br />
         {tempNut.schedule_day}
         <br />
         {tempNut.schedule_time}
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label="Select a date"
+            value={selectedDates}
+            onChange={handleDateChanges}
+            renderInput={(params) => <TextField {...params} />}
+            shouldDisableDate={disableUnavailableDates}
+            minDate={dayjs()}
+            //  open // Keep the calendar open
+          />
+        </LocalizationProvider>
       </Box>
     );
   };
@@ -659,6 +854,7 @@ function TelemedicineHome() {
   //
   const [joined, setJoined] = useState(false);
   //
+
   return (
     <div
       className="content"
@@ -668,6 +864,37 @@ function TelemedicineHome() {
         fontFamily: "Poppins",
       }}
     >
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Select a date"
+          value={selectedDates}
+          onChange={handleDateChanges}
+          renderInput={(params) => <TextField {...params} />}
+          shouldDisableDate={disableUnavailableDates}
+          minDate={dayjs()}
+          //  open // Keep the calendar open
+        />
+      </LocalizationProvider>
+      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Telemedicine Appointment"
+          value={date1}
+          onChange={handleDateChanges}
+          renderInput={(params) => <TextField {...params} />} // Customize input (optional)
+          renderDay={(date, value, callback) => (
+            <button
+              type="button"
+              disabled={!isWeekdayAvailable(date)}
+              onClick={() => (isDisabled ? null : callback(date))}
+              style={{
+                backgroundColor: isWeekdayAvailable(date) ? "inherit" : "#ddd",
+              }}
+            >
+              {date.getDate()}
+            </button>
+          )}
+        />
+      </LocalizationProvider> */}
       {/* ANother try */}
       {!joined && (
         <Link
@@ -679,10 +906,8 @@ function TelemedicineHome() {
           <button onClick={() => setJoined(true)}>Join Room</button>{" "}
         </Link>
       )}
-
       {joined && <VideoRoom />}
       {/*  */}
-
       {/* Video conferencing */}
       {/* <h1 style={{ textAlign: "center", color: "#fff" }}>Zoomish</h1>
       <div className="container">
@@ -760,7 +985,6 @@ function TelemedicineHome() {
           ) : null}
         </div>
       </div> */}
-
       {/*  */}
       {/* <MainUserNavbar />
       <TeleMedNavBar /> */}
@@ -778,7 +1002,6 @@ function TelemedicineHome() {
           alignItems: "center",
         }}
       ></Box>
-
       <Box sx={{ flexGrow: 1, my: 3, color: "#99756E", mx: 5 }}>
         {" "}
         {/* // ! modify pa dito like what if walang appointment si user */}
@@ -939,7 +1162,7 @@ function TelemedicineHome() {
                             sx={{ mt: 2 }}
                           >
                             Date of Consultation <br />
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DatePicker
                                 sx={{ background: "#ffffff" }}
                                 // defaultValue={initialValue}
@@ -948,7 +1171,20 @@ function TelemedicineHome() {
                                 }
                                 name="selectedDate"
                               />
-                            </LocalizationProvider>
+                            </LocalizationProvider> */}
+                            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DatePicker
+                                label="Select a date"
+                                value={selectedDates}
+                                onChange={handleDateChanges}
+                                renderInput={(params) => (
+                                  <TextField {...params} />
+                                )}
+                                shouldDisableDate={disableUnavailableDates}
+                                minDate={dayjs()}
+                                //  open // Keep the calendar open
+                              />
+                            </LocalizationProvider> */}
                           </Typography>
                         </Grid>
                         <Grid xs={6}>
