@@ -25,6 +25,7 @@ class User(models.Model):
     privilege= models.CharField(max_length=30)
     email=models.CharField(max_length=100)
     image = models.CharField(max_length=300)
+    active = models.BooleanField()
    # profile_pic = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     class Meta:
@@ -43,6 +44,8 @@ class Nutritionist(models.Model):
     license_id = models.CharField(max_length=50)
     schedule_day = JSONField()
     schedule_time = JSONField()
+    image = models.CharField(max_length=150)
+    license_pic = models.CharField(max_length=200)
 
     class Meta:
         db_table = "Nutritionist"
@@ -170,10 +173,24 @@ class FoodEntry(models.Model):
 
 class ScheduleDeck(models.Model):
     schedule_id = models.AutoField(primary_key=True)
-    nutritionist_id = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="listingsss3")
+    nutritionist_id = models.ForeignKey(Nutritionist, on_delete=models.CASCADE, related_name="listingsss3")
     time = models.TimeField()
     date = models.DateField()
     type = models.CharField(max_length=20)
 
     class Meta:
         db_table = "schedule_deck"
+
+class VerifyNutritionist(models.Model):
+    verify_id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=30)
+    password = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    license_pic = models.CharField(max_length=300)
+    email = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    license_id = models.CharField(max_length=20)
+
+    class Meta:
+        db_table = "verify_nutritionist"

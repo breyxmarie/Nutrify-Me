@@ -9,6 +9,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import AxiosInstance from "./forms/AxiosInstance";
+import { ToastContainer, toast } from "react-toastify";
 
 // import {
 //   MaterialReactTable,
@@ -16,6 +17,28 @@ import AxiosInstance from "./forms/AxiosInstance";
 // } from "material-react-table";
 
 function Home() {
+  //? toast
+  const query = new URLSearchParams(window.location.search);
+  const myParam = query.get("success");
+  //const myParam = query.get("param");
+  console.log(myParam);
+  // if (myParam === "true") {
+  //   toast.success("Registered Successfully");
+  // }
+
+  if (myParam === "registered") {
+    toast.success(
+      "Please wait for your account to be verified, a text/email will be sent to your registered email. Thank You!"
+    );
+
+    // return alert(
+    //   "Please wait for your accoutn to be verified, a text/email will be sent to your registered email. Thank You!"
+    // );
+  }
+  // if (myParam === "newPassword") {
+  //   toast.success("Password Changed");
+  // }
+  //?
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,

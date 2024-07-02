@@ -62,7 +62,7 @@ function FoodJournalHome() {
           (item) => item.date == day && item.user_id == loggedInUser.user_id
         )
       );
-      // console.log(
+      // console.log( setTimeDiv
       //   res.data.filter(
       //     (item) => item.date == day && item.user_id == loggedInUser.user_id
       //   )

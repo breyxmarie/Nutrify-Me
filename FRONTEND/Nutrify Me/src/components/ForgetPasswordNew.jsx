@@ -125,6 +125,8 @@ function ForgetPasswordNew() {
         last_name: foundUser.last_name,
         privilege: "User",
         email: foundUser.email,
+        image: foundUser.image,
+        active: 1,
       }).then((res) => {
         console.log(res, res.data);
         // navigate("/Profiling", {

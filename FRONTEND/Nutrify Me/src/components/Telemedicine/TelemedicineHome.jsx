@@ -354,45 +354,45 @@ function TelemedicineHome() {
   // Define your list of available days (e.g., "Tuesday", "Friday", "Saturday")
   const [availableDays, setAvailableDays] = useState(["Wednesday"]);
 
-  const handleDateChanges = (date) => {
-    // Get the day of the week (e.g., "Tuesday")
+  // const handleDateChanges = async (date) => {
+  //   // Get the day of the week (e.g., "Tuesday")
 
-    console.log(date);
-    const year = date.$y;
-    const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
-    const day = date.$d.getDate();
+  //   console.log(date);
+  //   const year = date.$y;
+  //   const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+  //   const day = date.$d.getDate();
 
-    const convertedDate = new Date(date);
-    console.log(convertedDate);
-    const selectedDay = convertedDate.toLocaleDateString("en-US", {
-      weekday: "long",
-    });
-    console.log(selectedDay);
-    if (availableDays.includes(selectedDay)) {
-      console.log(date, "is it working ba");
-      setSelectedDates(date);
-      // Handle the selected date (e.g., update state, trigger an action, etc.)
-    } else {
-      // Display an error message or prevent selection
-      console.log("Please select a valid day.");
-      setSelectedDates(null);
-    }
-  };
+  //   const convertedDate = new Date(date);
+  //   console.log(convertedDate);
+  //   const selectedDay = convertedDate.toLocaleDateString("en-US", {
+  //     weekday: "long",
+  //   });
+  //   console.log(selectedDay);
+  //   if (availableDays.includes(selectedDay)) {
+  //     console.log(date, "is it working ba");
+  //     setSelectedDates(date);
+  //     // Handle the selected date (e.g., update state, trigger an action, etc.)
+  //   } else {
+  //     // Display an error message or prevent selection
+  //     console.log("Please select a valid day.");
+  //     await setSelectedDates(null);
+  //   }
+  // };
 
-  function disableUnavailableDates(date) {
-    // Get the day of the week (e.g., "Tuesday")
-    const year = date.$y;
-    const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
-    const day = date.$d.getDate();
+  // function disableUnavailableDates(date) {
+  //   // Get the day of the week (e.g., "Tuesday")
+  //   const year = date.$y;
+  //   const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+  //   const day = date.$d.getDate();
 
-    const convertedDate = new Date(date);
-    const selectedDay = convertedDate.toLocaleDateString("en-US", {
-      weekday: "long",
-    });
+  //   const convertedDate = new Date(date);
+  //   const selectedDay = convertedDate.toLocaleDateString("en-US", {
+  //     weekday: "long",
+  //   });
 
-    // Check if the selected day is in the unavailable list
-    return !availableDays.includes(selectedDay);
-  }
+  //   // Check if the selected day is in the unavailable list
+  //   return !availableDays.includes(selectedDay);
+  // }
   //?
 
   const [selectedNutritionist, setSelectedNutritionist] = useState("");
@@ -466,83 +466,341 @@ function TelemedicineHome() {
     return intervals;
   }
 
+  function convertTimeFormat(timeString) {
+    // Split the time string into hours, minutes, and seconds
+    const [hours, minutes, seconds] = timeString.split(":");
+
+    // Parse the hours, minutes, and seconds into integers
+    const parsedHours = parseInt(hours, 10);
+    const parsedMinutes = parseInt(minutes, 10);
+    const parsedSeconds = parseInt(seconds, 10);
+
+    // Convert the time to a 12-hour format with AM/PM indicator
+    let formattedHours = parsedHours % 12; // Get hours in 12-hour format
+
+    // Omit leading zero for hours 10-12 (optional)
+    if (formattedHours >= 10 && formattedHours <= 12) {
+      formattedHours = formattedHours.toString(); // Remove leading zero
+    } else {
+      //  formattedHours = formattedHours.toString().padStart(2, "0"); // Add leading zero for others
+      formattedHours = formattedHours.toString(); // Add leading zero for others
+    }
+
+    const amPm = parsedHours >= 12 ? "PM" : "AM";
+
+    // Format the final time string
+    const formattedTime = `${formattedHours}:${parsedMinutes
+      .toString()
+      .padStart(2, "0")} ${amPm}`;
+
+    return formattedTime;
+  }
+
+  const [setTimeDiv, setSetTimeDiv] = useState(<></>);
   const handleChange = (event) => {
     setSelectedNutritionist(event.target.value);
-
+    let selectedTheDay;
+    let availableTime = [];
     const tempNut = nutritionist.find(
       (nut) => nut.nutritionist_id === event.target.value
     );
+    console.log(tempNut.schedule_day);
+    // Replace with user-provided end time
+    let totalHours = 0;
+
+    // !
+    const handleDateChanges = async (date) => {
+      // Get the day of the week (e.g., "Tuesday")
+      selectedTheDay = date;
+      console.log(date);
+      const year = date.$y;
+      const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+      const day = date.$d.getDate();
+
+      const convertedDate = new Date(date);
+      console.log(convertedDate);
+      const selectedDay = convertedDate.toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+      console.log(selectedDay);
+      if (tempNut.schedule_day.includes(selectedDay)) {
+        console.log(date, "is it working ba");
+        setSelectedDates(date);
+        // Handle the selected date (e.g., update state, trigger an action, etc.)
+      } else {
+        // Display an error message or prevent selection
+        console.log("Please select a valid day.");
+        setSelectedDates(null);
+      }
+      console.log(selectedTheDay);
+    };
+    //!
+
+    // ?
+    function disableUnavailableDates(date) {
+      // Get the day of the week (e.g., "Tuesday")
+      const year = date.$y;
+      const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+      const day = date.$d.getDate();
+
+      const convertedDate = new Date(date);
+      const selectedDay = convertedDate.toLocaleDateString("en-US", {
+        weekday: "long",
+      });
+
+      // Check if the selected day is in the unavailable list
+      // return !availableDays.includes(selectedDay);
+
+      return !tempNut.schedule_day.includes(selectedDay);
+    }
+
+    //?
+
+    // try {
+    //   const startTimeParsed = parseTimeString(startTimeString);
+    //   const endTimeParsed = parseTimeString(endTimeString);
+
+    //   const startTime = new Time(
+    //     startTimeParsed.hours === 12 && startTimeParsed.amPm === "AM"
+    //       ? 0 // Convert 12:00AM to 0 hours
+    //       : startTimeParsed.hours === 12 && startTimeParsed.amPm === "PM"
+    //       ? 12 // Keep 12:00PM as 12 hours
+    //       : startTimeParsed.amPm === "PM"
+    //       ? startTimeParsed.hours + 12 // Add 12 for PM hours
+    //       : startTimeParsed.hours, // Keep hours for AM
+    //     startTimeParsed.minutes
+    //   );
+
+    //   const endTime = new Time(
+    //     endTimeParsed.hours === 12 && endTimeParsed.amPm === "AM"
+    //       ? 0 // Convert 12:00AM to 0 hours
+    //       : endTimeParsed.hours === 12 && endTimeParsed.amPm === "PM"
+    //       ? 12 // Keep 12:00PM as 12 hours
+    //       : endTimeParsed.amPm === "PM"
+    //       ? endTimeParsed.hours + 12 // Add 12 for PM hours
+    //       : endTimeParsed.hours, // Keep hours for AM
+    //     endTimeParsed.minutes
+    //   );
+    //   console.log(startTimeParsed + " " + endTime);
+    //   totalHours = calculateTotalHours(startTime, endTime);
+    //   console.log("Total hours:", totalHours, startTimeString);
+    // } catch (error) {
+    //   console.error("Error parsing time:", error.message);
+    // }
+
+    function getTotalHours(startTimeString, endTimeString) {
+      try {
+        const startTimeParsed = parseTimeString(startTimeString);
+        const endTimeParsed = parseTimeString(endTimeString);
+
+        const startTime = new Time(
+          startTimeParsed.hours === 12 && startTimeParsed.amPm === "AM"
+            ? 0 // Convert 12:00AM to 0 hours
+            : startTimeParsed.hours === 12 && startTimeParsed.amPm === "PM"
+            ? 12 // Keep 12:00PM as 12 hours
+            : startTimeParsed.amPm === "PM"
+            ? startTimeParsed.hours + 12 // Add 12 for PM hours
+            : startTimeParsed.hours, // Keep hours for AM
+          startTimeParsed.minutes
+        );
+
+        const endTime = new Time(
+          endTimeParsed.hours === 12 && endTimeParsed.amPm === "AM"
+            ? 0 // Convert 12:00AM to 0 hours
+            : endTimeParsed.hours === 12 && endTimeParsed.amPm === "PM"
+            ? 12 // Keep 12:00PM as 12 hours
+            : endTimeParsed.amPm === "PM"
+            ? endTimeParsed.hours + 12 // Add 12 for PM hours
+            : endTimeParsed.hours, // Keep hours for AM
+          endTimeParsed.minutes
+        );
+        console.log(startTimeParsed + " " + endTime);
+        totalHours = calculateTotalHours(startTime, endTime);
+        console.log("Total hours:", totalHours, startTimeString);
+
+        return totalHours;
+      } catch (error) {
+        console.error("Error parsing time:", error.message);
+      }
+    }
 
     const startTimeString = "08:00AM"; // Replace with user-provided start time
-    const endTimeString = "12:00PM"; // Replace with user-provided end time
-    let totalHours = 0;
-    try {
-      const startTimeParsed = parseTimeString(startTimeString);
-      const endTimeParsed = parseTimeString(endTimeString);
+    const endTimeString = "12:00PM";
+    console.log(dayjs(selectedTheDay));
+    totalHours = getTotalHours(startTimeString, endTimeString);
 
-      const startTime = new Time(
-        startTimeParsed.hours === 12 && startTimeParsed.amPm === "AM"
-          ? 0 // Convert 12:00AM to 0 hours
-          : startTimeParsed.hours === 12 && startTimeParsed.amPm === "PM"
-          ? 12 // Keep 12:00PM as 12 hours
-          : startTimeParsed.amPm === "PM"
-          ? startTimeParsed.hours + 12 // Add 12 for PM hours
-          : startTimeParsed.hours, // Keep hours for AM
-        startTimeParsed.minutes
-      );
+    // const s = dayjs("08:00 PM", "HH:mm A/P");
+    const s = dayjs("08:00 PM", "HH:mm A/P");
 
-      const endTime = new Time(
-        endTimeParsed.hours === 12 && endTimeParsed.amPm === "AM"
-          ? 0 // Convert 12:00AM to 0 hours
-          : endTimeParsed.hours === 12 && endTimeParsed.amPm === "PM"
-          ? 12 // Keep 12:00PM as 12 hours
-          : endTimeParsed.amPm === "PM"
-          ? endTimeParsed.hours + 12 // Add 12 for PM hours
-          : endTimeParsed.hours, // Keep hours for AM
-        endTimeParsed.minutes
-      );
-      console.log(startTimeParsed + " " + endTime);
-      totalHours = calculateTotalHours(startTime, endTime);
-      console.log("Total hours:", totalHours);
-    } catch (error) {
-      console.error("Error parsing time:", error.message);
-    }
-    console.log(dayjs("08:00 PM"));
-    const s = dayjs("8:00 PM", "HH:mm A/P");
-
-    let availableTime = [];
     try {
       const timeIntervals = divideHoursIntoIntervals(s, totalHours);
       console.log("Time intervals for", totalHours, "hours:");
       console.log(timeIntervals.join(", ")); // Join intervals with commas and space
-      availableTime = divideHoursIntoIntervals(s, totalHours);
-      console.log(availableTime);
+
+      const filteredAvailableTime = divideHoursIntoIntervals(s, totalHours);
+      AxiosInstance.get(`scheduledeck`).then((res) => {
+        // setJournalEntry(
+        //   res.data.filter(
+        //     (item) => item.date == day && item.user_id == loggedInUser.user_id
+        //   )
+        //  );
+
+        console.log(res.data);
+        console.log(timeIntervals);
+
+        console.log(selectedTheDay);
+
+        //  availableTime.map((item) => console.log(item));
+        let tempTime;
+        res.data.forEach((item) => {
+          // Format the time
+          const formattedTime = convertTimeFormat(item.time);
+          console.log(formattedTime);
+          // Assuming availableTime contains time intervals
+          availableTime = filteredAvailableTime.filter(
+            //  availableTime = availableTime.filter(
+            (interval) => interval !== formattedTime
+          );
+
+          // availableTime = filteredAvailableTime;
+
+          // Use filteredAvailableTime for further processing
+        });
+        console.log(availableTime);
+        setSelectedDates(dayjs());
+        // setNutritionistInformation(
+        //   <Box>
+        //     <img src={tempNut.image} />
+        //     {tempNut.first_name} {tempNut.last_name}
+        //     <br />
+        //     {tempNut.schedule_day}
+        //     <br />
+        //     {tempNut.schedule_time}
+        //     <LocalizationProvider dateAdapter={AdapterDayjs}>
+        //       <DatePicker
+        //         label="Select a date"
+        //         defaultValue={dayjs()}
+        //         value={selectedDates}
+        //         onChange={handleDateChanges}
+        //         renderInput={(params) => <TextField {...params} />}
+        //         shouldDisableDate={disableUnavailableDates}
+        //         minDate={dayjs()}
+        //         //  open // Keep the calendar open
+        //       />
+        //     </LocalizationProvider>
+        //     Time:
+        //     <Select
+        //       labelId="demo-simple-select-filled-label"
+        //       id="demo-simple-select-filled"
+        //       // value={selectedNutritionist}
+        //       onChange={handleChangeTime}
+        //       name="type"
+        //       width="100%"
+        //       //  {...register("type")}
+        //       //  error={errors.type ? true : false}
+        //     >
+        //       {availableTime.map((option) => (
+        //         <MenuItem key={option} value={option}>
+        //           {option}
+        //         </MenuItem>
+        //       ))}
+        //     </Select>
+        //   </Box>
+        // );
+      });
+
+      function getAvailableTimes(s, totalHours) {
+        try {
+          const timeIntervals = divideHoursIntoIntervals(s, totalHours);
+          console.log("Time intervals for", totalHours, "hours:");
+          console.log(timeIntervals.join(", ")); // Join intervals with commas and space
+
+          const filteredAvailableTime = divideHoursIntoIntervals(s, totalHours);
+          AxiosInstance.get(`scheduledeck`).then((res) => {
+            // setJournalEntry(
+            //   res.data.filter(
+            //     (item) => item.date == day && item.user_id == loggedInUser.user_id
+            //   )
+            //  );
+
+            console.log(res.data);
+            console.log(timeIntervals);
+
+            console.log(selectedTheDay);
+
+            //  availableTime.map((item) => console.log(item));
+            let tempTime;
+            res.data.forEach((item) => {
+              // Format the time
+              const formattedTime = convertTimeFormat(item.time);
+              console.log(formattedTime);
+              // Assuming availableTime contains time intervals
+              availableTime = filteredAvailableTime.filter(
+                //  availableTime = availableTime.filter(
+                (interval) => interval !== formattedTime
+              );
+
+              // availableTime = filteredAvailableTime;
+
+              // Use filteredAvailableTime for further processing
+            });
+            console.log(availableTime);
+          });
+        } catch (error) {
+          console.error(error.message);
+        }
+      }
+      availableTime = [];
+      //  availableTime = getAvailableTimes(s, totalHours);
+      console.log(getAvailableTimes(s, totalHours));
+      setNutritionistInformation(
+        <Box>
+          <img src={tempNut.image} />
+          {tempNut.first_name} {tempNut.last_name}
+          <br />
+          {tempNut.schedule_day}
+          <br />
+          {tempNut.schedule_time}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select a date"
+              defaultValues={null}
+              value={selectedDates}
+              onChange={handleDateChanges}
+              renderInput={(params) => <TextField {...params} />}
+              shouldDisableDate={disableUnavailableDates}
+              minDate={dayjs()}
+              //  open // Keep the calendar open
+            />
+          </LocalizationProvider>
+          Time:
+          {availableTime.length > 0 && ( // Check if array is not empty
+            <Select
+              labelId="demo-simple-select-filled-label"
+              id="demo-simple-select-filled"
+              // value={selectedNutritionist}
+              //  onChange={handleChangeTime}
+              name="type"
+              width="100%"
+              //  {...register("type")}
+              //  error={errors.type ? true : false}
+            >
+              {availableTime.map((option) => (
+                <MenuItem key={option} value={option}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
+        </Box>
+      );
+      //  availableTime = divideHoursIntoIntervals(s, totalHours);
     } catch (error) {
       console.error(error.message);
     }
-
+    console.log(availableTime);
+    const handleChangeTime = () => {};
     setAvailableDays(tempNut.schedule_day);
-    setNutritionistInformation(
-      <Box>
-        <img src={tempNut.image} />
-        {tempNut.first_name} {tempNut.last_name}
-        <br />
-        {tempNut.schedule_day}
-        <br />
-        {tempNut.schedule_time}
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label="Select a date"
-            value={selectedDates}
-            onChange={handleDateChanges}
-            renderInput={(params) => <TextField {...params} />}
-            shouldDisableDate={disableUnavailableDates}
-            minDate={dayjs()}
-            //  open // Keep the calendar open
-          />
-        </LocalizationProvider>
-      </Box>
-    );
   };
 
   const schema = yup
@@ -864,7 +1122,7 @@ function TelemedicineHome() {
         fontFamily: "Poppins",
       }}
     >
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Select a date"
           value={selectedDates}
@@ -874,7 +1132,7 @@ function TelemedicineHome() {
           minDate={dayjs()}
           //  open // Keep the calendar open
         />
-      </LocalizationProvider>
+      </LocalizationProvider> */}
       {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Telemedicine Appointment"

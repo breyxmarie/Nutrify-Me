@@ -35,6 +35,9 @@ urlpatterns = [
     path('foodentry/<int:pk>', FoodEntryAPI),
     path('scheduledeck/', ScheduleDeckAPI),
     path('scheduledeck/<int:pk>', ScheduleDeckAPI),
+    path('verifynutritionist/', VerifyNutritionistAPI),
+    path('verifynutritionist/<int:pk>', VerifyNutritionistAPI),
+    path('savefilelicense', SaveFileLicense),
 
   #  path('SaveFile', SaveFile), 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

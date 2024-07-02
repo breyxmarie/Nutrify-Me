@@ -16,9 +16,12 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import { useNavigate } from "react-router-dom";
 
 function AdminNavBar() {
-  const { loggedInUser } = useLoggedInUser();
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const navigate = useNavigate();
+
   const StyledLink = `
   color: #99756e; /* Default styles */
   display: block;
@@ -59,7 +62,17 @@ function AdminNavBar() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (setting) => {
+    switch (setting) {
+      case "Logout":
+        setLoggedInUser(null);
+        navigate("/");
+        break;
+      case "Profile":
+        //navigate("/user-profile");
+        break;
+    }
+
     setAnchorElUser(null);
   };
 
@@ -260,7 +273,12 @@ function AdminNavBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem
+                  key={setting}
+                  onClick={() => {
+                    handleCloseUserMenu(setting);
+                  }}
+                >
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

@@ -43,7 +43,7 @@ function Registration() {
       .required("StreetName, Building, House No. are Required"),
     barangay: yup.string().required("Barangay is required"),
     city: yup.string().required("City is Required"),
-    phone: yup.string().required("Phone Number is REquired"),
+    phone: yup.string().required("Phone Number is Required"),
     postalCode: yup.string().required("Postal Code is Required"),
     username: yup
       .string()
@@ -127,7 +127,9 @@ function Registration() {
     reset();
   };
   //!
-
+  const registerNutritionist = () => {
+    navigate("/RegisterNutritionist");
+  };
   return (
     <div
       className="content"
@@ -274,6 +276,7 @@ function Registration() {
           </Grid>
         </Grid>
       </form>
+      <button onClick={registerNutritionist}>Register as Nutritionist</button>
     </div>
   );
 }

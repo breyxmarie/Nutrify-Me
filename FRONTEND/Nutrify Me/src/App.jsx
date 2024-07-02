@@ -47,6 +47,7 @@ import ForgetPassword from "./components/ForgetPassword";
 import ForgetPasswordNew from "./components/ForgetPasswordNew";
 import ForgetPasswordOTP from "./components/ForgetPasswordOTP";
 import Registration from "./components/Registration";
+import RegistrationNutritionist from "./components/RegistrationNutritionist";
 import OTP from "./components/OTP";
 import UserFooter from "./components/UserFooter";
 import UserFooterNotLogIn from "./components/UserFooterNotLogIn";
@@ -79,6 +80,10 @@ function App() {
           <Routes>
             <Route path="/Log-In" element={<LogIn />} />
             <Route path="/Register" element={<Registration />} />
+            <Route
+              path="/RegisterNutritionist"
+              element={<RegistrationNutritionist />}
+            />
             <Route path="/Profiling" element={<Profiling />} />
             <Route path="/OTP" element={<OTP />} />
             <Route path="/ForgetPassword" element={<ForgetPassword />} />

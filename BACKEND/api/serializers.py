@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'password',
                   'first_name',
                   'last_name',
-                  'privilege', 'email', 'image')
+                  'privilege', 'email', 'image', 'active')
         
 class NutritionistSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +22,9 @@ class NutritionistSerializer(serializers.ModelSerializer):
                   'last_name',
                   'license_id',
                   'schedule_day' ,
-                  'schedule_time' ,)
+                  'schedule_time',
+                  'image',
+                  'license_pic')
         
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -95,5 +97,17 @@ class FoodEntrySerializer(serializers.ModelSerializer):
 class ScheduleDeckSerializer(serializers.ModelSerializer):
     class Meta:
         model = ScheduleDeck
-        fiels = ('schedule_id', 'nutritionist_id', 'time', 'date', 'type')
+        fields = ('schedule_id', 'nutritionist_id', 'time', 'date', 'type')
 
+class VerifyNutritionistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VerifyNutritionist
+        fields = ('verify_id',
+                  'username',
+                  'password',
+                  'first_name',
+                  'last_name',
+                  'license_pic',
+                  'email', 
+                  'phone',
+                  'license_id')

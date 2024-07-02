@@ -10,6 +10,9 @@ from django.http import HttpResponse
 from .models import *
 from .serializers import *
 from django.core.files.storage import default_storage
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+import os
 
 @csrf_exempt
 def UserAPI(request, pk=0):
@@ -286,6 +289,22 @@ def SaveFile(request):
     file_name=default_storage.save(file.name, file)
     return JsonResponse(file_name, safe=False)
 
+
+@csrf_exempt
+def SaveFileLicense(request):
+    if request.method == 'POST' and request.FILES.get('file'):
+        file = request.FILES['file']
+        # Specify the directory where you want to save the file
+        save_directory = os.path.join(settings.MEDIA_ROOT, 'license')
+        fs = FileSystemStorage(location=save_directory)
+        file_name = fs.save(file.name, file)
+        return JsonResponse(file_name, safe=False)
+    else:
+        return JsonResponse({'error': 'No file found in request'}, status=400)
+
+
+
+
 def home(request):
     return HttpResponse("This is the homepage")
 # Create your views here.
@@ -486,7 +505,7 @@ def ScheduleDeckAPI(request, pk=0):
     if request.method == 'GET':
         if pk == 0:  # Check if pk is not specified (meaning get all users)
             scheduleDeck = ScheduleDeck.objects.all()
-            serializer = ScheduleDeckSerializer(foodEntry, many=True)  # Set many=True for multiple users
+            serializer = ScheduleDeckSerializer(scheduleDeck, many=True)  # Set many=True for multiple users
             return JsonResponse(serializer.data, safe=False)
         else:
             # Existing logic for fetching a single user using pk
@@ -506,13 +525,48 @@ def ScheduleDeckAPI(request, pk=0):
     elif request.method == 'PUT':
         scheduleDeck_data = JSONParser().parse(request)
         scheduleDecks = ScheduleDeck.objects.get(scheduleDeck_id=scheduleDeck_data['schedule_id'])
-        scheduleDeck_serializer = FoodEntrySerializer(scheduleDecks, data = scheduleDeck_data)
+        scheduleDeck_serializer = ScheduleDeckSerializer(scheduleDecks, data = scheduleDeck_data)
         if scheduleDeck_serializer.is_valid():
             scheduleDeck_serializer.save()
             return JsonResponse("Update Successfully", safe=False)
         return JsonResponse("Failed to Update", safe=False)
     elif request.method == 'DELETE':
-        scheduleDeck = FoodEntry.objects.get(schedule_id=pk)
+        scheduleDeck = ScheduleDeck.objects.get(schedule_id=pk)
         scheduleDeck.delete()
         return JsonResponse("Food Entry was deleted Successfully", safe = False)
+    
+@csrf_exempt
+def VerifyNutritionistAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            verifyNutritionist = VerifyNutritionist.objects.all()
+            serializer = VerifyNutritionistSerializer(verifyNutritionist, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                verifyNutritionist = VerifyNutritionist.objects.get(pk=pk)
+                serializer = VerifyNutritionistSerializer(verifyNutritionist)
+                return JsonResponse(serializer.data, safe=False)
+            except VerifyNutritionist.DoesNotExist:
+                return JsonResponse({'error': 'Verify Nutritionist not found'}, status=404)
+    elif request.method == 'POST':
+        verifyNutritionist_data = JSONParser().parse(request)
+        verifyNutritionist_serializer = VerifyNutritionistSerializer(data = verifyNutritionist_data)
+        if verifyNutritionist_serializer.is_valid():
+            verifyNutritionist_serializer.save()
+            return JsonResponse("Verify Nutritionist Added Successfully", safe=False)
+        return JsonResponse("Failed to Add VerifyNutritionist", safe=False)
+    elif request.method == 'PUT':
+        verifyNutritionist_data = JSONParser().parse(request)
+        verifyNutritionists = VerifyNutritionist.objects.get(verifyNutritionist_id=verifyNutritionist_data['verify_id'])
+        verifyNutritionist_serializer = VerifyNutritionistSerializer(verifyNutritionists, data = verifyNutritionist_data)
+        if verifyNutritionist_serializer.is_valid():
+            verifyNutritionist_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        verifyNutritionist = VerifyNutritionist.objects.get(verify_id=pk)
+        verifyNutritionist.delete()
+        return JsonResponse("Verify Nutritionist was deleted Successfully", safe = False)
     
