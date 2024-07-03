@@ -1,11 +1,17 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import ColorContext from "./ColorContext"; // Import the context
+import ImageContext from "./ImageContext";
 
 function Footer() {
+  const { logo, setLogo } = useContext(ImageContext);
+
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
   return (
     <footer
       style={{
         color: "#ffffff",
-        background: "#898246",
+        background: secondaryColor,
         width: "100vw",
         height: "70px",
       }}

@@ -13,6 +13,9 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import { useState, useContext } from "react";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
 
 const pages = [
   { names: "JOURNAL", links: "/food-journal-home" },
@@ -25,6 +28,10 @@ function FoodJournalNavBar() {
   const activeLink = " bg-blue-100 text-black";
   const normalLink = "";
   const path = location.pathname;
+  const { logo, setLogo } = useContext(ImageContext);
+
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

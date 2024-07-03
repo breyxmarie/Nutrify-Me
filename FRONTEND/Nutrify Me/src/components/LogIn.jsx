@@ -17,7 +17,7 @@ function LogIn() {
   const query = new URLSearchParams(window.location.search);
   const myParam = query.get("success");
   //const myParam = query.get("param");
-  console.log(myParam);
+
   // if (myParam === "true") {
   //   toast.success("Registered Successfully");
   // }
@@ -34,12 +34,6 @@ function LogIn() {
   const [userData, setUserData] = useState();
   const GetData = () => {
     AxiosInstance.get(`user/`).then((res) => {
-      {
-        res.data.map((item, index) =>
-          console.log(item.username, item.password)
-        );
-      }
-      console.log(res.data);
       setUserData(res.data);
     });
   };
@@ -68,8 +62,6 @@ function LogIn() {
   let privilege;
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const onSubmitHandler = (data) => {
-    console.log({ data });
-
     // const userfound =
     //   userData.some((item) => item.username === data.username) &&
     //   ((item) => item.password === data.password);
@@ -79,16 +71,12 @@ function LogIn() {
         item.username === data.username && item.password === data.password
     );
 
-    userData.some((item, index) => console.log(item, index));
-
-    console.log(userfound);
     if (userfound) {
       const loggedInUser = userData.find(
         (user) =>
           user.username === data.username && user.password === data.password
       );
 
-      console.log("Logged In!", loggedInUser.privilege);
       // Import useHistory from react-router-dom
       //navigate("/user-home");
       setLoggedInUser(loggedInUser);

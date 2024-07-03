@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import MainUserNavbar from "./NavBars/MainUserNavbar";
 import UserNotLogInNavBar from "./NavBars/UserNotLogInNavBar";
 import Box from "@mui/material/Box";
@@ -19,8 +19,14 @@ import TextField from "@mui/material/TextField";
 import { PhoneInput } from "react-international-phone";
 import "react-international-phone/style.css";
 import emailjs from "@emailjs/browser";
+import ColorContext from "./ColorContext"; // Import the context
+import ImageContext from "./ImageContext";
 
 function UserFooterNotLogIn() {
+  const { logo, setLogo } = useContext(ImageContext);
+
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
   //! email stuff
   const form = useRef();
 
@@ -74,7 +80,7 @@ function UserFooterNotLogIn() {
     <footer className="footer" style={{ width: "100vw" }}>
       <div
         className="container"
-        style={{ background: "#E66253", color: "#ffffff", padding: 20 }}
+        style={{ background: primaryColor, color: "#ffffff", padding: 20 }}
       >
         <Grid container spacing={2}>
           <Grid item xs={4}>
@@ -179,7 +185,7 @@ function UserFooterNotLogIn() {
       <Grid
         container
         spacing={2}
-        sx={{ color: "#ffffff", background: "#898246" }}
+        sx={{ color: "#ffffff", background: secondaryColor }}
       >
         <Grid xs={4}>
           <p className="copyright" style={{ pl: 5 }}>

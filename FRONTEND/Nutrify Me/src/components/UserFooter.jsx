@@ -32,9 +32,13 @@ function UserFooter() {
   const form = useRef();
 
   const sendEmail = (e) => {
-    e.preventDefault();
-    setLogo("/images/snacks.png");
-    console.log(logo);
+    //e.preventDefault();
+    // const newLogo = "/images/snacks.png"; // Replace with actual new logo path
+    // setLogo(newLogo);
+    // // setLogo("/images/snacks.png");
+    // console.log(logo);
+    // setPrimaryColor("blue");
+    // console.log(primaryColor);
     // .sendForm("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", form.current, {
     //   publicKey: "YOUR_PUBLIC_KEY",
     // })
@@ -86,7 +90,24 @@ function UserFooter() {
       >
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <img src={logo} width="170px" height="170px"></img>
+            <Box
+              sx={{
+                borderRadius: 50,
+                border: 10,
+                borderColor: secondaryColor,
+                background: "#ffffff",
+                width: "200px",
+                height: "190px",
+                ml: 20,
+              }}
+            >
+              <img
+                src={logo}
+                width="100px"
+                height="120px"
+                style={{ marginTop: 20 }}
+              ></img>
+            </Box>
 
             <p>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do

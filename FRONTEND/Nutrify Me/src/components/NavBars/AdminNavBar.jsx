@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -17,9 +17,15 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import { useNavigate } from "react-router-dom";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
 
 function AdminNavBar() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const { logo, setLogo } = useContext(ImageContext);
+
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
   const navigate = useNavigate();
 
   const StyledLink = `
@@ -42,7 +48,7 @@ function AdminNavBar() {
 
   const pages = [
     { names: "HOME", links: "/admin-home" },
-    { names: "VERIFICATION", links: "/admin-verification" },
+    { names: "CHANGE THEME", links: "/admin-customization" },
   ];
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -96,7 +102,8 @@ function AdminNavBar() {
             }}
           >
             {/* <img src="/images/logo.png" alt="Logo" /> */}
-            <img src="/images/logo.png" alt="Logo" />
+            {/* // <img src="/images/logo.png" alt="Logo" /> */}
+            <img src={logo} alt="Logo" width="100" height="100" />
           </Typography>
 
           <Box
@@ -248,9 +255,17 @@ function AdminNavBar() {
                 <Button
                   variant="contained"
                   className="userButton"
-                  onMouseEnter={(e) => (e.target.style.background = "#E66253")}
-                  onMouseLeave={(e) => (e.target.style.background = "#E66253")}
-                  sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.background = primaryColor)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.background = primaryColor)
+                  }
+                  sx={{
+                    borderRadius: 4,
+                    background: primaryColor,
+                    mr: "15px ",
+                  }}
                 >
                   WELCOME {loggedInUser.first_name}!
                 </Button>

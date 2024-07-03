@@ -14,6 +14,9 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
+import { useState, useRef, useContext } from "react";
 
 const pages = [
   { names: "HOME", links: "/nutritionist-home" },
@@ -47,6 +50,10 @@ function NutritionistNavBar() {
   const normalLink = "";
   const path = location.pathname;
   const navigate = useNavigate();
+  const { logo, setLogo } = useContext(ImageContext);
+
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -93,7 +100,7 @@ function NutritionistNavBar() {
             }}
           >
             {/* <img src="/images/logo.png" alt="Logo" /> */}
-            <img src="/images/logo.png" alt="Logo" />
+            <img src="/images/logo.png" alt="Logo" width="80" height="120" />
           </Typography>
 
           <Box
@@ -233,9 +240,15 @@ function NutritionistNavBar() {
                 <Button
                   variant="contained"
                   className="userButton"
-                  onMouseOver={(e) => (e.target.style.background = "#E66253")}
-                  onMouseOut={(e) => (e.target.style.background = "#E66253")}
-                  sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                  onMouseOver={(e) =>
+                    (e.target.style.background = primaryColor)
+                  }
+                  onMouseOut={(e) => (e.target.style.background = primaryColor)}
+                  sx={{
+                    borderRadius: 4,
+                    background: primaryColor,
+                    mr: "15px ",
+                  }}
                 >
                   WELCOME {loggedInUser.first_name}!
                 </Button>

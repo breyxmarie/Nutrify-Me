@@ -16,6 +16,9 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import { useNavigate } from "react-router-dom";
+import { useState, useContext } from "react";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
 
 const pages = [
   { names: "HOME", links: "/user-home" },
@@ -52,6 +55,9 @@ function MainUserNavbar() {
   const path = location.pathname;
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const navigate = useNavigate();
+  const { logo, setLogo } = useContext(ImageContext);
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -98,7 +104,7 @@ function MainUserNavbar() {
             }}
           >
             {/* <img src="/images/logo.png" alt="Logo" /> */}
-            <img src="/images/logo.png" alt="Logo" />
+            <img src={logo} alt="Logo" width="80" height="120" />
           </Typography>
 
           <Box
@@ -250,9 +256,17 @@ function MainUserNavbar() {
                 <Button
                   variant="contained"
                   className="userButton"
-                  onMouseEnter={(e) => (e.target.style.background = "#E66253")}
-                  onMouseLeave={(e) => (e.target.style.background = "#E66253")}
-                  sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                  onMouseEnter={(e) =>
+                    (e.target.style.background = primaryColor)
+                  }
+                  onMouseLeave={(e) =>
+                    (e.target.style.background = primaryColor)
+                  }
+                  sx={{
+                    borderRadius: 4,
+                    background: primaryColor,
+                    mr: "15px ",
+                  }}
                 >
                   WELCOME {loggedInUser.first_name}!
                 </Button>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -43,9 +43,15 @@ import "./style.css";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import dayjs from "dayjs";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
 
 function FoodJournalHome() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
+  const { logo, setLogo } = useContext(ImageContext);
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
+
   //! get data
 
   const [carbs, setCarbs] = useState(0);
@@ -282,7 +288,8 @@ function FoodJournalHome() {
     },
     [`& .${linearProgressClasses.bar}`]: {
       borderRadius: 5,
-      backgroundColor: theme.palette.mode === "light" ? "#898246" : "#308fe8",
+      backgroundColor:
+        theme.palette.mode === "light" ? secondaryColor : "#308fe8",
     },
   }));
 
@@ -315,7 +322,7 @@ function FoodJournalHome() {
     transform: "translate(-50%, -50%)",
     minWidth: "90%", // Adjust minimum width as needed
     //bgcolor: "background.paper",
-    background: "#E66253",
+    background: primaryColor,
     boxShadow: 24,
     p: 4,
     borderRadius: 4,
@@ -684,7 +691,7 @@ function FoodJournalHome() {
             </Grid>
             <Grid xs={2}>
               <Button
-                sx={{ color: "#E66253", textDecoration: "underline" }}
+                sx={{ color: primaryColor, textDecoration: "underline" }}
                 onClick={() => handleSelectMeal(meal)}
               >
                 View Details{" "}
@@ -732,7 +739,7 @@ function FoodJournalHome() {
         <Box
           sx={{
             borderRadius: 0,
-            background: "#898246",
+            background: secondaryColor,
             color: "#ffffff",
             display: "inline-block",
             justifyItems: "right",
@@ -747,7 +754,7 @@ function FoodJournalHome() {
           <Box
             sx={{
               background: "#ffffff",
-              color: "#898246",
+              color: secondaryColor,
               mx: "20px",
               borderRadius: 2,
             }}
@@ -763,7 +770,7 @@ function FoodJournalHome() {
               <Box
                 sx={{
                   background: "#ffffff",
-                  color: "#898246",
+                  color: secondaryColor,
                   borderRadius: 2,
                   mx: 5,
                 }}
@@ -776,7 +783,7 @@ function FoodJournalHome() {
               <Box
                 sx={{
                   background: "#ffffff",
-                  color: "#E66253",
+                  color: primaryColor,
                   borderRadius: 2,
                   mx: 5,
                 }}
@@ -789,7 +796,7 @@ function FoodJournalHome() {
               <Box
                 sx={{
                   background: "#ffffff",
-                  color: "#898246",
+                  color: secondaryColor,
                   borderRadius: 2,
                   mx: 5,
                 }}
@@ -808,7 +815,7 @@ function FoodJournalHome() {
           <Grid xs={6}>
             <Button
               sx={{
-                background: "#E66253",
+                background: primaryColor,
                 borderRadius: 3,
                 color: "#ffffff",
                 px: 5,
@@ -885,7 +892,7 @@ function FoodJournalHome() {
                 <Button
                   sx={{
                     background: "#ffffff",
-                    color: "#E66253",
+                    color: primaryColor,
                     backgroundRadius: 10,
                   }}
                 >
@@ -917,7 +924,7 @@ function FoodJournalHome() {
             </Grid>
             <Grid xs={2}>
               <Button
-                sx={{ color: "#E66253", textDecoration: "underline" }}
+                sx={{ color: primaryColor, textDecoration: "underline" }}
                 onClick={() => handleSelectMeal(meal)}
               >
                 View Details{" "}
@@ -1642,7 +1649,7 @@ function FoodJournalHome() {
           <Button
             sx={{
               background: "#ffffff",
-              color: "#E66253",
+              color: primaryColor,
               backgroundRadius: 10,
             }}
             type="submit"
@@ -1712,7 +1719,7 @@ function FoodJournalHome() {
 
             <Button
               sx={{
-                background: "#E66253",
+                background: primaryColor,
                 borderRadius: 3,
                 color: "#ffffff",
                 px: 5,
@@ -1966,7 +1973,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleCaloriesBSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2019,7 +2026,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleFatBSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2070,7 +2077,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleProteinBSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2117,7 +2124,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleCarbsBSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2220,7 +2227,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleCaloriesLSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2267,7 +2274,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleFatLSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2318,7 +2325,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleProteinLSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2365,7 +2372,7 @@ function FoodJournalHome() {
                                       }
                                       onChange={handleCarbsLSliderChange}
                                       aria-labelledby="input-slider"
-                                      sx={{ color: "#898246" }}
+                                      sx={{ color: secondaryColor }}
                                     />
                                   </Grid>
                                   <Grid item>
@@ -2470,7 +2477,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCaloriesSSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2514,7 +2521,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleFatSSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2565,7 +2572,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleProteinSSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2612,7 +2619,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCarbsSSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2715,7 +2722,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCaloriesDSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2759,7 +2766,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleFatDSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2810,7 +2817,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleProteinDSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2857,7 +2864,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCarbsDSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -2887,7 +2894,7 @@ function FoodJournalHome() {
                   <button
                     style={{
                       background: "#ffffff",
-                      color: "#E66253",
+                      color: primaryColor,
                       backgroundRadius: 10,
                     }}
                     type="submit"
@@ -2907,7 +2914,7 @@ function FoodJournalHome() {
 
             <Button
               sx={{
-                background: "#E66253",
+                background: primaryColor,
                 borderRadius: 3,
                 color: "#ffffff",
                 px: 5,
@@ -3152,7 +3159,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCaloriesBSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3196,7 +3203,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleFatBSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3247,7 +3254,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleProteinBSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3294,7 +3301,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCarbsBSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3397,7 +3404,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCaloriesLSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3441,7 +3448,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleFatLSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3492,7 +3499,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleProteinLSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3539,7 +3546,7 @@ function FoodJournalHome() {
                                     }
                                     onChange={handleCarbsLSliderChange}
                                     aria-labelledby="input-slider"
-                                    sx={{ color: "#898246" }}
+                                    sx={{ color: secondaryColor }}
                                   />
                                 </Grid>
                                 <Grid item>
@@ -3644,7 +3651,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleCaloriesSSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -3688,7 +3695,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleFatSSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -3739,7 +3746,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleProteinSSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -3783,7 +3790,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleCarbsSSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -3886,7 +3893,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleCaloriesDSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -3930,7 +3937,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleFatDSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -3981,7 +3988,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleProteinDSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -4025,7 +4032,7 @@ function FoodJournalHome() {
                                   }
                                   onChange={handleCarbsDSliderChange}
                                   aria-labelledby="input-slider"
-                                  sx={{ color: "#898246" }}
+                                  sx={{ color: secondaryColor }}
                                 />
                               </Grid>
                               <Grid item>
@@ -4052,7 +4059,7 @@ function FoodJournalHome() {
                   <button
                     style={{
                       background: "#ffffff",
-                      color: "#E66253",
+                      color: primaryColor,
                       backgroundRadius: 10,
                     }}
                     type="submit"
@@ -4073,7 +4080,7 @@ function FoodJournalHome() {
           <Box
             sx={{
               borderRadius: 0,
-              background: "#898246",
+              background: secondaryColor,
               color: "#ffffff",
               display: "inline-block",
               justifyItems: "right",
@@ -4089,7 +4096,7 @@ function FoodJournalHome() {
             <Box
               sx={{
                 background: "#ffffff",
-                color: "#898246",
+                color: secondaryColor,
                 mx: "20px",
                 borderRadius: 2,
                 p: 4,
@@ -4107,7 +4114,7 @@ function FoodJournalHome() {
                 <Box
                   sx={{
                     background: "#ffffff",
-                    color: "#898246",
+                    color: secondaryColor,
                     borderRadius: 2,
                     mx: 5,
                   }}
@@ -4120,7 +4127,7 @@ function FoodJournalHome() {
                 <Box
                   sx={{
                     background: "#ffffff",
-                    color: "#E66253",
+                    color: primaryColor,
                     borderRadius: 2,
                     mx: 5,
                   }}
@@ -4133,7 +4140,7 @@ function FoodJournalHome() {
                 <Box
                   sx={{
                     background: "#ffffff",
-                    color: "#898246",
+                    color: secondaryColor,
                     borderRadius: 2,
                     mx: 5,
                   }}

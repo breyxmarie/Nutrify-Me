@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import * as React from "react";
 import { Line } from "react-chartjs-2";
 import Tooltip from "@mui/material/Tooltip";
@@ -19,9 +19,14 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 import { ArcElement } from "chart.js";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
 
 function FoodJournalProgressReport() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
+  const { logo, setLogo } = useContext(ImageContext);
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
 
   const [filterCondition, setFilterCondition] = useState("Weekly");
 
@@ -384,13 +389,13 @@ function FoodJournalProgressReport() {
 
           data: months.map((item) => [item.fat]),
           backgroundColor: [
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -686,13 +691,13 @@ function FoodJournalProgressReport() {
 
           data: yearData.map((item) => [item.fat]),
           backgroundColor: [
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
+            primaryColor,
+            secondaryColor,
+            primaryColor,
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -710,13 +715,13 @@ function FoodJournalProgressReport() {
 
           data: yearData.map((item) => [item.protein]),
           backgroundColor: [
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
+            primaryColor,
+            secondaryColor,
+            primaryColor,
+            secondaryColor,
+            primaryColor,
+            secondaryColor,
+            primaryColor,
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -785,7 +790,7 @@ function FoodJournalProgressReport() {
                   colorMap: {
                     type: "piecewise",
                     thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                    colors: ["#898246"],
+                    colors: [secondaryColor],
                   },
                 },
               ]}
@@ -807,7 +812,7 @@ function FoodJournalProgressReport() {
                   colorMap: {
                     type: "piecewise",
                     thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                    colors: ["#898246"],
+                    colors: [secondaryColor],
                   },
                 },
               ]}
@@ -905,24 +910,24 @@ function FoodJournalProgressReport() {
           label: "Systolic",
 
           lineTension: 0.1, // Adjust line smoothness
-          backgroundColor: "#898246", // Area fill color
-          borderColor: "#898246", // Line border color
-          pointBorderColor: "#898246", // Point border color
-          pointBackgroundColor: "#898246", // Point background color
-          pointHoverBackgroundColor: "#E66253", // Point hover background
-          pointHoverBorderColor: "#E66253", // Point hover border
+          backgroundColor: secondaryColor, // Area fill color
+          borderColor: secondaryColor, // Line border color
+          pointBorderColor: secondaryColor, // Point border color
+          pointBackgroundColor: secondaryColor, // Point background color
+          pointHoverBackgroundColor: primaryColor, // Point hover background
+          pointHoverBorderColor: primaryColor, // Point hover border
           data: sysData,
         },
         {
           label: "Diastolic",
 
           lineTension: 0.1, // Adjust line smoothness
-          backgroundColor: "#E66253", // Area fill color
-          borderColor: "#E66253", // Line border color
-          pointBorderColor: "#E66253", // Point border color
-          pointBackgroundColor: "#E66253", // Point background color
-          pointHoverBackgroundColor: "#898246", // Point hover background
-          pointHoverBorderColor: "#898246", // Point hover border
+          backgroundColor: primaryColor, // Area fill color
+          borderColor: primaryColor, // Line border color
+          pointBorderColor: primaryColor, // Point border color
+          pointBackgroundColor: primaryColor, // Point background color
+          pointHoverBackgroundColor: secondaryColor, // Point hover background
+          pointHoverBorderColor: secondaryColor, // Point hover border
           data: diaData,
         },
       ],
@@ -1071,24 +1076,24 @@ function FoodJournalProgressReport() {
           label: "Systolic",
 
           lineTension: 0.1, // Adjust line smoothness
-          backgroundColor: "#898246", // Area fill color
-          borderColor: "#898246", // Line border color
-          pointBorderColor: "#898246", // Point border color
-          pointBackgroundColor: "#898246", // Point background color
-          pointHoverBackgroundColor: "#E66253", // Point hover background
-          pointHoverBorderColor: "#E66253", // Point hover border
+          backgroundColor: secondaryColor, // Area fill color
+          borderColor: secondaryColor, // Line border color
+          pointBorderColor: secondaryColor, // Point border color
+          pointBackgroundColor: secondaryColor, // Point background color
+          pointHoverBackgroundColor: primaryColor, // Point hover background
+          pointHoverBorderColor: primaryColor, // Point hover border
           data: sysData,
         },
         {
           label: "Diastolic",
 
           lineTension: 0.1, // Adjust line smoothness
-          backgroundColor: "#E66253", // Area fill color
-          borderColor: "#E66253", // Line border color
-          pointBorderColor: "#E66253", // Point border color
-          pointBackgroundColor: "#E66253", // Point background color
-          pointHoverBackgroundColor: "#898246", // Point hover background
-          pointHoverBorderColor: "#898246", // Point hover border
+          backgroundColor: primaryColor, // Area fill color
+          borderColor: primaryColor, // Line border color
+          pointBorderColor: primaryColor, // Point border color
+          pointBackgroundColor: primaryColor, // Point background color
+          pointHoverBackgroundColor: secondaryColor, // Point hover background
+          pointHoverBorderColor: secondaryColor, // Point hover border
           data: diaData,
         },
       ],
@@ -1287,24 +1292,24 @@ function FoodJournalProgressReport() {
           label: "Systolic",
 
           lineTension: 0.1, // Adjust line smoothness
-          backgroundColor: "#898246", // Area fill color
-          borderColor: "#898246", // Line border color
-          pointBorderColor: "#898246", // Point border color
-          pointBackgroundColor: "#898246", // Point background color
-          pointHoverBackgroundColor: "#E66253", // Point hover background
-          pointHoverBorderColor: "#E66253", // Point hover border
+          backgroundColor: secondaryColor, // Area fill color
+          borderColor: secondaryColor, // Line border color
+          pointBorderColor: secondaryColor, // Point border color
+          pointBackgroundColor: secondaryColor, // Point background color
+          pointHoverBackgroundColor: primaryColor, // Point hover background
+          pointHoverBorderColor: primaryColor, // Point hover border
           data: sysYears,
         },
         {
           label: "Diastolic",
 
           lineTension: 0.1, // Adjust line smoothness
-          backgroundColor: "#E66253", // Area fill color
-          borderColor: "#E66253", // Line border color
-          pointBorderColor: "#E66253", // Point border color
-          pointBackgroundColor: "#E66253", // Point background color
-          pointHoverBackgroundColor: "#898246", // Point hover background
-          pointHoverBorderColor: "#898246", // Point hover border
+          backgroundColor: primaryColor, // Area fill color
+          borderColor: primaryColor, // Line border color
+          pointBorderColor: primaryColor, // Point border color
+          pointBackgroundColor: primaryColor, // Point background color
+          pointHoverBackgroundColor: secondaryColor, // Point hover background
+          pointHoverBorderColor: secondaryColor, // Point hover border
           data: diaYears,
         },
       ],
@@ -1421,13 +1426,13 @@ function FoodJournalProgressReport() {
 
           data: weeks.map((item) => [item.fat]),
           backgroundColor: [
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
             "#898246",
-            "#E66253",
+            primaryColor,
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -1453,13 +1458,13 @@ function FoodJournalProgressReport() {
 
           data: weeks.map((item) => [item.protein]),
           backgroundColor: [
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
+            primaryColor,
+            secondaryColor,
+            primaryColor,
+            secondaryColor,
+            primaryColor,
+            secondaryColor,
+            primaryColor,
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -1533,7 +1538,7 @@ function FoodJournalProgressReport() {
                   colorMap: {
                     type: "piecewise",
                     thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                    colors: ["#898246"],
+                    colors: [secondaryColor],
                   },
                 },
               ]}
@@ -1563,7 +1568,7 @@ function FoodJournalProgressReport() {
                   colorMap: {
                     type: "piecewise",
                     thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-                    colors: ["#898246"],
+                    colors: [secondaryColor],
                   },
                 },
               ]}
@@ -2419,7 +2424,7 @@ function FoodJournalProgressReport() {
           colorMap: {
             type: "piecewise",
             thresholds: [0, 10],
-            colors: ["#898246", "#898246"],
+            colors: [secondaryColor, secondaryColor],
           },
         },
       ]}
@@ -2657,7 +2662,7 @@ function FoodJournalProgressReport() {
             colorMap: {
               type: "piecewise",
               thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
-              colors: ["#E66253"],
+              colors: [primaryColor],
             },
           },
         ]}
@@ -2761,24 +2766,24 @@ function FoodJournalProgressReport() {
         label: "Systolic",
 
         lineTension: 0.1, // Adjust line smoothness
-        backgroundColor: "#898246", // Area fill color
-        borderColor: "#898246", // Line border color
-        pointBorderColor: "#898246", // Point border color
-        pointBackgroundColor: "#898246", // Point background color
-        pointHoverBackgroundColor: "#E66253", // Point hover background
-        pointHoverBorderColor: "#E66253", // Point hover border
+        backgroundColor: secondaryColor, // Area fill color
+        borderColor: secondaryColor, // Line border color
+        pointBorderColor: secondaryColor, // Point border color
+        pointBackgroundColor: secondaryColor, // Point background color
+        pointHoverBackgroundColor: primaryColor, // Point hover background
+        pointHoverBorderColor: primaryColor, // Point hover border
         data: [0, 0, 0, 0, 0, 0, 0],
       },
       {
         label: "Diastolic",
 
         lineTension: 0.1, // Adjust line smoothness
-        backgroundColor: "#E66253", // Area fill color
-        borderColor: "#E66253", // Line border color
-        pointBorderColor: "#E66253", // Point border color
-        pointBackgroundColor: "#E66253", // Point background color
-        pointHoverBackgroundColor: "#898246", // Point hover background
-        pointHoverBorderColor: "#898246", // Point hover border
+        backgroundColor: primaryColor, // Area fill color
+        borderColor: primaryColor, // Line border color
+        pointBorderColor: primaryColor, // Point border color
+        pointBackgroundColor: primaryColor, // Point background color
+        pointHoverBackgroundColor: secondaryColor, // Point hover background
+        pointHoverBorderColor: secondaryColor, // Point hover border
         data: [0, 0, 0, 0, 0, 0, 0],
       },
     ],
@@ -2867,9 +2872,9 @@ function FoodJournalProgressReport() {
               <Button
                 variant="contained"
                 className="userButton"
-                onMouseEnter={(e) => (e.target.style.background = "#E66253")}
-                onMouseLeave={(e) => (e.target.style.background = "#E66253")}
-                sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                onMouseEnter={(e) => (e.target.style.background = primaryColor)}
+                onMouseLeave={(e) => (e.target.style.background = primaryColor)}
+                sx={{ borderRadius: 4, background: primaryColor, mr: "15px " }}
               >
                 <img src="/images/filter.png" height="20px" />
                 FILTER BY: {filterCondition}
@@ -2923,9 +2928,9 @@ function FoodJournalProgressReport() {
               <Button
                 variant="contained"
                 className="userButton"
-                onMouseEnter={(e) => (e.target.style.background = "#E66253")}
-                onMouseLeave={(e) => (e.target.style.background = "#E66253")}
-                sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                onMouseEnter={(e) => (e.target.style.background = primaryColor)}
+                onMouseLeave={(e) => (e.target.style.background = primaryColor)}
+                sx={{ borderRadius: 4, background: primaryColor, mr: "15px " }}
               >
                 <img src="/images/filter.png" height="20px" />
                 THIS {thisText}
@@ -2983,9 +2988,9 @@ function FoodJournalProgressReport() {
               <Button
                 variant="contained"
                 className="userButton"
-                onMouseEnter={(e) => (e.target.style.background = "#E66253")}
-                onMouseLeave={(e) => (e.target.style.background = "#E66253")}
-                sx={{ borderRadius: 4, background: "#E66253", mr: "15px " }}
+                onMouseEnter={(e) => (e.target.style.background = primaryColor)}
+                onMouseLeave={(e) => (e.target.style.background = primaryColor)}
+                sx={{ borderRadius: 4, background: primaryColor, mr: "15px " }}
               >
                 <img src="/images/filter.png" height="20px" />
                 FILTER BY: {BPFilter}

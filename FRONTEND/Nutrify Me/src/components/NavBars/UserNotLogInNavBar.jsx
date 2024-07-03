@@ -14,7 +14,9 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 
 import { NavLink, Link, useLocation } from "react-router-dom";
-
+import { useState, useContext } from "react";
+import ColorContext from "../ColorContext"; // Import the context
+import ImageContext from "../ImageContext";
 import LogIn from "../LogIn";
 import Grid from "@mui/material/Grid";
 
@@ -55,6 +57,9 @@ function userNotLogInNavBar() {
   const activeLink = " bg-blue-100 text-black";
   const normalLink = "";
   const path = location.pathname;
+  const { logo, setLogo } = useContext(ImageContext);
+  const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
+    useContext(ColorContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -153,7 +158,7 @@ function userNotLogInNavBar() {
           </Box>
           <Grid container spacing={3} sx={{ mt: ".5px" }}>
             <Grid xs>
-              <img src="/images/logo.png" alt="Logo" />
+              <img src={logo} alt="Logo" width="80" height="120" />
             </Grid>
             <Grid xs={6} sx={{ mt: "20px" }}>
               <Box sx={{ alignItems: "center", mx: "20%" }}>
@@ -216,14 +221,14 @@ function userNotLogInNavBar() {
                         variant="contained"
                         className="userButton"
                         onMouseEnter={(e) =>
-                          (e.target.style.background = "#E66253")
+                          (e.target.style.background = primaryColor)
                         }
                         onMouseLeave={(e) =>
-                          (e.target.style.background = "#E66253")
+                          (e.target.style.background = primaryColor)
                         }
                         sx={{
                           borderRadius: 4,
-                          background: "#E66253",
+                          background: primaryColor,
                           mr: "15px ",
                         }}
                       >
