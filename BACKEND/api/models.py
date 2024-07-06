@@ -46,6 +46,7 @@ class Nutritionist(models.Model):
     schedule_time = JSONField()
     image = models.CharField(max_length=150)
     license_pic = models.CharField(max_length=200)
+    user_id =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings5")
 
     class Meta:
         db_table = "Nutritionist"

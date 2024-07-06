@@ -101,6 +101,11 @@ function ServerDay(props) {
 // *
 
 function TelemedicineHome() {
+  //! initialize variables
+  const [selectedDates, setSelectedDates] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  //!
+
   //! functions for calendar
 
   const [modalDayContent, setModalDayContent] = useState(<div>try</div>);
@@ -283,14 +288,19 @@ function TelemedicineHome() {
   // * Book Consultation modal
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setSelectedNutritionist(null);
+    setOpen(false);
+    setSelectedDates(null);
+    setTempNut(null);
+  };
 
   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    width: "50%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -350,8 +360,6 @@ function TelemedicineHome() {
   //     // Optional: Show an error message or notification
   //   }
   // };
-
-  const [selectedDates, setSelectedDates] = useState(null);
 
   // Define your list of available days (e.g., "Tuesday", "Friday", "Saturday")
   const [availableDays, setAvailableDays] = useState(["Wednesday"]);
@@ -777,6 +785,7 @@ function TelemedicineHome() {
       (nut) => nut.nutritionist_id === event.target.value
     );
     setTempNut(tempNut);
+    setSelectedDates(dayjs());
     console.log(tempNut);
     setNutritionistInformation(
       <Box>
@@ -1422,6 +1431,64 @@ function TelemedicineHome() {
   const [joined, setJoined] = useState(false);
   //
 
+  const submitAppointment = () => {
+    console.log(
+      selectedDates.format("YYYY-MM-DD"),
+      " ",
+      selectedTime,
+      " ",
+      selectedNutritionist,
+      " ",
+      loggedInUser.user_id
+    );
+    try {
+      AxiosInstance.post(`appointment/`, {
+        date: selectedDates.format("YYYY-MM-DD"),
+        time: selectedTime,
+        user_id: loggedInUser.user_id,
+        nutritionist_id: selectedNutritionist,
+      }).then((res) => {
+        console.log(res.data);
+        handleClose();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+
+    try {
+      AxiosInstance.post(`scheduledeck/`, {
+        nutritionist_id: selectedNutritionist,
+        time: selectedTime,
+        date: selectedDates.format("YYYY-MM-DD"),
+        type: "follow up",
+      }).then((res) => {
+        console.log(res.data);
+        handleClose();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+    setTempNut(null);
+    setSelectedDates(null);
+    GetData();
+  };
+
+  const handleChangeTime = (e) => {
+    console.log(e.target.value);
+
+    const inputTime = dayjs(e.target.value, "h:mm A"); // Parse input time with format "h:mm A"
+    const formattedTime = inputTime.format("HH:mm:ss"); // Format in 24-hour format with seconds
+
+    // Add desired seconds (optional)
+    // if (!formattedTime.includes(":10")) {
+    //   formattedTime += ":10";
+    // }
+
+    console.log(formattedTime);
+    setSelectedTime(formattedTime);
+  };
   return (
     <div
       className="content"
@@ -1463,7 +1530,7 @@ function TelemedicineHome() {
         />
       </LocalizationProvider> */}
       {/* ANother try */}
-      {!joined && (
+      {/* {!joined && (
         <Link
           to="/telemedicine-consultation"
           style={{
@@ -1472,7 +1539,7 @@ function TelemedicineHome() {
         >
           <button onClick={() => setJoined(true)}>Join Room</button>{" "}
         </Link>
-      )}
+      )} */}
       {joined && <VideoRoom />}
       {/*  */}
       {/* Video conferencing */}
@@ -1575,7 +1642,7 @@ function TelemedicineHome() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <h2>My Scheduled Appointments</h2>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 defaultValue={date}
                 loading={isLoading}
@@ -1608,8 +1675,8 @@ function TelemedicineHome() {
                   "& .MuiPickersDay-day": { backgroundColor: "#000000" },
                 }}
               />
-            </LocalizationProvider>
-            {DateModal}
+            </LocalizationProvider> */}
+            {/* {DateModal} */}
 
             {/* //! Calendar */}
             <div
@@ -1661,6 +1728,12 @@ function TelemedicineHome() {
                 px: 5,
                 py: 1,
                 fontSize: 20,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                  borderColor: "#E66253",
+                },
               }}
             >
               Book a Consultation
@@ -1694,41 +1767,16 @@ function TelemedicineHome() {
                     options={nutritionist}
                   /> */}
 
-                      <FormControl
-                        variant="standard"
-                        sx={{ width: "70%", background: "#ffffff" }}
-                      >
-                        <InputLabel id="demo-simple-select-filled-label">
-                          Nutritionist
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-filled-label"
-                          id="demo-simple-select-filled"
-                          value={selectedNutritionist}
-                          onChange={handleChange}
-                          name="nutritionist"
-                        >
-                          {nutritionist.map((option) => (
-                            <MenuItem
-                              key={option.nutritionist_id}
-                              value={option.nutritionist_id}
-                            >
-                              {option.first_name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
                       <br />
                       <br />
 
                       <Grid container spacing={2}>
-                        <Grid xs={6}>
+                        <Grid xs={0}>
                           {" "}
                           <Typography
                             id="modal-modal-description"
                             sx={{ mt: 2 }}
                           >
-                            Date of Consultation <br />
                             {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DatePicker
                                 sx={{ background: "#ffffff" }}
@@ -1754,9 +1802,52 @@ function TelemedicineHome() {
                             </LocalizationProvider> */}
                           </Typography>
                         </Grid>
-                        <Grid xs={6}>
-                          {" "}
-                          <Typography
+                        <Grid xs={4}>
+                          <FormControl
+                            variant="standard"
+                            sx={{ width: "70%", background: "#ffffff" }}
+                          >
+                            <InputLabel id="demo-simple-select-filled-label">
+                              Nutritionist
+                            </InputLabel>
+                            <Select
+                              labelId="demo-simple-select-filled-label"
+                              id="demo-simple-select-filled"
+                              value={selectedNutritionist}
+                              onChange={handleChange}
+                              name="nutritionist"
+                            >
+                              {nutritionist.map((option) => (
+                                <MenuItem
+                                  key={option.nutritionist_id}
+                                  value={option.nutritionist_id}
+                                >
+                                  {option.first_name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                          <Button
+                            variant="contained"
+                            sx={{
+                              float: "right",
+                              mx: "auto",
+                              display: "block",
+                              background: "#ffffff",
+                              color: "#E66253",
+                              fontSize: "20px",
+                              "&:hover": {
+                                backgroundColor: "#E66253",
+                                color: "#ffffff",
+                                border: 1,
+                                borderColor: "#ffffff",
+                              },
+                            }}
+                            onClick={submitAppointment}
+                          >
+                            Submit
+                          </Button>{" "}
+                          {/* <Typography
                             id="modal-modal-description"
                             sx={{ mt: 2 }}
                           >
@@ -1783,55 +1874,62 @@ function TelemedicineHome() {
                                 name="selectedTime"
                               />
                             </DemoContainer>
-                          </LocalizationProvider>
+                          </LocalizationProvider> */}
                         </Grid>
                       </Grid>
 
                       {/* <Button onClick={submission}>Book</Button> */}
-                      <Button
-                        type="submit"
-                        onClick={() => handleSubmit(onSubmit())}
-                      >
-                        Submit
-                      </Button>
                     </Grid>
                     <Grid xs={4}>
-                      {/* {nutritionistInformation} */}
-                      <img src={tempNut?.image} />
-                      {tempNut?.first_name} {tempNut?.last_name}
+                      {/* {nutritionistInformation} */}{" "}
+                      <img
+                        src={tempNut?.image}
+                        style={{ background: "#ffffff" }}
+                      />{" "}
                       <br />
-                      {tempNut?.schedule_day}
+                      Name: {tempNut?.first_name} {tempNut?.last_name}
                       <br />
-                      {tempNut?.schedule_time}
+                      <br />
+                      <Grid container spacing={2}>
+                        <Grid xs={6}>Days: {tempNut?.schedule_day}</Grid>
+                        <Grid xs={6}> Time {tempNut?.schedule_time}</Grid>
+                      </Grid>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label="Select a date"
-                          defaultValues={null}
-                          value={selectedDates}
-                          onChange={handleDateChanges}
-                          renderInput={(params) => <TextField {...params} />}
-                          shouldDisableDate={disableUnavailableDates}
-                          minDate={dayjs()}
-                          //  open // Keep the calendar open
-                        />
+                        {selectedDates ? (
+                          <>
+                            <DatePicker
+                              label="Select a date"
+                              defaultValues={null}
+                              value={selectedDates}
+                              onChange={handleDateChanges}
+                              renderInput={(params) => (
+                                <TextField {...params} />
+                              )}
+                              shouldDisableDate={disableUnavailableDates}
+                              minDate={dayjs()}
+                              //  open // Keep the calendar open
+                            />
+                            <Select
+                              labelId="demo-simple-select-filled-label"
+                              id="demo-simple-select-filled"
+                              // value={selectedNutritionist}
+                              onChange={handleChangeTime}
+                              name="type"
+                              width="100%"
+                              //  {...register("type")}
+                              //  error={errors.type ? true : false}
+                            >
+                              {freeTime?.map((option) => (
+                                <MenuItem key={option} value={option}>
+                                  {option}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </>
+                        ) : (
+                          <div></div>
+                        )}
                       </LocalizationProvider>
-                      <Select
-                        labelId="demo-simple-select-filled-label"
-                        id="demo-simple-select-filled"
-                        // value={selectedNutritionist}
-                        // onChange={handleChangeTime}
-                        name="type"
-                        width="100%"
-                        //  {...register("type")}
-                        //  error={errors.type ? true : false}
-                      >
-                        {freeTime?.map((option) => (
-                          <MenuItem key={option} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                      {timeDiv}
                     </Grid>
                   </Grid>
                 </Box>
@@ -1895,6 +1993,12 @@ function TelemedicineHome() {
                     px: 5,
                     py: 1,
                     fontSize: 20,
+                    "&:hover": {
+                      backgroundColor: "#ffffff",
+                      color: "#E66253",
+                      border: 1,
+                      borderColor: "#E66253",
+                    },
                   }}
                 >
                   <img src="/images/messages.png" width="30px" height="30px" />{" "}

@@ -24,7 +24,7 @@ class NutritionistSerializer(serializers.ModelSerializer):
                   'schedule_day' ,
                   'schedule_time',
                   'image',
-                  'license_pic')
+                  'license_pic', 'user_id')
         
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:

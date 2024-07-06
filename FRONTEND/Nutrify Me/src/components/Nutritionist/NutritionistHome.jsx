@@ -399,7 +399,7 @@ function NutritionistHome() {
                 </Button>
               </Typography>
               <br />
-              {appointmentData.length >= 3 ? (
+              {appointmentData.length >= 0 ? (
                 appointmentData
                   .slice(1)
                   .map((item, index) => (

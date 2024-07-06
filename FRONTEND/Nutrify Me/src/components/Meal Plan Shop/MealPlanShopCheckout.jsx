@@ -55,6 +55,7 @@ import {
   usePayPalCardFields,
 } from "@paypal/react-paypal-js";
 import PayPalPayment from "./PayPalPayment";
+import LalamoveApi from "./LalamoveApi";
 
 function MealPlanShopCheckout() {
   const { cartId } = useParams();
@@ -695,6 +696,38 @@ function MealPlanShopCheckout() {
   }
   //!
 
+  //! lalamove test
+  const [pickupLocation, setPickupLocation] = useState({});
+  const [deliveryLocation, setDeliveryLocation] = useState({});
+  const [goods, setGoods] = useState([]); // Array of items
+  const [quotes, setQuotes] = useState([]);
+  const [orderId, setOrderId] = useState(null);
+
+  const handleGetQuotes = async () => {
+    const fetchedQuotes = await LalamoveApi.getQuotes(
+      pickupLocation,
+      deliveryLocation,
+      goods
+    );
+    setQuotes(fetchedQuotes);
+  };
+
+  const handleCreateOrder = async (selectedQuote) => {
+    const orderDetails = {
+      // ... construct order details based on selected quote and additional information
+    };
+    const createdOrder = await LalamoveApi.createOrder(orderDetails);
+    setOrderId(createdOrder.id);
+  };
+
+  const handleTrackOrder = async () => {
+    if (orderId) {
+      const orderStatus = await LalamoveApi.trackOrder(orderId);
+      // Update UI based on order status
+    }
+  };
+  //!
+
   return (
     <div
       className="content"
@@ -705,6 +738,31 @@ function MealPlanShopCheckout() {
         color: "#000000",
       }}
     >
+      {/* //? */}
+      <div>
+        {/* ... input fields for pickup, delivery, goods */}
+        <button onClick={handleGetQuotes}>Get Quotes</button>
+        {quotes.length > 0 && (
+          <div>
+            {/* Display available quote options */}
+            <button onClick={() => handleCreateOrder(selectedQuote)}>
+              Create Order
+            </button>
+          </div>
+        )}
+        {orderId && (
+          <div>
+            <button onClick={handleTrackOrder}>Track Order</button>
+            {orderStatus && (
+              <div>
+                {/* Display order status information here */}
+                {/* Example: Show estimated delivery time, tracking URL, etc. */}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+      {/* //! */}
       <form onSubmit={handleSubmit1(onSubmitHandler1)}>
         <Typography
           sx={{ color: "#99756E", fontSize: "30px", fontWeight: "bold", m: 5 }}

@@ -96,6 +96,17 @@ def NutritionistAPI(request, pk=0):
         nutritionist.delete()
         return JsonResponse("Nutritionist was deleted Successfully", safe = False)
     
+@csrf_exempt
+def NutritionistAPIuser_id(request, user_id=0):
+    if request.method == 'GET':
+        if user_id:  # Check if pk is not specified (meaning get all users)
+            try:
+                nutritionist = Nutritionist.objects.get(user_id=user_id)
+                serializer = NutritionistSerializer(nutritionist)
+                return JsonResponse(serializer.data, safe=False)
+            except Nutritionist.DoesNotExist:
+                return JsonResponse({'error': 'Nutritionist not found'}, status=404)
+  
 
 @csrf_exempt
 def AppointmentAPI(request, pk=0):

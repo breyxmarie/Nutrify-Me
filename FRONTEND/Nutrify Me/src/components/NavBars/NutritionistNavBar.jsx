@@ -74,7 +74,7 @@ function NutritionistNavBar() {
         navigate("/");
         break;
       case "Profile":
-        navigate("/user-profile");
+        navigate("/nutritionist-profile");
         break;
     }
     setAnchorElUser(null);
