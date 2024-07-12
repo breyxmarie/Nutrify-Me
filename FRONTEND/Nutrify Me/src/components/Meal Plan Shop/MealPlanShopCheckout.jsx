@@ -57,6 +57,8 @@ import {
 import PayPalPayment from "./PayPalPayment";
 import LalamoveApi from "./LalamoveApi";
 
+import SDKClient from "@lalamove/lalamove-js";
+
 function MealPlanShopCheckout() {
   const { cartId } = useParams();
   const navigate = useNavigate();
@@ -704,10 +706,37 @@ function MealPlanShopCheckout() {
   const [orderId, setOrderId] = useState(null);
 
   const handleGetQuotes = async () => {
+    const pickupLocations = {
+      latitude: 14.599512,
+      longitude: 121.018872,
+      // ... other pickup location details
+    };
+
+    const deliveryLocations = {
+      latitude: 14.67609,
+      longitude: 121.017222,
+      // ... other delivery location details
+    };
+
+    const goodss = {
+      description: "Documents",
+      quantity: 1,
+      weight: 0.5,
+      // ... other goods details
+    };
+
+    setTimeout(async () => {
+      try {
+        const quotationData = await LalamoveApi.createQuotation();
+        console.log(quotationData);
+      } catch (error) {
+        console.error("Error creating quotation:", error.message);
+      }
+    }, 2000); // Simulate a 2-second delay
     const fetchedQuotes = await LalamoveApi.getQuotes(
-      pickupLocation,
-      deliveryLocation,
-      goods
+      pickupLocations,
+      deliveryLocations,
+      goodss
     );
     setQuotes(fetchedQuotes);
   };
@@ -726,7 +755,60 @@ function MealPlanShopCheckout() {
       // Update UI based on order status
     }
   };
+
+  // const Lalamove = require("lalamovesdks");
+
+  // // Replace with your Lalamove API credentials for sandbox or production
+  // const apiKey = "YOUR_API_KEY";
+  // const apiSecret = "YOUR_API_SECRET";
+
+  // const client = new Lalamove.Client({
+  //   apiKey,
+  //   apiSecret,
+  //   sandbox: true, // Set to true for sandbox environment
+  // });
+
+  // const quotationData = {
+  //   serviceType: "MOTORCYCLE", // Adjust based on your needs (e.g., CAR, VAN)
+  //   specialRequests: ["THERMAL_BAG_1"], // Optional - adjust if needed
+  //   language: "en_PH",
+  //   stops: [
+  //     {
+  //       coordinates: {
+  //         lat: 14.599512, // Latitude of Ortigas Center, Pasig City
+  //         lng: 121.018872, // Longitude of Ortigas Center, Pasig City
+  //       },
+  //       address: "Ortigas Center, Pasig City",
+  //     },
+  //     {
+  //       coordinates: {
+  //         lat: 14.604133, // Latitude of SM Mall of Asia, Pasay City
+  //         lng: 121.006311, // Longitude of SM Mall of Asia, Pasay City
+  //       },
+  //       address: "SM Mall of Asia, Pasay City",
+  //     },
+  //   ],
+  //   item: {
+  //     quantity: "12",
+  //     weight: "LESS_THAN_3_KG",
+  //     categories: ["FOOD_DELIVERY", "OFFICE_ITEM"],
+  //     handlingInstructions: ["KEEP_UPRIGHT"],
+  //   },
+  // };
+
+  // async function createQuotation() {
+  //   try {
+  //     const quotation = await client.quotations.create(quotationData);
+  //     console.log("Quotation created successfully:", quotation);
+  //   } catch (error) {
+  //     console.error("Error creating quotation:", error);
+  //   }
+  // }
+
+  // createQuotation();
   //!
+
+  // TODO lalamove api
 
   return (
     <div

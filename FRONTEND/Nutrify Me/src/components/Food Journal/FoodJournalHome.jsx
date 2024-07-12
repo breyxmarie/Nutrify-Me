@@ -68,6 +68,13 @@ function FoodJournalHome() {
           (item) => item.date == day && item.user_id == loggedInUser.user_id
         )
       );
+
+      console.log(
+        res.data.filter(
+          (items) => items.date == day && items.user_id == loggedInUser.user_id
+        )
+        //[0].journal_id
+      );
       // console.log( setTimeDiv
       //   res.data.filter(
       //     (item) => item.date == day && item.user_id == loggedInUser.user_id
@@ -76,7 +83,9 @@ function FoodJournalHome() {
 
       try {
         getfoodEntryData(
-          res.data.filter((item) => item.date == day)[0].journal_id
+          res.data.filter(
+            (item) => item.date == day && item.user_id == loggedInUser.user_id
+          )[0].journal_id
         );
       } catch {
         setFoodEntry([]);
@@ -173,8 +182,10 @@ function FoodJournalHome() {
     }
   };
 
-  const onDateClickHandle = (day, dayStr) => {
+  const onDateClickHandle = async (day, dayStr) => {
     setSelectedDate(day);
+    getJournalData(dayjs(day).format("YYYY-MM-DD"));
+
     showDetailsHandle(dayStr);
   };
 
@@ -964,6 +975,8 @@ function FoodJournalHome() {
   };
 
   // TODO slider
+
+  const [dinnerFood, setDinnerFood] = useState(null);
   const Input = styled(MuiInput)`
     width: 42px;
   `;
@@ -1564,6 +1577,7 @@ function FoodJournalHome() {
     }
   };
   //?
+
   return (
     <div
       className="content"
@@ -1576,6 +1590,20 @@ function FoodJournalHome() {
         color: "#000000",
       }}
     >
+      {/* //! weekly */}
+      <div className="calendar">
+        {renderHeader()}
+        {renderDays()}
+        {renderCells()}
+        {renderFooter()}
+      </div>
+
+      {renderHeader()}
+      {renderDays()}
+      {renderCells()}
+      {renderFooter()}
+
+      {/* //! //! */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -1686,8 +1714,8 @@ function FoodJournalHome() {
         </Box>
       </Modal> */}
       {/*  //! */}
-      <div className="calendar-app">
-        <div className="day-labels">{/* Days of the week */}</div>
+      {/* <div className="calendar-app">
+        <div className="day-labels"></div>
         <Calendar
           onChange={onChange}
           value={date}
@@ -1696,22 +1724,14 @@ function FoodJournalHome() {
         {isPopupVisible && (
           <div className="popup">
             <h3>Date: {date.toLocaleDateString()}</h3>
-            {/* Your specific popup content here */}
+
             <button onClick={handlePopupClose}>Close</button>
           </div>
         )}
-      </div>
-      {/* //! weekly */}
-      <div className="calendar">
-        {renderHeader()}
-        {renderDays()}
-        {renderCells()}
-        {renderFooter()}
-      </div>
-      {/* //! //! */}
+      </div> */}
 
       {console.log(journalEntry)}
-      {journalEntry.length > 0 ? (
+      {journalEntry.length > 0 && foodEntry.length > 0 ? (
         <Grid container spacing={2}>
           <Grid xs={6}> </Grid>
           <Grid xs={6}>
@@ -1742,7 +1762,7 @@ function FoodJournalHome() {
                     <Grid xs={2}>
                       <img src="/images/food journal icon.png" />
                     </Grid>
-                    <Grid xs={8}>View Journal Entry</Grid>
+                    <Grid xs={8}>Journal Entry</Grid>
                     <Grid xs={2}>
                       <Button sx={{ float: "right" }} onClick={handleClose1}>
                         <img src="/images/close.png" height="10" weight="10" />
@@ -1896,7 +1916,7 @@ function FoodJournalHome() {
                                 name="breakfast_food"
                                 fullWidth
                                 margin="dense"
-                                defaultValue={"20"}
+                                defaultValue={foodEntry[0].food}
                                 {...register1("breakfast_food")}
                                 error={errors.breakfast_food ? true : false}
                                 label="Food Eaten:"
@@ -1969,7 +1989,7 @@ function FoodJournalHome() {
                                       value={
                                         caloriesBvalue != 0
                                           ? caloriesBvalue
-                                          : 720
+                                          : foodEntry[0]?.calories
                                       }
                                       onChange={handleCaloriesBSliderChange}
                                       aria-labelledby="input-slider"
@@ -1977,13 +1997,14 @@ function FoodJournalHome() {
                                     />
                                   </Grid>
                                   <Grid item>
+                                    {console.log(foodEntry)}
                                     <Input
                                       // value={caloriesBvalue}
 
                                       value={
                                         caloriesBvalue != 0
                                           ? caloriesBvalue
-                                          : 720
+                                          : foodEntry[0]?.calories
                                       }
                                       size="small"
                                       onChange={handleCaloriesBInputChange}
@@ -2022,7 +2043,7 @@ function FoodJournalHome() {
                                       value={
                                         typeof fatBvalue === "number"
                                           ? fatBvalue
-                                          : 0
+                                          : foodEntry[0]?.fat
                                       }
                                       onChange={handleFatBSliderChange}
                                       aria-labelledby="input-slider"
@@ -2031,7 +2052,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={fatBvalue}
+                                      value={
+                                        fatBvalue != 0
+                                          ? fatBvalue
+                                          : foodEntry[0]?.fat
+                                      }
                                       size="small"
                                       onChange={handleFatBInputChange}
                                       onBlur={handleFatBBlur}
@@ -2071,9 +2096,11 @@ function FoodJournalHome() {
                                       label=""
                                       {...register("breakfast_protein")}
                                       value={
-                                        typeof proteinBvalue === "number"
+                                        typeof proteinBvalue != 0
                                           ? proteinBvalue
-                                          : 0
+                                          : foodEntry[0]?.protein
+
+                                        //foodEntry[0]?.protein
                                       }
                                       onChange={handleProteinBSliderChange}
                                       aria-labelledby="input-slider"
@@ -2082,7 +2109,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={proteinBvalue}
+                                      value={
+                                        proteinBvalue != 0
+                                          ? proteinBvalue
+                                          : foodEntry[0]?.protein
+                                      }
                                       size="small"
                                       onChange={handleProteinBInputChange}
                                       onBlur={handleProteinBBlur}
@@ -2118,9 +2149,9 @@ function FoodJournalHome() {
                                       label=""
                                       {...register("breakfast_carbs")}
                                       value={
-                                        typeof carbsBvalue === "number"
+                                        carbsBvalue != 0
                                           ? carbsBvalue
-                                          : 0
+                                          : foodEntry[0]?.carbs
                                       }
                                       onChange={handleCarbsBSliderChange}
                                       aria-labelledby="input-slider"
@@ -2129,7 +2160,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={carbsBvalue}
+                                      value={
+                                        carbsBvalue != 0
+                                          ? carbsBvalue
+                                          : foodEntry[0]?.carbs
+                                      }
                                       size="small"
                                       onChange={handleCarbsBInputChange}
                                       onBlur={handleCarbsBBlur}
@@ -2155,6 +2190,7 @@ function FoodJournalHome() {
                                 id="lunch_food"
                                 name="lunch_food"
                                 margin="dense"
+                                defaultValue={foodEntry[1].food}
                                 {...register("lunch_food")}
                                 error={errors.lunch_food ? true : false}
                                 label="Food Eaten:"
@@ -2221,9 +2257,9 @@ function FoodJournalHome() {
                                       label=""
                                       {...register("lunch_calories")}
                                       value={
-                                        typeof caloriesLvalue === "number"
+                                        caloriesLvalue != 0
                                           ? caloriesLvalue
-                                          : 0
+                                          : foodEntry[1]?.calories
                                       }
                                       onChange={handleCaloriesLSliderChange}
                                       aria-labelledby="input-slider"
@@ -2232,7 +2268,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={caloriesLvalue}
+                                      value={
+                                        caloriesLvalue != 0
+                                          ? caloriesLvalue
+                                          : foodEntry[0]?.calories
+                                      }
                                       size="small"
                                       onChange={handleCaloriesLInputChange}
                                       onBlur={handleCaloriesLBlur}
@@ -2268,9 +2308,9 @@ function FoodJournalHome() {
                                       label=""
                                       {...register("lunch_fat")}
                                       value={
-                                        typeof fatLvalue === "number"
+                                        fatLvalue != 0
                                           ? fatLvalue
-                                          : 0
+                                          : foodEntry[1]?.fat
                                       }
                                       onChange={handleFatLSliderChange}
                                       aria-labelledby="input-slider"
@@ -2279,7 +2319,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={fatLvalue}
+                                      value={
+                                        fatLvalue != 0
+                                          ? fatLvalue
+                                          : foodEntry[1]?.fat
+                                      }
                                       size="small"
                                       onChange={handleFatLInputChange}
                                       onBlur={handleFatLBlur}
@@ -2319,9 +2363,9 @@ function FoodJournalHome() {
                                       label=""
                                       {...register("lunch_protein")}
                                       value={
-                                        typeof proteinLvalue === "number"
+                                        proteinLvalue != 0
                                           ? proteinLvalue
-                                          : 0
+                                          : foodEntry[1]?.protein
                                       }
                                       onChange={handleProteinLSliderChange}
                                       aria-labelledby="input-slider"
@@ -2330,7 +2374,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={proteinLvalue}
+                                      value={
+                                        proteinLvalue != 0
+                                          ? proteinLvalue
+                                          : foodEntry[1]?.protein
+                                      }
                                       size="small"
                                       onChange={handleProteinLInputChange}
                                       onBlur={handleProteinLBlur}
@@ -2366,9 +2414,9 @@ function FoodJournalHome() {
                                       label=""
                                       {...register("lunch_carbs")}
                                       value={
-                                        typeof carbsLvalue === "number"
+                                        carbsLvalue != 0
                                           ? carbsLvalue
-                                          : 0
+                                          : foodEntry[1]?.carbs
                                       }
                                       onChange={handleCarbsLSliderChange}
                                       aria-labelledby="input-slider"
@@ -2377,7 +2425,11 @@ function FoodJournalHome() {
                                   </Grid>
                                   <Grid item>
                                     <Input
-                                      value={carbsLvalue}
+                                      value={
+                                        carbsLvalue != 0
+                                          ? carbsLvalue
+                                          : foodEntry[1]?.carbs
+                                      }
                                       size="small"
                                       onChange={handleCarbsLInputChange}
                                       onBlur={handleCarbsLBlur}
@@ -2405,7 +2457,8 @@ function FoodJournalHome() {
                                 name="title"
                                 fullWidth
                                 margin="dense"
-                                {...register("snack_food")}
+                                defaultValue={foodEntry[2].food}
+                                // {...register("snack_food")}
                                 error={errors.snack_food ? true : false}
                                 label="Food Eaten:"
                                 variant="filled"
@@ -2471,9 +2524,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("snack_calories")}
                                     value={
-                                      typeof caloriesSvalue === "number"
+                                      caloriesSvalue != 0
                                         ? caloriesSvalue
-                                        : 0
+                                        : foodEntry[2]?.calories
                                     }
                                     onChange={handleCaloriesSSliderChange}
                                     aria-labelledby="input-slider"
@@ -2482,7 +2535,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={caloriesSvalue}
+                                    value={
+                                      caloriesSvalue != 0
+                                        ? caloriesSvalue
+                                        : foodEntry[2]?.calories
+                                    }
                                     size="small"
                                     onChange={handleCaloriesSInputChange}
                                     onBlur={handleCaloriesSBlur}
@@ -2515,9 +2572,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("snack_fat")}
                                     value={
-                                      typeof fatSvalue === "number"
+                                      fatSvalue != 0
                                         ? fatSvalue
-                                        : 0
+                                        : foodEntry[2]?.fat
                                     }
                                     onChange={handleFatSSliderChange}
                                     aria-labelledby="input-slider"
@@ -2526,7 +2583,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={fatSvalue}
+                                    value={
+                                      fatSvalue != 0
+                                        ? fatSvalue
+                                        : foodEntry[2]?.fat
+                                    }
                                     size="small"
                                     onChange={handleFatSInputChange}
                                     onBlur={handleFatSBlur}
@@ -2566,9 +2627,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("snack_protein")}
                                     value={
-                                      typeof proteinSvalue === "number"
+                                      proteinSvalue != 0
                                         ? proteinSvalue
-                                        : 0
+                                        : foodEntry[2]?.protein
                                     }
                                     onChange={handleProteinSSliderChange}
                                     aria-labelledby="input-slider"
@@ -2577,7 +2638,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={proteinSvalue}
+                                    value={
+                                      proteinSvalue != 0
+                                        ? proteinSvalue
+                                        : foodEntry[2]?.protein
+                                    }
                                     size="small"
                                     onChange={handleProteinSInputChange}
                                     onBlur={handleProteinSBlur}
@@ -2613,9 +2678,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("snack_carbs")}
                                     value={
-                                      typeof carbsSvalue === "number"
+                                      carbsSvalue != 0
                                         ? carbsSvalue
-                                        : 0
+                                        : foodEntry[2]?.carbs
                                     }
                                     onChange={handleCarbsSSliderChange}
                                     aria-labelledby="input-slider"
@@ -2624,7 +2689,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={carbsSvalue}
+                                    value={
+                                      carbsSvalue != 0
+                                        ? carbsSvalue
+                                        : foodEntry[2]?.carbs
+                                    }
                                     size="small"
                                     onChange={handleCarbsSInputChange}
                                     onBlur={handleCarbsSBlur}
@@ -2648,6 +2717,30 @@ function FoodJournalHome() {
                               <TextField
                                 id="dinner_food"
                                 name="dinner_food"
+                                defaultValue={foodEntry[3].food}
+                                fullWidth
+                                label="Food Eaten:"
+                                //    {...register("dinner_food")}
+                                //  {...register1("title")}
+                                // error={errors.title ? true : false}
+                                // id="filled-basic"
+                                // label="Title"
+                                // variant="filled"
+                                // sx={{ mr: 2 }}
+                                // value={idToCall}
+                                // onChange={(e) => setIdToCall(e.target.value)}
+                              />
+
+                              <TextField
+                                id="dinner_food"
+                                name="dinner_food"
+                                defaultValue={foodEntry[3].food}
+                                // value={
+                                //   dinnerFood === null
+                                //     ? foodEntry[3]?.food
+                                //     : "dinnerFood"
+                                // }
+                                //  onChange={(e) => setDinnerFood(e.target.value)}
                                 margin="dense"
                                 {...register("dinner_food")}
                                 error={errors.title ? true : false}
@@ -2716,9 +2809,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("dinner_calories")}
                                     value={
-                                      typeof caloriesDvalue === "number"
+                                      caloriesDvalue != 0
                                         ? caloriesDvalue
-                                        : 0
+                                        : foodEntry[3]?.calories
                                     }
                                     onChange={handleCaloriesDSliderChange}
                                     aria-labelledby="input-slider"
@@ -2727,7 +2820,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={caloriesDvalue}
+                                    value={
+                                      caloriesDvalue != 0
+                                        ? caloriesDvalue
+                                        : foodEntry[3]?.calories
+                                    }
                                     size="small"
                                     onChange={handleCaloriesDInputChange}
                                     onBlur={handleCaloriesDBlur}
@@ -2760,9 +2857,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("dinner_fat")}
                                     value={
-                                      typeof fatDvalue === "number"
+                                      fatDvalue != 0
                                         ? fatDvalue
-                                        : 0
+                                        : foodEntry[3]?.fat
                                     }
                                     onChange={handleFatDSliderChange}
                                     aria-labelledby="input-slider"
@@ -2771,7 +2868,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={fatDvalue}
+                                    value={
+                                      fatDvalue != 0
+                                        ? fatDvalue
+                                        : foodEntry[3]?.fat
+                                    }
                                     size="small"
                                     onChange={handleFatDInputChange}
                                     onBlur={handleFatDBlur}
@@ -2811,9 +2912,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("dinner_protein")}
                                     value={
-                                      typeof proteinDvalue === "number"
+                                      proteinDvalue != 0
                                         ? proteinDvalue
-                                        : 0
+                                        : foodEntry[3]?.protein
                                     }
                                     onChange={handleProteinDSliderChange}
                                     aria-labelledby="input-slider"
@@ -2822,7 +2923,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={proteinDvalue}
+                                    value={
+                                      proteinDvalue != 0
+                                        ? proteinDvalue
+                                        : foodEntry[3]?.protein
+                                    }
                                     size="small"
                                     onChange={handleProteinDInputChange}
                                     onBlur={handleProteinDBlur}
@@ -2858,9 +2963,9 @@ function FoodJournalHome() {
                                     label=""
                                     {...register("dinner_carbs")}
                                     value={
-                                      typeof carbsDvalue === "number"
+                                      carbsDvalue != 0
                                         ? carbsDvalue
-                                        : 0
+                                        : foodEntry[3]?.carbs
                                     }
                                     onChange={handleCarbsDSliderChange}
                                     aria-labelledby="input-slider"
@@ -2869,7 +2974,11 @@ function FoodJournalHome() {
                                 </Grid>
                                 <Grid item>
                                   <Input
-                                    value={carbsDvalue}
+                                    value={
+                                      carbsDvalue != 0
+                                        ? carbsDvalue
+                                        : foodEntry[3]?.carbs
+                                    }
                                     size="small"
                                     onChange={handleCarbsDInputChange}
                                     onBlur={handleCarbsDBlur}
@@ -4150,24 +4259,24 @@ function FoodJournalHome() {
               </Grid>
             </Grid>
           </Box>
-          <Typography>{journalEntry[0].title}</Typography>
-          <Typography>{journalEntry[0].entry}</Typography>
-          <Typography>{journalEntry[0].date}</Typography>
+          <Typography>{journalEntry[0]?.title}</Typography>
+          <Typography>{journalEntry[0]?.entry}</Typography>
+          <Typography>{journalEntry[0]?.date}</Typography>
 
           <br />
           <Grid container spacing={2}>
             <Grid xs={6}>
               {" "}
               <Typography sx={{ fontSize: "30px" }}>
-                {journalEntry[0].title}
+                {journalEntry[0]?.title}
               </Typography>{" "}
               <br />
-              <Typography>{journalEntry[0].entry}</Typography>
+              <Typography>{journalEntry[0]?.entry}</Typography>
             </Grid>
             <Grid xs={6}>
               {" "}
-              <Typography>{journalEntry[0].date}</Typography>
-              {dayjs(journalEntry[0].date).format("dddd, MMMM D, YYYY")};
+              <Typography>{journalEntry[0]?.date}</Typography>
+              {dayjs(journalEntry[0]?.date).format("dddd, MMMM D, YYYY")};
             </Grid>
           </Grid>
         </>

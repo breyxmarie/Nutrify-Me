@@ -90,8 +90,10 @@ function MealPlanGeneratorQuestion() {
   ];
 
   //!
-  const API_ID = "c4463c1b";
-  const API_KEY = "271feabad8974932420da2460b71ae78";
+  // const API_ID = "c4463c1b";
+  // const API_KEY = "271feabad8974932420da2460b71ae78";
+  const API_ID = "f83fcc7d";
+  const API_KEY = "2db949a6f3a14546f7fe3f025b737d1c";
 
   // TODO: sa q yun query stuff such as cuisine, chicken, meat, fish
   // TODO dishType kung main chuvanes
@@ -4127,6 +4129,12 @@ function MealPlanGeneratorQuestion() {
   };
   //?
 
+  const trySomething = async (deets) => {
+    await axios.get(URL + deets).then((res) => {
+      console.log(res);
+    });
+  };
+
   return (
     <div
       className="content"
@@ -4483,6 +4491,16 @@ function MealPlanGeneratorQuestion() {
       {/* {Object.keys(generatedMeal.meals).forEach((meal) => {
         console.log(meal);
       })} */}
+
+      <button
+        onClick={() =>
+          trySomething(
+            `q=&dishType=main&mealType=lunch&cuisineType=american&calories=600-1000`
+          )
+        }
+      >
+        try
+      </button>
     </div>
   );
 }
