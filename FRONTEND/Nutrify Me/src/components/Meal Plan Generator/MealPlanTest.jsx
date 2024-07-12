@@ -592,9 +592,15 @@ function MealPlanTest() {
 
     // for (let i = 0; i < 7; i++) {
 
-    if (selectedDiet !== null && selectedAllergen !== null) {
+    if (
+      selectedDiet !== null &&
+      selectedAllergen !== null &&
+      selectedCuisine.length >= 1
+    ) {
       if (selectedAllergen === "None") {
         if (selectedDiet === "High-Protein") {
+          console.log("no allergen and high protein");
+
           const diet = selectedDiet.toLowerCase();
 
           let cuisineFood = [];
@@ -658,9 +664,59 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
+          console.log(cuisineFood);
+
+          const tempB = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&diet=${diet}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+          );
+          const tempL = await getRecipesApi(
+            `q=&dishType=main&mealType=lunch&diet=${diet}&calories=${cal.minlunch}-${cal.maxlunch}`
+          );
+          const tempS = await getRecipesApi(
+            `q=snack&mealType=snack&diet=${diet}&calories=${cal.minsnack}-${cal.maxsnack}`
+          );
+          const tempD = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&diet=${diet}&calories=${cal.mindinner}-${cal.maxdinner}`
+          );
+
+          {
+            cuisineFood.map((item) =>
+              item.meals.map((items, index) => {
+                if (items.length > 0) {
+                  console.log("has content");
+                } else {
+                  console.log("no content");
+
+                  switch (index) {
+                    case 0:
+                      {
+                        tempB.map((item) => items.push(item));
+                      }
+                      break;
+                    case 1:
+                      {
+                        tempL.map((item) => items.push(item));
+                      }
+                      break;
+                    case 2:
+                      {
+                        tempS.map((item) => items.push(item));
+                      }
+                      break;
+                    case 3:
+                      {
+                        tempD.map((item) => items.push(item));
+                      }
+                      break;
+                  }
+
+                  //   const temp = getRecipesApi()
+                }
+              })
+            );
+          }
 
           setGeneratedMeal(randomizeFood(cuisineFood));
-          console.log("no allergen and high protein");
         } else if (selectedDiet === "High Blood Friendly") {
           const diet = selectedDiet.toLowerCase();
 
@@ -726,91 +782,551 @@ function MealPlanTest() {
             cuisineFood.push({ cuisine, meals });
           }
           console.log(cuisineFood);
-          // setGeneratedMeal(randomizeFood(cuisineFood));
+
+          const tempB = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&health=DASH&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+          );
+          const tempL = await getRecipesApi(
+            `q=&dishType=main&mealType=lunch&health=DASH&calories=${cal.minlunch}-${cal.maxlunch}`
+          );
+          const tempS = await getRecipesApi(
+            `q=snack&mealType=snack&health=DASH&calories=${cal.minsnack}-${cal.maxsnack}`
+          );
+          const tempD = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&health=DASH&calories=${cal.mindinner}-${cal.maxdinner}`
+          );
+
+          {
+            cuisineFood.map((item) =>
+              item.meals.map((items, index) => {
+                if (items.length > 0) {
+                  console.log("has content");
+                } else {
+                  console.log("no content");
+
+                  switch (index) {
+                    case 0:
+                      {
+                        tempB.map((item) => items.push(item));
+                      }
+                      break;
+                    case 1:
+                      {
+                        tempL.map((item) => items.push(item));
+                      }
+                      break;
+                    case 2:
+                      {
+                        tempS.map((item) => items.push(item));
+                      }
+                      break;
+                    case 3:
+                      {
+                        tempD.map((item) => items.push(item));
+                      }
+                      break;
+                  }
+
+                  //   const temp = getRecipesApi()
+                }
+              })
+            );
+          }
+
+          setGeneratedMeal(randomizeFood(cuisineFood));
           console.log("no allergen and high blood friendly");
         } else {
           console.log("paleo vegetarian");
+
+          const diet = selectedDiet.toLowerCase();
+
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+
+            const breakfastdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=breakfast&health=${diet}&cuisineType=${cuisine}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            );
+            const breakfasts = filterRecipe(
+              breakfastdatas,
+              cal.minbreakfast,
+              cal.maxbreakfast,
+              fat,
+              carbs,
+              protein
+            );
+
+            const lunchdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&health=${diet}&cuisineType=${cuisine}&calories=${cal.minlunch}-${cal.maxlunch}`
+            );
+            const lunchs = filterRecipe(
+              lunchdatas,
+              cal.minlunch,
+              cal.maxlunch,
+              fat,
+              carbs,
+              protein
+            );
+            //console.log(lunch);
+            const snackdatas = await getRecipesApi(
+              `q=snack&mealType=snack&health=${diet}&calories=${cal.minsnack}-${cal.maxsnack}&foodCategory!=Condiments and sauces`
+            );
+            const snacks = filterRecipe(
+              snackdatas,
+              cal.minsnack,
+              cal.maxsnack,
+              fat,
+              carbs,
+              protein
+            );
+            // console.log(snack);
+
+            const dinnerdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&health=${diet}&cuisineType=${cuisine}&calories=${cal.mindinner}-${cal.maxdinner}`
+            );
+            const dinners = filterRecipe(
+              dinnerdatas,
+              cal.mindinner,
+              cal.maxdinner,
+              fat,
+              carbs,
+              protein
+            );
+            //  console.log(dinner);
+
+            meals.push(breakfasts);
+            meals.push(lunchs);
+            meals.push(snacks);
+            meals.push(dinners);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+          console.log(cuisineFood);
+
+          const tempB = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&health=${diet}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+          );
+          const tempL = await getRecipesApi(
+            `q=&dishType=main&mealType=lunch&health=${diet}&calories=${cal.minlunch}-${cal.maxlunch}`
+          );
+          const tempS = await getRecipesApi(
+            `q=snack&mealType=snack&health=${diet}&calories=${cal.minsnack}-${cal.maxsnack}`
+          );
+          const tempD = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&health=${diet}&calories=${cal.mindinner}-${cal.maxdinner}`
+          );
+
+          {
+            cuisineFood.map((item) =>
+              item.meals.map((items, index) => {
+                if (items.length > 0) {
+                  console.log("has content");
+                } else {
+                  console.log("no content");
+
+                  switch (index) {
+                    case 0:
+                      {
+                        tempB.map((item) => items.push(item));
+                      }
+                      break;
+                    case 1:
+                      {
+                        tempL.map((item) => items.push(item));
+                      }
+                      break;
+                    case 2:
+                      {
+                        tempS.map((item) => items.push(item));
+                      }
+                      break;
+                    case 3:
+                      {
+                        tempD.map((item) => items.push(item));
+                      }
+                      break;
+                  }
+
+                  //   const temp = getRecipesApi()
+                }
+              })
+            );
+          }
+
+          setGeneratedMeal(randomizeFood(cuisineFood));
         }
       } else {
         if (selectedDiet === "High-Protein") {
           console.log("allergen high protein");
+
+          const diet = selectedDiet.toLowerCase();
+          const allergen = selectedAllergen.toLowerCase();
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+
+            const breakfastdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=breakfast&diet=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            );
+            const breakfasts = filterRecipe(
+              breakfastdatas,
+              cal.minbreakfast,
+              cal.maxbreakfast,
+              fat,
+              carbs,
+              protein
+            );
+
+            const lunchdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&diet=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.minlunch}-${cal.maxlunch}`
+            );
+            const lunchs = filterRecipe(
+              lunchdatas,
+              cal.minlunch,
+              cal.maxlunch,
+              fat,
+              carbs,
+              protein
+            );
+            //console.log(lunch);
+            const snackdatas = await getRecipesApi(
+              `q=snack&mealType=snack&diet=${diet}&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}&foodCategory!=Condiments and sauces`
+            );
+            const snacks = filterRecipe(
+              snackdatas,
+              cal.minsnack,
+              cal.maxsnack,
+              fat,
+              carbs,
+              protein
+            );
+            // console.log(snack);
+
+            const dinnerdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&diet=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.mindinner}-${cal.maxdinner}`
+            );
+            const dinners = filterRecipe(
+              dinnerdatas,
+              cal.mindinner,
+              cal.maxdinner,
+              fat,
+              carbs,
+              protein
+            );
+            //  console.log(dinner);
+
+            meals.push(breakfasts);
+            meals.push(lunchs);
+            meals.push(snacks);
+            meals.push(dinners);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+          console.log(cuisineFood);
+
+          const tempB = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&diet=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+          );
+          const tempL = await getRecipesApi(
+            `q=&dishType=main&mealType=lunch&diet=${diet}&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
+          );
+          const tempS = await getRecipesApi(
+            `q=snack&mealType=snack&diet=${diet}&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
+          );
+          const tempD = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&diet=${diet}&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
+          );
+
+          {
+            cuisineFood.map((item) =>
+              item.meals.map((items, index) => {
+                if (items.length > 0) {
+                  console.log("has content");
+                } else {
+                  console.log("no content");
+
+                  switch (index) {
+                    case 0:
+                      {
+                        tempB.map((item) => items.push(item));
+                      }
+                      break;
+                    case 1:
+                      {
+                        tempL.map((item) => items.push(item));
+                      }
+                      break;
+                    case 2:
+                      {
+                        tempS.map((item) => items.push(item));
+                      }
+                      break;
+                    case 3:
+                      {
+                        tempD.map((item) => items.push(item));
+                      }
+                      break;
+                  }
+
+                  //   const temp = getRecipesApi()
+                }
+              })
+            );
+          }
+
+          setGeneratedMeal(randomizeFood(cuisineFood));
         } else if (selectedDiet === "High Blood Friendly") {
           console.log("allergen and high blood friendly");
+
+          const diet = selectedDiet.toLowerCase();
+          const allergen = selectedAllergen.toLowerCase();
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+
+            const breakfastdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=breakfast&health=DASH&diet=low-sodium&health=${allergen}&cuisineType=${cuisine}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            );
+            const breakfasts = filterRecipe(
+              breakfastdatas,
+              cal.minbreakfast,
+              cal.maxbreakfast,
+              fat,
+              carbs,
+              protein
+            );
+
+            const lunchdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&health=DASH&diet=low-sodium&health=${allergen}&cuisineType=${cuisine}&calories=${cal.minlunch}-${cal.maxlunch}`
+            );
+            const lunchs = filterRecipe(
+              lunchdatas,
+              cal.minlunch,
+              cal.maxlunch,
+              fat,
+              carbs,
+              protein
+            );
+            //console.log(lunch);
+            const snackdatas = await getRecipesApi(
+              `q=snack&mealType=snack&health=DASH&diet=low-sodium&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}&foodCategory!=Condiments and sauces`
+            );
+            const snacks = filterRecipe(
+              snackdatas,
+              cal.minsnack,
+              cal.maxsnack,
+              fat,
+              carbs,
+              protein
+            );
+            // console.log(snack);
+
+            const dinnerdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&health=DASH&diet=low-sodium&health=${allergen}&cuisineType=${cuisine}&calories=${cal.mindinner}-${cal.maxdinner}`
+            );
+            const dinners = filterRecipe(
+              dinnerdatas,
+              cal.mindinner,
+              cal.maxdinner,
+              fat,
+              carbs,
+              protein
+            );
+            //  console.log(dinner);
+
+            meals.push(breakfasts);
+            meals.push(lunchs);
+            meals.push(snacks);
+            meals.push(dinners);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+          console.log(cuisineFood);
+
+          const tempB = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&diet=low-sodium&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+          );
+          const tempL = await getRecipesApi(
+            `q=&dishType=main&mealType=lunch&diet=low-sodium&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
+          );
+          const tempS = await getRecipesApi(
+            `q=snack&mealType=snack&diet=low-sodium&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
+          );
+          const tempD = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&diet=low-sodium&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
+          );
+
+          {
+            cuisineFood.map((item) =>
+              item.meals.map((items, index) => {
+                if (items.length > 0) {
+                  console.log("has content");
+                } else {
+                  console.log("no content");
+
+                  switch (index) {
+                    case 0:
+                      {
+                        tempB.map((item) => items.push(item));
+                      }
+                      break;
+                    case 1:
+                      {
+                        tempL.map((item) => items.push(item));
+                      }
+                      break;
+                    case 2:
+                      {
+                        tempS.map((item) => items.push(item));
+                      }
+                      break;
+                    case 3:
+                      {
+                        tempD.map((item) => items.push(item));
+                      }
+                      break;
+                  }
+
+                  //   const temp = getRecipesApi()
+                }
+              })
+            );
+          }
+
+          console.log(cuisineFood);
+          setGeneratedMeal(randomizeFood(cuisineFood));
         } else {
           console.log("paleo vegetarian");
+
+          const diet = selectedDiet.toLowerCase();
+          const allergen = selectedAllergen.toLowerCase();
+
+          let cuisineFood = [];
+          for (const cuisine of selectedCuisine) {
+            let meals = [];
+
+            const breakfastdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=breakfast&health=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            );
+            const breakfasts = filterRecipe(
+              breakfastdatas,
+              cal.minbreakfast,
+              cal.maxbreakfast,
+              fat,
+              carbs,
+              protein
+            );
+
+            const lunchdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&health=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.minlunch}-${cal.maxlunch}`
+            );
+            const lunchs = filterRecipe(
+              lunchdatas,
+              cal.minlunch,
+              cal.maxlunch,
+              fat,
+              carbs,
+              protein
+            );
+            //console.log(lunch);
+            const snackdatas = await getRecipesApi(
+              `q=snack&mealType=snack&health=${diet}&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}&foodCategory!=Condiments and sauces`
+            );
+            const snacks = filterRecipe(
+              snackdatas,
+              cal.minsnack,
+              cal.maxsnack,
+              fat,
+              carbs,
+              protein
+            );
+            // console.log(snack);
+
+            const dinnerdatas = await getRecipesApi(
+              `q=&dishType=main&mealType=lunch&health=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.mindinner}-${cal.maxdinner}`
+            );
+            const dinners = filterRecipe(
+              dinnerdatas,
+              cal.mindinner,
+              cal.maxdinner,
+              fat,
+              carbs,
+              protein
+            );
+            //  console.log(dinner);
+
+            meals.push(breakfasts);
+            meals.push(lunchs);
+            meals.push(snacks);
+            meals.push(dinners);
+
+            cuisineFood.push({ cuisine, meals });
+          }
+          console.log(cuisineFood);
+
+          const tempB = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&health=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+          );
+          const tempL = await getRecipesApi(
+            `q=&dishType=main&mealType=lunch&health=${diet}&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
+          );
+          const tempS = await getRecipesApi(
+            `q=snack&mealType=snack&health=${diet}&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
+          );
+          const tempD = await getRecipesApi(
+            `q=&dishType=main&mealType=breakfast&health=${diet}&chealth=${allergen}&alories=${cal.mindinner}-${cal.maxdinner}`
+          );
+
+          {
+            cuisineFood.map((item) =>
+              item.meals.map((items, index) => {
+                if (items.length > 0) {
+                  console.log("has content");
+                } else {
+                  console.log("no content");
+
+                  switch (index) {
+                    case 0:
+                      {
+                        tempB.map((item) => items.push(item));
+                      }
+                      break;
+                    case 1:
+                      {
+                        tempL.map((item) => items.push(item));
+                      }
+                      break;
+                    case 2:
+                      {
+                        tempS.map((item) => items.push(item));
+                      }
+                      break;
+                    case 3:
+                      {
+                        tempD.map((item) => items.push(item));
+                      }
+                      break;
+                  }
+
+                  //   const temp = getRecipesApi()
+                }
+              })
+            );
+          }
+
+          setGeneratedMeal(randomizeFood(cuisineFood));
         }
       }
     } else {
-      toast("Please select a diet/allergens!");
+      toast("Please select a diet/allergens/cuisine!");
     }
-  };
-
-  const retrieveCuisineFood = async (
-    breakfastURL,
-    lunchURL,
-    snackURL,
-    dinnerURL,
-    cal
-  ) => {
-    let cuisineFood = [];
-    for (const cuisine of selectedCuisine) {
-      let meals = [];
-
-      const breakfastdatas = await getRecipesApi(breakfastURL);
-      const breakfasts = filterRecipe(
-        breakfastdatas,
-        cal.minbreakfast,
-        cal.maxbreakfast,
-        fat,
-        carbs,
-        protein
-      );
-
-      const lunchdatas = await getRecipesApi(lunchURL);
-      const lunchs = filterRecipe(
-        lunchdatas,
-        cal.minlunch,
-        cal.maxlunch,
-        fat,
-        carbs,
-        protein
-      );
-      //console.log(lunch);
-      const snackdatas = await getRecipesApi(snackURL);
-      const snacks = filterRecipe(
-        snackdatas,
-        cal.minsnack,
-        cal.maxsnack,
-        fat,
-        carbs,
-        protein
-      );
-      // console.log(snack);
-
-      const dinnerdatas = await getRecipesApi(dinnerURL);
-      const dinners = filterRecipe(
-        dinnerdatas,
-        cal.mindinner,
-        cal.maxdinner,
-        fat,
-        carbs,
-        protein
-      );
-      //  console.log(dinner);
-
-      meals.push(breakfasts);
-      meals.push(lunchs);
-      meals.push(snacks);
-      meals.push(dinners);
-
-      cuisineFood.push({ cuisine, meals });
-    }
-
-    return cuisineFood;
   };
 
   const randomizeFood = (cuisineFood) => {
     let mealPlan = [];
+
+    let tempNum = getRandomInRange(0, cuisineFood.length - 1);
+
     for (let i = 0; i < 5; i++) {
       let meals = [];
 
@@ -823,17 +1339,16 @@ function MealPlanTest() {
       if (BtempMeal) {
         meals.push({ Meal: "Breakfast", details: BtempMeal });
       } else {
-        while (BtempMeal === undefined) {
-          tempNum = getRandomInRange(0, cuisineFood.length - 1);
-          BtempMeal =
-            cuisineFood[tempNum].meals[0][
-              getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
-            ];
-
-          if (BtempMeal) {
-            meals.push({ Meal: "Breakfast", details: BtempMeal });
-          }
-        }
+        // while (BtempMeal === undefined) {
+        //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
+        //   BtempMeal =
+        //     cuisineFood[tempNum].meals[0][
+        //       getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
+        //     ];
+        //   if (BtempMeal) {
+        //     meals.push({ Meal: "Breakfast", details: BtempMeal });
+        //   }
+        // }
       }
 
       tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -845,17 +1360,16 @@ function MealPlanTest() {
       if (LtempMeal) {
         meals.push({ Meal: "Lunch", details: LtempMeal });
       } else {
-        while (LtempMeal === undefined) {
-          tempNum = getRandomInRange(0, cuisineFood.length - 1);
-          LtempMeal =
-            cuisineFood[tempNum].meals[1][
-              getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
-            ];
-
-          if (LtempMeal) {
-            meals.push({ Meal: " Lunch", details: LtempMeal });
-          }
-        }
+        // while (LtempMeal === undefined) {
+        //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
+        //   LtempMeal =
+        //     cuisineFood[tempNum].meals[1][
+        //       getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
+        //     ];
+        //   if (LtempMeal) {
+        //     meals.push({ Meal: " Lunch", details: LtempMeal });
+        //   }
+        // }
       }
 
       tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -867,17 +1381,16 @@ function MealPlanTest() {
       if (StempMeal) {
         meals.push({ Meal: "Snack", details: StempMeal });
       } else {
-        while (StempMeal === undefined) {
-          tempNum = getRandomInRange(0, cuisineFood.length - 1);
-          StempMeal =
-            cuisineFood[tempNum].meals[2][
-              getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
-            ];
-
-          if (StempMeal) {
-            meals.push({ Meal: "Snack", details: StempMeal });
-          }
-        }
+        // while (StempMeal === undefined) {
+        //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
+        //   StempMeal =
+        //     cuisineFood[tempNum].meals[2][
+        //       getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
+        //     ];
+        //   if (StempMeal) {
+        //     meals.push({ Meal: "Snack", details: StempMeal });
+        //   }
+        // }
       }
 
       tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -889,17 +1402,16 @@ function MealPlanTest() {
       if (DtempMeal) {
         meals.push({ Meal: "Dinner", details: DtempMeal });
       } else {
-        while (DtempMeal === undefined) {
-          tempNum = getRandomInRange(0, cuisineFood.length - 1);
-          DtempMeal =
-            cuisineFood[tempNum].meals[3][
-              getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
-            ];
-
-          if (DtempMeal) {
-            meals.push({ Meal: "Dinner", details: DtempMeal });
-          }
-        }
+        // while (DtempMeal === undefined) {
+        //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
+        //   DtempMeal =
+        //     cuisineFood[tempNum].meals[3][
+        //       getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
+        //     ];
+        //   if (DtempMeal) {
+        //     meals.push({ Meal: "Dinner", details: DtempMeal });
+        //   }
+        // }
       }
 
       //console.log(meals);
@@ -1003,6 +1515,9 @@ function MealPlanTest() {
       return response.data.hits; // Implicit return (no need for explicit statement)
     } catch (error) {
       console.error("Error fetching recipes:", error);
+      toast(
+        "Too Many request. Please wait a Few Minutes before generating again"
+      );
       // Handle errors appropriately (e.g., return a default value or throw)
     }
   };
