@@ -111,3 +111,21 @@ class VerifyNutritionistSerializer(serializers.ModelSerializer):
                   'email', 
                   'phone',
                   'license_id')
+        
+class GeneratedMealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GeneratedMeal
+        fields = ('generatedMeal_id', 
+                  'date', 
+                  'meal', 
+                  'user_id', 
+                  'name', 
+                  'age',
+                  'gender',
+                  'activity',
+                  'goal',
+                  'cuisine',
+                  'diet',
+                  'allergen', 
+                  'height',
+                  'weight')

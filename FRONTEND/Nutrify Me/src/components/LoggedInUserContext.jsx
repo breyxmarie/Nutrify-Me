@@ -7,12 +7,29 @@ export const LoggedInUserProvider = ({ children }) => {
     () => JSON.parse(localStorage.getItem("loggedInUser")) || null
   ); // Read from local storage on initial render
 
+  const [profiled, setProfiled] = useState(
+    () => JSON.parse(localStorage.getItem("profiled")) || null
+  ); // Read from local storage on initial render
+
+  const [nutritionist, setnNutritionist] = useState(
+    () => JSON.parse(localStorage.getItem("nutritionist")) || null
+  ); // Read from local storage on initial render
+
   useEffect(() => {
     localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
   }, [loggedInUser]); // Update local storage when state changes
 
   return (
-    <LoggedInUserContext.Provider value={{ loggedInUser, setLoggedInUser }}>
+    <LoggedInUserContext.Provider
+      value={{
+        loggedInUser,
+        setLoggedInUser,
+        profiled,
+        setProfiled,
+        nutritionist,
+        setnNutritionist,
+      }}
+    >
       {children}
     </LoggedInUserContext.Provider>
   );

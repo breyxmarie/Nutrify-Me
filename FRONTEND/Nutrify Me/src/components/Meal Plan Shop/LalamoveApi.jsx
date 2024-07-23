@@ -50,7 +50,7 @@ const LalamoveApi = {
       },
     };
 
-    const body = JSON.stringify({
+    const body = {
       data: {
         // scheduleAt: null, // Optional - set a scheduled delivery time if needed
         serviceType: "MOTORCYCLE",
@@ -81,7 +81,7 @@ const LalamoveApi = {
           handlingInstructions: ["KEEP_UPRIGHT"],
         },
       },
-    });
+    };
     const time = new Date().getTime().toString();
     const method = "POST";
     const url = "/v3/quotations";
@@ -117,16 +117,78 @@ const LalamoveApi = {
     // }
 
     try {
-      const response = await axios.post(`${this.baseUrl}/v3/quotations`, body, {
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
+      // const response = await axios.post(`${this.baseUrl}/v3/quotations`, body, {
+      // headers: {
+      //   "Content-Type": "application/json; charset=utf-8",
+      //   Market: "PH",
+      //   Authorization: `hmac ${TOKEN}`,
+      //   Accept: "application/json",
 
-          Authorization: `hmac ${TOKEN}`,
-          Accept: "application/json",
-          // Market: "PH",
-        },
-      });
-      return response;
+      //   "Access-Control-Allow-Headers": true,
+      //   crossorigin: true,
+      // },
+      // });
+      // return response;
+
+      try {
+        const response = await fetch(`${this.baseUrl}/v3/quotations`, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            Authorization: `hmac ${TOKEN}`,
+            "Content-Type": "application/json",
+            Market: "PH",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            data: {
+              serviceType: "MOTORCYCLE",
+              specialRequests: ["THERMAL_BAG_1"],
+              language: "en_PH",
+              stops: [
+                {
+                  coordinates: {
+                    lat: "14.599512",
+                    lng: "121.018872",
+                  },
+                  address: "Ortigas Center, Pasig City",
+                },
+
+                {
+                  coordinates: {
+                    lat: "14.604133",
+                    lng: "121.006311",
+                  },
+                  address: "SM Mall of Asia, Pasay City",
+                },
+              ],
+              isRouteOptimized: false,
+              item: {
+                quantity: "12",
+                weight: "LESS_THAN_3_KG",
+                categories: ["FOOD_DELIVERY", "OFFICE_ITEM"],
+                handlingInstructions: ["KEEP_UPRIGHT"],
+              },
+            },
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              console.log(response.json());
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => console.log(data))
+          .catch((error) => console.error("Error:", error));
+
+        console.log(response.json());
+        console.log(response);
+
+        return response;
+      } catch (error) {
+        console.log(error);
+      }
     } catch (error) {
       console.error("Error creating quotation:", error);
       // Handle errors appropriately (e.g., throw exception, display error message)

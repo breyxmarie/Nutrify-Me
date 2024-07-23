@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 
-function MealPlangeneratorHome() {
+function MealPlanGeneratorHistory() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   // ? get Data
   const [mealData, setMealData] = useState([]);
@@ -243,4 +243,4 @@ function MealPlangeneratorHome() {
   );
 }
 
-export default MealPlangeneratorHome;
+export default MealPlanGeneratorHistory;

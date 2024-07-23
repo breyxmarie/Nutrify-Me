@@ -37,7 +37,9 @@ urlpatterns = [
     path('scheduledeck/', ScheduleDeckAPI),
     path('scheduledeck/<int:pk>', ScheduleDeckAPI),
     path('verifynutritionist/', VerifyNutritionistAPI),
-    path('verifynutritionist/<int:pk>', VerifyNutritionistAPI),
+    path('verifynutritionist/<int:pk>', VerifyNutritionistAPI), 
+    path('generatedmeal/', GeneratedMealAPI),
+    path('generated/<int:pk>', GeneratedMealAPI),
     path('savefilelicense', SaveFileLicense),
 
   #  path('SaveFile', SaveFile), 

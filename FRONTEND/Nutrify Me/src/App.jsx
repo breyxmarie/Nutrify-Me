@@ -10,9 +10,9 @@ import FoodJournalProgressReport from "./components/Food Journal/FoodJournalProg
 import MealPlangeneratorHome from "./components/Meal Plan Generator/MealPlangeneratorHome";
 import MealPlanGeneratorQuestion from "./components/Meal Plan Generator/MealPlanGeneratorQuestion";
 import MealPlanGeneratorConsent from "./components/Meal Plan Generator/MealPlanGeneratorConsent";
-
+import MealPlanHistory from "./components/Meal Plan Generator/MealPlanHistory";
 import MealPlanGeneratorGeneratedMeal from "./components/Meal Plan Generator/MealPlanGeneratorGeneratedMeal";
-
+import MealPlanGeneratorHistory from "./components/Meal Plan Generator/MealPlanGeneratorHistory";
 import MealPlanSelection from "./components/Meal Plan Generator/MealPlanSelection";
 import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
 import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
@@ -267,7 +267,7 @@ function App() {
                     </>
                   }
                 />
-                {/* meal plan generator  */}
+                {/* meal plan generator  */} MealPlanHistory
                 <Route
                   path="/meal-plan-generator-home"
                   element={
@@ -275,6 +275,17 @@ function App() {
                       <MainUserNavBar />
                       <MealPlanGeneratorNavBar />
                       <MealPlangeneratorHome />
+                      <UserFooter />
+                    </>
+                  }
+                />
+                <Route
+                  path="/meal-plan-generator-history"
+                  element={
+                    <>
+                      <MainUserNavBar />
+                      <MealPlanGeneratorNavBar />
+                      <MealPlanHistory />
                       <UserFooter />
                     </>
                   }

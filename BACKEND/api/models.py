@@ -195,3 +195,22 @@ class VerifyNutritionist(models.Model):
 
     class Meta:
         db_table = "verify_nutritionist"
+
+class GeneratedMeal(models.Model):
+    generatedMeal_id =models.AutoField(primary_key=True)
+    date = models.DateField()
+    meal = JSONField()
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss10")
+    name = models.CharField(max_length=40)
+    age = models.IntegerField()
+    gender = models.CharField(max_length=40)
+    activity = models.CharField(max_length=40)
+    goal = models.CharField(max_length=40)
+    cuisine = JSONField()
+    diet = models.CharField(max_length=40)
+    allergen = models.CharField(max_length=50)
+    height = models.IntegerField()
+    weight = models.IntegerField()
+
+    class Meta:
+        db_table = "generated_meal"

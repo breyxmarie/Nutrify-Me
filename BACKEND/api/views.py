@@ -581,3 +581,39 @@ def VerifyNutritionistAPI(request, pk=0):
         verifyNutritionist.delete()
         return JsonResponse("Verify Nutritionist was deleted Successfully", safe = False)
     
+
+@csrf_exempt
+def GeneratedMealAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            generatedMeal = GeneratedMeal.objects.all()
+            serializer = GeneratedMealSerializer(generatedMeal, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                generatedMeal = GeneratedMeal.objects.get(pk=pk)
+                serializer = GeneratedMealSerializer(generatedMeal)
+                return JsonResponse(serializer.data, safe=False)
+            except GeneratedMeal.DoesNotExist:
+                return JsonResponse({'error': 'Generated Meal not found'}, status=404)
+    elif request.method == 'POST':
+        generatedMeal_data = JSONParser().parse(request)
+        generatedMeal_serializer = GeneratedMealSerializer(data = generatedMeal_data)
+        if generatedMeal_serializer.is_valid():
+            generatedMeal_serializer.save()
+            return JsonResponse("Generated Meal Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Generated Meal", safe=False)
+    elif request.method == 'PUT':
+        generatedMeal_data = JSONParser().parse(request)
+        generatedMeals = VerifyNutritionist.objects.get(generatedMeal_id=generatedMeal_data['generatedMeal_id'])
+        generatedMeal_serializer = GeneratedMealSerializer(generatedMeals, data = generatedMeal_data)
+        if generatedMeal_serializer.is_valid():
+            generatedMeal_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        generatedMeal = GeneratedMeal.objects.get(verify_id=pk)
+        generatedMeal.delete()
+        return JsonResponse("Generated Meal was deleted Successfully", safe = False)
+    

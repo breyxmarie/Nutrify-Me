@@ -15,8 +15,9 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 
 const pages = [
-  { names: "MEAL PLAN GENERATOR", links: "/meal-plan-generator-home" },
-  { names: "MEAL PLAN HISTORY", links: "/telemedicine-meet-us" },
+  { names: "MEAL PLAN HOME", links: "/meal-plan-generator-home" },
+  { names: "MEAL PLAN GENERATOR", links: "/meal-plan-generator-consent" },
+  { names: "MEAL PLAN HISTORY", links: "/meal-plan-generator-history" },
 ];
 
 const StyledLink = `

@@ -13,8 +13,16 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { ClickAwayListener } from "@mui/material";
 import styled from "styled-components";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import dayjs from "dayjs";
+import { useLoggedInUser } from "../LoggedInUserContext";
+import AxiosInstance from "../forms/AxiosInstance";
 
 function MealPlanTest() {
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const [foodChoices, setFoodChoices] = useState();
+  const [mealName, setMealName] = useState();
   //! pop up
   const PopupTrigger = styled.span`
     /* Styles for the trigger element */
@@ -77,6 +85,12 @@ function MealPlanTest() {
   const [protein, setProtein] = useState(100);
   const [carbs, setCarbs] = useState(1000);
   const [generatedMeal, setGeneratedMeal] = useState([]);
+  const [age, setAge] = useState(0);
+  const [gender, setGender] = useState("none");
+  const [goal, setGoal] = useState("none");
+  const [height, setHeight] = useState(0);
+  const [weight, setWeight] = useState(0);
+  const [cuisineMeals, setCuisineMeals] = useState([]);
 
   const isSelectedCuisine = (cuisineName) => {
     return selectedCuisine.includes(cuisineName);
@@ -667,22 +681,22 @@ function MealPlanTest() {
           console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=${diet}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            `q=&dishType=main&mealType=breakfast&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
           const tempL = await getRecipesApi(
-            `q=&dishType=main&mealType=lunch&diet=${diet}&calories=${cal.minlunch}-${cal.maxlunch}`
+            `q=&dishType=main&mealType=lunch&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&diet=${diet}&calories=${cal.minsnack}-${cal.maxsnack}`
+            `q=snack&mealType=snack&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=${diet}&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
-                if (items.length > 0) {
+                if (items.length > 10) {
                   console.log("has content");
                 } else {
                   console.log("no content");
@@ -716,6 +730,7 @@ function MealPlanTest() {
             );
           }
 
+          setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         } else if (selectedDiet === "High Blood Friendly") {
           const diet = selectedDiet.toLowerCase();
@@ -784,22 +799,22 @@ function MealPlanTest() {
           console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&health=DASH&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            `q=&dishType=main&mealType=breakfast&diet=low-sodium&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
           const tempL = await getRecipesApi(
-            `q=&dishType=main&mealType=lunch&health=DASH&calories=${cal.minlunch}-${cal.maxlunch}`
+            `q=&dishType=main&mealType=lunch&diet=low-sodium&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&health=DASH&calories=${cal.minsnack}-${cal.maxsnack}`
+            `q=snack&mealType=snack&diet=low-sodium&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&health=DASH&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&diet=low-sodium&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
-                if (items.length > 0) {
+                if (items.length > 10) {
                   console.log("has content");
                 } else {
                   console.log("no content");
@@ -832,7 +847,7 @@ function MealPlanTest() {
               })
             );
           }
-
+          setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
           console.log("no allergen and high blood friendly");
         } else {
@@ -904,22 +919,22 @@ function MealPlanTest() {
           console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&health=${diet}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            `q=&dishType=main&mealType=breakfast&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
           const tempL = await getRecipesApi(
-            `q=&dishType=main&mealType=lunch&health=${diet}&calories=${cal.minlunch}-${cal.maxlunch}`
+            `q=&dishType=main&mealType=lunch&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&health=${diet}&calories=${cal.minsnack}-${cal.maxsnack}`
+            `q=snack&mealType=snack&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&health=${diet}&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinnert&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
-                if (items.length > 0) {
+                if (items.length > 10) {
                   console.log("has content");
                 } else {
                   console.log("no content");
@@ -952,7 +967,7 @@ function MealPlanTest() {
               })
             );
           }
-
+          setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         }
       } else {
@@ -1025,22 +1040,22 @@ function MealPlanTest() {
           console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            `q=&dishType=main&mealType=breakfast&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
           const tempL = await getRecipesApi(
-            `q=&dishType=main&mealType=lunch&diet=${diet}&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
+            `q=&dishType=main&mealType=lunch&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&diet=${diet}&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
+            `q=snack&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=${diet}&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
-                if (items.length > 0) {
+                if (items.length > 10) {
                   console.log("has content");
                 } else {
                   console.log("no content");
@@ -1073,7 +1088,7 @@ function MealPlanTest() {
               })
             );
           }
-
+          setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         } else if (selectedDiet === "High Blood Friendly") {
           console.log("allergen and high blood friendly");
@@ -1150,16 +1165,16 @@ function MealPlanTest() {
             `q=&dishType=main&mealType=lunch&diet=low-sodium&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&diet=low-sodium&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
+            `q=snack&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=low-sodium&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinnert&diet=low-sodium&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
-                if (items.length > 0) {
+                if (items.length > 10) {
                   console.log("has content");
                 } else {
                   console.log("no content");
@@ -1194,6 +1209,7 @@ function MealPlanTest() {
           }
 
           console.log(cuisineFood);
+          setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         } else {
           console.log("paleo vegetarian");
@@ -1243,7 +1259,7 @@ function MealPlanTest() {
             // console.log(snack);
 
             const dinnerdatas = await getRecipesApi(
-              `q=&dishType=main&mealType=lunch&health=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.mindinner}-${cal.maxdinner}`
+              `q=&dishType=main&mealType=dinner&health=${diet}&health=${allergen}&cuisineType=${cuisine}&calories=${cal.mindinner}-${cal.maxdinner}`
             );
             const dinners = filterRecipe(
               dinnerdatas,
@@ -1264,23 +1280,34 @@ function MealPlanTest() {
           }
           console.log(cuisineFood);
 
-          const tempB = await getRecipesApi(
+          let tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&health=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
-          const tempL = await getRecipesApi(
+          let tempL = await getRecipesApi(
             `q=&dishType=main&mealType=lunch&health=${diet}&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
           );
-          const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&health=${diet}&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
+          let tempS = await getRecipesApi(
+            `q=snack&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
           );
-          const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&health=${diet}&chealth=${allergen}&alories=${cal.mindinner}-${cal.maxdinner}`
+          // let tempD = await getRecipesApi(
+          //   `q=&dishType=main&mealType=dinner&health=${diet}&chealth=${allergen}&alories=${cal.mindinner}-${cal.maxdinner}`
+          // );
+
+          let tempD = filterRecipe(
+            await getRecipesApi(
+              `q=&dishType=main&mealType=dinner&health=${diet}&chealth=${allergen}&alories=${cal.mindinner}-${cal.maxdinner}`
+            ),
+            cal.mindinner,
+            cal.maxdinner,
+            fat,
+            carbs,
+            protein
           );
 
           {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
-                if (items.length > 0) {
+                if (items.length > 10) {
                   console.log("has content");
                 } else {
                   console.log("no content");
@@ -1313,7 +1340,7 @@ function MealPlanTest() {
               })
             );
           }
-
+          setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         }
       }
@@ -1478,6 +1505,13 @@ function MealPlanTest() {
     resolver: yupResolver(calculatorSchema),
   });
   const onSubmitHandler = (data) => {
+    setAge(data.age);
+    setGender(data.gender);
+    setActivity(data.activity);
+    setGoal(data.goal);
+    setHeight(data.height);
+    setWeight(data.weight);
+
     const bmr = calculateBMR(data.weight, data.height, data.age, data.gender);
     //const calories = TotalTER(bmr, data.activity);
     const [minCalories, maxCalories] = calculateTDEE(bmr, data.activity);
@@ -1563,17 +1597,77 @@ function MealPlanTest() {
 
     tempCarbs = tempProtein.filter((item) =>
       item.recipe.digest.find(
-        (nutrient) =>
-          nutrient.label === "Carbs" && nutrient.total >= 100000000000000000
+        (nutrient) => nutrient.label === "Carbs" && nutrient.total <= carbs
       )
     );
 
     console.log(tempCarbs);
-    if (tempCalories) {
-      return tempCalories;
+    if (tempCarbs) {
+      return tempCarbs;
     } else {
       return [];
     }
+  };
+
+  //? modal
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 3,
+    color: "#ffffff",
+  };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleChange = (e) => {
+    setMealName(e.target.value);
+  };
+  const handleClose = () => {
+    setIsOpen(false);
+    setMealName();
+  };
+
+  const saveMeal = () => {
+    try {
+      AxiosInstance.post(`generatedmeal/`, {
+        date: dayjs().format("YYYY-MM-DD"),
+        user_id: loggedInUser.user_id,
+        meal: generatedMeal,
+        name: mealName,
+        age: parseInt(age),
+        gender: gender,
+        activity: activity,
+        goal: goal,
+        weight: parseInt(weight),
+        height: parseInt(height),
+        cuisine: selectedCuisine,
+        diet: selectedDiet,
+        allergen: selectedAllergen,
+      }).then((res) => {
+        // navigate(`/`);
+        handleClose();
+        console.log(res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //?
+
+  const regenerate = () => {
+    setGeneratedMeal(randomizeFood(cuisineMeals));
   };
 
   return (
@@ -1860,10 +1954,12 @@ function MealPlanTest() {
         <Typography> item.Day</Typography>;
         // console.log(item.Day);
       })}
+      <Button onClick={regenerate}>Regenerate</Button>
       {generatedMeal.length === 0 ? (
         <div>tryee </div>
       ) : (
         // <Grid container spacing={2}>
+
         generatedMeal.map((item, index) => (
           // <Grid item xs={3} sm={4} md={6} key={index}>
           <Box>
@@ -1949,9 +2045,29 @@ function MealPlanTest() {
                 ))}
               </Grid>
             </Box>
+            <Modal
+              open={isOpen}
+              onClose={handleClose}
+              aria-labelledby="modal-title"
+              aria-describedby="modal-description"
+            >
+              <Box sx={style}>
+                Save
+                <TextField
+                  name="mealname"
+                  label="mealname"
+                  variant="outlined"
+                  value={mealName}
+                  onChange={handleChange}
+                  required={true}
+                />
+                <Button onClick={saveMeal}>Save Meal Plan</Button>
+              </Box>
+            </Modal>
           </Box>
         ))
       )}
+      <Button onClick={handleOpen}>Save Meal Plan</Button>
     </div>
   );
 }
