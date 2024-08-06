@@ -36,6 +36,8 @@ function MealPlanShopOrders() {
     totalPrice,
     shippingPrice,
   } = location.state || {};
+
+  console.log(location.state);
   console.log(orderId);
   console.log(useParams());
 
@@ -67,11 +69,11 @@ function MealPlanShopOrders() {
   const [color3, setColor3] = useState("#E66253");
   function getStatus() {
     switch (status) {
-      case "Order Confirmed":
+      case "Ordered":
         setColor2("#B3B3B3");
         setColor3("#B3B3B3");
         return;
-      case "Shipping":
+      case "On-Going":
         setColor3("#B3B3B3");
         return;
     }
@@ -133,9 +135,7 @@ function MealPlanShopOrders() {
           </Box>
 
           <Typography>ORDER CONFIRMED</Typography>
-          <Typography>
-            {time}, {date}
-          </Typography>
+          <Typography>{date}</Typography>
         </Grid>
         <Grid xs={3}>
           <hr style={{ marginTop: "3%" }} />
@@ -180,7 +180,7 @@ function MealPlanShopOrders() {
         </Grid>
       </Grid>
       <br />
-      <Box>
+      {/* <Box>
         <Grid container spacing={2} sx={{}}>
           <Grid xs={2} sx={{ textAlign: "left", ml: "5%", color: "#99756E" }}>
             TRACKING NUMBER:
@@ -198,7 +198,7 @@ function MealPlanShopOrders() {
             <a href={shipLink}>{shipLink}</a>
           </Grid>
         </Grid>
-      </Box>
+      </Box> */}
       <br />
       <Typography
         sx={{
@@ -232,7 +232,7 @@ function MealPlanShopOrders() {
           >
             <Grid container spacing={2} sx={{ mt: "2%", ml: "2%" }}>
               <Grid xs={2}>
-                <img src={item.image} width="160px" height="160px" />
+                <img src={location.state.image} width="160px" height="160px" />
               </Grid>
               <Grid xs={3} sx={{ mt: "6%" }}>
                 {item.name}{" "}
@@ -284,7 +284,7 @@ function MealPlanShopOrders() {
               Total
             </Grid>
             <Grid xs={2.5} s>
-              PHP {totalOrderPrice}
+              PHP {location.state.totalPrice}
             </Grid>
           </Grid>
         </Box>

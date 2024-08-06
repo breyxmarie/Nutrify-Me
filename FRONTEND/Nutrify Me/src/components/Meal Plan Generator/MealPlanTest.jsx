@@ -23,6 +23,15 @@ function MealPlanTest() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [foodChoices, setFoodChoices] = useState();
   const [mealName, setMealName] = useState();
+
+  //? Modal
+  const [opens, setOpens] = React.useState(false);
+  const handleOpens = () => setOpens(true);
+  const handleCloses = () => {
+    setOpens(false);
+  };
+
+  //?
   //! pop up
   const PopupTrigger = styled.span`
     /* Styles for the trigger element */
@@ -81,9 +90,9 @@ function MealPlanTest() {
   const [caloriesGoal, setCaloriesGoal] = useState(1000);
   const [minCalories, setMinCalories] = useState();
   const [maxCalories, setMaxCalories] = useState();
-  const [fat, setFat] = useState(100);
-  const [protein, setProtein] = useState(100);
-  const [carbs, setCarbs] = useState(1000);
+  const [fat, setFat] = useState();
+  const [protein, setProtein] = useState();
+  const [carbs, setCarbs] = useState();
   const [generatedMeal, setGeneratedMeal] = useState([]);
   const [age, setAge] = useState(0);
   const [gender, setGender] = useState("none");
@@ -1679,147 +1688,172 @@ function MealPlanTest() {
         fontFamily: "Poppins",
       }}
     >
-      <Box sx={{ border: 1 }}>
-        Calculator
-        <form onSubmit={handleSubmit(onSubmitHandler)}>
-          Gender
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            // onChange={handleChange}
-            name="gender"
-            width="100%"
-            {...register("gender")}
-            error={errors.gender ? true : false}
-          >
-            {genderChoice.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="inherit" color="textSecondary">
-            {errors.gender?.message}
-          </Typography>
-          <TextField
-            id="weight"
-            name="weight"
-            label="Weight"
-            fullWidth
-            margin="dense"
-            {...register("weight")}
-            error={errors.weight ? true : false}
-            type="number"
-          />
-          <Typography variant="inherit" color="textSecondary">
-            {errors.weight?.message}
-          </Typography>
-          <TextField
-            id="height"
-            name="height"
-            label="Height"
-            fullWidth
-            margin="dense"
-            {...register("height")}
-            error={errors.height ? true : false}
-            type="number"
-          />
-          <Typography variant="inherit" color="textSecondary">
-            {errors.height?.message}
-          </Typography>
-          <TextField
-            id="age"
-            name="age"
-            label="Age"
-            fullWidth
-            margin="dense"
-            {...register("age")}
-            error={errors.age ? true : false}
-            type="number"
-          />
-          <Typography variant="inherit" color="textSecondary">
-            {errors.age?.message}
-          </Typography>
-          Activity
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            // onChange={handleChange}
-            name="activity"
-            width="100%"
-            {...register("activity")}
-            error={errors.activity ? true : false}
-          >
-            {activityChoices.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="inherit" color="textSecondary">
-            {errors.activity?.message}
-          </Typography>
-          Goal
-          <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            // onChange={handleChange}
-            name="goal"
-            width="100%"
-            {...register("goal")}
-            error={errors.goal ? true : false}
-          >
-            {goalChoice.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="inherit" color="textSecondary">
-            {errors.goal?.message}
-          </Typography>
-          <button type="submit">Calculate</button>
-        </form>
-      </Box>
-      <Box sx={{ border: 1 }}>
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          <Box sx={{ border: 1 }}>
+            Calculator
+            <Button onClick={handleOpens}>?</Button>
+            <form onSubmit={handleSubmit(onSubmitHandler)}>
+              Gender
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                // value={selectedNutritionist}
+                // onChange={handleChange}
+                name="gender"
+                width="50%"
+                {...register("gender")}
+                error={errors.gender ? true : false}
+              >
+                {genderChoice.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Typography variant="inherit" color="textSecondary">
+                {errors.gender?.message}
+              </Typography>
+              <TextField
+                id="weight"
+                name="weight"
+                label="Weight"
+                //  fullWidth
+                margin="dense"
+                {...register("weight")}
+                error={errors.weight ? true : false}
+                type="number"
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.weight?.message}
+              </Typography>
+              <TextField
+                id="height"
+                name="height"
+                label="Height"
+                //  fullWidth
+                margin="dense"
+                {...register("height")}
+                error={errors.height ? true : false}
+                type="number"
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.height?.message}
+              </Typography>
+              <TextField
+                id="age"
+                name="age"
+                label="Age"
+                // fullWidth
+                margin="dense"
+                {...register("age")}
+                error={errors.age ? true : false}
+                type="number"
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.age?.message}
+              </Typography>
+              Activity
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                // value={selectedNutritionist}
+                // onChange={handleChange}
+                name="activity"
+                width="100%"
+                {...register("activity")}
+                error={errors.activity ? true : false}
+              >
+                {activityChoices.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Typography variant="inherit" color="textSecondary">
+                {errors.activity?.message}
+              </Typography>
+              Goal
+              <Select
+                labelId="demo-simple-select-filled-label"
+                id="demo-simple-select-filled"
+                // value={selectedNutritionist}
+                // onChange={handleChange}
+                name="goal"
+                width="100%"
+                {...register("goal")}
+                error={errors.goal ? true : false}
+              >
+                {goalChoice.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+              <Typography variant="inherit" color="textSecondary">
+                {errors.goal?.message}
+              </Typography>
+              <button type="submit">Calculate</button>
+            </form>
+          </Box>
+        </Grid>
+        <Grid xs={6}>
+          Fat: {fat} <br />
+          Protein: {protein}
+          <br />
+          Carbs: {carbs}
+          <br />
+          Calories: {minCalories} - {maxCalories}
+          <br />
+        </Grid>
+      </Grid>
+      <Modal
+        open={opens}
+        onClose={handleCloses}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>Caution</Box>
+      </Modal>
+      <Box sx={{ border: 1, mx: 2 }}>
         {" "}
         <form onSubmit={handleSubmit1(onSubmitHandlerGenerator)}>
           Meal Plan Generator Questionnaire
           <br />
-          Cuisine
-          <Grid container spacing={2}>
-            {cuisineChoice.map((item, index) => (
-              <Grid item xs={6} sm={4} md={2} key={index}>
-                <div
-                  key={index}
-                  onClick={() => handleCuisineClick(item.label)}
-                  style={{
-                    background: isSelectedCuisine(item.label)
-                      ? "#D4CE98"
-                      : "white",
-                  }}
-                >
-                  <center>
-                    {/* <img src={item.image} width="40%" height="40%" /> */}
-                  </center>
-                  <Typography
-                    sx={{
-                      color: "#000000",
-                    }}
-                  >
-                    <img src={item.image} height="50" weight="50" />
-                    <br />
-                    {item.label}
-                  </Typography>
-                </div>
+          <Box sx={{ mx: 6 }}>
+            <Grid container spacing={2}>
+              <Grid xs={4}>
+                Cuisine
+                <Grid container spacing={2}>
+                  {cuisineChoice.map((item, index) => (
+                    <Grid item xs={6} sm={4} md={4} key={index}>
+                      <div
+                        key={index}
+                        onClick={() => handleCuisineClick(item.label)}
+                        style={{
+                          background: isSelectedCuisine(item.label)
+                            ? "#D4CE98"
+                            : "white",
+                        }}
+                      >
+                        <center>
+                          {/* <img src={item.image} width="40%" height="40%" /> */}
+                        </center>
+                        <Typography
+                          sx={{
+                            color: "#000000",
+                          }}
+                        >
+                          <img src={item.image} height="50" weight="50" />
+                          <br />
+                          {item.label}
+                        </Typography>
+                      </div>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
-          Cuisine:{" "}
-          {/* <Select
+              {/* <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
             // value={selectedNutritionist}
@@ -1838,38 +1872,40 @@ function MealPlanTest() {
           <Typography variant="inherit" color="textSecondary">
             {errors1.cuisine?.message}
           </Typography> */}
-          Diet{" "}
-          <Grid container spacing={2}>
-            {dietChoices.map((item, index) => (
-              <Grid item xs={6} sm={4} md={3} key={index}>
-                <div
-                  key={item}
-                  item={item}
-                  onClick={() => handleDietClick(item.label)}
-                  isSelectedDiet={() => selectedDiet === item.label}
-                  style={{
-                    background: isSelectedDiet(item.label)
-                      ? "lightblue"
-                      : "white",
-                  }}
-                >
-                  <center>
-                    {/* <img src={item.image} width="40%" height="40%" /> */}
-                  </center>
-                  <Typography
-                    sx={{
-                      color: "#000000",
-                    }}
-                  >
-                    <img src={item.image} height="50" weight="50" />
-                    <br />
-                    {item.label}
-                  </Typography>
-                </div>
+              <Grid xs={4}>
+                Diet{" "}
+                <Grid container spacing={2}>
+                  {dietChoices.map((item, index) => (
+                    <Grid item xs={6} sm={4} md={6} key={index}>
+                      <div
+                        key={item}
+                        item={item}
+                        onClick={() => handleDietClick(item.label)}
+                        isSelectedDiet={() => selectedDiet === item.label}
+                        style={{
+                          background: isSelectedDiet(item.label)
+                            ? "lightblue"
+                            : "white",
+                        }}
+                      >
+                        <center>
+                          {/* <img src={item.image} width="40%" height="40%" /> */}
+                        </center>
+                        <Typography
+                          sx={{
+                            color: "#000000",
+                          }}
+                        >
+                          <img src={item.image} height="50" weight="50" />
+                          <br />
+                          {item.label}
+                        </Typography>
+                      </div>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
-          {/* <Select
+              {/* <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
             // value={selectedNutritionist}
@@ -1888,38 +1924,42 @@ function MealPlanTest() {
           <Typography variant="inherit" color="textSecondary">
             {errors1.diet?.message}
           </Typography> */}
-          <br />
-          Allergens
-          <Grid container spacing={2}>
-            {allergens.map((item, index) => (
-              <Grid item xs={6} sm={4} md={2} key={index}>
-                <div
-                  key={item}
-                  item={item}
-                  onClick={() => handleAllergensClick(item.label)}
-                  isSelectedDiet={() => selectedDiet === item.label}
-                  style={{
-                    background: isSelectedAllergen(item.label)
-                      ? "pink"
-                      : "white",
-                  }}
-                >
-                  <center>
-                    {/* <img src={item.image} width="40%" height="40%" /> */}
-                  </center>
-                  <Typography
-                    sx={{
-                      color: "#000000",
-                    }}
-                  >
-                    <img src={item.image} height="50" weight="50" />
-                    <br />
-                    {item.label}
-                  </Typography>
-                </div>
+              <br />
+              <Grid xs={4}>
+                Allergens
+                <Grid container spacing={2}>
+                  {allergens.map((item, index) => (
+                    <Grid item xs={6} sm={4} md={4} key={index}>
+                      <div
+                        key={item}
+                        item={item}
+                        onClick={() => handleAllergensClick(item.label)}
+                        isSelectedDiet={() => selectedDiet === item.label}
+                        style={{
+                          background: isSelectedAllergen(item.label)
+                            ? "pink"
+                            : "white",
+                        }}
+                      >
+                        <center>
+                          {/* <img src={item.image} width="40%" height="40%" /> */}
+                        </center>
+                        <Typography
+                          sx={{
+                            color: "#000000",
+                          }}
+                        >
+                          <img src={item.image} height="50" weight="50" />
+                          <br />
+                          {item.label}
+                        </Typography>
+                      </div>
+                    </Grid>
+                  ))}
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
+            </Grid>
+          </Box>
           {/* <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"

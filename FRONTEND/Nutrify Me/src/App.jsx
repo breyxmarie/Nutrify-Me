@@ -15,6 +15,7 @@ import MealPlanGeneratorGeneratedMeal from "./components/Meal Plan Generator/Mea
 import MealPlanGeneratorHistory from "./components/Meal Plan Generator/MealPlanGeneratorHistory";
 import MealPlanSelection from "./components/Meal Plan Generator/MealPlanSelection";
 import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
+import Paypal from "./components/Meal Plan Shop/Paypal";
 import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
 import MealPlanShopMealPlanHistory from "./components/Meal Plan Shop/MealPlanShopMealPlanHistory";
 import MealPlanShopTrackOrders from "./components/Meal Plan Shop/MealPlanShopTrackOrders";
@@ -61,6 +62,7 @@ import Dietician from "./components/Admin/Dietician";
 import AdminNavbBar from "./components/NavBars/AdminNavBar";
 import SellerNavBar from "./components/NavBars/SellerNavBar";
 import SellerHome from "./components/Seller/SellerHome";
+import SellerOrders from "./components/Seller/SellerOrders";
 import SellerCreateMealPlan from "./components/Seller/SellerCreateMealPlan";
 import SellerMenuItems from "./components/Seller/SellerMenuItems";
 import { LoggedInUserProvider } from "./components/LoggedInUserContext";
@@ -267,7 +269,15 @@ function App() {
                     </>
                   }
                 />
-                {/* meal plan generator  */} MealPlanHistory
+                {/* meal plan generator  Paypal MealPlanHistory  */}
+                <Route
+                  path="/paypal-payment"
+                  element={
+                    <>
+                      <Paypal />
+                    </>
+                  }
+                />
                 <Route
                   path="/meal-plan-generator-home"
                   element={
@@ -497,6 +507,16 @@ function App() {
                     <>
                       <SellerNavBar />
                       <SellerMenuItems />
+                      <Footer />
+                    </>
+                  }
+                />
+                <Route
+                  path="/seller-orders"
+                  element={
+                    <>
+                      <SellerNavBar />
+                      <SellerOrders />
                       <Footer />
                     </>
                   }

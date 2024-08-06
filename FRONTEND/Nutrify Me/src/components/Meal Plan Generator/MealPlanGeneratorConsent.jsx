@@ -99,6 +99,7 @@ function MealPlanGeneratorConsent() {
           PROCEED
         </Button>
       </Box>
+      <ToastContainer />
     </div>
   );
 }

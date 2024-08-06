@@ -126,6 +126,8 @@ class Address(models.Model):
     name = models.CharField(max_length=100)
     default = models.BooleanField(default=0)
     postalcode = models.CharField(max_length=15)
+    longi = models.FloatField() 
+    lang = models.FloatField() 
 
     class Meta:
         db_table = "address"
@@ -142,6 +144,8 @@ class Order(models.Model):
     notes = models.CharField(max_length=(400))
     totalprice = models.IntegerField()
     shipping_price = models.IntegerField()
+    payment_details = JSONField()
+    schedule_date = JSONField()
 
     class Meta:
         db_table = "order"

@@ -82,7 +82,7 @@ function MealPlangeneratorHome() {
         (item) => (
           //  item.meal.map((items) => (
           <>
-            <Grid container spacing={2} sx={{ mx: "30%" }}>
+            <Grid container spacing={2} sx={{ mx: "30%", mt: 2 }}>
               <Grid xs={2}>
                 {" "}
                 <Grid container spacing={2} sx={{ mx: 0 }}>

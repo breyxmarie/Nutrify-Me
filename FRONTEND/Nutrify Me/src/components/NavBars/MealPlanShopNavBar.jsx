@@ -17,7 +17,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 const pages = [
   { names: "SHOP", links: "/meal-plan-shop-home" },
   { names: " MEAL PLANS", links: "/meal-plan-shop-meal-plans" },
-  { names: "MEAL PLAN HISTORY", links: "/meal-plan-shop-meal-plan-history" },
+  // { names: "MEAL PLAN HISTORY", links: "/meal-plan-shop-meal-plan-history" },
   { names: "TRACK ORDERS", links: "/meal-plan-shop-track-orders" },
 ];
 

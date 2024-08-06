@@ -75,12 +75,12 @@ class CartSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
-        fields = ('address_id','user_id','phone','address','name','default', 'postalcode') 
+        fields = ('address_id','user_id','phone','address','name','default', 'postalcode', 'longi', 'lang') 
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ('order_id','user_id','orders','date','status','address_id','payment','shipping', 'notes', 'totalprice', 'shipping_price')
+        fields = ('order_id','user_id','orders','date','status','address_id','payment','shipping', 'notes', 'totalprice', 'shipping_price', 'payment_details', 'schedule_date')
 
 class JournalEntrySerializer(serializers.ModelSerializer):
     class Meta:

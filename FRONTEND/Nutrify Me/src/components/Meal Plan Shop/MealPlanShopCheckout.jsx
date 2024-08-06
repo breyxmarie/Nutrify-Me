@@ -36,16 +36,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import dotenv from "dotenv";
 import axios from "axios";
-import {
-  PayPalScriptProvider,
-  PayPalButtons,
-  // PayPalCardFieldsProvider,
-  // PayPalNameField,
-  // PayPalNumberField,
-  // PayPalExpiryField,
-  // PayPalCVVField,
-  // usePayPalCardFields,
-} from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import {
   PayPalCardFieldsProvider,
   PayPalNameField,
@@ -56,8 +47,30 @@ import {
 } from "@paypal/react-paypal-js";
 import PayPalPayment from "./PayPalPayment";
 import LalamoveApi from "./LalamoveApi";
-
+import {
+  APIProvider,
+  Map,
+  //MapCameraChangedEvent,
+  Marker,
+} from "@vis.gl/react-google-maps";
 import SDKClient from "@lalamove/lalamove-js";
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
+import Autocomplete from "react-google-autocomplete";
+import useOnclickOutside from "react-cool-onclickoutside";
+import ScriptLoader from "@s-ui/react-script-loader";
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  // getLatLng,
+} from "react-places-autocomplete";
+import {
+  regions,
+  provinces,
+  cities,
+  barangays,
+} from "select-philippines-address";
 
 function MealPlanShopCheckout() {
   const { cartId } = useParams();
@@ -70,8 +83,19 @@ function MealPlanShopCheckout() {
   const [notes, setNotes] = useState("n/a");
   const [payment, setPayment] = useState("");
   const [shipping, setShipping] = useState("");
+  const [selectedLong, setSelectedLong] = useState(0);
+  const [selectedLat, setSelectedLat] = useState(0);
+  const [shippingDetails, setShippingDetails] = useState([]);
+  const API_KEY = "AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0";
 
   //! get Address Data
+  //changeAddress(0);
+  const addressDatas = () => {};
+  const [addressValue, setAddressValue] = useState("");
+
+  const handleChangeAddress = (event) => {
+    setAddressValue(event.target.value);
+  };
 
   const [addressData, setAddressData] = useState([]);
 
@@ -82,8 +106,38 @@ function MealPlanShopCheckout() {
         (item) => item.user_id === loggedInUser.user_id
       );
       setAddressData(filteredData);
-      console.log(addressData);
+      console.log(response);
       // getMealData();
+
+      setTimeout(async () => {
+        try {
+          const quotationData = await LalamoveApi.createQuotation(
+            filteredData[0].lang,
+            filteredData[0].longi,
+            filteredData[0].address
+          );
+          console.log(quotationData);
+          setShippingPrice(
+            quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
+          );
+          const tempPrice = calculateSubTotalPrice();
+          setTotalOrderPrice(
+            parseInt(tempPrice) +
+              parseInt(
+                quotationData?.data?.data?.priceBreakdown
+                  ?.totalExcludePriorityFee
+              )
+          );
+
+          console.log(tempPrice);
+          setShippingDetails(quotationData);
+          // setTotalOrderPrice(
+          //   parseInt(subTotalPrices) + parseInt(shippingPrice)
+          // );
+        } catch (error) {
+          console.error("Error creating quotation:", error.message);
+        }
+      }, 2000); // Simulate a 2-second delay
     } catch (error) {
       console.error("Error fetching address data:", error);
     }
@@ -110,6 +164,167 @@ function MealPlanShopCheckout() {
     reset(); // Call reset function to clear form state and errors
   };
   //!
+
+  //! usePlaces
+  const [searchOriginLatitude, setSearchOriginLatitude] = useState(56);
+  const [searchOriginLongtitude, setSearchOriginLongtitude] = useState(23);
+
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    apiKey: "AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0",
+    callbackName: "AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0",
+    requestOptions: { componentRestrictions: { country: "ph" } },
+    debounce: 300,
+  });
+
+  const ref = useOnclickOutside(() => {
+    clearSuggestions();
+  });
+
+  const handleInput = (e) => {
+    setValue(e.target.value);
+  };
+  const handleSelect =
+    ({ description }) =>
+    () => {
+      setValue(description, false);
+      clearSuggestions();
+
+      console.log(description, false);
+
+      getGeocode({ address: description }).then((results) => {
+        const { lat, lng } = getLatLng(results[0]);
+        console.log("Coordinate: ", lat, lng);
+        setSearchOriginLatitude(lat);
+        setSearchOriginLongtitude(lng);
+      });
+    };
+
+  useEffect(() => {
+    console.log(data);
+    if (searchOriginLatitude && searchOriginLongtitude) {
+      console.log(
+        `Retrieved ${searchOriginLatitude} and ${searchOriginLongtitude}`
+      );
+    }
+  }, [searchOriginLatitude, searchOriginLongtitude]);
+
+  const renderSuggestions = () =>
+    data.map((suggestion) => {
+      const {
+        place_id,
+        structured_formatting: { main_text, secondary_text },
+      } = suggestion;
+
+      return (
+        <li cl key={place_id} onClick={handleSelect(suggestion)}>
+          <strong>{main_text}</strong> <small>{secondary_text}</small>
+        </li>
+      );
+    });
+
+  //!
+  //? address
+  const [regionData, setRegion] = useState([]);
+  const [provinceData, setProvince] = useState([]);
+  const [cityData, setCity] = useState([]);
+  const [barangayData, setBarangay] = useState([]);
+
+  const [regionAddr, setRegionAddr] = useState("");
+  const [provinceAddr, setProvinceAddr] = useState("");
+  const [cityAddr, setCityAddr] = useState("");
+  const [barangayAddr, setBarangayAddr] = useState("");
+
+  const region = () => {
+    regions().then((response) => {
+      setRegion(response);
+    });
+  };
+
+  const province = (e) => {
+    setRegionAddr(e.target.selectedOptions[0].text);
+    provinces(e.target.value).then((response) => {
+      setProvince(response);
+      setCity([]);
+      setBarangay([]);
+    });
+  };
+
+  const city = (e) => {
+    setProvinceAddr(e.target.selectedOptions[0].text);
+    cities(e.target.value).then((response) => {
+      setCity(response);
+    });
+  };
+
+  const barangay = (e) => {
+    setCityAddr(e.target.selectedOptions[0].text);
+
+    const temp =
+      addressValue +
+      " " +
+      regionAddr +
+      " " +
+      provinceAddr +
+      " " +
+      e.target.selectedOptions[0].text;
+    //e.target.selectedOptions[0].text;
+
+    console.log(temp);
+    setValue(temp);
+    console.log(
+      getGeocode({ address: temp }).then((results) => {
+        const { lat, lng } = getLatLng(results[0]);
+        console.log("Coordinate: ", lat, lng);
+        setSearchOriginLatitude(lat);
+        setSearchOriginLongtitude(lng);
+      })
+    );
+    barangays(e.target.value).then((response) => {
+      setBarangay(response);
+    });
+  };
+
+  const brgy = (e) => {
+    setBarangayAddr(e.target.selectedOptions[0].text);
+    console.log(
+      regionAddr,
+      " ",
+      provinceAddr,
+      " ",
+      cityAddr,
+      " ",
+      barangayAddr
+    );
+
+    const temp =
+      addressValue + " " + regionAddr + " " + provinceAddr + " " + cityAddr;
+    //e.target.selectedOptions[0].text;
+
+    console.log(temp);
+    setValue(temp);
+    console.log(
+      getGeocode({ address: temp }).then((results) => {
+        const { lat, lng } = getLatLng(results[0]);
+        console.log("Coordinate: ", lat, lng);
+        setSearchOriginLatitude(lat);
+        setSearchOriginLongtitude(lng);
+      })
+    );
+  };
+
+  useEffect(() => {
+    region();
+    console.log(addressData);
+    console.log("try");
+  }, []);
+
+  //?
 
   //! get Cart data
 
@@ -215,8 +430,8 @@ function MealPlanShopCheckout() {
 
     name: yup.string().required("Name is required"),
     phone: yup.string().required("Phone is required"),
-    street: yup.string().required("Street is required"),
-    address2: yup.string().required("Address is required"),
+    //  street: yup.string().required("Street is required"),
+    // address2: yup.string().required("Address is required"),
     postalcode: yup.string().required("Postal Code is required"),
   });
 
@@ -234,10 +449,15 @@ function MealPlanShopCheckout() {
       AxiosInstance.post(`address/`, {
         user_id: loggedInUser.user_id,
         phone: data.phone,
-        address: data.street + " " + data.address2,
+        address: value,
         name: data.name,
         default: false,
         postalcode: data.postalcode,
+        longi: searchOriginLatitude,
+        lang: searchOriginLongtitude,
+
+        // setSearchOriginLatitude(lat);
+        // setSearchOriginLongtitude(lng);
       }).then((res) => {
         console.log(res, res.data);
         getAddressData();
@@ -252,7 +472,7 @@ function MealPlanShopCheckout() {
   const secondschema = yup.object().shape({
     payment: yup.string().required("Payment Method is required"),
 
-    shipping: yup.string().required("Shipping is required"),
+    //shipping: yup.string().required("Shipping is required"),
     // .integer("Please enter an integer value"),
     // Other fields
 
@@ -268,17 +488,9 @@ function MealPlanShopCheckout() {
   });
 
   const onSubmitHandler1 = async (data) => {
-    console.log(payment);
-    navigate(
-      data.payment === "Paypal"
-        ? "/user-home"
-        : data.payment === "GCash"
-        ? "/user-home"
-        : "/meal-plan-shop-home"
-    );
-
-    try {
-      AxiosInstance.post(`order/`, {
+    console.log(data);
+    if (payment === "Paypal") {
+      const datas = {
         user_id: loggedInUser.user_id,
         orders: cartData[0].orders,
         date: dayjs().format("YYYY-MM-DD"),
@@ -287,25 +499,67 @@ function MealPlanShopCheckout() {
         payment: payment,
         shipping: data.shipping,
         notes: notes,
-        totalprice: subTotalPrices,
+        totalprice: parseInt(totalOrderPrice),
         shipping_price: shippingPrice,
-        // shippingPrice
-      }).then((res) => {
-        console.log(res, res.data);
+      };
 
-        try {
-          const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
-          console.log(response);
-        } catch (error) {
-          console.log(error);
-        }
-        // getAddressData();
-        // handleReset();
-        // setActiveTab(0);
-      });
-    } catch (error) {
-      console.log(error);
+      try {
+        const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
+        console.log(response);
+
+        navigate("/paypal-payment", { state: datas });
+      } catch (error) {
+        console.log(error);
+      }
+
+      console.log(datas);
+      navigate("/paypal-payment", { state: datas });
+    } else {
+      try {
+        console.log(addressData[selectedAddress].address_id);
+        AxiosInstance.post(`order/`, {
+          user_id: loggedInUser.user_id,
+          orders: cartData[0].orders,
+          date: dayjs().format("YYYY-MM-DD"),
+          status: "Ordered",
+          address_id: addressData[selectedAddress].address_id,
+          payment: payment,
+          shipping: "Lalamove",
+          notes: notes,
+          totalprice: parseInt(totalOrderPrice),
+          shipping_price: parseInt(shippingPrice),
+          payment_details: ["Cash on Delivery", "Cash on Delivery"],
+          // shippingPrice
+        }).then((res) => {
+          console.log(res, res.data);
+
+          try {
+            const response = AxiosInstance.delete(
+              `cart/${cartData[0].cart_id}`
+            );
+            console.log(response);
+
+            navigate("/meal-plan-shop-home");
+          } catch (error) {
+            console.log(error);
+          }
+          // getAddressData();
+          // handleReset();
+          // setActiveTab(0);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
+
+    // console.log(payment);
+    // navigate(
+    //   data.payment === "Paypal"
+    //     ? "/user-home"
+    //     : data.payment === "GCash"
+    //     ? "/user-home"
+    //     : "/meal-plan-shop-home"
+    // );
   };
 
   //!
@@ -356,11 +610,13 @@ function MealPlanShopCheckout() {
 
   // modal codes open list address
   const style = {
+    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
+    overflowY: "auto",
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
+    width: "80%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -390,7 +646,16 @@ function MealPlanShopCheckout() {
 
     getCartData();
     getAddressData();
+    const tempPrice = calculateSubTotalPrice();
+    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
   }, []);
+
+  useEffect(() => {
+    // addNewObject();
+
+    const tempPrice = calculateSubTotalPrice();
+    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+  }, [shippingPrice]);
 
   useEffect(() => {
     if (cartData.length > 0 && shopMeal.length === 0) {
@@ -433,7 +698,9 @@ function MealPlanShopCheckout() {
             >
               {addressData.map((item, index) => (
                 <FormControlLabel
-                  onChange={() => setSelectedAddress(item.address_id)}
+                  //  onChange={() => setSelectedAddress(index)}
+
+                  onChange={() => changeAddress(index)}
                   // onChange={() =>
                   //   setSelectedAddress(console.log(item.address_id))
                   // }
@@ -518,24 +785,106 @@ function MealPlanShopCheckout() {
                 </Typography>
               </Grid>
             </Grid>
+            <select onChange={province} onSelect={region}>
+              <option disabled>Select Region</option>
+              {regionData &&
+                regionData.length > 0 &&
+                regionData.map((item) => (
+                  <option key={item.region_code} value={item.region_code}>
+                    {item.region_name}
+                  </option>
+                ))}
+            </select>
+            <br />
+            <select onChange={city}>
+              <option disabled>Select Province</option>
+              {provinceData &&
+                provinceData.length > 0 &&
+                provinceData.map((item) => (
+                  <option key={item.province_code} value={item.province_code}>
+                    {item.province_name}
+                  </option>
+                ))}
+            </select>
+            <br />
+            <select onChange={barangay}>
+              <option disabled>Select City</option>
+              {cityData &&
+                cityData.length > 0 &&
+                cityData.map((item) => (
+                  <option key={item.city_code} value={item.city_code}>
+                    {item.city_name}
+                  </option>
+                ))}
+            </select>
+            <br />
+            <select onChange={brgy}>
+              <option disabled>Select Barangay</option>
+              {barangayData &&
+                barangayData.length > 0 &&
+                barangayData.map((item) => (
+                  <option key={item.brgy_code} value={item.brgy_code}>
+                    {item.brgy_name}
+                  </option>
+                ))}
+            </select>
             <Typography>Address</Typography>
 
             <TextField
               id="street"
               name="street"
+              value={addressValue}
+              onChange={handleChangeAddress}
               label="Food Street Name, Building, House No."
               placeholder="Street Name, Building, House No."
               fullWidth
               margin="dense"
-              {...register("street")}
-              error={errors.street ? true : false}
+              //   {...register("street")}
+              // error={errors.street ? true : false}
             />
             <Typography variant="inherit" color="textSecondary">
               {errors.street?.message}
             </Typography>
             <br />
             <br />
-            <TextField
+
+            <APIProvider
+              apiKey={API_KEY}
+              onLoad={() => console.log("Maps API has loaded.")}
+            >
+              <div style={{ height: "400px" }}>
+                {/* <Map
+            defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+            defaultZoom={10}
+          /> */}
+                <Map
+                  defaultZoom={13}
+                  //  defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+                  center={{
+                    lat: searchOriginLatitude,
+                    lng: searchOriginLongtitude,
+                  }}
+
+                  // onCameraChanged={(ev: MapCameraChangedEvent) =>
+                  //   console.log(
+                  //     "camera changed:",
+                  //     ev.detail.center,
+                  //     "zoom:",
+                  //     ev.detail.zoom
+                  //   )
+                  // }
+                >
+                  <Marker
+                    position={{
+                      lat: searchOriginLatitude,
+                      lng: searchOriginLongtitude,
+                    }}
+                  />
+                </Map>
+              </div>
+            </APIProvider>
+
+            {/* <TextField
               id="address2"
               name="address2"
               label="Barangay, City"
@@ -544,10 +893,10 @@ function MealPlanShopCheckout() {
               margin="dense"
               {...register("address2")}
               error={errors.address2 ? true : false}
-            />
-            <Typography variant="inherit" color="textSecondary">
+            /> */}
+            {/* <Typography variant="inherit" color="textSecondary">
               {errors.address2?.message}
-            </Typography>
+            </Typography> */}
             <br />
             <br />
             <TextField
@@ -727,18 +1076,22 @@ function MealPlanShopCheckout() {
 
     setTimeout(async () => {
       try {
-        const quotationData = await LalamoveApi.createQuotation();
+        const quotationData = await LalamoveApi.createQuotation(
+          5,
+          6,
+          "fsdsdffd"
+        );
         console.log(quotationData);
       } catch (error) {
         console.error("Error creating quotation:", error.message);
       }
     }, 2000); // Simulate a 2-second delay
-    const fetchedQuotes = await LalamoveApi.getQuotes(
-      pickupLocations,
-      deliveryLocations,
-      goodss
-    );
-    setQuotes(fetchedQuotes);
+    // const fetchedQuotes = await LalamoveApi.getQuotes(
+    //   pickupLocations,
+    //   deliveryLocations,
+    //   goodss
+    // );
+    // setQuotes(fetchedQuotes);
   };
 
   const handleCreateOrder = async (selectedQuote) => {
@@ -810,6 +1163,56 @@ function MealPlanShopCheckout() {
 
   // TODO lalamove api
 
+  const handleMapsApiLoad = () => {
+    // This function will be called when the library is loaded
+    console.log("Google Maps Places API loaded successfully!");
+    // You can perform additional setup here if needed
+  };
+
+  const [addresss, setAddresss] = React.useState("");
+
+  const handleChanges = (value) => {
+    setAddresss(value);
+  };
+
+  const handleSelects = (value) => {
+    setAddress(value);
+  };
+
+  useEffect(() => {
+    // changeAddress(0);
+  }, []);
+
+  const changeAddress = (index) => {
+    setSelectedAddress(index);
+    setSelectedLong(addressData[index].lang);
+    setSelectedLat(addressData[index].longi);
+
+    setTimeout(async () => {
+      try {
+        const quotationData = await LalamoveApi.createQuotation(
+          addressData[index].lang,
+          addressData[index].longi,
+          addressData[index].address
+        );
+        console.log(quotationData);
+        setShippingPrice(
+          quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
+        );
+        const tempPrice = calculateSubTotalPrice();
+        setTotalOrderPrice(
+          parseInt(tempPrice) +
+            parseInt(
+              quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
+            )
+        );
+        setShippingDetails(quotationData);
+      } catch (error) {
+        console.error("Error creating quotation:", error.message);
+      }
+    }, 2000); // Simulate a 2-second delay
+  };
+  // changeAddress(1);
   return (
     <div
       className="content"
@@ -820,6 +1223,133 @@ function MealPlanShopCheckout() {
         color: "#000000",
       }}
     >
+      {/* <Autocomplete
+        apiKey={"AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0"}
+        onPlaceSelected={(place) => {
+          console.log(place);
+        }}
+      />
+      <Autocomplete
+        apiKey={"AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0"}
+        style={{ width: "90%" }}
+        onPlaceSelected={(place) => {
+          console.log(place);
+        }}
+        options={{
+          types: ["(regions)"],
+          componentRestrictions: { country: "ru" },
+        }}
+        defaultValue="Amsterdam"
+      /> */}
+      {/* <script
+        defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0&libraries=places&callback=handleMapsApiLoad"
+      >
+        {" "}
+      </script> */}
+      {/* <ScriptLoader
+        src={
+          "https://maps.googleapis.com/maps/api/js?key=AIzaSyBOMdigs7wUPHJpS_WKReoXSuSXXprE8D0&libraries=places&callback=handleMapsApiLoad"
+        }
+        verifier={() => true}
+        isAsync={false}
+        render={() => "Ready to render!"}
+      /> */}
+      {/* <input type="text" defaultValue="try" /> */}
+      {/* <div ref={ref}>
+        <input
+          value={value}
+          onChange={handleInput}
+          disabled={!ready}
+          placeholder="Your Origin"
+        />
+
+        {status === "OK" && <ul>{renderSuggestions()}</ul>}
+      </div> */}
+      {/* <div ref={ref}>
+        <input
+          value={value}
+          onChange={handleInput}
+          disabled={!ready}
+          placeholder="Where are you going?"
+        />
+
+        {status === "OK" && <ul>{renderSuggestions()}</ul>}
+      </div> */}
+      {/* <div>
+        <PlacesAutocomplete
+          value={addresss}
+          onChange={handleChanges}
+          onSelect={handleSelects}
+        >
+          {({
+            getInputProps,
+            suggestions,
+            getSuggestionItemProps,
+            loading,
+          }) => (
+            <div>
+              <input
+                {...getInputProps({
+                  placeholder: "Enter Address...",
+                })}
+              />
+              <div>
+                {loading && <div>Loading...</div>}
+                {suggestions.map((suggestion) => {
+                  const style = suggestion.active
+                    ? { backgroundColor: "#a83232", cursor: "pointer" }
+                    : { backgroundColor: "#ffffff", cursor: "pointer" };
+
+                  return (
+                    <div {...getSuggestionItemProps(suggestion, { style })}>
+                      {suggestion.description}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </PlacesAutocomplete>
+      </div> */}
+      {/* <APIProvider
+        apiKey={API_KEY}
+        onLoad={() => console.log("Maps API has loaded.")}
+      >
+        <div style={{ height: "400px" }}>
+          <Map
+            defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+            defaultZoom={10}
+          />
+          <Map
+            defaultZoom={13}
+            //  defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+            center={{
+              lat: searchOriginLatitude,
+              lng: searchOriginLongtitude,
+            }}
+
+            // onCameraChanged={(ev: MapCameraChangedEvent) =>
+            //   console.log(
+            //     "camera changed:",
+            //     ev.detail.center,
+            //     "zoom:",
+            //     ev.detail.zoom
+            //   )
+            // }
+          >
+            <Marker
+              position={{
+                lat: searchOriginLatitude,
+                lng: searchOriginLongtitude,
+              }}
+            />
+          </Map>
+        </div>
+      </APIProvider> */}
+      {/* <p>Address</p>
+      {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
+      //! test google maps //! */}
       {/* //? */}
       <div>
         {/* ... input fields for pickup, delivery, goods */}
@@ -870,11 +1400,55 @@ function MealPlanShopCheckout() {
                 <Typography sx={{ color: "#000000" }}>Loading...</Typography>
               ) : (
                 <>
+                  {console.log(
+                    addressData[selectedAddress].lang,
+                    selectedAddress,
+                    selectedLong,
+                    selectedLat
+                  )}
                   <Typography sx={{ color: "#000000" }}>
-                    {addressData[selectedAddress - 1].name} |{" "}
-                    {addressData[selectedAddress - 1].phone} <br />
-                    {addressData[selectedAddress - 1].address}
+                    {addressData[selectedAddress]?.name} |{" "}
+                    {addressData[selectedAddress]?.phone} <br />
+                    {addressData[selectedAddress]?.address}
                   </Typography>
+
+                  <APIProvider
+                    apiKey={API_KEY}
+                    onLoad={() => console.log("Maps API has loaded.")}
+                  >
+                    <div style={{ height: "100px" }}>
+                      {/* <Map
+            defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+            defaultZoom={10}
+          /> */}
+                      <Map
+                        defaultZoom={13}
+                        //  defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+                        center={{
+                          // lat: addressData[selectedAddress].lang,
+                          // lng: addressData[selectedAddress].longi,
+                          lat: parseFloat(selectedLong),
+                          lng: parseFloat(selectedLat),
+                        }}
+
+                        // onCameraChanged={(ev: MapCameraChangedEvent) =>
+                        //   console.log(
+                        //     "camera changed:",
+                        //     ev.detail.center,
+                        //     "zoom:",
+                        //     ev.detail.zoom
+                        //   )
+                        // }
+                      >
+                        <Marker
+                          position={{
+                            lat: parseFloat(selectedLong),
+                            lng: parseFloat(selectedLat),
+                          }}
+                        />
+                      </Map>
+                    </div>
+                  </APIProvider>
                 </>
               )}
               {/* <Typography sx={{ color: "#000000" }}>
@@ -1047,14 +1621,14 @@ function MealPlanShopCheckout() {
                 {...register1("payment")}
                 error={errors1.payment ? true : false}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 value="GCash"
                 control={<Radio />}
                 label="GCash"
                 onChange={handleChange}
                 {...register1("payment")}
                 error={errors1.payment ? true : false}
-              />
+              /> */}
             </RadioGroup>
             <Typography variant="inherit" color="textSecondary">
               {errors1.payment?.message}
@@ -1087,10 +1661,22 @@ function MealPlanShopCheckout() {
           <br />
           <Grid container spacing={2} sx={{ my: 5 }}>
             {" "}
-            <Grid xs={6}>SHIPPING</Grid>
             <Grid xs={6}>
-              {" "}
-              <FormControl sx={{ ml: 15, mb: 3 }}>
+              SHIPPING DETAILS <br />
+              Courier: Lalamove
+            </Grid>
+            <Grid xs={6}>
+              Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
+              <br />
+              Extra Mileage:{" "}
+              {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
+              <br />
+              Total:{" "}
+              {
+                shippingDetails?.data?.data?.priceBreakdown
+                  ?.totalExcludePriorityFee
+              }
+              {/* <FormControl sx={{ ml: 15, mb: 3 }}>
                 <FormLabel id="demo-radio-buttons-group-label">
                   Shipping/Delivery
                 </FormLabel>
@@ -1129,7 +1715,7 @@ function MealPlanShopCheckout() {
                 <Typography variant="inherit" color="textSecondary">
                   {errors1.shipping?.message}
                 </Typography>
-              </FormControl>
+              </FormControl> */}
             </Grid>
           </Grid>
           <hr />
@@ -1152,6 +1738,7 @@ function MealPlanShopCheckout() {
 
         {/* <Link to={"/meal-plan-shop-home"}> */}
         <Button
+          onClick={() => placeOrder()}
           type="submit"
           sx={{
             background: "#E66253",
