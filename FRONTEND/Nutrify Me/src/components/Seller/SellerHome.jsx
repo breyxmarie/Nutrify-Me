@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import Slider from "react-slick";
+import ChatBox from "./ChatBox";
 
 function SellerHome() {
   const handleNextC = () => {
@@ -202,6 +203,7 @@ function SellerHome() {
         color: "#99756E",
       }}
     >
+      <ChatBox />
       <Grid container spacing={2}>
         <Grid xs={6} sx={{ color: "#99756E" }}>
           <Box

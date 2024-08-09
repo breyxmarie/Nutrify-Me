@@ -9,6 +9,7 @@ const LalamoveApi = {
     "sk_test_k+9yCKYHFfgX3wPv5wbVWWUDyD2z+4EY1Dm4kANmV6BI8Bg6JLeribyYsxCadY1O",
 
   async createQuotation(long, lat, address) {
+    console.log(long, lat, address);
     const serviceType = "MOTORCYCLE"; // Adjust based on your needs (e.g., CAR, VAN)
     const specialRequests = ["THERMAL_BAG_1"]; // Optional - adjust if needed
     const item = {
@@ -325,7 +326,7 @@ const LalamoveApi = {
     return response.data;
   },
 
-  async createOrder(quotationID, custPhoneNum, name, remark) {
+  async createOrder(quotationID, custPhoneNum, name, remark, stop1, stop2) {
     // const response = await axios.post(`${this.baseUrl}/orders`, orderDetails, {
     //   headers: {
     //     Authorization: `Basic ${btoa(this.apiKey + ":")}`,
@@ -337,14 +338,14 @@ const LalamoveApi = {
       data: {
         quotationId: quotationID,
         sender: {
-          stopId: pm.environment.get("stopId-0"),
+          stopId: stop1,
           name: "Nutrify Me",
           phone: "+639171561080",
         },
 
         recipients: [
           {
-            stopId: pm.environment.get("stopId-1"),
+            stopId: stop2,
             name: name,
             phone: custPhoneNum,
             remarks: remark, // optional
@@ -361,7 +362,7 @@ const LalamoveApi = {
     const datas = JSON.stringify(body);
 
     const method = "POST";
-    const url = "/v3/quotations";
+    const url = "/v3/orders";
     const signatureString = `${time}\r\n${method}\r\n${url}\r\n\r\n${datas}`;
 
     const signature = CryptoJS.HmacSHA256(
@@ -382,7 +383,7 @@ const LalamoveApi = {
     try {
       console.log(TOKEN);
       const response = await axios.post(
-        `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
+        `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/orders`,
         //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,
 
         //! watch out here for deployment baka mag kaerror

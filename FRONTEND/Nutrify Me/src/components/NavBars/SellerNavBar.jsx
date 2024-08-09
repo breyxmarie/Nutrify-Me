@@ -31,6 +31,7 @@ function SellerNavBar() {
     { names: "HOME", links: "/seller-home" },
     { names: "EDIT MEAL PLAN", links: "/seller-createMealPlan" },
     { names: "MENU ITEMS", links: "/seller-menu-items" },
+    { names: "ORDERS", links: "/seller-orders" },
   ];
 
   const StyledLink = `

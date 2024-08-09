@@ -18,6 +18,7 @@ const pages = [
   { names: "SHOP", links: "/meal-plan-shop-home" },
   { names: " MEAL PLANS", links: "/meal-plan-shop-meal-plans" },
   // { names: "MEAL PLAN HISTORY", links: "/meal-plan-shop-meal-plan-history" },
+  { names: "REQUEST ORDERS", links: "/meal-plan-shop-track-orders" },
   { names: "TRACK ORDERS", links: "/meal-plan-shop-track-orders" },
 ];
 

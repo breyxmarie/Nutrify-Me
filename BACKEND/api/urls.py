@@ -40,7 +40,14 @@ urlpatterns = [
     path('verifynutritionist/<int:pk>', VerifyNutritionistAPI), 
     path('generatedmeal/', GeneratedMealAPI),
     path('generated/<int:pk>', GeneratedMealAPI),
+    path('requestomeals/', RequestMealsAPI),
+    path('requestomeals/<int:pk>', RequestMealsAPI),
+    path('theme/', ThemeAPI),
+    path('theme/<int:pk>', ThemeAPI),
+    path('deployedorder/', DeployedOrderAPI),
+    path('deployedorder/<int:pk>', DeployedOrderAPI),
     path('savefilelicense', SaveFileLicense),
+
 
   #  path('SaveFile', SaveFile), 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -129,3 +129,19 @@ class GeneratedMealSerializer(serializers.ModelSerializer):
                   'allergen', 
                   'height',
                   'weight')
+        
+class RequestMealsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequestMeals
+        fields = ('request_id', 'user_id','generatedMeal_id', 'date', 'status' )
+
+class ThemeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Theme
+        fields = ('theme_id', 'primaryColor', 'secondaryColor', 'logo' )
+
+class DeployedOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeployedOrder
+        fields = ('deployed_id', 'user', 'order','address', 'order_details', 'date', 'time',
+                   'status')

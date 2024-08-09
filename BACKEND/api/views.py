@@ -617,3 +617,111 @@ def GeneratedMealAPI(request, pk=0):
         generatedMeal.delete()
         return JsonResponse("Generated Meal was deleted Successfully", safe = False)
     
+
+
+@csrf_exempt
+def RequestMealsAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            requestMeals = RequestMeals.objects.all()
+            serializer = RequestMealsSerializer(requestMeals, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                requestMeals = RequestMeals.objects.get(pk=pk)
+                serializer = RequestMealsSerializer(requestMeals)
+                return JsonResponse(serializer.data, safe=False)
+            except RequestMeals.DoesNotExist:
+                return JsonResponse({'error': 'Requested Meals not found'}, status=404)
+    elif request.method == 'POST':
+        requestMeals_data = JSONParser().parse(request)
+        requestMeals_serializer = RequestMealsSerializer(data = requestMeals_data)
+        if requestMeals_serializer.is_valid():
+            requestMeals_serializer.save()
+            return JsonResponse("Requested Meals Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Request Meals", safe=False)
+    elif request.method == 'PUT':
+        requestMeals_data = JSONParser().parse(request)
+        requestMealss = VerifyNutritionist.objects.get(request_id=requestMeals_data['request_id'])
+        requestMeals_serializer = RequestMealsSerializer(requestMealss, data = requestMeals_data)
+        if requestMeals_serializer.is_valid():
+            requestMeals_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        requestMeals = GeneratedMeal.objects.get(verify_id=pk)
+        requestMeals.delete()
+        return JsonResponse("Requested Meals was deleted Successfully", safe = False)
+
+
+@csrf_exempt
+def ThemeAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            theme = Theme.objects.all()
+            serializer = ThemeSerializer(theme, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                theme = Theme.objects.get(pk=pk)
+                serializer = ThemeSerializer(theme)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'Theme not found'}, status=404)
+    elif request.method == 'POST':
+        theme_data = JSONParser().parse(request)
+        theme_serializer = ThemeSerializer(data = theme_data)
+        if theme_serializer.is_valid():
+            theme_serializer.save()
+            return JsonResponse("Theme Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Theme", safe=False)
+    elif request.method == 'PUT':
+        theme_data = JSONParser().parse(request)
+        themes = Theme.objects.get(request_id=theme_data['theme_id'])
+        theme_serializer = RequestMealsSerializer(themes, data = theme_data)
+        if theme_serializer.is_valid():
+            theme_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        theme = Theme.objects.get(theme_id=pk)
+        theme.delete()
+        return JsonResponse("Theme was deleted Successfully", safe = False)
+    
+
+@csrf_exempt
+def DeployedOrderAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            deployedOrder = DeployedOrder.objects.all()
+            serializer = DeployedOrderSerializer(deployedOrder, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                deployedOrder = DeployedOrder.objects.get(pk=pk)
+                serializer = DeployedOrderSerializer(deployedOrder)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'DeployedOrder not found'}, status=404)
+    elif request.method == 'POST':
+        deployedOrder_data = JSONParser().parse(request)
+        deployedOrder_serializer = DeployedOrderSerializer(data = deployedOrder_data)
+        if deployedOrder_serializer.is_valid():
+            deployedOrder_serializer.save()
+            return JsonResponse("Deployed Order Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Deployed Order",safe=False)
+    elif request.method == 'PUT':
+        deployedOrder_data = JSONParser().parse(request)
+        deployedOrders = DeployedOrder.objects.get(deployed_id=deployedOrder_data['deployed_id'])
+        deployedOrder_serializer = DeployedOrderSerializer(deployedOrders, data = deployedOrder_data)
+        if deployedOrder_serializer.is_valid():
+            deployedOrder_serializer.save()
+            return JsonResponse("Update Successfully",  safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        deployedOrder = DeployedOrder.objects.get(theme_id=pk)
+        deployedOrder.delete()
+        return JsonResponse("Deployed Order was deleted Successfully", safe = False)

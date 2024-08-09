@@ -529,6 +529,10 @@ function MealPlanShopCheckout() {
           totalprice: parseInt(totalOrderPrice),
           shipping_price: parseInt(shippingPrice),
           payment_details: ["Cash on Delivery", "Cash on Delivery"],
+          schedule_date: [
+            dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+            dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+          ],
           // shippingPrice
         }).then((res) => {
           console.log(res, res.data);

@@ -1,54 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import "./chatbox.css";
+import Box from "@mui/material/Box";
+import AxiosInstance from "../forms/AxiosInstance";
+import Grid from "@mui/material/Grid";
 
-function ChatBox() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState("");
+function ChatBox(props) {
+  const [orders, setOrders] = useState([]);
 
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
+  const getData = () => {
+    try {
+      AxiosInstance.get(`deployedorder/`).then((res) => {
+        console.log(res, res.data);
+
+        const foundOrder = res.data.filter((item) => item.status !== "Done");
+
+        console.log(foundOrder);
+        setOrders(foundOrder);
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
   };
 
-  const handleSendMessage = () => {
-    setMessages([...messages, message]);
-    setMessage("");
+  useEffect(() => {
+    getData();
+  }, []);
+  let hide = {
+    display: "none",
+  };
+  let show = {
+    display: "block",
+  };
+  let textRef = React.createRef();
+  const { messages } = props;
+
+  const [chatopen, setChatopen] = useState(false);
+  const toggle = (e) => {
+    setChatopen(!chatopen);
   };
 
   return (
-    <div>
-      <button onClick={toggleChat}>Open Chat</button>
-      {isOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: "300px",
-            height: "300px",
-            backgroundColor: "white",
-            border: "1px solid #ccc",
-            boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.1)",
-            zIndex: 999,
-          }}
-        >
-          <button onClick={toggleChat} style={{ float: "right" }}>
-            X
-          </button>
-          <div style={{ height: "200px", overflowY: "scroll" }}>
-            {messages.map((msg, index) => (
-              <div key={index}>{msg}</div>
-            ))}
-          </div>
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            style={{ width: "100%" }}
-          />
-          <button onClick={handleSendMessage}>Send</button>
+    <div id="chatCon">
+      <div class="chat-box" style={chatopen ? show : hide}>
+        <div class="header">On Going Orders</div>
+        <br />
+        {orders.map((item) => (
+          <Box sx={{ border: 1 }}>
+            Date: {item.date}
+            Time:
+            {item.time}
+            <br />
+            Customer:
+            <br />
+            <br />
+            Link:
+            <a href={item.order_details.data.data.shareLink}>
+              <Grid container spacing={2}>
+                {" "}
+                <Grid xs={6}>{item.order_details.data.data.shareLink}</Grid>
+                <Grid xs={6}> </Grid>
+              </Grid>
+            </a>
+            <a>fdf</a>
+          </Box>
+        ))}
+        {/* <div class="header">Chat with me</div>
+        <div class="msg-area">
+          {messages.map((msg, i) =>
+            i % 2 ? (
+              <p class="right">
+                <span>{msg}</span>
+              </p>
+            ) : (
+              <p class="left">
+                <span>{msg}</span>
+              </p>
+            )
+          )}
         </div>
-      )}
+        <div class="footer">
+          <input type="text" ref={textRef} />
+          <button>
+            <i class="fa fa-paper-plane"></i>
+          </button>
+        </div> */}
+      </div>
+      <div class="pop">
+        <p>
+          {/* <img
+            onClick={toggle}
+            src="https://p7.hiclipart.com/preview/151/758/442/iphone-imessage-messages-logo-computer-icons-message.jpg"
+            alt=""
+          /> */}
+
+          <Box onClick={toggle}>Orders</Box>
+        </p>
+      </div>
     </div>
   );
 }

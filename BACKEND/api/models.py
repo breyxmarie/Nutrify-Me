@@ -218,3 +218,34 @@ class GeneratedMeal(models.Model):
 
     class Meta:
         db_table = "generated_meal"
+
+class RequestMeals(models.Model):
+    request_id =models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss100")
+    generatedMeal_id =  models.ForeignKey(GeneratedMeal, on_delete=models.CASCADE, related_name="listingsss100")
+    date = models.DateField()
+    status = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "request_meals"
+
+class Theme(models.Model):
+    theme_id = models.AutoField(primary_key=True)
+    primaryColor = models.CharField(max_length=50)
+    secondaryColor = models.CharField(max_length=50)
+    logo = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = "theme"
+
+class DeployedOrder(models.Model):
+    deployed_id = models.AutoField(primary_key=True)
+    user =  JSONField()
+    order =  JSONField()
+    address = JSONField()
+    order_details = JSONField()
+    date = models.DateField()
+    time = models.TimeField()
+    status = models.CharField(max_length=50) 
+    class Meta:
+        db_table = "deployed_order"

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState, useEffect, useContext } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,9 +13,8 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-
+import AxiosInstance from "../forms/AxiosInstance";
 import { NavLink, Link, useLocation } from "react-router-dom";
-import { useState, useContext } from "react";
 import ColorContext from "../ColorContext"; // Import the context
 import ImageContext from "../ImageContext";
 import LogIn from "../LogIn";
@@ -60,6 +60,11 @@ function userNotLogInNavBar() {
   const { logo, setLogo } = useContext(ImageContext);
   const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
     useContext(ColorContext);
+
+  useEffect(() => {
+    const res = AxiosInstance.get(`foodentry`);
+    console.log(primaryColor);
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);

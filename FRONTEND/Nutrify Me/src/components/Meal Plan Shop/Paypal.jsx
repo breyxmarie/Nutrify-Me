@@ -50,6 +50,10 @@ function Paypal() {
         totalprice: location.state.totalprice,
         shipping_price: location.state.shipping_price,
         payment_details: order,
+        schedule_date: [
+          dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+          dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+        ],
         // shippingPrice
       }).then((res) => {
         console.log(res, res.data);
