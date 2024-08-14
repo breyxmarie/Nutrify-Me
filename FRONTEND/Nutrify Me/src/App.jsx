@@ -16,6 +16,9 @@ import MealPlanGeneratorHistory from "./components/Meal Plan Generator/MealPlanG
 import MealPlanSelection from "./components/Meal Plan Generator/MealPlanSelection";
 import MealPlanShopHome from "./components/Meal Plan Shop/MealPlanShopHome";
 import Paypal from "./components/Meal Plan Shop/Paypal";
+import PayPalRequest from "./components/Meal Plan Shop/PayPalRequest";
+import MealPlanShopRequest from "./components/Meal Plan Shop/MealPlanShopRequest";
+import MealPlanShopRequestCheckout from "./components/Meal Plan Shop/MealPlanShopRequestCheckout";
 import MealPlanShopMealPlans from "./components/Meal Plan Shop/MealPlanShopMealPlans";
 import MealPlanShopMealPlanHistory from "./components/Meal Plan Shop/MealPlanShopMealPlanHistory";
 import MealPlanShopTrackOrders from "./components/Meal Plan Shop/MealPlanShopTrackOrders";
@@ -63,6 +66,7 @@ import AdminNavbBar from "./components/NavBars/AdminNavBar";
 import SellerNavBar from "./components/NavBars/SellerNavBar";
 import SellerHome from "./components/Seller/SellerHome";
 import SellerOrders from "./components/Seller/SellerOrders";
+import SellerRequestOrders from "./components/Seller/SellerRequestOrders";
 import SellerCreateMealPlan from "./components/Seller/SellerCreateMealPlan";
 import SellerMenuItems from "./components/Seller/SellerMenuItems";
 import { LoggedInUserProvider } from "./components/LoggedInUserContext";
@@ -198,6 +202,16 @@ function App() {
                   }
                 />
                 <Route
+                  path="/meal-plan-shop-request"
+                  element={
+                    <>
+                      <MainUserNavBar />
+                      <MealPlanShopNavBar />
+                      <MealPlanShopRequest /> <UserFooter />
+                    </>
+                  }
+                />
+                <Route
                   path="/meal-plan-shop-meal-plans"
                   element={
                     <>
@@ -259,6 +273,16 @@ function App() {
                   }
                 />
                 <Route
+                  path="/meal-plan-shop-request-checkout"
+                  element={
+                    <>
+                      <MainUserNavBar />
+                      <MealPlanShopNavBar />
+                      <MealPlanShopRequestCheckout /> <UserFooter />
+                    </>
+                  }
+                />
+                <Route
                   path="/meal-plan-shop-order/:orderId?"
                   element={
                     <>
@@ -275,6 +299,14 @@ function App() {
                   element={
                     <>
                       <Paypal />
+                    </>
+                  }
+                />
+                <Route
+                  path="/paypal-payment-request"
+                  element={
+                    <>
+                      <PayPalRequest />
                     </>
                   }
                 />
@@ -527,6 +559,16 @@ function App() {
                     <>
                       <SellerNavBar />
                       <SellerCreateMealPlan />
+                      <Footer />
+                    </>
+                  }
+                />
+                <Route
+                  path="/seller-request-meals"
+                  element={
+                    <>
+                      <SellerNavBar />
+                      <SellerRequestOrders />
                       <Footer />
                     </>
                   }

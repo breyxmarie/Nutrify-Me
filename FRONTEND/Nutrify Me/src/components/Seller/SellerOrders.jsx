@@ -37,6 +37,10 @@ function SellerOrders() {
   const [orderDetails, setOrderDetails] = useState([]);
 
   const style = {
+    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
+    display: "flex",
+    flexDirection: "column",
+    overflowY: "auto",
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -78,10 +82,18 @@ function SellerOrders() {
     const tempMealsData = await AxiosInstance.get(`shopmeal`);
 
     const orderItems = allOrder.find((item) => item.order_id === orderId);
-    console.log(tempPlanData.data);
+    console.log(orderItems);
 
     // let tempPlan = allOrder.find((item) => item.order_id === orderId);
-    let tempMealArray = [];
+    let tempMealArray = [
+      { day: 1, meals: [] },
+      { day: 2, meals: [] },
+      { day: 3, meals: [] },
+      { day: 4, meals: [] },
+      { day: 5, meals: [] },
+    ];
+    const newMeals = [];
+    //  let tempMealArray = [];
     {
       orderItems.orders.forEach((items) => {
         const planIds = tempPlanData.data.find(
@@ -94,16 +106,33 @@ function SellerOrders() {
           (item) => item.mealplan_id === planIds.shop_mealplan_id
         );
 
+        // const newMealDetail = {
+        //   meal_plan: planIds,
+        //   meals: meals,
+        // };
+        console.log(meals);
+        let dayMeals = [];
+        {
+          meals.forEach((item) => {
+            const temp = parseInt(item.day) - 1;
+            console.log(tempMealArray[temp].meals, parseInt(item.day));
+
+            tempMealArray[parseInt(temp)].meals.push(item);
+          });
+        }
+        console.log(tempMealArray);
         const newMealDetail = {
           meal_plan: planIds,
-          meals: meals,
+          meals: tempMealArray,
         };
-        tempMealArray.push(newMealDetail);
+
+        newMeals.push(newMealDetail);
+        console.log(newMeals);
       });
     }
     // setSelectedMealDetails([...selectedMealDetails, newMealDetail]);
 
-    setSelectedMealDetails(tempMealArray);
+    setSelectedMealDetails(newMeals);
     console.log(selectedMealDetails);
     // tempPlan.filter((item) => item.user_id === userId;
     // setUserDetails(userData.find((item) => item.user_id === userId));
@@ -273,10 +302,11 @@ function SellerOrders() {
 
       setOnGoingOrder(filteredOnGoingData);
 
-      const filteredDoneData = response.filter((item) => {
-        item.status === "Delivered";
-      });
+      const filteredDoneData = response.filter(
+        (item) => item.status === "Delivered"
+      );
 
+      console.log(response.filter((item) => item.status === "Delivered"));
       setDoneOrder(filteredDoneData);
 
       const userDeets = await AxiosInstance.get(`user`);
@@ -335,6 +365,22 @@ function SellerOrders() {
       });
     } catch (error) {}
   };
+
+  const groupByDay = (data) => {
+    const groupedData = {};
+    for (const item of data) {
+      const day = item.day; // Assuming you have a "day" property in each item
+      if (!groupedData[day]) {
+        groupedData[day] = [];
+      }
+      groupedData[day].push(item);
+    }
+
+    console.log(data);
+
+    return groupedData;
+  };
+
   return (
     <div
       className="content"
@@ -404,13 +450,49 @@ function SellerOrders() {
                     aria-describedby="modal-description"
                   >
                     <Box sx={style}>
+                      <Grid container spacing={2}>
+                        <Grid xs={2}>
+                          {" "}
+                          <img src="/images/food journal icon.png" />
+                        </Grid>
+                        <Grid xs={8}>Order Details</Grid>
+                        <Grid xs={2}>
+                          <Button
+                            key={index}
+                            sx={{ float: "right" }}
+                            onClick={() => handleCloseDetails()}
+                          >
+                            <img
+                              src="/images/close.png"
+                              height="10"
+                              weight="10"
+                            />
+                          </Button>
+                        </Grid>
+                      </Grid>
                       {selectedMealDetails.map((item) => (
                         <>
-                        <Typography>{item.meal_plan.name}</Typography>
-                        <Typography>{item.meal_plan.name}</Typography>
+                          <Typography>{item.meal_plan.name}</Typography>
+                          {console.log(item.meals)}
+                          Orders: <br />
+                          <Grid container spacing={2} sx={{ m: 1.5 }}>
+                            {item.meals.map((items, index) => (
+                              <Box>
+                                Day {items.day}
+                                <Grid container spacing={2} sx={{ m: 1.5 }}>
+                                  {items.meals.map((i, index) => (
+                                    <Grid item xs={3} sm={3} md={3} key={index}>
+                                      <Box>
+                                        {i.type}:{i.food}
+                                      </Box>
+                                    </Grid>
+                                  ))}
+                                </Grid>
+                              </Box>
+                            ))}
+                          </Grid>
                         </>
-                       )
-                      )}
+                      ))}
                     </Box>
                   </Modal>
                 </Grid>
@@ -518,8 +600,212 @@ function SellerOrders() {
           </Grid>
         ))}
       </Grid>
-      On Going Orders <br />
       Past Orders
+      {doneOrder.map((item, index) => (
+        <Grid item xs={3} sm={4} md={6} key={index}>
+          <Box
+            sx={{
+              border: 1,
+              backgroundColor: "#E66253",
+              borderRadius: 3,
+              color: "#ffffff",
+            }}
+          >
+            <br />
+
+            <Grid container spacing={2}>
+              <Grid xs={5}>Date: {item.date}</Grid>
+              <Grid xs={6}>Payment: {item.payment}</Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid xs={6}>
+                Name:
+                {
+                  userData?.find((items) => items.user_id === item.user_id)
+                    ?.first_name
+                }
+              </Grid>
+              <Grid xs={6}>
+                Total Order Price:{item.totalprice - item.shipping_price}{" "}
+              </Grid>
+              <Grid xs={6}></Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid xs={6}>
+                <Button
+                  sx={{
+                    color: "#ffffff",
+                    border: 0,
+                    // fontWeight: "bold",
+                    backgroundColor: "#539801",
+                    "&:hover": {
+                      backgroundColor: "#ffffff",
+                      color: " #539801",
+                      border: 0.5,
+                      borderColor: "#539801",
+                    },
+                  }}
+                  onClick={() => handleOpenDetails(item.order_id)}
+                >
+                  Details
+                </Button>
+
+                <Modal
+                  open={isOpenDetails}
+                  onClose={handleCloseDetails}
+                  aria-labelledby="modal-title"
+                  aria-describedby="modal-description"
+                >
+                  <Box sx={style}>
+                    <Grid container spacing={2}>
+                      <Grid xs={2}>
+                        {" "}
+                        <img src="/images/food journal icon.png" />
+                      </Grid>
+                      <Grid xs={8}>Order Details</Grid>
+                      <Grid xs={2}>
+                        <Button
+                          key={index}
+                          sx={{ float: "right" }}
+                          onClick={() => handleCloseDetails()}
+                        >
+                          <img
+                            src="/images/close.png"
+                            height="10"
+                            weight="10"
+                          />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    {selectedMealDetails.map((item) => (
+                      <>
+                        <Typography>{item.meal_plan.name}</Typography>
+                        {console.log(item.meals)}
+                        Orders: <br />
+                        <Grid container spacing={2} sx={{ m: 1.5 }}>
+                          {item.meals.map((items, index) => (
+                            <Box>
+                              Day {items.day}
+                              <Grid container spacing={2} sx={{ m: 1.5 }}>
+                                {items.meals.map((i, index) => (
+                                  <Grid item xs={3} sm={3} md={3} key={index}>
+                                    <Box>
+                                      {i.type}:{i.food}
+                                    </Box>
+                                  </Grid>
+                                ))}
+                              </Grid>
+                            </Box>
+                          ))}
+                        </Grid>
+                      </>
+                    ))}
+                  </Box>
+                </Modal>
+              </Grid>
+              <Grid xs={6}>Shipping Price:{item.shipping_price}</Grid>
+            </Grid>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid xs={6}></Grid>
+              <Grid xs={6}>Total Price:{item.totalprice}</Grid>
+            </Grid>
+
+            <Modal
+              open={isOpen}
+              onClose={handleClose}
+              aria-labelledby="modal-title"
+              aria-describedby="modal-description"
+            >
+              <Box sx={style}>
+                {" "}
+                {item.date}
+                <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
+                  <Grid xs={2}>
+                    {" "}
+                    <img src="/images/food journal icon.png" />
+                  </Grid>
+                  <Grid xs={8}>Edit Food Information</Grid>
+                  <Grid xs={2}>
+                    <Button sx={{ float: "right" }} onClick={handleClose}>
+                      <img src="/images/close.png" height="10" weight="10" />
+                    </Button>
+                  </Grid>
+                </Grid>
+                Name:
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{
+                    width: "70%",
+                    background: "#ffffff",
+                    borderRadius: 0,
+                  }}
+                  // value={param.meals.Breakfast.food}
+                  name="name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+                Phone Number:
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{
+                    width: "70%",
+                    background: "#ffffff",
+                    borderRadius: 0,
+                  }}
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  // value={param.meals.Breakfast.food}
+                  name="name"
+                />
+                {selectedAddress}
+                <Button
+                  onClick={() =>
+                    createOrder(selectedAddress, selectedUser, selectedOrder)
+                  }
+                >
+                  Create Order
+                </Button>
+              </Box>
+            </Modal>
+            <Button
+              sx={{
+                color: "#ffffff",
+                border: 0,
+                // fontWeight: "bold",
+                backgroundColor: "#539801",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: " #539801",
+                  border: 0.5,
+                  borderColor: "#539801",
+                },
+              }}
+              onClick={() =>
+                handleOpen(item.address_id, item.user_id, item.order_id)
+              }
+            >
+              Deploy Order
+            </Button>
+            <Button
+              onClick={() => completeOrder(item.order_id)}
+              sx={{
+                color: "#E66253",
+                border: 0,
+                // fontWeight: "bold",
+                backgroundColor: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#E66253",
+                  color: "#ffffff",
+                  border: 0.5,
+                  borderColor: "#ffffff",
+                },
+              }}
+            >
+              Order Done
+            </Button>
+          </Box>
+        </Grid>
+      ))}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useMemo } from "react";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { VideoPlayer } from "./VideoPlayer";
+import { useLoggedInUser } from "../LoggedInUserContext";
 //
 import {
   MeetingProvider,
@@ -13,6 +14,8 @@ import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
 function NutritionistHome() {
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
   // const APP_ID = "da6708a41b464c7fb30a7bb85468663b";
   // const TOKEN =
   //   "007eJxTYNgo7/7gmKK17tGmvXNZXURTHti8Dvs+55Ts1bPfFZ3FDtkrMKQkmpkbWCSaGCaZmJkkm6clGRskmiclWZiamFmYmRkn/VcySmsIZGSIDZdgZmSAQBCfh8E5P6+4NKcksSQzP4+BAQAvoyGl";
@@ -27,7 +30,7 @@ function NutritionistHome() {
   const micRef = useRef(null);
 
   function JoinScreen({ getMeetingAndToken }) {
-    const [meetingId, setMeetingId] = useState(null);
+    const [meetingId, setMeetingId] = useState("hykm-ec71-maf8");
     const onClick = async () => {
       await getMeetingAndToken(meetingId);
     };
@@ -151,7 +154,7 @@ function NutritionistHome() {
   }
 
   function MeetingView(props) {
-    const [joined, setJoined] = useState(null);
+    const [joined, setJoined] = useState("JOINED");
     //Get the method which will be used to join the meeting.
     //We will also get the participants list to display all participants
     const { join, participants } = useMeeting({
@@ -164,29 +167,68 @@ function NutritionistHome() {
         props.onMeetingLeave();
       },
     });
+    // const firstElement = [...participants.entries()][0];
+    // // const [key, value] = firstElement;
+    // console.log(firstElement[0]);
     const joinMeeting = () => {
       setJoined("JOINING");
       join();
     };
 
+    useEffect(() => {
+      join();
+    }, []);
+
+    useEffect(() => {
+      // const firstElement = [...participants.entries()][0];
+      // // const [key, value] = firstElement;
+      // console.log(firstElement[0]);
+    }, [participants]);
+
     return (
       <div className="container">
         <h3>Meeting Id: {props.meetingId}</h3>
+        {console.log([...participants.entries()].length)}
         {joined && joined == "JOINED" ? (
           <div>
             <Controls />
             //For rendering all the participants in the meeting
-            {[...participants.keys()].map((participantId) => (
-              <ParticipantView
-                participantId={participantId}
-                key={participantId}
-              />
-            ))}
+            {[...participants.entries()].length === 1 ? (
+              <>
+                {console.log(participants, "hi")}
+                <ParticipantView
+                  participantId={[...participants.entries()][0][0]}
+                  key={[...participants.entries()][0][0]}
+                />
+              </>
+            ) : [...participants.entries()].length > 1 ? (
+              <>
+                {" "}
+                <ParticipantView
+                  participantId={[...participants.entries()][0][0]}
+                  key={[...participants.entries()][0][0]}
+                />
+                <br />
+                <ParticipantView
+                  participantId={[...participants.entries()][1][1]}
+                  key={[...participants.entries()][1][1]}
+                />
+              </>
+            ) : (
+              <div>hi</div>
+            )}
+            {/* // {[...participants.keys()].map((participantId) => (
+            //   <ParticipantView
+            //     participantId={participantId}
+            //     key={participantId}
+            //   />
+            // ))} */}
           </div>
         ) : joined && joined == "JOINING" ? (
           <p>Joining the meeting...</p>
         ) : (
-          <button onClick={joinMeeting}>Join</button>
+          // <button onClick={joinMeeting}>Join</button>
+          <div>hi</div>
         )}
       </div>
     );
@@ -355,7 +397,9 @@ function NutritionistHome() {
           </MeetingProvider>
         ) : (
           // <JoinScreen getMeetingAndToken={getMeetingAndToken} />
-          <JoinScreen getMeetingAndToken={meetingId} />
+          // <JoinScreen getMeetingAndToken={meetingId} />
+
+          <div>hi</div>
         )}
         //! {/* <ParticipantView props={getMeetingAndToken} /> */}
       </div>

@@ -14,6 +14,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
+import dayjs from "dayjs";
 
 function MealPlanHistory() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
@@ -139,6 +140,24 @@ function MealPlanHistory() {
   ];
 
   //?
+  const requestOrder = (id) => {
+    //Requested
+    //Pending
+    //Approved
+    //Disapproved
+    try {
+      AxiosInstance.post(`requestedmeals/`, {
+        user_id: loggedInUser.user_id,
+        generatedMeal_id: id,
+        date: dayjs().format("YYYY-MM-DD"),
+        status: "Pending",
+      }).then((res) => {
+        console.log(res, res.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div
@@ -213,6 +232,7 @@ function MealPlanHistory() {
                         color: "#E66253",
                       },
                     }}
+                    onClick={() => requestOrder(item.generatedMeal_id)}
                   >
                     Request To Order
                   </Button>

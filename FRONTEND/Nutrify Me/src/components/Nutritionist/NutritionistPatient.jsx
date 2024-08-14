@@ -4,8 +4,11 @@ import { useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 function NutritionistPatient() {
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
   const patient = [
     { patientID: "01", username: "Brey" },
     { patientID: "02", username: "Brey" },

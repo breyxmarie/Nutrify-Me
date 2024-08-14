@@ -21,6 +21,7 @@ import Dayjs from "dayjs";
 import moment from "moment";
 
 function NutritionistAppointment() {
+  const [todayApp, setTodayApp] = useState();
   //! retrieving data.
 
   const [appointmentData, setAppointmentData] = useState([
@@ -54,8 +55,16 @@ function NutritionistAppointment() {
   //  const te = appointmentData.filter(
   //   (item) => item.date === Dayjs(initialValue).format("YYYY-MM-DD")
   // );
+
+  function formatTime12Hour(date) {
+    const hours = date.getHours() % 12 || 12;
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const period = date.getHours() >= 12 ? "PM" : "AM";
+    return `${hours}:${minutes} ${period}`;
+  }
   const [todayAppointment, setTodayAppointment] = useState();
-  const GetData = () => {
+  const GetData = async () => {
+    const user = await AxiosInstance.get(`user`);
     AxiosInstance.get(`appointment`).then((res) => {
       {
         res.data.map((item, index) =>
@@ -64,41 +73,115 @@ function NutritionistAppointment() {
       }
       console.log(res.data);
 
-      const condition = (item) => item.id > 1;
-      const filteredData = res.data.filter(
-        (item) =>
-          item.nutritionist_id === loggedInUser.user_id &&
-          moment(item.date).isSameOrAfter(moment(), "day")
+      const tempNutDataApp = res.data.filter(
+        (data) => data.nutritionist_id === nutritionist.nutritionist_id
       );
+      const condition = (item) => item.id > 1;
+      // const filteredData = res.data.filter(
+      //   (item) =>
+      //     item.nutritionist_id === loggedInUser.user_id &&
+      //     moment(item.date).isSameOrAfter(moment(), "day")
+      // );
 
-      console.log("try try", filteredData, loggedInUser.user_id);
+      const filteredData = res.data.filter(
+        (data) =>
+          data.nutritionist_id === nutritionist.nutritionist_id &&
+          moment(data.date).isSameOrAfter(moment(), "day")
+      );
+      console.log("try try", filteredData);
+
+      setTodayAppointment(
+        filteredData.filter(
+          (data) => data.date === dayjs().format("YYYY-MM-DD")
+        )
+      );
+      console.log(
+        filteredData.find((data) => data.date === dayjs().format("YYYY-MM-DD"))
+      );
       setAppointmentData(filteredData);
 
       const te = filteredData.filter(
         (item) => item.date === Dayjs(initialValue).format("YYYY-MM-DD")
       );
 
+      const formattedTime = filteredData.find(
+        (data) => data.date === dayjs().format("YYYY-MM-DD")
+      ).time;
+
+      const formattedDay = filteredData.find(
+        (data) => data.date === dayjs().format("YYYY-MM-DD")
+      ).date;
+
       if (te) {
         console.log("console console", te);
         setTodayAppointment(
-          <Box>
+          <Box sx={{ mx: 10 }}>
             {" "}
-            <p>{te[0].user_id}</p>
-            <p>Time: {te[0].time}</p>
-            <p>Dietitian: Bea</p>
+            <Grid container spacing={2}>
+              <Grid xs={4}>
+                <img
+                  width="100"
+                  height="100"
+                  src={
+                    user.data.find(
+                      (user) =>
+                        user.user_id ===
+                        filteredData.find(
+                          (data) => data.date === dayjs().format("YYYY-MM-DD")
+                        ).user_id
+                    )?.image
+                  }
+                />
+              </Grid>
+              <Grid xs={6}>
+                {" "}
+                <p>
+                  User: {console.log(user.data)}
+                  {
+                    user.data.find(
+                      (user) =>
+                        user.user_id ===
+                        filteredData.find(
+                          (data) => data.date === dayjs().format("YYYY-MM-DD")
+                        ).user_id
+                    )?.first_name
+                  }
+                </p>
+              </Grid>
+            </Grid>
+            <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
+              Date:{" "}
+              {
+                filteredData.find(
+                  (data) => data.date === dayjs().format("YYYY-MM-DD")
+                ).date
+              }
+            </Typography>
+            <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
+              Time:
+              {console.log(
+                // formatTime12Hour(formattedTime),
+                formattedTime,
+                dayjs(formattedDay + formattedTime).format("h:mm A")
+              )}
+              {dayjs(formattedDay + formattedTime).format("h:mm A")}
+            </Typography>
             <center>
               <Link
-                to="/nutritionist-consultation"
+                to={{
+                  pathname: "/nutritionist-consultation",
+                  //  state: { data: myStateData },
+                }}
                 style={{
                   color: "#ffffff",
                 }}
               >
                 <Button sx={{ background: "#E66253", color: "#ffffff" }}>
-                  Go to Consultation
+                  Call
                 </Button>
               </Link>
             </center>
-            <Link
+            {/* <Link
               to="/nutritionist-consultation"
               style={{
                 color: "#ffffff",
@@ -107,12 +190,13 @@ function NutritionistAppointment() {
               <Button sx={{ background: "#E66253", color: "#ffffff" }}>
                 Go to Consultation
               </Button>
-            </Link>{" "}
+            </Link>{" "} */}
           </Box>
         );
       } else {
         setTodayAppointment(<h2>No Scheduled Consultation </h2>);
       }
+
       setScheduledAppointments(
         <Grid container spacing={2}>
           {filteredData.map((item, index) => (
@@ -177,7 +261,8 @@ function NutritionistAppointment() {
   }, []);
   //!
 
-  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
@@ -255,7 +340,7 @@ function NutritionistAppointment() {
                 sm={6}
                 md={3.5}
                 key={index}
-                sx={{ border: 1, mx: "10px" }}
+                sx={{ border: 2, mx: "50px", borderRadius: 3 }}
               >
                 <Grid container spacing={2}>
                   <Grid xs={6}>
@@ -372,7 +457,7 @@ function NutritionistAppointment() {
                   sm={6}
                   md={3.5}
                   key={index}
-                  sx={{ border: 1, mx: "50px" }}
+                  sx={{ border: 2, mx: "50px", borderRadius: 3 }}
                 >
                   <Grid container spacing={2}>
                     <Grid xs={6}>

@@ -763,7 +763,8 @@ function SellerCreateMealPlan() {
   //!
   const [activeButtonIndex, setActiveButtonIndex] = useState(null);
 
-  const buttons = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
+  //const buttons = ["SUN", "MON", "TUES", "WED", "THURS", "FRI", "SAT"];
+  const buttons = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"];
 
   const meal = [
     {
@@ -923,27 +924,43 @@ function SellerCreateMealPlan() {
 
   const changeDiv = (index, day) => {
     switch (day) {
-      case "SUN":
-        setDay("Sunday");
+      case "Day 1":
+        setDay("Day 1");
         break;
-      case "MON":
-        setDay("Monday");
+      case "Day 2":
+        setDay("Day 2");
         break;
-      case "TUES":
-        setDay("Tuesday");
+      case "Day 3":
+        setDay("Day 3");
         break;
-      case "WED":
-        setDay("Wednesday");
+      case "Day 4":
+        setDay("Day 4");
         break;
-      case "THURS":
-        setDay("Thursday");
+      case "Day 5":
+        setDay("Day 5");
         break;
-      case "FRI":
-        setDay("Friday");
-        break;
-      case "SAT":
-        setDay("Saturday");
-        break;
+
+      // case "SUN":
+      //   setDay("Sunday");
+      //   break;
+      // case "MON":
+      //   setDay("Monday");
+      //   break;
+      // case "TUES":
+      //   setDay("Tuesday");
+      //   break;
+      // case "WED":
+      //   setDay("Wednesday");
+      //   break;
+      // case "THURS":
+      //   setDay("Thursday");
+      //   break;
+      // case "FRI":
+      //   setDay("Friday");
+      //   break;
+      // case "SAT":
+      //   setDay("Saturday");
+      //   break;
     }
 
     setActiveButtonIndex(index);
@@ -967,7 +984,7 @@ function SellerCreateMealPlan() {
             </Typography>
             <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
               <Grid container spacing={2} sx={{ my: 2 }}>
-                <Grid xs={2}>
+                <Grid xs={3}>
                   <img
                     src={
                       tempMeal[index]?.meals?.[mealName]?.image ||
@@ -978,7 +995,7 @@ function SellerCreateMealPlan() {
                     alt="Meal Image" // Add an alt attribute for accessibility
                   />
                 </Grid>
-                <Grid xs={8} sx={{ mx: 4, mt: 5 }}>
+                <Grid xs={7} sx={{ mx: 4, mt: 5 }}>
                   <Typography
                     sx={{
                       color: "#99756E",
@@ -1438,7 +1455,7 @@ function SellerCreateMealPlan() {
         <Grid xs={8}>
           <Grid container spacing={2}>
             {buttons.map((buttonLabel, index) => (
-              <Grid item xs={6} sm={4} md={1.5} key={index}>
+              <Grid item xs={6} sm={4} md={2} key={index}>
                 <Button
                   key={index}
                   variant="contained" // Adjust variant as needed
@@ -1446,8 +1463,8 @@ function SellerCreateMealPlan() {
                   sx={{
                     borderColor: "#ffffff",
                     fontWeight: "bold",
-                    boxShadow: 0,
-                    mx: 5,
+                    boxShadow: 1,
+                    mx: 1,
                     fontSize: "20px",
                     background: "#ffffff",
                     color: activeButtonIndex === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
@@ -1470,7 +1487,7 @@ function SellerCreateMealPlan() {
         <Grid xs={4} sx={{ color: "#99756E" }}>
           <form onSubmit={handleSubmit1(saveMealPlan)}>
             <Grid container spacing={0}>
-              <Grid xs={3}>
+              <Grid xs={4}>
                 <Typography
                   sx={{
                     textAlign: "left",

@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import * as React from "react";
-
+import { NavLink, Link, useLocation, useParams } from "react-router-dom";
 import { useEffect, useState, useRef, useMemo } from "react";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -33,6 +33,7 @@ import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
+  const location = useLocation();
   // const apiKey = "mmhfdzb5evj2"; // the API key can be found in the "Credentials" section
   // const token =
   //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQXNhampfVmVudHJlc3MiLCJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL0FzYWpqX1ZlbnRyZXNzIiwiaWF0IjoxNzE0MTkyMjA3LCJleHAiOjE3MTQ3OTcwMTJ9.vKJ4B-RyN3BH2sK5uuIrNB18JhwuCyiaTH07pBvVM3g"; // the token can be found in the "Credentials" section
@@ -213,10 +214,10 @@ function TelemedicineConsultation() {
 
     return (
       <>
-        <p>
+        {/* <p>
           Participant: {displayName} | Webcam: {webcamOn ? "ON" : "OFF"} | Mic:{" "}
           {micOn ? "ON" : "OFF"}
-        </p>
+        </p> */}
         <audio ref={micRef} autoPlay playsInline muted={isLocal} />
         {webcamOn && (
           <ReactPlayer
@@ -230,8 +231,8 @@ function TelemedicineConsultation() {
             //
             url={videoStream}
             //
-            height={"300px"}
-            width={"700px"}
+            height={"900px"}
+            width={"1000px"}
             onError={(err) => {
               console.log(err, "participant video error");
             }}
@@ -392,7 +393,12 @@ function TelemedicineConsultation() {
   }
 
   const [micIconmute, setMicIconmute] = useState(
-    <img src="/images/+.png" width="30px" height="30px" style={{ margin: 5 }} />
+    <img
+      src="/images/mute.png"
+      width="30px"
+      height="30px"
+      style={{ margin: 5 }}
+    />
   );
   function Mute(props) {
     const { leave, toggleMic, toggleWebcam } = useMeeting();
@@ -402,7 +408,7 @@ function TelemedicineConsultation() {
     const handleClick = () => {
       toggleMic();
       setIsMuted(!isMuted);
-      setMicIcon(isMuted ? "/images/microphone.png" : "/images/+.png"); // Update icon based on muted state
+      setMicIcon(isMuted ? "/images/microphone.png" : "/images/mute.png"); // Update icon based on muted state
     };
 
     return (
@@ -445,6 +451,7 @@ function TelemedicineConsultation() {
         props.onMeetingLeave();
       },
     });
+    console.log(participants);
     const joinMeeting = () => {
       setJoined("JOINING");
       join();
@@ -547,12 +554,66 @@ function TelemedicineConsultation() {
 
                 <hr />
               </Grid>
+              {[...participants.keys()].map((participantId) => (
+                <ParticipantView
+                  participantId={participantId}
+                  key={participantId}
+                />
+              ))}
 
-              <Grid container spacing={2} sx={{ mt: 0, border: 1 }}>
+              <Grid
+                container
+                spacing={2}
+                justify="center"
+                alignItems="center"
+                sx={{
+                  background: "#E66253",
+                  borderRadius: 5,
+                  // mx: "35%",
+                  //mt: "600px",
+                  alignItems: "center",
+                }}
+              >
+                <Grid xs={4}>
+                  {/* <Button onClick={() => toggleMic()}>
+                          <img
+                            src="/images/microphone.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button> */}
+                  <Mute />
+                </Grid>
+
+                <Grid xs={4}>
+                  <Button sx={{ background: "#ffffff" }}>
+                    <img
+                      src="/images/comment.png"
+                      width="30px"
+                      height="30px"
+                      style={{ margin: 5 }}
+                    />
+                  </Button>
+                </Grid>
+
+                <Grid xs={4}>
+                  {/* <Button onClick={() => toggleWebcam()}>
+                          <img
+                            src="/images/video.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button> */}
+                  <Webcam />
+                </Grid>
+              </Grid>
+              {/* <Grid container spacing={2} sx={{ mt: 0, border: 1 }}>
                 <Grid xs={8}>
                   <Box
                     sx={{
-                      backgroundImage: "url('/images/telemedPic.png')",
+                      //  backgroundImage: "url('/images/telemedPic.png')",
                       width: "100%",
                       height: "500px",
                       backgroundSize: "cover",
@@ -564,63 +625,9 @@ function TelemedicineConsultation() {
                       alignItems: "center",
                     }}
                   >
-                    {[...participants.keys()].map((participantId) => (
-                      <ParticipantView
-                        participantId={participantId}
-                        key={participantId}
-                      />
-                    ))}
                     <br />
                     <br />
                     <br />
-                    <Grid
-                      container
-                      spacing={2}
-                      justify="center"
-                      alignItems="center"
-                      sx={{
-                        background: "#E66253",
-                        borderRadius: 5,
-                        mx: "35%",
-                        mt: "600px",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Grid xs={4}>
-                        {/* <Button onClick={() => toggleMic()}>
-                          <img
-                            src="/images/microphone.png"
-                            width="30px"
-                            height="30px"
-                            style={{ margin: 5 }}
-                          />
-                        </Button> */}
-                        <Mute />
-                      </Grid>
-
-                      <Grid xs={4}>
-                        <Button sx={{ background: "#ffffff" }}>
-                          <img
-                            src="/images/comment.png"
-                            width="30px"
-                            height="30px"
-                            style={{ margin: 5 }}
-                          />
-                        </Button>
-                      </Grid>
-
-                      <Grid xs={4}>
-                        {/* <Button onClick={() => toggleWebcam()}>
-                          <img
-                            src="/images/video.png"
-                            width="30px"
-                            height="30px"
-                            style={{ margin: 5 }}
-                          />
-                        </Button> */}
-                        <Webcam />
-                      </Grid>
-                    </Grid>
                   </Box>
                 </Grid>
 
@@ -663,7 +670,7 @@ function TelemedicineConsultation() {
                     </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Grid> */}
             </Box>
           </div>
         ) : joined && joined == "JOINING" ? (

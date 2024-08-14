@@ -85,8 +85,8 @@ def upload_meal_path(instance, filename):
 
 class ShopMealPlan(models.Model):
     shop_mealplan_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    image = models.CharField(max_length=300)
+    name = models.CharField(max_length=1000)
+    image = models.CharField(max_length=3000)
     # image = models.ImageField(blank=True, null=True, upload_to='Photos/meal_plan')
     description= models.CharField(max_length=200)
     start_week = models.DateField(auto_now=False)
@@ -104,8 +104,8 @@ class ShopMeal(models.Model):
     fat= models.IntegerField()
     protein= models.IntegerField()
     carbs = models.IntegerField()
-    food = models.CharField(max_length=70)
-    image = models.CharField(max_length=100)
+    food = models.CharField(max_length=1000)
+    image = models.CharField(max_length=3000)
     day = models.CharField(max_length=15)
     
     class Meta:
@@ -225,6 +225,7 @@ class RequestMeals(models.Model):
     generatedMeal_id =  models.ForeignKey(GeneratedMeal, on_delete=models.CASCADE, related_name="listingsss100")
     date = models.DateField()
     status = models.CharField(max_length=200)
+    price = models.IntegerField()
 
     class Meta:
         db_table = "request_meals"

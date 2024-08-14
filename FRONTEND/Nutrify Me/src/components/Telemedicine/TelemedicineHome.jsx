@@ -1258,7 +1258,11 @@ function TelemedicineHome() {
               <p>Dietitian: Bea</p>
               <center>
                 <Link
-                  to="/telemedicine-consultation"
+                  to={{
+                    pathname: "/telemedicine-consultation",
+
+                    //  state: { data: myStateData },
+                  }}
                   style={{
                     color: "#ffffff",
                   }}

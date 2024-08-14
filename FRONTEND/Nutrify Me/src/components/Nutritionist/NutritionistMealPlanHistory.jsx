@@ -9,10 +9,12 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 function NutritionistMealPlanHistory() {
   // * edit meal plans modal
-
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
   const style = {
     position: "absolute",
     top: "50%",

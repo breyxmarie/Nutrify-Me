@@ -72,11 +72,12 @@ import {
   barangays,
 } from "select-philippines-address";
 
-function MealPlanShopCheckout() {
+function MealPlanShopRequestCheckout() {
   const { cartId } = useParams();
   const navigate = useNavigate();
 
   const location = useLocation();
+  const { datas } = location.state || {};
   const { cartItems } = location.state || {};
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
   const [selectedAddress, setSelectedAddress] = useState(1);
@@ -120,16 +121,25 @@ function MealPlanShopCheckout() {
           setShippingPrice(
             quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
           );
-          const tempPrice = calculateSubTotalPrice();
+          // const tempPrice = calculateSubTotalPrice();
+          // setTotalOrderPrice(
+          //   parseInt(location.state.request.price) +
+          //     parseInt(
+          //       quotationData?.data?.data?.priceBreakdown
+          //         ?.totalExcludePriorityFee
+          //     )
+          // );
+
+          setSubTotalPrices(location.state.request.price);
           setTotalOrderPrice(
-            parseInt(tempPrice) +
+            parseInt(location.state.request.price) +
               parseInt(
                 quotationData?.data?.data?.priceBreakdown
                   ?.totalExcludePriorityFee
               )
           );
 
-          console.log(tempPrice);
+          // console.log(tempPrice);
           setShippingDetails(quotationData);
           // setTotalOrderPrice(
           //   parseInt(subTotalPrices) + parseInt(shippingPrice)
@@ -205,14 +215,20 @@ function MealPlanShopCheckout() {
       });
     };
 
+  // useEffect(() => {
+
+  //   console.log(data);
+  //   if (searchOriginLatitude && searchOriginLongtitude) {
+  //     console.log(
+  //       `Retrieved ${searchOriginLatitude} and ${searchOriginLongtitude}`
+  //     );
+  //   }
+  // }, [searchOriginLatitude, searchOriginLongtitude]);
+
   useEffect(() => {
-    console.log(data);
-    if (searchOriginLatitude && searchOriginLongtitude) {
-      console.log(
-        `Retrieved ${searchOriginLatitude} and ${searchOriginLongtitude}`
-      );
-    }
-  }, [searchOriginLatitude, searchOriginLongtitude]);
+    console.log(location.state, "hi");
+    getAddressData();
+  }, []);
 
   const renderSuggestions = () =>
     data.map((suggestion) => {
@@ -275,7 +291,6 @@ function MealPlanShopCheckout() {
       e.target.selectedOptions[0].text;
     //e.target.selectedOptions[0].text;
 
-    console.log(temp);
     setValue(temp);
     console.log(
       getGeocode({ address: temp }).then((results) => {
@@ -292,21 +307,11 @@ function MealPlanShopCheckout() {
 
   const brgy = (e) => {
     setBarangayAddr(e.target.selectedOptions[0].text);
-    console.log(
-      regionAddr,
-      " ",
-      provinceAddr,
-      " ",
-      cityAddr,
-      " ",
-      barangayAddr
-    );
 
     const temp =
       addressValue + " " + regionAddr + " " + provinceAddr + " " + cityAddr;
     //e.target.selectedOptions[0].text;
 
-    console.log(temp);
     setValue(temp);
     console.log(
       getGeocode({ address: temp }).then((results) => {
@@ -322,6 +327,7 @@ function MealPlanShopCheckout() {
     region();
     console.log(addressData);
     console.log("try");
+    getCartData();
   }, []);
 
   //?
@@ -333,17 +339,26 @@ function MealPlanShopCheckout() {
   const [cartMeal, setCartMeal] = useState([]);
 
   const getCartData = async () => {
-    try {
-      const response = await AxiosInstance.get(`cart`);
-      const filteredData = response.data.filter(
-        (item) => item.user_id === loggedInUser.user_id
-      );
-      setCartData(filteredData);
-      console.log(cartData);
-      // getMealData();
-    } catch (error) {
-      console.error("Error fetching cart data:", error);
-    }
+    const temp = location.state;
+    setSubTotalPrices(location.state.request.price);
+    setTotalOrderPrice(
+      parseInt(location.state.request.price) + parseInt(shippingPrice)
+    );
+
+    console.log(
+      parseInt(location.state.request.price) + parseInt(shippingPrice)
+    );
+    // try {
+    //   const response = await AxiosInstance.get(`cart`);
+    //   const filteredData = response.data.filter(
+    //     (item) => item.user_id === loggedInUser.user_id
+    //   );
+    //   setCartData(filteredData);
+
+    //   // getMealData();
+    // } catch (error) {
+    //   console.error("Error fetching cart data:", error);
+    // }
   };
 
   const getMealData = async () => {
@@ -361,7 +376,6 @@ function MealPlanShopCheckout() {
           cartData[0].orders &&
           cartData[0].orders.includes(item.shop_mealplan_id)
         ) {
-          console.log("Condition met! Item:", item);
           filteredItems.add(item); // Add item to the set
         }
 
@@ -398,13 +412,11 @@ function MealPlanShopCheckout() {
   };
   //! error handling for form
   const handleChange = (event) => {
-    console.log(event.target.value);
     setPayment(event.target.value);
   };
 
   const handleChangeShipping = (event) => {
     setShipping(event.target.value);
-    console.log(event.target.value);
 
     switch (event.target.value) {
       case "Lalamove":
@@ -459,8 +471,7 @@ function MealPlanShopCheckout() {
         // setSearchOriginLatitude(lat);
         // setSearchOriginLongtitude(lng);
       }).then((res) => {
-        console.log(res, res.data);
-        getAddressData();
+        // getAddressData();
         handleReset();
         setActiveTab(0);
       });
@@ -488,68 +499,110 @@ function MealPlanShopCheckout() {
   });
 
   const onSubmitHandler1 = async (data) => {
-    console.log(data);
     if (payment === "Paypal") {
       const datas = {
         user_id: loggedInUser.user_id,
-        orders: cartData[0].orders,
+        // orders: cartData[0].orders,
         date: dayjs().format("YYYY-MM-DD"),
         status: "Ordered",
         address_id: selectedAddress,
         payment: payment,
-        shipping: data.shipping,
+        shipping: "Lalamove",
         notes: notes,
         totalprice: parseInt(totalOrderPrice),
         shipping_price: shippingPrice,
       };
 
       try {
-        const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
-        console.log(response);
+        //  const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
 
-        navigate("/paypal-payment", { state: datas });
+        const state = location.state;
+        navigate("/paypal-payment-request", {
+          state: { state, datas },
+        });
       } catch (error) {
         console.log(error);
       }
 
-      console.log(datas);
-      navigate("/paypal-payment", { state: datas });
+      //  navigate("/paypal-payment", { state: datas });
     } else {
+      let orders;
       try {
-        console.log(addressData[selectedAddress].address_id);
-        AxiosInstance.post(`order/`, {
-          user_id: loggedInUser.user_id,
-          orders: cartData[0].orders,
-          date: dayjs().format("YYYY-MM-DD"),
-          status: "Ordered",
-          address_id: addressData[selectedAddress].address_id,
-          payment: payment,
-          shipping: "Lalamove",
-          notes: notes,
-          totalprice: parseInt(totalOrderPrice),
-          shipping_price: parseInt(shippingPrice),
-          payment_details: ["Cash on Delivery", "Cash on Delivery"],
-          schedule_date: [
-            dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-            dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
-          ],
+        console.log(location.state.meal.meal);
+        AxiosInstance.post(`shopmealplan/`, {
+          name: location.state.meal.name,
+          image: location.state.meal.meal[0].meals[0].details.recipe.image,
+          description: "Generated Meal",
+          start_week: dayjs("2019-10-25").format("YYYY-MM-DD"),
+          end_week: dayjs("2019-10-31").format("YYYY-MM-DD"),
+          price: location.state.request.price,
           // shippingPrice
         }).then((res) => {
-          console.log(res, res.data);
-
+          console.log(res);
           try {
-            const response = AxiosInstance.delete(
-              `cart/${cartData[0].cart_id}`
-            );
-            console.log(response);
+            AxiosInstance.post(`order/`, {
+              user_id: loggedInUser.user_id,
+              orders: [res.data.id],
+              date: dayjs().format("YYYY-MM-DD"),
+              status: "Ordered",
+              address_id: addressData[selectedAddress].address_id,
+              payment: payment,
+              shipping: "Lalamove",
+              notes: notes,
+              totalprice: parseInt(totalOrderPrice),
+              shipping_price: parseInt(shippingPrice),
+              payment_details: ["Cash on Delivery", "Cash on Delivery"],
+              schedule_date: [
+                dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+                dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+              ],
+              // shippingPrice
+            }).then((res) => {
+              //   try {
+              console.log(res);
 
+              // const response = AxiosInstance.delete(
+              //   `cart/${cartData[0].cart_id}`
+              // );//
+              // navigate("/meal-plan-shop-home");
+              //   } catch (error) {
+              //   console.log(error);
+              //    }
+              //   // getAddressData();
+              //   // handleReset();
+              //   // setActiveTab(0);
+            });
+
+            location.state.meal.meal.map((item) =>
+              item.meals.map((items) =>
+                //console.log(item.Day.substring(4))
+
+                AxiosInstance.post(`shopmeal/`, {
+                  mealplan_id: res.data.id,
+                  type: items.Meal,
+                  calories: Math.floor(items.details.recipe.calories),
+                  fat: Math.floor(items.details.recipe.digest[0].daily),
+                  protein: Math.floor(items.details.recipe.digest[2].daily),
+                  carbs: Math.floor(items.details.recipe.digest[1].daily),
+                  food: items.details.recipe.label,
+                  image: items.details.recipe.image,
+                  day: item.Day.substring(4),
+                  // shippingPrice
+                }).then((res) => {
+                  console.log(res);
+                })
+              )
+            );
+            console.log(location.state.request.request_id);
+            AxiosInstance.delete(
+              `requestedmeals/${location.state.request.request_id}`
+            ).then((res) => {
+              console.log(res);
+            });
             navigate("/meal-plan-shop-home");
           } catch (error) {
             console.log(error);
           }
-          // getAddressData();
-          // handleReset();
-          // setActiveTab(0);
         });
       } catch (error) {
         console.log(error);
@@ -587,7 +640,8 @@ function MealPlanShopCheckout() {
   }
 
   const [shippingPrice, setShippingPrice] = useState(0);
-  const subTotalPrices = calculateSubTotalPrice(); // Calculate total price here
+  // const subTotalPrices = calculateSubTotalPrice(); // Calculate total price here
+  const [subTotalPrices, setSubTotalPrices] = useState(0);
   const [totalOrderPrice, setTotalOrderPrice] = useState(
     parseInt(subTotalPrices) + parseInt(shippingPrice) ||
       parseInt(subTotalPrices) + parseInt(shippingPrice)
@@ -647,31 +701,25 @@ function MealPlanShopCheckout() {
 
   useEffect(() => {
     // addNewObject();
-    console.log(location);
+
     getCartData();
-    getAddressData();
+    //getAddressData();
     const tempPrice = calculateSubTotalPrice();
-    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+    // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
   }, []);
 
   useEffect(() => {
     // addNewObject();
 
     const tempPrice = calculateSubTotalPrice();
-    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+    // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
   }, [shippingPrice]);
 
   useEffect(() => {
     if (cartData.length > 0 && shopMeal.length === 0) {
       getMealData();
     }
-
-    console.log(cartData[0], "this is the cart");
   }, [cartData]);
-
-  useEffect(() => {
-    console.log(shopMeal, "did it work");
-  }, [shopMeal]);
 
   const tabContent = [
     {
@@ -1025,7 +1073,6 @@ function MealPlanShopCheckout() {
     // });
 
     const order = await actions.order.capture();
-    console.log(order);
   };
 
   const SubmitPayment = () => {
@@ -1085,7 +1132,6 @@ function MealPlanShopCheckout() {
           6,
           "fsdsdffd"
         );
-        console.log(quotationData);
       } catch (error) {
         console.error("Error creating quotation:", error.message);
       }
@@ -1404,12 +1450,6 @@ function MealPlanShopCheckout() {
                 <Typography sx={{ color: "#000000" }}>Loading...</Typography>
               ) : (
                 <>
-                  {console.log(
-                    addressData[selectedAddress].lang,
-                    selectedAddress,
-                    selectedLong,
-                    selectedLat
-                  )}
                   <Typography sx={{ color: "#000000" }}>
                     {addressData[selectedAddress]?.name} |{" "}
                     {addressData[selectedAddress]?.phone} <br />
@@ -1517,7 +1557,9 @@ function MealPlanShopCheckout() {
         </Box>
         <br />
         <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
-          {shopMeal.map((item, index) => (
+          {location.state.meal.name}
+          {location.state.request.price}
+          {/* {shopMeal.map((item, index) => (
             <Grid container spacing={2} sx={{ mt: "20px" }}>
               <Grid xs={4}>
                 {" "}
@@ -1536,7 +1578,7 @@ function MealPlanShopCheckout() {
                 x {item.quantity}
               </Grid>
             </Grid>
-          ))}
+          ))} */}
           <br />
           <br />
 
@@ -1742,7 +1784,7 @@ function MealPlanShopCheckout() {
 
         {/* <Link to={"/meal-plan-shop-home"}> */}
         <Button
-          onClick={() => placeOrder()}
+          // onClick={() => placeOrder()}
           type="submit"
           sx={{
             background: "#E66253",
@@ -1767,4 +1809,4 @@ function MealPlanShopCheckout() {
   );
 }
 
-export default MealPlanShopCheckout;
+export default MealPlanShopRequestCheckout;

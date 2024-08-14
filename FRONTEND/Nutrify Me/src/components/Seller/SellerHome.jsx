@@ -15,13 +15,36 @@ import Badge from "@mui/material/Badge";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import Slider from "react-slick";
 import ChatBox from "./ChatBox";
+import AxiosInstance from "../forms/AxiosInstance";
 
 function SellerHome() {
+  const [pendingOrder, setPendingOrder] = useState([]);
+  const [userData, setUserData] = useState([]);
+
   const handleNextC = () => {
     //* add sa carousel to handle prev and next buttons
     sliderRefC.current.slickNext(); // Trigger next slide transition
   };
 
+  const getOrderData = () => {
+    AxiosInstance.get(`order/`).then((res) => {
+      console.log(res.data);
+
+      const tempOrder = res.data.filter((item) => item.status === "Ordered");
+
+      setPendingOrder(tempOrder);
+    });
+
+    AxiosInstance.get(`user/`).then((res) => {
+      console.log(res.data);
+
+      setUserData(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getOrderData();
+  }, []);
   const handlePrevC = () => {
     sliderRefC.current.slickPrev(); // Trigger previous slide transition
   };
@@ -468,7 +491,40 @@ function SellerHome() {
               </Grid>
             </Grid>
 
-            {mealPlans.map((items, index) => (
+            {pendingOrder.slice(0, 3).map((item, index) => (
+              <Box sx={{ my: 4, mx: 10, border: 2, borderRadius: 3 }}>
+                <Grid container spacing={2} sx={{ mx: 5, my: 3 }}>
+                  <Grid xs={2}>
+                    {" "}
+                    <img
+                      src={
+                        userData?.find(
+                          (items) => items.user_id === item.user_id
+                        )?.image
+                      }
+                      height="60"
+                      width="60"
+                    />
+                  </Grid>
+                  <Grid xs={4}>
+                    {console.log(pendingOrder.slice(3))}
+                    {
+                      userData?.find((items) => items.user_id === item.user_id)
+                        ?.first_name
+                    }
+                    <br />
+                    ORDER # {item.order_id}
+                  </Grid>
+                  <Grid xs={4}>
+                    {item.date}
+                    {/* {items.date} <br />
+                    {items.time} */}
+                  </Grid>
+                </Grid>
+              </Box>
+            ))}
+
+            {/* {mealPlans.map((items, index) => (
               <Box sx={{ my: 4, mx: 10, border: 2, borderRadius: 3 }}>
                 <Grid container spacing={2} sx={{ mx: 5, my: 3 }}>
                   <Grid xs={2}>
@@ -487,7 +543,7 @@ function SellerHome() {
                   </Grid>
                 </Grid>
               </Box>
-            ))}
+            ))} */}
           </Box>
         </Grid>
       </Grid>

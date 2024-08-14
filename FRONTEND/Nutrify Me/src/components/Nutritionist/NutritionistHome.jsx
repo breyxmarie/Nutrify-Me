@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import * as React from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Calendar from "react-calendar";
 import Grid from "@mui/material/Grid";
 import LinearProgress, {
   linearProgressClasses,
@@ -24,8 +26,111 @@ import { useLoggedInUser } from "../LoggedInUserContext";
 import moment from "moment";
 
 function NutritionistHome() {
-  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
+  const [date, setDate] = useState();
+  const [appointData, setAppointdata] = useState([]);
+  const [nutritionists, setNutritionists] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [appToday, setAppToday] = useState(0);
   //! retrieving data.
+
+  const onChange = async (newDate) => {
+    setIsLoading(true);
+    // Fetch or update dates based on newDate
+    // ...
+
+    // Simulate loading delay (optional)
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+
+    setIsLoading(false);
+    setDate(newDate);
+    handleOpenDay();
+    setIsPopupVisible(true);
+    console.log(appointData);
+    const temp = appointData.find(
+      (data) => data.date === dayjs(newDate).format("YYYY-MM-DD")
+    );
+    console.log(temp);
+    if (temp) {
+      console.log(nutritionist);
+      // const nutrition = nutritionist.find(
+      //   (data) => data.nutritionist_id === temp.nutritionist_id
+      // );
+
+      const user = userData.find((data) => data.user_id === temp.user_id);
+
+      setModalDayContent(
+        <Box sx={{ mt: 4 }}>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <center>
+                <br />
+                <br />
+
+                <Typography>
+                  Date: {dayjs(newDate).format("MMMM DD YYYY")}
+                </Typography>
+                <Typography>Time: {temp.time}</Typography>
+              </center>
+            </Grid>
+            <Grid xs={6}>
+              {" "}
+              <center>
+                <img src={user.image} width="100" />
+
+                <br />
+                <Typography>
+                  <b>User:</b> {user.first_name} {user.last_name}
+                </Typography>
+              </center>{" "}
+            </Grid>
+          </Grid>
+
+          <br />
+
+          <br />
+        </Box>
+      );
+    } else {
+      console.log("No Appointment");
+      setModalDayContent(
+        <Box sx={{ m: 4 }}>
+          <center>
+            {dayjs(newDate).format("MMMM DD YYYY")} <br />
+            <b>No Appointment</b>
+          </center>
+        </Box>
+      );
+    }
+  };
+
+  const [openDay, setOpenDay] = useState(false);
+
+  const handleOpenDay = (selectedDate) => {
+    // Optional: Do something with the selected date before opening the modal
+    setOpenDay(true);
+  };
+
+  const handleCloseDay = () => {
+    setOpenDay(false);
+  };
+  const [modalDayContent, setModalDayContent] = useState(<div>try</div>);
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "50%",
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 5,
+    color: "#ffffff",
+  };
 
   const [appointmentData, setAppointmentData] = useState([
     {
@@ -56,31 +161,88 @@ function NutritionistHome() {
     },
   ]);
   const GetData = () => {
-    AxiosInstance.get(`appointment`).then((res) => {
-      {
-        res.data.map((item, index) =>
-          console.log(item.username, item.password)
+    console.log(nutritionist, loggedInUser);
+    AxiosInstance.get(`nutritionist/`)
+      .then((res) => {
+        setNutritionists(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+
+    AxiosInstance.get(`user/`)
+      .then((res) => {
+        setUserData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+
+    AxiosInstance.get(`appointment`)
+      .then((res) => {
+        //  setNutritionist(res.data);
+
+        console.log(
+          res.data.filter((data) => data.user_id === loggedInUser.user_id)
         );
-      }
-      console.log(res.data);
+        setAppointdata(
+          res.data.filter(
+            (data) => data.nutritionist_id === nutritionist.nutritionist_id
+          )
+        );
 
-      const condition = (item) => item.id > 1;
-      const filteredData = res.data.filter(
-        (item) =>
-          item.nutritionist_id === loggedInUser.user_id &&
-          //  moment(item.date).isSameOrAfter(moment(), "day")
-          moment(item.date).isSame(moment(), "day")
+        console.log(
+          res.data.filter(
+            (data) =>
+              data.nutritionist_id === nutritionist.nutritionist_id &&
+              data.date === dayjs().format("YYYY-MM-DD")
+          )
+        );
+        setAppToday(
+          res.data.filter(
+            (data) =>
+              data.nutritionist_id === nutritionist.nutritionist_id &&
+              data.date === dayjs().format("YYYY-MM-DD")
+          ).length
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+    // AxiosInstance.get(`appointment`).then((res) => {
+    //   {
+    //     res.data.map((item, index) =>
+    //       console.log(item.username, item.password)
+    //     );
+    //   }
+    //   console.log(res.data);
 
-        //new Date(item.date) >= new Date()
-      );
+    //   const condition = (item) => item.id > 1;
+    //   const filteredData = res.data.filter(
+    //     (item) =>
+    //       item.nutritionist_id === loggedInUser.user_id &&
+    //       //  moment(item.date).isSameOrAfter(moment(), "day")
+    //       moment(item.date).isSame(moment(), "day")
 
-      console.log("try try", filteredData, loggedInUser.user_id);
-      setAppointmentData(filteredData);
-    });
+    //     //new Date(item.date) >= new Date()
+    //   );
 
-    AxiosInstance.get(`user`).then((res) => {
-      setUsers(res.data);
-    });
+    //   console.log("try try", filteredData, loggedInUser.user_id);
+    //   setAppointmentData(filteredData);
+    // });
+
+    // AxiosInstance.get(`user`).then((res) => {
+    //   setUsers(res.data);
+    // });
   };
 
   const [disusers, setDisusers] = useState();
@@ -92,6 +254,7 @@ function NutritionistHome() {
 
   useEffect(() => {
     GetData();
+    console.log(nutritionist);
   }, []);
   //!
   const appointments = [
@@ -244,7 +407,7 @@ function NutritionistHome() {
             <br />
             <br />
             <Typography sx={{ float: "left" }}>
-              You have 2 appointments for today.
+              You have {appToday} appointments for today.
             </Typography>
             <br />
             <br />
@@ -257,7 +420,62 @@ function NutritionistHome() {
         </Grid>
         <Grid xs={6}>
           <h2>My Scheduled Appointments</h2>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+
+          {/* //! Calendar */}
+          <div className="calendar-app" style={{ backgroundColor: "#f5f5f5" }}>
+            <div className="day-labels" style={{ color: "#333" }}>
+              {/* Days of the week */}
+            </div>
+            <Calendar
+              onChange={onChange}
+              value={date}
+              className={isLoading ? "loading" : ""}
+              style={{
+                border: "1px solid #898246",
+                backgroundColor: "#f5f5f5",
+              }}
+            />
+            {/* {isPopupVisible && (
+                <div className="popup">
+                  <h3>Date: {date.toLocaleDateString()}</h3>
+               
+                  <button onClick={handlePopupClose}>Close</button>
+                </div>
+              )} */}
+          </div>
+
+          <Modal
+            open={openDay}
+            onClose={handleCloseDay}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box sx={style}>
+              <Grid container spacing={2}>
+                <Grid xs={2}>
+                  {" "}
+                  <img
+                    src="/images/consultation icon.png"
+                    height="25"
+                    weight="25"
+                  />
+                </Grid>
+                <Grid xs={8}>Consultation Schedule]</Grid>
+                <Grid xs={2}>
+                  <Button
+                    //key={index}
+                    sx={{ float: "right" }}
+                    onClick={handleCloseDay}
+                  >
+                    <img src="/images/close.png" height="10" weight="10" />
+                  </Button>
+                </Grid>
+              </Grid>
+              {modalDayContent}
+            </Box>
+          </Modal>
+
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
               defaultValue={initialValue}
               loading={isLoading}
@@ -280,7 +498,7 @@ function NutritionistHome() {
                 "& .MuiPickersDay-day": { backgroundColor: "#000000" },
               }}
             />
-          </LocalizationProvider>{" "}
+          </LocalizationProvider>{" "} */}
         </Grid>
       </Grid>
       <Box sx={{ mt: 5, mx: 5 }}>

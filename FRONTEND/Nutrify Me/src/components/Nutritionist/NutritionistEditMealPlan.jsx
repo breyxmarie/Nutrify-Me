@@ -1,7 +1,10 @@
 import { useState } from "react";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 function NutritionistEditMealPlan() {
   const mealPlans = [{}, {}];
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
   return (
     <div
       className="content"

@@ -9,7 +9,6 @@ const LalamoveApi = {
     "sk_test_k+9yCKYHFfgX3wPv5wbVWWUDyD2z+4EY1Dm4kANmV6BI8Bg6JLeribyYsxCadY1O",
 
   async createQuotation(long, lat, address) {
-    console.log(long, lat, address);
     const serviceType = "MOTORCYCLE"; // Adjust based on your needs (e.g., CAR, VAN)
     const specialRequests = ["THERMAL_BAG_1"]; // Optional - adjust if needed
     const item = {
@@ -96,10 +95,9 @@ const LalamoveApi = {
       signatureString,
       this.secret
     ).toString();
-    console.log(this.secret);
 
     const TOKEN = `${this.apiKey}:${time}:${signature}`;
-    console.log(signature);
+
     let headers = {
       ContentType: "application/json",
       Authorization: `hmac ${TOKEN}`,
@@ -124,7 +122,6 @@ const LalamoveApi = {
     // }
 
     try {
-      console.log(TOKEN);
       const response = await axios.post(
         `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
         //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,
@@ -369,10 +366,9 @@ const LalamoveApi = {
       signatureString,
       this.secret
     ).toString();
-    console.log(this.secret);
 
     const TOKEN = `${this.apiKey}:${time}:${signature}`;
-    console.log(signature);
+
     let headers = {
       ContentType: "application/json",
       Authorization: `hmac ${TOKEN}`,
@@ -381,7 +377,6 @@ const LalamoveApi = {
     };
 
     try {
-      console.log(TOKEN);
       const response = await axios.post(
         `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/orders`,
         //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,

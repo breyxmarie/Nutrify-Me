@@ -643,14 +643,14 @@ def RequestMealsAPI(request, pk=0):
         return JsonResponse("Failed to Add Request Meals", safe=False)
     elif request.method == 'PUT':
         requestMeals_data = JSONParser().parse(request)
-        requestMealss = VerifyNutritionist.objects.get(request_id=requestMeals_data['request_id'])
+        requestMealss = RequestMeals.objects.get(request_id=requestMeals_data['request_id'])
         requestMeals_serializer = RequestMealsSerializer(requestMealss, data = requestMeals_data)
         if requestMeals_serializer.is_valid():
             requestMeals_serializer.save()
             return JsonResponse("Update Successfully", safe=False)
         return JsonResponse("Failed to Update", safe=False)
     elif request.method == 'DELETE':
-        requestMeals = GeneratedMeal.objects.get(verify_id=pk)
+        requestMeals = RequestMeals.objects.get(request_id=pk)
         requestMeals.delete()
         return JsonResponse("Requested Meals was deleted Successfully", safe = False)
 

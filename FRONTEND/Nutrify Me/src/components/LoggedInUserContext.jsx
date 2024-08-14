@@ -17,6 +17,8 @@ export const LoggedInUserProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("loggedInUser", JSON.stringify(loggedInUser));
+    localStorage.setItem("nutritionist", JSON.stringify(nutritionist));
+    localStorage.setItem("profiled", JSON.stringify(profiled));
   }, [loggedInUser]); // Update local storage when state changes
 
   return (

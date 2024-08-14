@@ -133,7 +133,7 @@ class GeneratedMealSerializer(serializers.ModelSerializer):
 class RequestMealsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RequestMeals
-        fields = ('request_id', 'user_id','generatedMeal_id', 'date', 'status' )
+        fields = ('request_id', 'user_id','generatedMeal_id', 'date', 'status', 'price' )
 
 class ThemeSerializer(serializers.ModelSerializer):
     class Meta:

@@ -32,9 +32,14 @@ function LogIn() {
   //! retrieving data.
 
   const [userData, setUserData] = useState();
+  const [nutritionistData, setNutritionistData] = useState();
   const GetData = () => {
     AxiosInstance.get(`user/`).then((res) => {
       setUserData(res.data);
+    });
+
+    AxiosInstance.get(`nutritionist/`).then((res) => {
+      setNutritionistData(res.data);
     });
   };
 
@@ -60,7 +65,8 @@ function LogIn() {
   const [logData, setLogData] = useState();
   let logIn = false;
   let privilege;
-  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
+    useLoggedInUser();
   const onSubmitHandler = (data) => {
     // const userfound =
     //   userData.some((item) => item.username === data.username) &&
@@ -80,6 +86,16 @@ function LogIn() {
       // Import useHistory from react-router-dom
       //navigate("/user-home");
       setLoggedInUser(loggedInUser);
+
+      switch (loggedInUser.privilege) {
+        case "Nutritionist":
+          setnNutritionist(
+            nutritionistData.find(
+              (data) => data.user_id === loggedInUser.user_id
+            )
+          );
+          break;
+      }
       navigate(
         loggedInUser.privilege === "User"
           ? "/user-home"

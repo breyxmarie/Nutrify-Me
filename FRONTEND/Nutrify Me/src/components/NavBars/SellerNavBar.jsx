@@ -32,6 +32,7 @@ function SellerNavBar() {
     { names: "EDIT MEAL PLAN", links: "/seller-createMealPlan" },
     { names: "MENU ITEMS", links: "/seller-menu-items" },
     { names: "ORDERS", links: "/seller-orders" },
+    { names: "REQUEST ORDERS", links: "/seller-request-meals" },
   ];
 
   const StyledLink = `
@@ -185,7 +186,7 @@ function SellerNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 7,
-              mx: "30%",
+              mx: "10%",
             }}
           >
             {pages.map((page) => (
