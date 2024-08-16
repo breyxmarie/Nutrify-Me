@@ -447,6 +447,7 @@ function SellerCreateMealPlan() {
             description: data.description,
             start_week: currentWeekStart,
             end_week: currentWeekEnd,
+            //  price: ,
           }).then((res) => {
             console.log(res.data.id);
             tempMeal.forEach((dayObject) => {

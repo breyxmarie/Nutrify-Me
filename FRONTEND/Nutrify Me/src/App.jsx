@@ -30,6 +30,7 @@ import TelemedicineHome from "./components/Telemedicine/TelemedicineHome";
 import TelemedicineMeetUs from "./components/Telemedicine/TelemedicineMeetUs";
 import TelemedicineMessages from "./components/Telemedicine/TelemedicineMessages";
 import TelemedicineConsultation from "./components/Telemedicine/TelemedicineConsultation";
+import TelemedicinePaypalPayment from "./components/Telemedicine/TelemedicinePaypalPayment";
 import NutritionistConsultation from "./components/Nutritionist/NutritionistConsultation";
 import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment";
 import NutritionistHome from "./components/Nutritionist/NutritionistHome";
@@ -187,6 +188,14 @@ function App() {
                       <MainUserNavBar />
                       <TeleMedNavBar />
                       <TelemedicineConsultation /> <UserFooter />
+                    </>
+                  }
+                />
+                <Route
+                  path="/telemedicine-payment"
+                  element={
+                    <>
+                      <TelemedicinePaypalPayment />
                     </>
                   }
                 />

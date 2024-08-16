@@ -123,7 +123,9 @@ const LalamoveApi = {
 
     try {
       const response = await axios.post(
-        `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
+        `${this.baseUrl}/v3/orders`,
+
+        // `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
         //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,
 
         //! watch out here for deployment baka mag kaerror
@@ -379,6 +381,7 @@ const LalamoveApi = {
     try {
       const response = await axios.post(
         `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/orders`,
+
         //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,
 
         //! watch out here for deployment baka mag kaerror

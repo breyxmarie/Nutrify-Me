@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useMemo } from "react";
-import AgoraRTC from "agora-rtc-sdk-ng";
+
 import { VideoPlayer } from "./VideoPlayer";
 import { useLoggedInUser } from "../LoggedInUserContext";
 //

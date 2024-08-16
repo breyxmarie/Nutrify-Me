@@ -8,6 +8,7 @@ import CircleIcon from "@mui/icons-material/Circle";
 import UserFooter from "../UserFooter";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { useNavigate } from "react-router-dom";
 import {
   CallingState,
   StreamCall,
@@ -19,7 +20,6 @@ import {
   CallControls,
 } from "@stream-io/video-react-sdk";
 
-import AgoraRTC from "agora-rtc-sdk-ng";
 import { VideoPlayer } from "./VideoPlayer";
 // import { getMeetingId, getToken } from "./api";
 import {
@@ -33,6 +33,7 @@ import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
+  const navigate = useNavigate();
   const location = useLocation();
   // const apiKey = "mmhfdzb5evj2"; // the API key can be found in the "Credentials" section
   // const token =
@@ -374,11 +375,17 @@ function TelemedicineConsultation() {
 
   function Leave(props) {
     const { leave, toggleMic, toggleWebcam } = useMeeting();
+
+    const leaveMeeting = () => {
+      leave();
+      navigate("/telemedicine-payment");
+    };
     return (
       <div>
         <Button
           sx={{ background: "#E66253", color: "#ffffff", px: 3, ml: 3 }}
-          onClick={() => leave()}
+          //onClick={() => leave()}
+          onClick={() => leaveMeeting()}
         >
           <img
             src="/images/end-call.png"
@@ -491,6 +498,10 @@ function TelemedicineConsultation() {
 
     // //!
 
+    useEffect(() => {
+      join();
+    }, []);
+
     return (
       <div className="container">
         <h3>Meeting Id: {props.meetingId}</h3>
@@ -554,13 +565,37 @@ function TelemedicineConsultation() {
 
                 <hr />
               </Grid>
-              {[...participants.keys()].map((participantId) => (
+              {/* {[...participants.keys()].map((participantId) => (
                 <ParticipantView
                   participantId={participantId}
                   key={participantId}
                 />
-              ))}
+              ))} */}
 
+              {[...participants.entries()].length === 1 ? (
+                <>
+                  {console.log(participants, "hi")}
+                  <ParticipantView
+                    participantId={[...participants.entries()][0][0]}
+                    key={[...participants.entries()][0][0]}
+                  />
+                </>
+              ) : [...participants.entries()].length > 1 ? (
+                <>
+                  {" "}
+                  <ParticipantView
+                    participantId={[...participants.entries()][0][0]}
+                    key={[...participants.entries()][0][0]}
+                  />
+                  <br />
+                  <ParticipantView
+                    participantId={[...participants.entries()][1][1]}
+                    key={[...participants.entries()][1][1]}
+                  />
+                </>
+              ) : (
+                <div>hi</div>
+              )}
               <Grid
                 container
                 spacing={2}
@@ -676,7 +711,8 @@ function TelemedicineConsultation() {
         ) : joined && joined == "JOINING" ? (
           <p>Joining the meeting...</p>
         ) : (
-          <button onClick={joinMeeting}>Join</button>
+          // <button onClick={joinMeeting}>Join</button>
+          <div>hi</div>
         )}
       </div>
     );
