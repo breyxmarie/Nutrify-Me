@@ -29,7 +29,7 @@ class User(models.Model):
    # profile_pic = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     class Meta:
-        db_table = "User"
+        db_table = "user"
 
 
    #  def __str__(self):
@@ -49,7 +49,7 @@ class Nutritionist(models.Model):
     user_id =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings5")
 
     class Meta:
-        db_table = "Nutritionist"
+        db_table = "nutritionist"
 
 # //! profile_pic = models.ImageField(upload_to=upload_to, blank=True, null=True)
     # //! (add picture for license) license_pic = models.ImageField(upload_to=upload_to, blank=True, null=True) 
@@ -63,7 +63,7 @@ class Appointment(models.Model):
     nutritionist_id = models.ForeignKey(Nutritionist, on_delete=models.CASCADE, related_name="listings") 
 
     class Meta:
-        db_table = "Appointment"
+        db_table = "appointment"
 
 # class VideoCall(models.Model):
 #     video_id = models.AutoField(primary_key=True)

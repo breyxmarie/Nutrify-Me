@@ -92,14 +92,27 @@ WSGI_APPLICATION = 'crud.wsgi.application'
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3','35.240.253.93'
+        # 'NAME': BASE_DIR / 'db.sqlite3', nutrify-me-430504:asia-southeast1:nutrify-me
+
+        #for deployment
+        # 'ENGINE' : 'django.db.backends.mysql',
+        # 'NAME': 'nutrify-me',
+        # 'USER': 'admin',
+        # 'PASSWORD': 'admin',
+        # 'HOST': '/cloudsql/nutrify-me-430504:asia-southeast1:nutrify-me',
+        # 'PORT': '8080'
+
+        #deployment
+
+        # database for local run
         'ENGINE' : 'django.db.backends.mysql',
         'NAME': 'nutrifyme',
         'USER': 'root',
         'PASSWORD': 'admin',
         'HOST': '127.0.0.1',
         'PORT': '3306'
+        # local run
     }
 }
 
