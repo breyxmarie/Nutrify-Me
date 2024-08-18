@@ -26,6 +26,7 @@ function NutritionistProfile() {
   const [nutritionists, setNutritionists] = useState();
   const [schedules, setSchedules] = useState([]);
   const [numSchedules, setNumSchedules] = useState(1); // Initial number of schedules
+  const [edit, setEdit] = useState(false);
 
   const [file, setFile] = useState();
   const dayChoices = [
@@ -54,6 +55,29 @@ function NutritionistProfile() {
     //   .catch((error) => {
     //     console.error("Error fetching data:", error);
     //   });
+    console.log(nutritionist.schedule_day.length);
+    const tempSchedule = [];
+
+    for (let i = 0; i < nutritionist.schedule_day.length; i++) {
+      const timeRange = nutritionist.schedule_time[i];
+      const [startTime, endTime] = timeRange.split("-");
+      console.log(
+        dayjs("2024-08-17" + " " + startTime).format("h:mm A"),
+        startTime
+      );
+      const temp = {
+        day: nutritionist.schedule_day[i],
+        start_time: dayjs("2024-08-17" + " " + startTime),
+        end_time: dayjs("2024-08-10" + " " + endTime),
+      };
+
+      tempSchedule.push(temp);
+    }
+
+    console.log(tempSchedule);
+    console.log(schedules);
+
+    setSchedules(tempSchedule);
   };
 
   useEffect(() => {
@@ -82,6 +106,7 @@ function NutritionistProfile() {
 
   const editProfile = () => {
     GetData();
+    setEdit(true);
     setProfileDiv(
       <>
         <button onClick={click}>click</button>
@@ -191,104 +216,6 @@ function NutritionistProfile() {
             </Grid>
             <Grid xs={6}></Grid>
           </Grid>
-          Schedule
-          <div className="schedule-manager">
-            <div className="schedule-form">
-              <Grid container spacing={2}>
-                <Grid xs={8}> Day:</Grid>
-                <Grid xs={0}>
-                  {" "}
-                  <Select
-                    labelId="demo-simple-select-filled-label"
-                    id="demo-simple-select-filled"
-                    value={day}
-                    // onChange={onChange}
-                    // error={!!error}
-                    onChange={(event) => setDay(event.target.value)}
-                  >
-                    {dayChoices.map((option) => (
-                      <MenuItem value={option}>{option}</MenuItem>
-                    ))}
-                  </Select>
-                </Grid>
-              </Grid>
-
-              <Grid container spacing={2} sx={{ mt: 2 }}>
-                <Grid xs={2}>Start Time:</Grid>
-                <Grid xs={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["TimePicker"]}
-                      name="selectedDate"
-                    >
-                      <TimePicker
-                        label="With Time Clock"
-                        viewRenderers={{
-                          hours: renderTimeViewClock,
-                          minutes: renderTimeViewClock,
-                          seconds: renderTimeViewClock,
-                        }}
-                        value={startTime}
-                        // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
-                        // onChange={(event) =>
-                        //   setStartTime(dayjs(event["$d"]).format("HH:mm:ss"))
-                        // }
-
-                        onChange={(newValue) => setStartTime(newValue)}
-                        // onChange={(e) => handleTimeChange(e)}
-                        sx={{ background: "#ffffff" }}
-                        name="selectedTime"
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-                <Grid xs={2}>End Time:</Grid>
-                <Grid xs={3}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer
-                      components={["TimePicker"]}
-                      name="selectedDate"
-                    >
-                      <TimePicker
-                        label="With Time Clock"
-                        viewRenderers={{
-                          hours: renderTimeViewClock,
-                          minutes: renderTimeViewClock,
-                          seconds: renderTimeViewClock,
-                        }}
-                        // defaultValue={time}
-                        // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
-                        // onChange={(event) =>
-                        //   setEndTime(dayjs(event["$d"]).format("HH:mm:ss"))
-                        // }
-                        value={endTime}
-                        onChange={(newValue) => setEndTime(newValue)}
-                        // onChange={(e) => handleTimeChange(e)}
-                        sx={{ background: "#ffffff" }}
-                        name="selectedTime"
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                </Grid>
-              </Grid>
-              {/* <input
-            type="text"
-            id="new-title"
-            value={newTitle}
-            //    onChange={(event) => setNewTitle(event.target.value)}
-          />
-          <label htmlFor="new-details">New Details:</label>
-          <textarea
-            id="new-details"
-            value={newDetails}
-            onChange={(event) => setNewDetails(event.target.value)}
-          /> */}
-              <button onClick={handleAddSchedule}>
-                <i className="fas fa-plus"></i> Add Schedule
-              </button>
-            </div>
-          </div>
-          {renderSchedules}
           <Box sx={{ ml: "21%", mt: "50px" }}>
             <Button
               sx={{
@@ -538,6 +465,7 @@ function NutritionistProfile() {
   });
 
   const onSubmitHandler = async (data) => {
+    setEdit(false);
     console.log(data);
     console.log(file);
     let fileName = "";
@@ -587,6 +515,22 @@ function NutritionistProfile() {
           // });
 
           // navigate("/Log-In?success=newPassword");
+
+          console.log(fileName);
+          AxiosInstance.put(`nutritionist/`, {
+            nutritionist_id: 1,
+            username: "randomname",
+            password: "123",
+            first_name: "fdassd",
+            last_name: "asdfasdf",
+            license_id: "324334",
+            schedule_day: ["Wednesday", "Thursday"],
+            schedule_time: ["10:00 AM-12:00 PM", "5:00 PM-7:00 PM"],
+            image: "http://127.0.0.1:8000/Photos/profile.png",
+            license_pic:
+              "http://127.0.0.1:8000/Photos/license/GQc7Xw8XAAAHE0F_8QmbYvx.jfif",
+            user_id: 101,
+          }).then((res) => {});
 
           AxiosInstance.get(`user/`).then((res) => {
             // {
@@ -1342,6 +1286,7 @@ function NutritionistProfile() {
           </button>
         </div>
       </div> */}
+
       <center>
         {/* <img src="/images/profile pic.png" height="190" /> */}
 
@@ -1352,6 +1297,240 @@ function NutritionistProfile() {
         <br />
       </center>
       {profileDiv}
+
+      {edit ? (
+        <div className="schedule-manager">
+          Schedule
+          <div className="schedule-form">
+            <Grid container spacing={2}>
+              <Grid xs={8}> Day:</Grid>
+              <Grid xs={0}>
+                {" "}
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  value={day}
+                  // onChange={onChange}
+                  // error={!!error}
+                  onChange={(event) => setDay(event.target.value)}
+                >
+                  {dayChoices.map((option) => (
+                    <MenuItem value={option}>{option}</MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+            </Grid>
+
+            <Grid container spacing={2} sx={{ mt: 2 }}>
+              <Grid xs={2}>Start Time:</Grid>
+              <Grid xs={3}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["TimePicker"]}
+                    name="selectedDate"
+                  >
+                    <TimePicker
+                      label="With Time Clock"
+                      viewRenderers={{
+                        hours: renderTimeViewClock,
+                        minutes: renderTimeViewClock,
+                        seconds: renderTimeViewClock,
+                      }}
+                      value={startTime}
+                      // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+                      // onChange={(event) =>
+                      //   setStartTime(dayjs(event["$d"]).format("HH:mm:ss"))
+                      // }
+
+                      onChange={(newValue) => setStartTime(newValue)}
+                      // onChange={(e) => handleTimeChange(e)}
+                      sx={{ background: "#ffffff" }}
+                      name="selectedTime"
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </Grid>
+              <Grid xs={2}>End Time:</Grid>
+              <Grid xs={3}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer
+                    components={["TimePicker"]}
+                    name="selectedDate"
+                  >
+                    <TimePicker
+                      label="With Time Clock"
+                      viewRenderers={{
+                        hours: renderTimeViewClock,
+                        minutes: renderTimeViewClock,
+                        seconds: renderTimeViewClock,
+                      }}
+                      // defaultValue={time}
+                      // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+                      // onChange={(event) =>
+                      //   setEndTime(dayjs(event["$d"]).format("HH:mm:ss"))
+                      // }
+                      value={endTime}
+                      onChange={(newValue) => setEndTime(newValue)}
+                      // onChange={(e) => handleTimeChange(e)}
+                      sx={{ background: "#ffffff" }}
+                      name="selectedTime"
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
+              </Grid>
+            </Grid>
+            {/* <input
+            type="text"
+            id="new-title"
+            value={newTitle}
+            //    onChange={(event) => setNewTitle(event.target.value)}
+          />
+          <label htmlFor="new-details">New Details:</label>
+          <textarea
+            id="new-details"
+            value={newDetails}
+            onChange={(event) => setNewDetails(event.target.value)}
+          /> */}
+            <button onClick={handleAddSchedule}>
+              <i className="fas fa-plus"></i> Add Schedule
+            </button>
+          </div>
+          {renderSchedules}
+          {schedules.map((schedule, index) => (
+            <div key={index} className="schedule-item">
+              <Grid container spacing={2}>
+                <Grid xs={8}> Day:</Grid>
+                <Grid xs={0}>
+                  {" "}
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    value={schedule.day}
+                    // onChange={onChange}
+                    // error={!!error}
+                    onChange={(event) => setDay(event.target.value)}
+                  >
+                    {dayChoices.map((option) => (
+                      <MenuItem value={option}>{option}</MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid xs={2}>Start Time:</Grid>
+                <Grid xs={3}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    {console.log(schedules)}
+
+                    {console.log(schedule.start_time)}
+                    <DemoContainer
+                      components={["TimePicker"]}
+                      name="selectedDate"
+                    >
+                      <TimePicker
+                        label="With Time Clock"
+                        viewRenderers={{
+                          hours: renderTimeViewClock,
+                          minutes: renderTimeViewClock,
+                          seconds: renderTimeViewClock,
+                        }}
+                        //    value={schedule?.start_time}
+                        // value={dayjs("2024-08-10" + "10:00:00").format("h:mm A")}
+                        defaultValue={schedule.start_time}
+                        // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+
+                        onChange={(event) => handleChangeEnd(event, index)}
+                        // onChange={(e) => handleTimeChange(e)}
+                        sx={{ background: "#ffffff" }}
+                        name="selectedTime"
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid xs={2}>End Time:</Grid>
+                <Grid xs={3}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      components={["TimePicker"]}
+                      name="selectedDate"
+                    >
+                      <TimePicker
+                        label="With Time Clock"
+                        viewRenderers={{
+                          hours: renderTimeViewClock,
+                          minutes: renderTimeViewClock,
+                          seconds: renderTimeViewClock,
+                        }}
+                        //  value={schedule?.end_time}
+                        // defaultValue={time}
+                        // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+                        defaultValue={schedule.end_time}
+                        // onChange={(event) =>
+                        //   setEndTime(dayjs(event["$d"]).format("HH:mm:ss"))
+                        // }
+
+                        onChange={(event) => handleChange(event, index)}
+                        // onChange={(e) => handleTimeChange(e)}
+                        sx={{ background: "#ffffff" }}
+                        name="selectedTime"
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+                <Grid>
+                  {" "}
+                  <button
+                    className="delete-button"
+                    onClick={() => removeSchedule(index)}
+                  >
+                    <i className="fas fa-minus"></i> Delete
+                  </button>
+                </Grid>
+              </Grid>
+
+              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DemoContainer components={["TimePicker"]} name="selectedDate">
+            <TimePicker
+              label="With Time Clock"
+              viewRenderers={{
+                hours: renderTimeViewClock,
+                minutes: renderTimeViewClock,
+                seconds: renderTimeViewClock,
+              }}
+              // defaultValue={time}
+              // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+              onChange={(event) =>
+                setNewTitle(dayjs(event["$d"]).format("HH:mm:ss"))
+              }
+              // onChange={(e) => handleTimeChange(e)}
+              sx={{ background: "#ffffff" }}
+              name="selectedTime"
+            />
+          </DemoContainer>
+        </LocalizationProvider> */}
+              {/* <label htmlFor={`title-${index}`}>Title:</label>
+        <input
+          type="text"
+          id={`title-${index}`}
+          name="title"
+          value={schedule.title} // Access value from state
+          onChange={(event) => handleChange(event, index)}
+        />
+        <label htmlFor={`details-${index}`}>Details:</label>
+        <textarea
+          id={`details-${index}`}
+          name="details"
+          value={schedule.details} // Access value from state
+          onChange={(event) => handleChange(event, index)}
+        /> */}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <>hi</>
+      )}
+
       {/* {" "}
       <center>
         <img src="/images/profile pic.png" height="190" />

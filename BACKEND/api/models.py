@@ -148,7 +148,7 @@ class Order(models.Model):
     schedule_date = JSONField()
 
     class Meta:
-        db_table = "order"
+        db_table = "orders"
 
 class JournalEntry(models.Model):
     journal_id = models.AutoField(primary_key=True)
