@@ -50,6 +50,10 @@ function MealPlangeneratorHome() {
   };
   //?
 
+  function getRandomInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
   return (
     <div
       className="content"
@@ -89,13 +93,21 @@ function MealPlangeneratorHome() {
                   <Grid xs={6}>
                     {" "}
                     <img
-                      src={item.meal[0].meals[0].details.recipe.image}
+                      src={
+                        item.meal[getRandomInRange(0, 4)].meals[
+                          getRandomInRange(0, 3)
+                        ].details.recipe.image
+                      }
                       width="100"
                       height="100"
                     />{" "}
                     <br />
                     <img
-                      src={item.meal[0].meals[0].details.recipe.image}
+                      src={
+                        item.meal[getRandomInRange(0, 4)].meals[
+                          getRandomInRange(0, 3)
+                        ].details.recipe.image
+                      }
                       width="100"
                       height="100"
                     />
@@ -103,13 +115,21 @@ function MealPlangeneratorHome() {
                   <Grid xs={1}>
                     {" "}
                     <img
-                      src={item.meal[0].meals[0].details.recipe.image}
+                      src={
+                        item.meal[getRandomInRange(0, 4)].meals[
+                          getRandomInRange(0, 3)
+                        ].details.recipe.image
+                      }
                       width="100"
                       height="100"
                     />
                     <br />
                     <img
-                      src={item.meal[0].meals[0].details.recipe.image}
+                      src={
+                        item.meal[getRandomInRange(0, 4)].meals[
+                          getRandomInRange(0, 3)
+                        ].details.recipe.image
+                      }
                       width="100"
                       height="100"
                     />

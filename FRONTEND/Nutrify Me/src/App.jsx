@@ -379,7 +379,9 @@ function App() {
                   element={
                     <>
                       <MainUserNavBar />
-                      <MealPlanTest />{" "}
+                      <MealPlanGeneratorNavBar />
+                      <MealPlanTest />
+                      <UserFooter />
                     </>
                   }
                 />

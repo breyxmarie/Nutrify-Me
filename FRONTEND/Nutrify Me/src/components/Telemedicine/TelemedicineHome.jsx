@@ -438,7 +438,8 @@ function TelemedicineHome() {
   }
 
   function parseTimeString(timeString) {
-    const timeRegex = /^(\d{1,2}):(\d{2})(AM|PM)?$/;
+    //const timeRegex = /^(\d{1,2}):(\d{2})(AM|PM)?$/;
+    const timeRegex = /^(\d{1,2}):(\d{2}) ?(AM|PM)$/;
     const match = timeString.trim().match(timeRegex);
     console.log(match);
     if (!match) {
@@ -645,7 +646,7 @@ function TelemedicineHome() {
     let totalHours = getTotalHours(startTimeString, endTimeString);
     let availableTime = [];
     // const s = dayjs("08:00 PM", "HH:mm A/P");
-    const s = dayjs(startTimeString, "HH:mmA/P");
+    const s = dayjs(startTimeString, "HH:mm A/P");
 
     try {
       const timeIntervals = divideHoursIntoIntervals(s, totalHours);
@@ -676,6 +677,7 @@ function TelemedicineHome() {
           (interval) => interval.date === checkDate
         );
 
+        console.log(filteredAvailableTime);
         filteredAvailableTime.map((filter) => {
           // checkNut.forEach((item) => {
           //   if (item.date === checkDate) {
@@ -1751,18 +1753,20 @@ function TelemedicineHome() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={style}>
                   <Grid container spacing={2}>
-                    <Grid xs={8}>
-                      <Typography
-                        id="modal-modal-title"
-                        variant="h6"
-                        component="h2"
-                      >
-                        Book a Consultation
-                      </Typography>
-                      <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                        Nutritionist
-                      </Typography>
-
+                    <Grid xs={7}>
+                      <center>
+                        <Typography
+                          id="modal-modal-title"
+                          variant="h6"
+                          component="h2"
+                          sx={{ mt: 3 }}
+                        >
+                          Book a Consultation with a Nutritionist
+                        </Typography>
+                        {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                          Nutritionist
+                        </Typography> */}
+                      </center>
                       {/* <MySelectField
                     label="Nutritionist"
                     name="nutritionist"
@@ -1806,51 +1810,34 @@ function TelemedicineHome() {
                             </LocalizationProvider> */}
                           </Typography>
                         </Grid>
-                        <Grid xs={4}>
-                          <FormControl
-                            variant="standard"
-                            sx={{ width: "70%", background: "#ffffff" }}
-                          >
-                            <InputLabel id="demo-simple-select-filled-label">
-                              Nutritionist
-                            </InputLabel>
-                            <Select
-                              labelId="demo-simple-select-filled-label"
-                              id="demo-simple-select-filled"
-                              value={selectedNutritionist}
-                              onChange={handleChange}
-                              name="nutritionist"
+                        <Typography sx={{ ml: 9 }}> Nutritionist</Typography>
+                        <Grid xs={12}>
+                          <center>
+                            <FormControl
+                              variant="standard"
+                              sx={{ width: "70%", background: "#ffffff" }}
                             >
-                              {nutritionist.map((option) => (
-                                <MenuItem
-                                  key={option.nutritionist_id}
-                                  value={option.nutritionist_id}
-                                >
-                                  {option.first_name}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </FormControl>
-                          <Button
-                            variant="contained"
-                            sx={{
-                              float: "right",
-                              mx: "auto",
-                              display: "block",
-                              background: "#ffffff",
-                              color: "#E66253",
-                              fontSize: "20px",
-                              "&:hover": {
-                                backgroundColor: "#E66253",
-                                color: "#ffffff",
-                                border: 1,
-                                borderColor: "#ffffff",
-                              },
-                            }}
-                            onClick={submitAppointment}
-                          >
-                            Submit
-                          </Button>{" "}
+                              <InputLabel id="demo-simple-select-filled-label">
+                                Nutritionist
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                value={selectedNutritionist}
+                                onChange={handleChange}
+                                name="nutritionist"
+                              >
+                                {nutritionist.map((option) => (
+                                  <MenuItem
+                                    key={option.nutritionist_id}
+                                    value={option.nutritionist_id}
+                                  >
+                                    {option.first_name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </center>
                           {/* <Typography
                             id="modal-modal-description"
                             sx={{ mt: 2 }}
@@ -1880,27 +1867,66 @@ function TelemedicineHome() {
                             </DemoContainer>
                           </LocalizationProvider> */}
                         </Grid>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            float: "right",
+                            mx: "auto",
+                            display: "block",
+                            background: "#ffffff",
+                            color: "#E66253",
+                            fontSize: "20px",
+                            borderRadius: 5,
+                            mt: 10,
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 1,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                          onClick={submitAppointment}
+                        >
+                          Submit
+                        </Button>{" "}
                       </Grid>
 
                       {/* <Button onClick={submission}>Book</Button> */}
                     </Grid>
-                    <Grid xs={4}>
+                    <Grid xs={5}>
                       {/* {nutritionistInformation} */}{" "}
-                      <img
-                        src={tempNut?.image}
-                        style={{ background: "#ffffff" }}
-                      />{" "}
-                      <br />
-                      Name: {tempNut?.first_name} {tempNut?.last_name}
+                      <center>
+                        <img
+                          src={tempNut?.image || "/images/Rectangle 355.png"}
+                          style={{ background: "#ffffff" }}
+                        />{" "}
+                        <br />
+                        Name: {tempNut?.first_name} {tempNut?.last_name}
+                      </center>
                       <br />
                       <br />
                       <Grid container spacing={2}>
-                        <Grid xs={6}>Days: {tempNut?.schedule_day}</Grid>
-                        <Grid xs={6}> Time {tempNut?.schedule_time}</Grid>
+                        <Grid xs={6}>
+                          Days:{" "}
+                          {tempNut?.schedule_day.map((item) => (
+                            <div>{item}</div>
+                          ))}
+                        </Grid>
+                        <Grid xs={6}>
+                          {" "}
+                          Time{" "}
+                          {tempNut?.schedule_time.map((item) => (
+                            <div>{item}</div>
+                          ))}
+                        </Grid>
                       </Grid>
+                      <br />
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         {selectedDates ? (
                           <>
+                            <Typography sx={{ mb: 1 }}>
+                              Select a Date
+                            </Typography>
                             <DatePicker
                               label="Select a date"
                               defaultValues={null}
@@ -1913,13 +1939,14 @@ function TelemedicineHome() {
                               minDate={dayjs()}
                               //  open // Keep the calendar open
                             />
+                            <Typography sx={{ mb: 1 }}>Select Time</Typography>
                             <Select
                               labelId="demo-simple-select-filled-label"
                               id="demo-simple-select-filled"
                               // value={selectedNutritionist}
                               onChange={handleChangeTime}
                               name="type"
-                              width="100%"
+                              width="full"
                               //  {...register("type")}
                               //  error={errors.type ? true : false}
                             >
@@ -1983,7 +2010,7 @@ function TelemedicineHome() {
               </Link> */}
             </Box>
             <center>
-              <Link
+              {/* <Link
                 to="/telemedicine-messages"
                 style={{
                   color: "#ffffff",
@@ -2008,7 +2035,7 @@ function TelemedicineHome() {
                   <img src="/images/messages.png" width="30px" height="30px" />{" "}
                   &nbsp; Messages
                 </Button>
-              </Link>
+              </Link> */}
             </center>
           </Grid>
         </Grid>

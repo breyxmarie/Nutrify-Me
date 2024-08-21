@@ -92,6 +92,7 @@ main {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  border: 1px solid #1a8fff;
 }
 
 .row-middle {
@@ -102,11 +103,25 @@ main {
   flex-grow: 1;
   flex-basis: 0;
   max-width: 100%;
+  /* background-color: #1a8fff; */
+  border-image: linear-gradient(45deg, #ff1a79 0%, #eb82b3 40%);
+}
+
+.col .cell {
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: 100%;
+  background-color: #1a8fff;
+  border-image: linear-gradient(45deg, #ff1a79 0%, #eb82b3 40%);
+  border-color: "#000000";
+  border: 1px solid #1a8fff;
 }
 
 .col-start {
   justify-content: flex-start;
   text-align: left;
+  border: 1px solid #1a8fff;
+  color: #1a8fff;
 }
 
 .col-center {
@@ -126,6 +141,7 @@ main {
   position: relative;
   width: 100%;
   background: var(--neutral-color);
+
   border: 1px solid var(--border-color);
 }
 
@@ -181,6 +197,12 @@ main {
   transition: 0.5s ease-out;
 }
 
+.col .cell .selected {
+  border-left: 10px solid transparent;
+  border-image: linear-gradient(45deg, #1a8fff 0%, #53cbf1 40%);
+  border-image-slice: 1;
+}
+
 .calendar .body .selected {
   border-left: 10px solid transparent;
   border-image: linear-gradient(45deg, #1a8fff 0%, #53cbf1 40%);
@@ -195,9 +217,9 @@ main {
   border-bottom: 1px solid var(--border-color);
 }
 
-/* .calendar .body .row:last-child {
-    border-bottom: none;
-  } */
+.calendar .body .row:last-child {
+  border-bottom: none;
+}
 
 .calendar .body .cell:last-child {
   border-right: none;
@@ -248,8 +270,19 @@ main {
 
 .cell.selected {
   text-align: center;
+  color: #ff1a79;
   /* Adjust width as needed */
   width: 50px; /* Example */
+  border: 1px solid #1a8fff;
+}
+
+.cell.today {
+  text-align: center;
+  color: #1a8fff;
+  /* Adjust width as needed */
+  width: 50px; /* Example */
+  height: 50px;
+  border: 1px solid #1a8fff;
 }
 
 .spinner {

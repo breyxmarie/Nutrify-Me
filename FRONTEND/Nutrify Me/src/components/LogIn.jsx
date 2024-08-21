@@ -11,6 +11,9 @@ import { useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "./LoggedInUserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
 
 function LogIn() {
   //? toast
@@ -133,49 +136,117 @@ function LogIn() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "80px",
+        marginTop: "0px",
         color: "#99756E",
       }}
     >
+      <Grid container spacing={2}>
+        <Grid xs={4}></Grid>
+        <Grid xs={4}>
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
+            <center>
+              <img
+                src="/images/transparentLogo.png"
+                style={{ maxWidth: "40%", maxHeight: "10%" }}
+              />
+
+              <Grid container spacing={2}>
+                <Grid xs={4}>
+                  <Typography sx={{ mt: "10%", ml: "30%" }}>
+                    Username
+                  </Typography>
+                </Grid>
+                <Grid xs={6}>
+                  {" "}
+                  <TextField
+                    size="small"
+                    id="username"
+                    name="username"
+                    // label="Username"
+                    fullWidth
+                    margin="dense"
+                    {...register("username")}
+                    error={errors.username ? true : false}
+                  />
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.username?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid xs={4}>
+                  <Typography sx={{ mt: "10%", ml: "30%" }}>
+                    Password
+                  </Typography>
+                </Grid>
+                <Grid xs={6}>
+                  <TextField
+                    size="small"
+                    id="password"
+                    name="password"
+                    // label="Password"
+                    type="password"
+                    fullWidth
+                    margin="dense"
+                    {...register("password")}
+                    error={errors.password ? true : false}
+                  />
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.password?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <br />
+              <Grid container spacing={2}>
+                <Grid xs={3.5}></Grid>
+                <Grid xs={3}>
+                  {" "}
+                  <Link to="/ForgetPassword">
+                    <a style={{ textDecoration: "underline" }}>
+                      Forget Password
+                    </a>
+                  </Link>
+                </Grid>
+                <Grid xs={3}>
+                  {" "}
+                  <Link to="/Register">
+                    <a style={{ textDecoration: "underline" }}>Register</a>
+                  </Link>
+                </Grid>
+                <Grid xs={3}></Grid>
+              </Grid>
+              {logIn && <Link to={navigate}>Sign In Successful!</Link>}
+              <br />
+              <Button
+                type="submit"
+                sx={{
+                  background: "#E66253",
+                  color: "#ffffff",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  px: 10,
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 1,
+                    borderColor: "#E66253",
+                  },
+                }}
+              >
+                Log In
+              </Button>
+            </center>
+          </form>
+        </Grid>
+        <Grid xs={4}></Grid>
+      </Grid>
+
+      <center>
+        <Box></Box>
+      </center>
       <ToastContainer />
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <h2>Lets sign you in.</h2>
-        <br />
-
-        <TextField
-          id="username"
-          name="username"
-          label="Username"
-          fullWidth
-          margin="dense"
-          {...register("username")}
-          error={errors.username ? true : false}
-        />
-        <Typography variant="inherit" color="textSecondary">
-          {errors.username?.message}
-        </Typography>
-        <br />
-
-        <TextField
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          fullWidth
-          margin="dense"
-          {...register("password")}
-          error={errors.password ? true : false}
-        />
-        <Typography variant="inherit" color="textSecondary">
-          {errors.password?.message}
-        </Typography>
-        <br />
-        {logIn && <Link to={navigate}>Sign In Successful!</Link>}
-        <button type="submit">Sign in</button>
-      </form>
-      <Link to="/ForgetPassword">
-        <button>Forget Password</button>
-      </Link>
     </div>
   );
 }

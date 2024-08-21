@@ -15,10 +15,11 @@ import { formatISO } from "date-fns";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Button from "@mui/material/Button";
 
 function OTP() {
   const location = useLocation();
-  console.log(location.state.otp);
+  // console.log(location.state.otp);
   const navigate = useNavigate();
   //! form handling
 
@@ -75,7 +76,7 @@ function OTP() {
       // navigate("/Log-In?success=true");
       navigate("/Log-In?success=registered");
     } else {
-      // alert("Enter a valid OTP please");
+      toast.success("Enter a valid OTP please");
     }
   };
   // sendEmail(forms);
@@ -89,31 +90,85 @@ function OTP() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "80px",
+        marginTop: "0px",
         fontFamily: "Poppins",
       }}
     >
       <ToastContainer />
-      hello
-      <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <TextField
-          id="otp"
-          name="otp"
-          label="OTP"
-          type="text"
-          fullWidth
-          margin="dense"
-          {...register("otp")}
-          error={errors.otp ? true : false}
-        />
 
-        <Typography variant="inherit" color="textSecondary">
-          {errors.otp?.message}
-        </Typography>
+      <Grid container spacing={2}>
+        <Grid xs={4.5}></Grid>
+        <Grid xs={3}>
+          <img
+            src="/images/transparentLogo.png"
+            style={{ maxWidth: "50%", maxHeight: "50%" }}
+          />{" "}
+          <Box sx={{ background: "#DEEBD6", py: 3, px: 2, mb: 2 }}>
+            We’ve sent a verification code to your email -{" "}
+            {location.state.email}
+          </Box>
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
+            <TextField
+              id="otp"
+              name="otp"
+              label="OTP"
+              type="text"
+              fullWidth
+              margin="dense"
+              {...register("otp")}
+              error={errors.otp ? true : false}
+            />
 
-        <button onClick={() => sendEmail(forms)}>RESEND OTP</button>
-        <button type="submit">SUBMIT</button>
-      </form>
+            <Typography variant="inherit" color="textSecondary">
+              {errors.otp?.message}
+            </Typography>
+            <br />
+
+            <Button
+              sx={{
+                background: "#898246",
+                color: "#ffffff",
+                fontSize: 16,
+                width: "100%",
+                fontWeight: "bold",
+                px: 10,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#898246",
+                  border: 1,
+                  borderColor: "#898246",
+                },
+              }}
+              onClick={() => sendEmail(forms)}
+            >
+              RESEND OTP
+            </Button>
+            <br />
+            <br />
+
+            <Button
+              type="submit"
+              sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                fontSize: 16,
+                width: "100%",
+                fontWeight: "bold",
+                px: 10,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                  borderColor: "#E66253",
+                },
+              }}
+            >
+              SUBMIT
+            </Button>
+          </form>
+        </Grid>
+        <Grid xs={4}></Grid>
+      </Grid>
     </div>
   );
 }

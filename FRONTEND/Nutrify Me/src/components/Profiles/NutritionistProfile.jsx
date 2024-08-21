@@ -74,8 +74,8 @@ function NutritionistProfile() {
       tempSchedule.push(temp);
     }
 
-    console.log(tempSchedule);
-    console.log(schedules);
+    // console.log(tempSchedule);
+    // console.log(schedules);
 
     setSchedules(tempSchedule);
   };
@@ -106,15 +106,37 @@ function NutritionistProfile() {
 
   const editProfile = () => {
     GetData();
+
+    const tempSchedule = [];
+    for (let i = 0; i < nutritionist.schedule_day.length; i++) {
+      const timeRange = nutritionist.schedule_time[i];
+      const [startTime, endTime] = timeRange.split("-");
+
+      const temp = {
+        day: nutritionist.schedule_day[i],
+        start_time: dayjs("2024-08-17" + " " + startTime),
+        end_time: dayjs("2024-08-10" + " " + endTime),
+      };
+
+      tempSchedule.push(temp);
+    }
+
+    console.log(tempSchedule);
+    // console.log(tempSchedule);
+    // console.log(schedules);
+
+    setSchedules(tempSchedule);
+
     setEdit(true);
+
     setProfileDiv(
       <>
-        <button onClick={click}>click</button>
+        {/* <button onClick={click}>click</button>
         <form onSubmit={handleSubmit(onSubmitHandler)}>
           <Grid container spacing={2} sx={{ my: 3 }}>
             <Grid xs={10} sx={{ mx: "30%" }}>
               Profile Picture: Upload Image:
-              {/* // * upload image */}
+           
               <input
                 type="file"
                 {...register("file")}
@@ -239,7 +261,7 @@ function NutritionistProfile() {
           <br />
           <br />
           <br />
-        </form>
+        </form> */}
       </>
     );
   };
@@ -508,189 +530,251 @@ function NutritionistProfile() {
           privilege: "User",
           email: loggedInUser.email,
           image: "http://127.0.0.1:8000/Photos/" + fileName,
+          active: 1,
         }).then((res) => {
-          //  console.log(res, res.data);
+          console.log(res, res.data);
           // navigate("/Profiling", {
           //   state: { email: data.email, name: data.first_name },
           // });
 
           // navigate("/Log-In?success=newPassword");
-
+          const tempDay = [];
+          const tempTime = [];
+          console.log(schedules);
+          for (let i = 0; i < schedules.length; i++) {
+            console.log(schedules.length, schedules[i].day);
+            tempDay.push(schedules[i].day);
+            tempTime.push(
+              schedules[i].start_time.format("h:mm A") +
+                "-" +
+                schedules[i].end_time.format("h:mm A")
+            );
+          }
+          console.log(nutritionist);
           console.log(fileName);
-          AxiosInstance.put(`nutritionist/`, {
-            nutritionist_id: 1,
-            username: "randomname",
-            password: "123",
-            first_name: "fdassd",
-            last_name: "asdfasdf",
-            license_id: "324334",
-            schedule_day: ["Wednesday", "Thursday"],
-            schedule_time: ["10:00 AM-12:00 PM", "5:00 PM-7:00 PM"],
-            image: "http://127.0.0.1:8000/Photos/profile.png",
-            license_pic:
-              "http://127.0.0.1:8000/Photos/license/GQc7Xw8XAAAHE0F_8QmbYvx.jfif",
-            user_id: 101,
-          }).then((res) => {});
+          try {
+            AxiosInstance.put(`nutritionist/`, {
+              nutritionist_id: nutritionist.nutritionist_id,
+              username: data.username,
+              password: nutritionist.password,
+              first_name: nutritionist.first_name,
+              last_name: nutritionist.last_name,
+              license_id: nutritionist.license_id,
+              schedule_day: tempDay,
+              schedule_time: tempTime,
+              image: nutritionist.image,
+              license_pic: nutritionist.license_pic,
+              user_id: 101,
+            }).then((res) => {
+              console.log(res);
 
-          AxiosInstance.get(`user/`).then((res) => {
-            // {
-            //   res.data.map((item, index) =>
-            //   //  console.log(item.username, item.password)
-            //   );
-            // }
-            //  console.log(res.data);
-            const newUser = res.data.find(
-              (user) => user.user_id === loggedInUser.user_id
-            );
-            setLoggedInUser(newUser);
+              const response = AxiosInstance.get(`nutritionist`);
 
-            setProfileDiv(
-              <>
-                <Button
-                  sx={{
-                    color: "#539801",
-                    border: 1,
-                    fontWeight: "bold",
-                    "&:hover": {
-                      backgroundColor: "#539801",
-                      color: "#ffffff",
-                      border: 0.5,
-                      borderColor: "#ffffff",
-                    },
-                  }}
-                  onClick={editProfile}
-                >
-                  EDIT
-                </Button>
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={6} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      Username
-                    </Typography>
+              AxiosInstance.get(`nutritionist/`).then((res) => {
+                const newNutritionist = res.data.find(
+                  (user) => user.user_id === loggedInUser.user_id
+                );
+                setnNutritionist(newNutritionist);
+                console.log(newNutritionist);
+                const tempSchedule = [];
+                for (let i = 0; i < newNutritionist.schedule_day.length; i++) {
+                  const timeRange = newNutritionist.schedule_time[i];
+                  const [startTime, endTime] = timeRange.split("-");
 
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {loggedInUser.username}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}> </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={10} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      Name:{" "}
-                    </Typography>
+                  const temp = {
+                    day: newNutritionist.schedule_day[i],
+                    start_time: dayjs("2024-08-17" + " " + startTime),
+                    end_time: dayjs("2024-08-10" + " " + endTime),
+                  };
 
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {newUser.first_name} {""}
-                      {newUser.last_name}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}> </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={2} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      Passoword:{" "}
-                    </Typography>
+                  tempSchedule.push(temp);
+                }
 
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {newUser.password}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}></Grid>
-                </Grid>{" "}
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={2} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      E-mail:{" "}
-                    </Typography>
+                console.log(tempSchedule);
+                // console.log(tempSchedule);
+                // console.log(schedules);
 
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {loggedInUser.email}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}></Grid>
-                </Grid>
-                <Box sx={{ ml: "21%", mt: "50px" }}>
-                  <Typography
-                    sx={{
-                      color: "#99756E",
-                      fontWeight: "bold",
-                      fontSize: "25px",
-                      float: "left",
-                      ml: 20,
-                    }}
-                  >
-                    Account Removal
-                  </Typography>
-                  <br />
-                  <br />
-                  <br />
-                  <Button
-                    sx={{
-                      background: "#E66253",
-                      color: "#ffffff",
-                      float: "left",
-                      ml: 20,
-                      px: 3,
-                      "&:hover": {
-                        backgroundColor: "#ffffff",
-                        color: "#E66253",
-                        border: 0.5,
-                        borderColor: "#E66253",
-                      },
-                    }}
-                  >
-                    DEACTIVATE ACCOUNT
-                  </Button>
-                </Box>
-                <br />
-                <br />
-                <br />
-                <Button
-                  sx={{
-                    color: "#B3B3B3",
-                    border: 1,
-                    fontWeight: "bold",
-                    px: 5,
-                    "&:hover": {
-                      backgroundColor: "#B3B3B3",
-                      color: "#ffffff",
-                      border: 0.5,
-                      borderColor: "#ffffff",
-                    },
-                  }}
-                >
-                  {" "}
-                  LOG OUT
-                </Button>
-              </>
-            );
-          });
+                setSchedules(tempSchedule);
+              });
+
+              try {
+                AxiosInstance.get(`user/`).then((res) => {
+                  // {
+                  //   res.data.map((item, index) =>
+                  //   //  console.log(item.username, item.password)
+                  //   );
+                  // }
+                  //  console.log(res.data);
+
+                  const newUser = res.data.find(
+                    (user) => user.user_id === loggedInUser.user_id
+                  );
+                  console.log(newUser);
+                  setLoggedInUser(newUser);
+
+                  setProfileDiv(
+                    <>
+                      <Button
+                        sx={{
+                          color: "#539801",
+                          border: 1,
+                          fontWeight: "bold",
+                          "&:hover": {
+                            backgroundColor: "#539801",
+                            color: "#ffffff",
+                            border: 0.5,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                        onClick={editProfile}
+                      >
+                        EDIT
+                      </Button>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={6} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Username
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {loggedInUser.username}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}> </Grid>
+                      </Grid>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={10} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Name:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {newUser.first_name} {""}
+                            {newUser.last_name}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}> </Grid>
+                      </Grid>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={2} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Passoword:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {newUser.password}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}></Grid>
+                      </Grid>{" "}
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={2} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            E-mail:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {loggedInUser.email}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}></Grid>
+                      </Grid>
+                      <Box sx={{ ml: "21%", mt: "50px" }}>
+                        <Typography
+                          sx={{
+                            color: "#99756E",
+                            fontWeight: "bold",
+                            fontSize: "25px",
+                            float: "left",
+                            ml: 20,
+                          }}
+                        >
+                          Account Removal
+                        </Typography>
+                        <br />
+                        <br />
+                        <br />
+                        <Button
+                          sx={{
+                            background: "#E66253",
+                            color: "#ffffff",
+                            float: "left",
+                            ml: 20,
+                            px: 3,
+                            "&:hover": {
+                              backgroundColor: "#ffffff",
+                              color: "#E66253",
+                              border: 0.5,
+                              borderColor: "#E66253",
+                            },
+                          }}
+                        >
+                          DEACTIVATE ACCOUNT
+                        </Button>
+                      </Box>
+                      <br />
+                      <br />
+                      <br />
+                      <Button
+                        sx={{
+                          color: "#B3B3B3",
+                          border: 1,
+                          fontWeight: "bold",
+                          px: 5,
+                          "&:hover": {
+                            backgroundColor: "#B3B3B3",
+                            color: "#ffffff",
+                            border: 0.5,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                      >
+                        {" "}
+                        LOG OUT
+                      </Button>
+                    </>
+                  );
+                });
+                setEdit(false);
+              } catch (error) {
+                console.log(error);
+              }
+            });
+          } catch (error) {
+            console.log(error);
+          }
         });
       } catch (error) {
         console.log(error.response);
@@ -1296,108 +1380,161 @@ function NutritionistProfile() {
         <br />
         <br />
       </center>
-      {profileDiv}
+      {/* {profileDiv} */}
 
       {edit ? (
-        <div className="schedule-manager">
-          Schedule
-          <div className="schedule-form">
-            <Grid container spacing={2}>
-              <Grid xs={8}> Day:</Grid>
-              <Grid xs={0}>
-                {" "}
-                <Select
-                  labelId="demo-simple-select-filled-label"
-                  id="demo-simple-select-filled"
-                  value={day}
-                  // onChange={onChange}
-                  // error={!!error}
-                  onChange={(event) => setDay(event.target.value)}
+        <>
+          <button onClick={click}>click</button>
+          <form onSubmit={handleSubmit(onSubmitHandler)}>
+            <Grid container spacing={2} sx={{ my: 3 }}>
+              <Grid xs={10} sx={{ mx: "30%" }}>
+                Profile Picture: Upload Image:
+                {/* // * upload image */}
+                <input
+                  type="file"
+                  {...register("file")}
+                  // onChange={(evt) => setFile(evt.target.files[0])}
+                  onChange={handleFileUpload}
+                />
+                <Typography
+                  sx={{
+                    color: "#E66253",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                  }}
                 >
-                  {dayChoices.map((option) => (
-                    <MenuItem value={option}>{option}</MenuItem>
-                  ))}
-                </Select>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={2} sx={{ mt: 2 }}>
-              <Grid xs={2}>Start Time:</Grid>
-              <Grid xs={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    components={["TimePicker"]}
-                    name="selectedDate"
-                  >
-                    <TimePicker
-                      label="With Time Clock"
-                      viewRenderers={{
-                        hours: renderTimeViewClock,
-                        minutes: renderTimeViewClock,
-                        seconds: renderTimeViewClock,
-                      }}
-                      value={startTime}
-                      // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
-                      // onChange={(event) =>
-                      //   setStartTime(dayjs(event["$d"]).format("HH:mm:ss"))
-                      // }
-
-                      onChange={(newValue) => setStartTime(newValue)}
-                      // onChange={(e) => handleTimeChange(e)}
-                      sx={{ background: "#ffffff" }}
-                      name="selectedTime"
+                  Username:{" "}
+                </Typography>
+                <TextField
+                  id="username"
+                  name="username"
+                  label="Usernam,e"
+                  defaultValue={loggedInUser.username}
+                  fullWidth
+                  margin="dense"
+                  {...register("username")}
+                  error={errors.username ? true : false}
+                />
+                <Typography
+                  variant="inherit"
+                  color="textSecondary"
+                  id="error-message"
+                >
+                  {errors.username?.message}
+                </Typography>
+                <Typography
+                  sx={{
+                    color: "#E66253",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                  }}
+                >
+                  Name:{" "}
+                </Typography>
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid xs={6}>
+                    {" "}
+                    <TextField
+                      id="firstname"
+                      name="firstname"
+                      label="First Name"
+                      defaultValue={loggedInUser.first_name}
+                      fullWidth
+                      margin="dense"
+                      {...register("firstname")}
+                      // error={errors.username ? true : false}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </Grid>
-              <Grid xs={2}>End Time:</Grid>
-              <Grid xs={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer
-                    components={["TimePicker"]}
-                    name="selectedDate"
-                  >
-                    <TimePicker
-                      label="With Time Clock"
-                      viewRenderers={{
-                        hours: renderTimeViewClock,
-                        minutes: renderTimeViewClock,
-                        seconds: renderTimeViewClock,
-                      }}
-                      // defaultValue={time}
-                      // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
-                      // onChange={(event) =>
-                      //   setEndTime(dayjs(event["$d"]).format("HH:mm:ss"))
-                      // }
-                      value={endTime}
-                      onChange={(newValue) => setEndTime(newValue)}
-                      // onChange={(e) => handleTimeChange(e)}
-                      sx={{ background: "#ffffff" }}
-                      name="selectedTime"
+                  </Grid>{" "}
+                  <Grid xs={6}>
+                    {" "}
+                    <TextField
+                      id="lastname"
+                      name="lastname"
+                      label="Last Name"
+                      defaultValue={loggedInUser.last_name}
+                      fullWidth
+                      margin="dense"
+                      sx={{ width: "100%" }}
+                      {...register("lastname")}
+                      // error={errors.username ? true : false}
                     />
-                  </DemoContainer>
-                </LocalizationProvider>
+                  </Grid>
+                </Grid>
               </Grid>
+              <Grid xs={6}> </Grid>
             </Grid>
-            {/* <input
-            type="text"
-            id="new-title"
-            value={newTitle}
-            //    onChange={(event) => setNewTitle(event.target.value)}
-          />
-          <label htmlFor="new-details">New Details:</label>
-          <textarea
-            id="new-details"
-            value={newDetails}
-            onChange={(event) => setNewDetails(event.target.value)}
-          /> */}
-            <button onClick={handleAddSchedule}>
-              <i className="fas fa-plus"></i> Add Schedule
-            </button>
-          </div>
-          {renderSchedules}
-          {schedules.map((schedule, index) => (
-            <div key={index} className="schedule-item">
+            <Grid container spacing={2} sx={{ my: 3 }}>
+              <Grid xs={2} sx={{ ml: "30%" }}>
+                <Typography
+                  sx={{
+                    color: "#E66253",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                  }}
+                >
+                  Password:{" "}
+                </Typography>
+                <TextField
+                  id="password"
+                  name="password"
+                  label="Password"
+                  type="text"
+                  defaultValue={loggedInUser.password}
+                  fullWidth
+                  margin="dense"
+                  sx={{ width: "100%" }}
+                  {...register("password")}
+                  // error={errors.username ? true : false}
+                />
+              </Grid>
+              <Grid xs={6}></Grid>
+            </Grid>{" "}
+            <Grid container spacing={2} sx={{ my: 3 }}>
+              <Grid xs={2} sx={{ ml: "30%" }}>
+                <Typography
+                  sx={{
+                    color: "#E66253",
+                    fontWeight: "bold",
+                    textAlign: "left",
+                  }}
+                >
+                  E-mail:{" "}
+                </Typography>
+
+                <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+                  {loggedInUser.email}
+                </Typography>
+              </Grid>
+              <Grid xs={6}></Grid>
+            </Grid>
+            <Box sx={{ ml: "21%", mt: "50px" }}>
+              <Button
+                sx={{
+                  background: "#E66253",
+                  color: "#ffffff",
+                  float: "left",
+                  ml: 20,
+                  px: 3,
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 0.5,
+                    borderColor: "#E66253",
+                  },
+                }}
+                type="submit"
+              >
+                SAVE
+              </Button>
+            </Box>
+            <br />
+            <br />
+            <br />
+          </form>
+
+          <div className="schedule-manager">
+            Schedule
+            <div className="schedule-form">
               <Grid container spacing={2}>
                 <Grid xs={8}> Day:</Grid>
                 <Grid xs={0}>
@@ -1405,7 +1542,7 @@ function NutritionistProfile() {
                   <Select
                     labelId="demo-simple-select-filled-label"
                     id="demo-simple-select-filled"
-                    value={schedule.day}
+                    value={day}
                     // onChange={onChange}
                     // error={!!error}
                     onChange={(event) => setDay(event.target.value)}
@@ -1421,9 +1558,6 @@ function NutritionistProfile() {
                 <Grid xs={2}>Start Time:</Grid>
                 <Grid xs={3}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    {console.log(schedules)}
-
-                    {console.log(schedule.start_time)}
                     <DemoContainer
                       components={["TimePicker"]}
                       name="selectedDate"
@@ -1435,12 +1569,13 @@ function NutritionistProfile() {
                           minutes: renderTimeViewClock,
                           seconds: renderTimeViewClock,
                         }}
-                        //    value={schedule?.start_time}
-                        // value={dayjs("2024-08-10" + "10:00:00").format("h:mm A")}
-                        defaultValue={schedule.start_time}
+                        value={startTime}
                         // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+                        // onChange={(event) =>
+                        //   setStartTime(dayjs(event["$d"]).format("HH:mm:ss"))
+                        // }
 
-                        onChange={(event) => handleChangeEnd(event, index)}
+                        onChange={(newValue) => setStartTime(newValue)}
                         // onChange={(e) => handleTimeChange(e)}
                         sx={{ background: "#ffffff" }}
                         name="selectedTime"
@@ -1462,15 +1597,13 @@ function NutritionistProfile() {
                           minutes: renderTimeViewClock,
                           seconds: renderTimeViewClock,
                         }}
-                        //  value={schedule?.end_time}
                         // defaultValue={time}
                         // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
-                        defaultValue={schedule.end_time}
                         // onChange={(event) =>
                         //   setEndTime(dayjs(event["$d"]).format("HH:mm:ss"))
                         // }
-
-                        onChange={(event) => handleChange(event, index)}
+                        value={endTime}
+                        onChange={(newValue) => setEndTime(newValue)}
                         // onChange={(e) => handleTimeChange(e)}
                         sx={{ background: "#ffffff" }}
                         name="selectedTime"
@@ -1478,18 +1611,118 @@ function NutritionistProfile() {
                     </DemoContainer>
                   </LocalizationProvider>
                 </Grid>
-                <Grid>
-                  {" "}
-                  <button
-                    className="delete-button"
-                    onClick={() => removeSchedule(index)}
-                  >
-                    <i className="fas fa-minus"></i> Delete
-                  </button>
-                </Grid>
               </Grid>
+              {/* <input
+            type="text"
+            id="new-title"
+            value={newTitle}
+            //    onChange={(event) => setNewTitle(event.target.value)}
+          />
+          <label htmlFor="new-details">New Details:</label>
+          <textarea
+            id="new-details"
+            value={newDetails}
+            onChange={(event) => setNewDetails(event.target.value)}
+          /> */}
+              <button onClick={handleAddSchedule}>
+                <i className="fas fa-plus"></i> Add Schedule
+              </button>
+            </div>
+            {renderSchedules}
+            {schedules.map((schedule, index) => (
+              <div key={index} className="schedule-item">
+                <Grid container spacing={2}>
+                  <Grid xs={8}> Day:</Grid>
+                  <Grid xs={0}>
+                    {" "}
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      value={schedule.day}
+                      // onChange={onChange}
+                      // error={!!error}
+                      onChange={(event) => setDay(event.target.value)}
+                    >
+                      {dayChoices.map((option) => (
+                        <MenuItem value={option}>{option}</MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                </Grid>
 
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <Grid xs={2}>Start Time:</Grid>
+                  <Grid xs={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      {console.log(schedules)}
+
+                      {console.log(schedule.start_time)}
+                      <DemoContainer
+                        components={["TimePicker"]}
+                        name="selectedDate"
+                      >
+                        <TimePicker
+                          label="With Time Clock"
+                          viewRenderers={{
+                            hours: renderTimeViewClock,
+                            minutes: renderTimeViewClock,
+                            seconds: renderTimeViewClock,
+                          }}
+                          //    value={schedule?.start_time}
+                          // value={dayjs("2024-08-10" + "10:00:00").format("h:mm A")}
+                          defaultValue={schedule.start_time}
+                          // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+
+                          onChange={(event) => handleChangeEnd(event, index)}
+                          // onChange={(e) => handleTimeChange(e)}
+                          sx={{ background: "#ffffff" }}
+                          name="selectedTime"
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid xs={2}>End Time:</Grid>
+                  <Grid xs={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer
+                        components={["TimePicker"]}
+                        name="selectedDate"
+                      >
+                        <TimePicker
+                          label="With Time Clock"
+                          viewRenderers={{
+                            hours: renderTimeViewClock,
+                            minutes: renderTimeViewClock,
+                            seconds: renderTimeViewClock,
+                          }}
+                          //  value={schedule?.end_time}
+                          // defaultValue={time}
+                          // onChange={(e) => setTime(dayjs(e["$d"]).format("HH:mm:ss"))}
+                          defaultValue={schedule.end_time}
+                          // onChange={(event) =>
+                          //   setEndTime(dayjs(event["$d"]).format("HH:mm:ss"))
+                          // }
+
+                          onChange={(event) => handleChange(event, index)}
+                          // onChange={(e) => handleTimeChange(e)}
+                          sx={{ background: "#ffffff" }}
+                          name="selectedTime"
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid>
+                    {" "}
+                    <button
+                      className="delete-button"
+                      onClick={() => removeSchedule(index)}
+                    >
+                      <i className="fas fa-minus"></i> Delete
+                    </button>
+                  </Grid>
+                </Grid>
+
+                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={["TimePicker"]} name="selectedDate">
             <TimePicker
               label="With Time Clock"
@@ -1509,7 +1742,7 @@ function NutritionistProfile() {
             />
           </DemoContainer>
         </LocalizationProvider> */}
-              {/* <label htmlFor={`title-${index}`}>Title:</label>
+                {/* <label htmlFor={`title-${index}`}>Title:</label>
         <input
           type="text"
           id={`title-${index}`}
@@ -1524,11 +1757,12 @@ function NutritionistProfile() {
           value={schedule.details} // Access value from state
           onChange={(event) => handleChange(event, index)}
         /> */}
-            </div>
-          ))}
-        </div>
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
-        <>hi</>
+        <>{profileDiv}</>
       )}
 
       {/* {" "}

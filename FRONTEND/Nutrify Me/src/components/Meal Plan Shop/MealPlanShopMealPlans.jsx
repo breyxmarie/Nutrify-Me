@@ -283,12 +283,12 @@ function MealPlanShopMealPlans() {
     return groupedData;
   };
 
-  const setMealDetails = (num) => {
+  const setMealDetails = (num, planName) => {
     setSelectedMeal(shopMeal.filter((item) => item.mealplan_id == num));
     const selects = shopMeal.filter((item) => item.mealplan_id == num);
 
     const days = groupByDay(selects);
-
+    console.log(planName, num);
     setMealDetailsDiv(
       // <Box>
       //   {selectedMeal ? (
@@ -308,7 +308,7 @@ function MealPlanShopMealPlans() {
       // </Box>
 
       <Box sx={{ ml: 10 }}>
-        hi
+        {planName}
         {Object.keys(days).map((day) => (
           <>
             <Typography key={day}>{day}</Typography>
@@ -428,7 +428,7 @@ function MealPlanShopMealPlans() {
               >
                 ADD TO CART
               </Button>
-
+              {console.log(plan.name, index)}
               <Button
                 sx={{
                   borderRadius: 4,
@@ -437,8 +437,8 @@ function MealPlanShopMealPlans() {
                   px: 4,
                   py: 1,
                 }}
-                //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
-                onClick={() => setMealDetails(plan.shop_mealplan_id)}
+                //  onClick={() => openMealPlan(plan.shop_mealplan_id)} plan.shop_mealplan_id,
+                onClick={() => setMealDetails(plan.shop_mealplan_id, plan.name)}
               >
                 VIEW
               </Button>
@@ -492,7 +492,7 @@ function MealPlanShopMealPlans() {
                   py: 1,
                 }}
                 //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
-                onClick={() => setMealDetails(plan.shop_mealplan_id)}
+                onClick={() => setMealDetails(plan.shop_mealplan_id, plan.name)}
               >
                 VIEW
               </Button>

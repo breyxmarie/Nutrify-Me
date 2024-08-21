@@ -40,6 +40,7 @@ import {
   subWeeks,
 } from "date-fns";
 import "./style.css";
+//import styles from "./style.css";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import dayjs from "dayjs";
@@ -200,7 +201,11 @@ function FoodJournalHome() {
           </div> */}
         </div>
         <div className="col col-center">
-          <span>{format(currentMonth, dateFormat)}</span>
+          <span>
+            <Typography sx={{ color: "#895858" }}>
+              {format(currentMonth, dateFormat)}{" "}
+            </Typography>
+          </span>
         </div>
         <div className="col col-end">
           {/* <div className="icon" onClick={() => changeMonthHandle("next")}>next month</div> */}
@@ -215,7 +220,10 @@ function FoodJournalHome() {
     for (let i = 0; i < 7; i++) {
       days.push(
         <div className="col col-center" key={i}>
-          {format(addDays(startDate, i), dateFormat)}
+          {/* {format(addDays(startDate, i), dateFormat)} */}
+          <Box sx={{ border: 2 }}>
+            {format(addDays(startDate, i), dateFormat)}
+          </Box>
         </div>
       );
     }
@@ -249,8 +257,11 @@ function FoodJournalHome() {
               onDateClickHandle(cloneDay, dayStr);
             }}
           >
+            {/* { () :
+()} */}
+
             <span className="number">{formattedDate}</span>
-            <span className="bg">{formattedDate}</span>
+            {/* <span className="bg">{formattedDate}</span> */}
           </div>
         );
         day = addDays(day, 1);
@@ -269,11 +280,12 @@ function FoodJournalHome() {
     return (
       <div className="header row flex-middle">
         <div className="col col-start">
-          <div className="icon" onClick={() => changeWeekHandle("prev")}>
+          {/* <div className="icon" onClick={() => changeWeekHandle("prev")}>
             prev week
-          </div>
+          </div> */}
+          <div onClick={() => changeWeekHandle("prev")}>prev week</div>
         </div>
-        <div>{currentWeek}</div>
+        {/* <div>{currentWeek}</div> */}
         <div className="col col-end" onClick={() => changeWeekHandle("next")}>
           <div className="icon">next week</div>
         </div>
@@ -1591,12 +1603,12 @@ function FoodJournalHome() {
       }}
     >
       {/* //! weekly */}
-      <div className="calendar">
+      {/* <div className="calendar">
         {renderHeader()}
         {renderDays()}
         {renderCells()}
         {renderFooter()}
-      </div>
+      </div> */}
 
       {renderHeader()}
       {renderDays()}
@@ -1732,7 +1744,7 @@ function FoodJournalHome() {
 
       {console.log(journalEntry)}
       {journalEntry.length > 0 && foodEntry.length > 0 ? (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ mt: 3 }}>
           <Grid xs={6}> </Grid>
           <Grid xs={6}>
             {/* {selectedDate } */}

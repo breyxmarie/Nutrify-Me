@@ -8,6 +8,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Typography from "@mui/material/Typography";
 import { ToastContainer, toast } from "react-toastify";
 import { PhoneInput } from "react-international-phone";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 function RegistrationNutritionist() {
   const [userData, setUserData] = useState();
@@ -114,130 +117,193 @@ function RegistrationNutritionist() {
   };
 
   return (
-    <div>
+    <div
+      className="content"
+      style={{
+        paddingBottom: "40px",
+        marginTop: "0px",
+        color: "#99756E",
+      }}
+    >
+      {" "}
+      <img
+        src="/images/transparentLogo.png"
+        style={{ maxWidth: "20%", maxHeight: "8%" }}
+      />
       <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <TextField
-          id="username"
-          name="username"
-          label="Username"
-          type="text"
-          fullWidth
-          margin="dense"
-          {...register("username")}
-          error={errors.username ? true : false}
-        />
-        <Typography variant="inherit" color="textSecondary">
-          {errors.username?.message}
-        </Typography>
-
-        <TextField
-          id="email"
-          name="email"
-          label="Email"
-          type="email"
-          fullWidth
-          margin="dense"
-          {...register("email")}
-          error={errors.email ? true : false}
-        />
-
-        <Typography variant="inherit" color="textSecondary">
-          {errors.email?.message}
-        </Typography>
-        <TextField
-          id="password"
-          name="password"
-          label="Password"
-          type="password"
-          fullWidth
-          margin="dense"
-          {...register("password")}
-          error={errors.password ? true : false}
-        />
-        <Typography variant="inherit" color="textSecondary">
-          {errors.password?.message}
-        </Typography>
-
-        <TextField
-          id="conpassword"
-          name="conpassword"
-          label="Confirm Password"
-          type="text"
-          fullWidth
-          margin="dense"
-          {...register("conpassword")}
-          error={errors.conpassword ? true : false}
-        />
-        <Typography variant="inherit" color="textSecondary">
-          {errors.conpassword?.message}
-        </Typography>
-
-        <PhoneInput
-          sx={{ width: "100%" }}
-          defaultCountry="ph"
-          // value={phone}
-          // onChange={(phone) => setPhone(phone)}
-          id="phone"
-          name="phone"
-          label="Phone Number"
-          {...register("phone")}
-        />
-
-        <Typography variant="inherit" color="textSecondary">
-          {errors.phone?.message}
-        </Typography>
-
-        <TextField
-          id="first_name"
-          name="first_name"
-          label="First Name"
-          type="text"
-          fullWidth
-          margin="dense"
-          {...register("first_name")}
-          error={errors.first_name ? true : false}
-        />
-
-        <Typography variant="inherit" color="textSecondary">
-          {errors.first_name?.message}
-        </Typography>
-        <TextField
-          id="last_name"
-          name="last_name"
-          label="Last Name"
-          type="text"
-          fullWidth
-          margin="dense"
-          {...register("last_name")}
-          error={errors.last_name ? true : false}
-        />
-
-        <Typography variant="inherit" color="textSecondary">
-          {errors.last_name?.message}
-        </Typography>
-
-        <TextField
-          id="license_id"
-          name="license_id"
-          label="License Id"
-          type="text"
-          fullWidth
-          margin="dense"
-          {...register("license_id")}
-          error={errors.license_id ? true : false}
-        />
-
-        <Typography variant="inherit" color="textSecondary">
-          {errors.license_id?.message}
-        </Typography>
-
-        <input
-          type="file"
-          {...register("file")}
-          onChange={(evt) => setFile(evt.target.files[0])}
-          //  onChange={handleFileUpload}
-        />
-        <button type="submit">Register</button>
+        <Grid container spacing={2}>
+          <Grid xs={3}></Grid>
+          <Grid xs={3}>
+            <Box sx={{ mr: "10%" }}>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Username
+              </Typography>
+              <TextField
+                id="username"
+                name="username"
+                size="small"
+                type="text"
+                fullWidth
+                margin="dense"
+                {...register("username")}
+                error={errors.username ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.username?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Email:
+              </Typography>
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                size="small"
+                fullWidth
+                margin="dense"
+                {...register("email")}
+                error={errors.email ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.email?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Password
+              </Typography>
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                fullWidth
+                size="small"
+                margin="dense"
+                {...register("password")}
+                error={errors.password ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.password?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Confirm Password:
+              </Typography>
+              <TextField
+                id="conpassword"
+                name="conpassword"
+                type="text"
+                fullWidth
+                size="small"
+                margin="dense"
+                {...register("conpassword")}
+                error={errors.conpassword ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.conpassword?.message}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid xs={3}>
+            <Box sx={{ ml: "10%" }}>
+              {" "}
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Phone Number:
+              </Typography>
+              <PhoneInput
+                sx={{ width: "100%" }}
+                defaultCountry="ph"
+                // value={phone}
+                // onChange={(phone) => setPhone(phone)}
+                id="phone"
+                name="phone"
+                label="Phone Number"
+                {...register("phone")}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.phone?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                First Name:
+              </Typography>
+              <TextField
+                id="first_name"
+                name="first_name"
+                label="First Name"
+                type="text"
+                fullWidth
+                size="small"
+                margin="dense"
+                {...register("first_name")}
+                error={errors.first_name ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.first_name?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Last Name:
+              </Typography>
+              <TextField
+                id="last_name"
+                name="last_name"
+                label="Last Name"
+                type="text"
+                fullWidth
+                size="small"
+                margin="dense"
+                {...register("last_name")}
+                error={errors.last_name ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.last_name?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                License ID Number
+              </Typography>
+              <TextField
+                id="license_id"
+                name="license_id"
+                label="License Id"
+                type="text"
+                fullWidth
+                margin="dense"
+                size="small"
+                {...register("license_id")}
+                error={errors.license_id ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors.license_id?.message}
+              </Typography>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                License ID
+              </Typography>
+              <input
+                type="file"
+                {...register("file")}
+                onChange={(evt) => setFile(evt.target.files[0])}
+                //  onChange={handleFileUpload}
+              />
+              <br />
+              <br />
+              <Button
+                type="submit"
+                sx={{
+                  background: "#E66253",
+                  color: "#ffffff",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  px: 10,
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 1,
+                    borderColor: "#E66253",
+                  },
+                }}
+              >
+                Register
+              </Button>
+            </Box>
+          </Grid>
+          <Grid xs={3}></Grid>
+        </Grid>
       </form>
     </div>
   );

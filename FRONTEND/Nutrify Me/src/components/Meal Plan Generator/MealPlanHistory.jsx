@@ -15,6 +15,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styled from "styled-components";
 import dayjs from "dayjs";
+import { ToastContainer, toast } from "react-toastify";
+import { NavLink, Link, useLocation } from "react-router-dom";
 
 function MealPlanHistory() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
@@ -151,13 +153,19 @@ function MealPlanHistory() {
         generatedMeal_id: id,
         date: dayjs().format("YYYY-MM-DD"),
         status: "Pending",
+        price: 0,
       }).then((res) => {
         console.log(res, res.data);
+        toast.success("Request Sent");
       });
     } catch (error) {
       console.log(error);
     }
   };
+
+  function getRandomInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
   return (
     <div
@@ -172,197 +180,352 @@ function MealPlanHistory() {
       {mealData.map(
         (item, index) => (
           //  item.meal.map((items) => (
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1-content"
-              id="panel1-header"
-            >
-              <Grid container spacing={2} sx={{ mx: "10%", mt: 5 }}>
-                <Grid xs={6}>
-                  {" "}
-                  <Grid container spacing={2} sx={{ mx: 0 }}>
-                    <Grid xs={6}>
-                      {" "}
-                      <img
-                        src={item.meal[0].meals[0].details.recipe.image}
-                        width="100"
-                        height="100"
-                      />{" "}
-                      <br />
-                      <img
-                        src={item.meal[0].meals[0].details.recipe.image}
-                        width="100"
-                        height="100"
-                      />
-                    </Grid>
-                    <Grid xs={1}>
-                      {" "}
-                      <img
-                        src={item.meal[0].meals[0].details.recipe.image}
-                        width="100"
-                        height="100"
-                      />
-                      <br />
-                      <img
-                        src={item.meal[0].meals[0].details.recipe.image}
-                        width="100"
-                        height="100"
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid xs={2}>
-                  {" "}
-                  <Typography>{item.name}</Typography>
-                  <Typography>{item.date}</Typography>
-                  <br />
-                  <br />
-                  <br />
-                  <Button
-                    sx={{
-                      mx: "auto",
-                      display: "block",
-                      float: "right",
-                      background: "#E66253",
-                      fontSize: "13px",
-                      color: "#ffffff",
-                      "&:hover": {
-                        backgroundColor: "#ffffff",
-                        color: "#E66253",
-                      },
-                    }}
-                    onClick={() => requestOrder(item.generatedMeal_id)}
+          <Grid container spacing={2} sx={{ mt: 2 }}>
+            <Grid xs={10}>
+              <Box>
+                <Accordion>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
                   >
-                    Request To Order
-                  </Button>
-                </Grid>
-                <Grid xs={4} sx={{ float: "right" }}>
-                  Age: {item.age} <br />
-                  Weight: {item.weight} <br />
-                  Height: {item.height} <br />
-                  Activity: {item.activity} <br />
-                  Goal: {item.goal}
-                  <br />
-                  Allergen: {item.allergen} <br />
-                  Diet: {item.diet} <br />
-                </Grid>
-              </Grid>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{item.name}</Typography>
-              <Typography>{item.date}</Typography>
+                    <Grid container spacing={2} sx={{ mx: "10%", mt: 5 }}>
+                      <Grid xs={4}>
+                        {" "}
+                        <Grid container spacing={2} sx={{ mx: 0 }}>
+                          <Grid xs={6}>
+                            {console.log(item.meal)}
+                            <img
+                              src={
+                                item.meal[getRandomInRange(0, 4)].meals[
+                                  getRandomInRange(0, 3)
+                                ].details.recipe.image
+                              }
+                              width="100"
+                              height="100"
+                            />{" "}
+                            <br />
+                            <img
+                              src={
+                                item.meal[getRandomInRange(0, 4)].meals[
+                                  getRandomInRange(0, 3)
+                                ].details.recipe.image
+                              }
+                              width="100"
+                              height="100"
+                            />
+                          </Grid>
+                          <Grid xs={1}>
+                            {" "}
+                            <img
+                              src={
+                                item.meal[getRandomInRange(0, 4)].meals[
+                                  getRandomInRange(0, 3)
+                                ].details.recipe.image
+                              }
+                              width="100"
+                              height="100"
+                            />
+                            <br />
+                            <img
+                              src={
+                                item.meal[getRandomInRange(0, 4)].meals[
+                                  getRandomInRange(0, 3)
+                                ].details.recipe.image
+                              }
+                              width="100"
+                              height="100"
+                            />
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                      <Grid xs={4}>
+                        {" "}
+                        <Typography>{item.name}</Typography>
+                        <Typography>{item.date}</Typography>
+                        <br />
+                        <br />
+                        <br />
+                        {/* <Button
+                          sx={{
+                            mx: "auto",
+                            display: "block",
+                            float: "right",
+                            background: "#E66253",
+                            fontSize: "13px",
+                            color: "#ffffff",
+                            "&:hover": {
+                              backgroundColor: "#ffffff",
+                              color: "#E66253",
+                            },
+                          }}
+                          onClick={() => requestOrder(item.generatedMeal_id)}
+                        >
+                          Request To Order
+                        </Button> */}
+                      </Grid>
+                      <Grid xs={4} alignItems="center">
+                        <Typography
+                          display="flex"
+                          justifyContent="flex-start"
+                          alignItems="center"
+                        >
+                          Age: {item.age} <br />
+                          Weight: {item.weight} <br />
+                          Height: {item.height} <br />
+                          Activity: {item.activity} <br />
+                          Goal: {item.goal}
+                          <br />
+                          Allergen: {item.allergen} <br />
+                          Diet: {item.diet} <br />
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </AccordionSummary>
 
-              <Grid container spacing={2}>
-                <Grid item xs={1}>
-                  <button
-                    onClick={() => handlePrevC(index)}
-                    style={{ marginTop: "80%" }}
-                  >
-                    <img
-                      src="/images/left arrow.png"
-                      width="30px"
-                      height="30px"
-                    />
-                  </button>
-                </Grid>
-                <Grid item xs={10}>
-                  <Slider
-                    {...settings}
-                    ref={(ref) => {
-                      if (ref) {
-                        sliderRefs.current[index] = ref;
-                      }
-                    }}
-                    sx={{
-                      color: "#000000",
-                      border: 1,
-                      borderColor: "#000000",
-                      ml: "30px",
-                      mr: "30px",
-                    }}
-                  >
-                    {item.meal.map((items) => console.log(items))}
-                    {item.meal.map((items, index) => (
-                      <Box key={index} onClick={() => handleSlideClick(item)}>
-                        <Box
+                  <AccordionDetails>
+                    <Typography>{item.name}</Typography>
+                    <Typography>{item.date}</Typography>
+
+                    <Grid container spacing={2}>
+                      <Grid item xs={1}>
+                        <Button
+                          onClick={() => handlePrevC(index)}
+                          sx={{ mt: "235%", background: "#ffffff" }}
+                        >
+                          <img
+                            src="/images/left arrow.png"
+                            width="30px"
+                            height="30px"
+                          />
+                        </Button>
+                      </Grid>
+                      <Grid item xs={10}>
+                        <Slider
+                          {...settings}
+                          ref={(ref) => {
+                            if (ref) {
+                              sliderRefs.current[index] = ref;
+                            }
+                          }}
                           sx={{
                             color: "#000000",
-                            border: 3,
-                            borderColor: "#898246",
-                            borderRadius: 3,
-                            ml: "230px",
-                            mr: "230px",
+                            border: 1,
+                            borderColor: "#000000",
+                            ml: "30px",
+                            mr: "30px",
                           }}
                         >
-                          {items.Day}
+                          {item.meal.map((items, index) => (
+                            <Box
+                              key={index}
+                              onClick={() => handleSlideClick(item)}
+                            >
+                              <Box
+                                sx={{
+                                  color: "#000000",
+                                  border: 3,
+                                  borderColor: "#898246",
+                                  borderRadius: 3,
+                                  ml: "0px",
+                                  mr: "0px",
+                                  pt: 1,
+                                  pb: 10,
+                                }}
+                              >
+                                <Typography sx={{ fontWeight: "bold" }}>
+                                  {items.Day}
+                                </Typography>
 
-                          <Grid container spacing={2}>
-                            {items.meals.map((items1) => (
-                              <Grid item xs={3} sm={3} md={3} key={index}>
-                                <div className="parent-div">
-                                  <PopupTrigger>
-                                    <Typography>{items1.Meal}</Typography>
-                                    <img
-                                      src={items1.details.recipe.image}
-                                      width="100"
-                                      height="100"
-                                    />
-                                    {items1.details.recipe.label}
-                                  </PopupTrigger>
-                                  <Popup>
-                                    Ingredients
-                                    <img
-                                      src={items1.details.recipe.image}
-                                      width="100"
-                                      height="100"
-                                    />
-                                  </Popup>
-                                </div>
-                              </Grid>
-                            ))}
-                          </Grid>
+                                <Grid container spacing={2} sx={{ mx: "0%" }}>
+                                  {items.meals.map((items1) => (
+                                    <Grid item xs={3} sm={3} md={3} key={index}>
+                                      <div className="parent-div">
+                                        <PopupTrigger>
+                                          <Typography>{items1.Meal}</Typography>
+                                          <center>
+                                            <img
+                                              src={items1.details.recipe.image}
+                                              width="100"
+                                              height="100"
+                                            />
+                                          </center>
+                                          <Typography sx={{ mx: "5%" }}>
+                                            {items1.details.recipe.label}
+                                          </Typography>
 
-                          <Grid>
-                            {/* <img
-                              src={item.image}
-                              width="140"
-                              height="140"
-                              style={{ marginLeft: 10 }}
-                            /> */}
-                          </Grid>
+                                          <Grid
+                                            container
+                                            spacing={2}
+                                            sx={{ mt: 1 }}
+                                          >
+                                            <Grid xs={2}>
+                                              {" "}
+                                              <img src="/images/calories.png" />
+                                            </Grid>
+                                            <Grid
+                                              xs={8}
+                                              display="flex"
+                                              justifyContent="flex-start"
+                                            >
+                                              {" "}
+                                              {Math.floor(
+                                                items1.details.recipe.calories /
+                                                  items1.details.recipe.yield
+                                              )}{" "}
+                                              calories
+                                            </Grid>
+                                          </Grid>
 
-                          <Grid>
-                            <img
-                              src="/images/star.png"
-                              width="10"
-                              height="10"
-                              style={{ marginLeft: 10 }}
-                            />
-                            <Typography sx={{ color: "#000000" }}></Typography>
-                          </Grid>
-                        </Box>
-                      </Box>
-                    ))}
-                  </Slider>
-                </Grid>
-                <Grid item xs={1}>
-                  {" "}
-                  {/* Button container (adjust width as needed) */}
-                  <button
-                    onClick={() => handleNextC(index)}
-                    style={{ marginTop: "70%", background: "#ffffff" }}
-                  >
-                    <img
-                      src="/images/right arrow.png"
-                      width="30px"
-                      height="30px"
-                    />
-                  </button>
-                </Grid>
-              </Grid>
-            </AccordionDetails>
-          </Accordion>
+                                          <Grid
+                                            container
+                                            spacing={2}
+                                            sx={{ mt: 1 }}
+                                          >
+                                            <Grid xs={2}>
+                                              {" "}
+                                              <img src="/images/carbs.png" />
+                                            </Grid>
+                                            <Grid
+                                              xs={8}
+                                              display="flex"
+                                              justifyContent="flex-start"
+                                            >
+                                              {Math.floor(
+                                                items1.details.recipe.digest[1]
+                                                  .total
+                                              )}{" "}
+                                              carbs
+                                            </Grid>
+                                          </Grid>
+
+                                          <Grid
+                                            container
+                                            spacing={2}
+                                            sx={{ mt: 1 }}
+                                          >
+                                            <Grid xs={2}>
+                                              {" "}
+                                              <img src="/images/fat.png" />
+                                            </Grid>
+                                            <Grid
+                                              xs={8}
+                                              display="flex"
+                                              justifyContent="flex-start"
+                                            >
+                                              {Math.floor(
+                                                items1.details.recipe.digest[0]
+                                                  .total
+                                              )}{" "}
+                                              fats
+                                            </Grid>
+                                          </Grid>
+
+                                          <Grid
+                                            container
+                                            spacing={2}
+                                            sx={{ mt: 1 }}
+                                          >
+                                            <Grid xs={2}>
+                                              {" "}
+                                              <img src="/images/protein.png" />
+                                            </Grid>
+
+                                            <Grid
+                                              xs={8}
+                                              display="flex"
+                                              justifyContent="flex-start"
+                                            >
+                                              {Math.floor(
+                                                items1.details.recipe.digest[2]
+                                                  .total
+                                              )}{" "}
+                                              protein
+                                            </Grid>
+                                          </Grid>
+
+                                          <Link
+                                            to={items1.details.recipe.url}
+                                            target="_blank"
+                                          >
+                                            <Button
+                                              sx={{
+                                                background: "#E66253",
+                                                color: "#ffffff",
+                                                fontSize: 16,
+                                                mt: 3,
+                                                borderRadius: 3,
+                                                px: 5,
+                                                "&:hover": {
+                                                  backgroundColor: "#ffffff",
+                                                  color: "#E66253",
+                                                  border: 1,
+                                                  borderColor: "#E66253",
+                                                },
+                                              }}
+                                            >
+                                              Recipe
+                                            </Button>
+                                          </Link>
+                                        </PopupTrigger>
+                                        <Popup>
+                                          Ingredients
+                                          <img
+                                            src={items1.details.recipe.image}
+                                            width="100"
+                                            height="100"
+                                          />
+                                        </Popup>
+                                      </div>
+                                    </Grid>
+                                  ))}
+                                </Grid>
+                              </Box>
+                            </Box>
+                          ))}
+                        </Slider>
+                      </Grid>
+                      <Grid item xs={1}>
+                        {" "}
+                        {/* Button container (adjust width as needed) */}
+                        <Button
+                          onClick={() => handleNextC(index)}
+                          sx={{ mt: "235%", background: "#ffffff" }}
+                        >
+                          <img
+                            src="/images/right arrow.png"
+                            width="30px"
+                            height="30px"
+                          />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
+              </Box>
+            </Grid>
+            <Grid xs={1.5}>
+              {" "}
+              <Button
+                sx={{
+                  mx: "auto",
+                  display: "block",
+                  float: "right",
+                  background: "#E66253",
+                  fontSize: "13px",
+                  mt: "60%",
+                  color: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                  },
+                }}
+                onClick={() => requestOrder(item.generatedMeal_id)}
+              >
+                Request To Order
+              </Button>
+            </Grid>
+          </Grid>
         )
         //  ))
       )}

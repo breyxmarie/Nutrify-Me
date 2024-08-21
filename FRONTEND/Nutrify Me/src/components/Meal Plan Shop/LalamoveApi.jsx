@@ -123,10 +123,10 @@ const LalamoveApi = {
 
     try {
       const response = await axios.post(
-        `${this.baseUrl}/v3/orders`,
+        //`${this.baseUrl}/v3/orders`,
 
         // `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
-        //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,
+        `https://thingproxy.freeboard.io/fetch/${this.baseUrl}/v3/quotations`,
 
         //! watch out here for deployment baka mag kaerror
         body,

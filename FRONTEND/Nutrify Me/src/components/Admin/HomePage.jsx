@@ -143,26 +143,6 @@ function HomePage() {
 
   const verifyNutritionistClick = (data) => {
     console.log(data);
-    try {
-      AxiosInstance.post(`nutritionist/`, {
-        username: data.username,
-        password: data.password,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        license_id: data.license_id,
-        schedule_day: [],
-        schedule_time: [],
-        image: "http://127.0.0.1:8000/Photos/profile.png",
-        license_pic: data.license_pic,
-      }).then((res) => {
-        console.log(res);
-        alert("Nutritionist Verified");
-
-        // navigate("/?success=registered");
-      });
-    } catch (error) {
-      console.log(error.response.data);
-    }
 
     try {
       AxiosInstance.post(`user/`, {
@@ -176,6 +156,28 @@ function HomePage() {
         active: 1,
       }).then((res) => {
         console.log(res);
+
+        try {
+          AxiosInstance.post(`nutritionist/`, {
+            user_id: res.data.id,
+            username: data.username,
+            password: data.password,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            license_id: data.license_id,
+            schedule_day: [],
+            schedule_time: [],
+            image: "http://127.0.0.1:8000/Photos/profile.png",
+            license_pic: data.license_pic,
+          }).then((res) => {
+            console.log(res);
+            alert("Nutritionist Verified");
+
+            // navigate("/?success=registered");
+          });
+        } catch (error) {
+          console.log(error.response.data);
+        }
       });
     } catch (error) {
       console.log(error.response);

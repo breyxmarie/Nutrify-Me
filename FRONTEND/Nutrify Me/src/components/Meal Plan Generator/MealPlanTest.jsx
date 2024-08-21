@@ -18,11 +18,16 @@ import Modal from "@mui/material/Modal";
 import dayjs from "dayjs";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import AxiosInstance from "../forms/AxiosInstance";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { NavLink, Link, useLocation } from "react-router-dom";
 
 function MealPlanTest() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [foodChoices, setFoodChoices] = useState();
   const [mealName, setMealName] = useState();
+  const [divPhase, setDivPhase] = useState("calculator"); // calculator, choices, loading, meals
 
   //? Modal
   const [opens, setOpens] = React.useState(false);
@@ -326,6 +331,7 @@ function MealPlanTest() {
   }
 
   const onSubmitHandlerGenerator = async (data) => {
+    setDivPhase("meal");
     // try {
     //   const response = await axios.get(
     //     "https://api.spoonacular.com/recipes/complexSearch?apiKey=335f0832faf54f319c568f8c5a425d3f&minCalories=300&maxCalories=600&addRecipeInformation=true&fillIngredients=true&number=30&type=snack&maxFat=60&maxProtein=60&maxCarbs=100"
@@ -1514,6 +1520,7 @@ function MealPlanTest() {
     resolver: yupResolver(calculatorSchema),
   });
   const onSubmitHandler = (data) => {
+    setDivPhase("choices");
     setAge(data.age);
     setGender(data.gender);
     setActivity(data.activity);
@@ -1534,8 +1541,8 @@ function MealPlanTest() {
     setFat(fat);
     setProtein(protein);
     setCarbs(carbs);
-    setMinCalories(minCalories);
-    setMaxCalories(maxCalories);
+    setMinCalories(Math.round(minCalories));
+    setMaxCalories(Math.round(maxCalories));
 
     console.log(
       minCalories,
@@ -1679,435 +1686,913 @@ function MealPlanTest() {
     setGeneratedMeal(randomizeFood(cuisineMeals));
   };
 
+  //? Slider
+  const handleNextC = () => {
+    //* add sa carousel to handle prev and next buttons
+    sliderRefC.current.slickNext(); // Trigger next slide transition
+  };
+
+  const handlePrevC = () => {
+    sliderRefC.current.slickPrev(); // Trigger previous slide transition
+  };
+  const sliderRefC = useRef(null);
+  const settings = {
+    dots: true, // Enable pagination dots
+    infinite: true, // Enable infinite looping
+    slidesToShow: 1, // Number of slides visible at once
+    slidesToScroll: 1, // Number of slides to scroll per click
+  };
+  //?
+
   return (
     <div
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "80px",
+        marginTop: "90px",
         fontFamily: "Poppins",
       }}
     >
-      <Grid container spacing={2}>
-        <Grid xs={6}>
-          <Box sx={{ border: 1 }}>
-            Calculator
-            <Button onClick={handleOpens}>?</Button>
+      {divPhase === "calculator" ? (
+        <>
+          <Box
+            sx={{
+              border: 1,
+              borderRadius: 3,
+              borderColor: "#99756E",
+              mx: "20%",
+              pb: "3%",
+              pt: "1%",
+            }}
+          >
+            <Typography
+              sx={{ color: "#E66253", fontWeight: "bold", fontSize: "150%" }}
+            >
+              NUTRITION CALCULATOR
+              <Box
+                sx={{
+                  border: 1,
+                  borderRadius: 3,
+                  borderColor: "#99756E",
+                  background: "#EAE9DE",
+                  //opacity: 0.4,
+                  mx: "5%",
+                  px: "5%",
+                  py: "1.5%",
+                  mb: "5%",
+                }}
+              >
+                <Typography sx={{ color: "#898246" }}>
+                  This calculator uses a standard ____ equation to estimate your
+                  Calorie needs. We also make some rough macronutrient
+                  suggestions, but you're free to completely customize these
+                  values when you create a free account. Lorem ipsum dolor sit
+                  amet, consectetur adipiscing elit, sed do eiusmod tempor
+                  incididunt ut labore et dolore magna aliqua.
+                </Typography>
+              </Box>
+            </Typography>
+
             <form onSubmit={handleSubmit(onSubmitHandler)}>
-              Gender
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                // value={selectedNutritionist}
-                // onChange={handleChange}
-                name="gender"
-                width="50%"
-                {...register("gender")}
-                error={errors.gender ? true : false}
+              <Grid container spacing={2}>
+                <Grid
+                  xs={1.5}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: "8%" }}
+                >
+                  <Typography> I want to....</Typography>
+                </Grid>{" "}
+                <Grid
+                  xs={4}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: 4 }}
+                >
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    // value={selectedNutritionist}
+                    // onChange={handleChange}
+                    fullWidth
+                    size="small"
+                    name="goal"
+                    width="100%"
+                    {...register("goal")}
+                    error={errors.goal ? true : false}
+                  >
+                    {goalChoice.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.goal?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid
+                  xs={1.5}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: "8%" }}
+                >
+                  <Typography>Gender</Typography>
+                </Grid>
+                <Grid
+                  xs={4}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: 4 }}
+                >
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    // value={selectedNutritionist}
+                    // onChange={handleChange}
+                    size="small"
+                    name="gender"
+                    width="50%"
+                    fullWidth
+                    {...register("gender")}
+                    error={errors.gender ? true : false}
+                  >
+                    {genderChoice.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.gender?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid
+                  xs={1.5}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: "8%" }}
+                >
+                  <Typography sx={{ mt: "15%" }}>Height</Typography>
+                </Grid>
+                <Grid
+                  xs={4}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: 4 }}
+                >
+                  {" "}
+                  <TextField
+                    id="height"
+                    name="height"
+                    label="Height"
+                    size="small"
+                    fullWidth
+                    margin="dense"
+                    {...register("height")}
+                    error={errors.height ? true : false}
+                    type="number"
+                  />
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.height?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid
+                  xs={1.5}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: "8%" }}
+                >
+                  <Typography> Weight</Typography>
+                </Grid>
+                <Grid
+                  xs={4}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: 4 }}
+                >
+                  {" "}
+                  <TextField
+                    id="weight"
+                    name="weight"
+                    label="Weight"
+                    size="small"
+                    fullWidth
+                    margin="dense"
+                    {...register("weight")}
+                    error={errors.weight ? true : false}
+                    type="number"
+                  />
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.weight?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid
+                  xs={1.5}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: "8%" }}
+                >
+                  {" "}
+                  <Typography> Age</Typography>
+                </Grid>
+                <Grid
+                  xs={4}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: 4 }}
+                >
+                  {" "}
+                  <TextField
+                    id="age"
+                    name="age"
+                    label="Age"
+                    fullWidth
+                    size="small"
+                    margin="dense"
+                    {...register("age")}
+                    error={errors.age ? true : false}
+                    type="number"
+                  />
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.age?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid
+                  xs={1.5}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: "8%" }}
+                >
+                  {" "}
+                  <Typography> Activity Level</Typography>
+                </Grid>
+                <Grid
+                  xs={4}
+                  display="flex"
+                  justifyContent="flex-start"
+                  sx={{ ml: 4 }}
+                >
+                  {" "}
+                  <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    // value={selectedNutritionist}
+                    // onChange={handleChange}
+                    size="small"
+                    name="activity"
+                    fullWidth
+                    {...register("activity")}
+                    error={errors.activity ? true : false}
+                  >
+                    {activityChoices.map((option) => (
+                      <MenuItem key={option} value={option}>
+                        {option}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <Typography variant="inherit" color="textSecondary">
+                    {errors.activity?.message}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Button
+                type="submit"
+                sx={{
+                  background: "#E66253",
+                  color: "#ffffff",
+                  fontSize: 16,
+                  fontWeight: "bold",
+                  borderRadius: 3,
+                  mt: 3,
+                  px: 10,
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 1,
+                    borderColor: "#E66253",
+                  },
+                }}
               >
-                {genderChoice.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Typography variant="inherit" color="textSecondary">
-                {errors.gender?.message}
-              </Typography>
-              <TextField
-                id="weight"
-                name="weight"
-                label="Weight"
-                //  fullWidth
-                margin="dense"
-                {...register("weight")}
-                error={errors.weight ? true : false}
-                type="number"
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.weight?.message}
-              </Typography>
-              <TextField
-                id="height"
-                name="height"
-                label="Height"
-                //  fullWidth
-                margin="dense"
-                {...register("height")}
-                error={errors.height ? true : false}
-                type="number"
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.height?.message}
-              </Typography>
-              <TextField
-                id="age"
-                name="age"
-                label="Age"
-                // fullWidth
-                margin="dense"
-                {...register("age")}
-                error={errors.age ? true : false}
-                type="number"
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.age?.message}
-              </Typography>
-              Activity
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                // value={selectedNutritionist}
-                // onChange={handleChange}
-                name="activity"
-                width="100%"
-                {...register("activity")}
-                error={errors.activity ? true : false}
-              >
-                {activityChoices.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Typography variant="inherit" color="textSecondary">
-                {errors.activity?.message}
-              </Typography>
-              Goal
-              <Select
-                labelId="demo-simple-select-filled-label"
-                id="demo-simple-select-filled"
-                // value={selectedNutritionist}
-                // onChange={handleChange}
-                name="goal"
-                width="100%"
-                {...register("goal")}
-                error={errors.goal ? true : false}
-              >
-                {goalChoice.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </Select>
-              <Typography variant="inherit" color="textSecondary">
-                {errors.goal?.message}
-              </Typography>
-              <button type="submit">Calculate</button>
+                Calculate
+              </Button>
             </form>
           </Box>
-        </Grid>
-        <Grid xs={6}>
-          Fat: {fat} <br />
-          Protein: {protein}
-          <br />
-          Carbs: {carbs}
-          <br />
-          Calories: {minCalories} - {maxCalories}
-          <br />
-        </Grid>
-      </Grid>
-      <Modal
-        open={opens}
-        onClose={handleCloses}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>Caution</Box>
-      </Modal>
-      <Box sx={{ border: 1, mx: 2 }}>
-        {" "}
-        <form onSubmit={handleSubmit1(onSubmitHandlerGenerator)}>
-          Meal Plan Generator Questionnaire
-          <br />
-          <Box sx={{ mx: 6 }}>
-            <Grid container spacing={2}>
-              <Grid xs={4}>
-                Cuisine
-                <Grid container spacing={2}>
-                  {cuisineChoice.map((item, index) => (
-                    <Grid item xs={6} sm={4} md={4} key={index}>
-                      <div
-                        key={index}
-                        onClick={() => handleCuisineClick(item.label)}
-                        style={{
-                          background: isSelectedCuisine(item.label)
-                            ? "#D4CE98"
-                            : "white",
-                        }}
-                      >
-                        <center>
-                          {/* <img src={item.image} width="40%" height="40%" /> */}
-                        </center>
-                        <Typography
-                          sx={{
-                            color: "#000000",
+        </>
+      ) : (
+        <></>
+      )}
+      {/* {divPhase === "calculator" ? ( */}
+      {divPhase === "choices" ? (
+        <Box>
+          <form onSubmit={handleSubmit1(onSubmitHandlerGenerator)}>
+            <Typography
+              sx={{ color: "#E66253", fontWeight: "bold", fontSize: "150%" }}
+            >
+              MEAL PLAN GENERATOR QUESTIONNAIRE
+            </Typography>
+            <Grid container spacing={1} sx={{ mx: "0", mt: "1%" }}>
+              <Grid xs={4} sx={{}}>
+                <Box
+                  sx={{
+                    mx: "5%",
+                    color: "#99756E",
+                    border: 1.8,
+                    pb: "16%",
+                    borderRadius: 4,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "#99756E",
+                      border: 3,
+                      borderColor: "##99756E",
+                      fontWeight: "bold",
+                      borderRadius: 4,
+                      mx: "35%",
+
+                      fontSize: "150%",
+                      mt: 1.5,
+                    }}
+                  >
+                    CUISINE
+                  </Typography>
+
+                  <p>You may choose more than 1</p>
+
+                  <Grid container spacing={2}>
+                    {cuisineChoice.map((item, index) => (
+                      <Grid item xs={6} sm={4} md={4} key={index}>
+                        <div
+                          key={index}
+                          onClick={() => handleCuisineClick(item.label)}
+                          style={{
+                            background: isSelectedCuisine(item.label)
+                              ? "#D4CE98"
+                              : "white",
                           }}
                         >
-                          <img src={item.image} height="50" weight="50" />
-                          <br />
-                          {item.label}
-                        </Typography>
-                      </div>
-                    </Grid>
-                  ))}
-                </Grid>
+                          <center>
+                            {/* <img src={item.image} width="40%" height="40%" /> */}
+                          </center>
+                          <Typography
+                            sx={{
+                              color: "#000000",
+                            }}
+                          >
+                            <img src={item.image} height="50" weight="50" />
+                            <br />
+                            {item.label}
+                          </Typography>
+                        </div>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
               </Grid>
-              {/* <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            // onChange={handleChange}
-            name="cuisine"
-            width="100%"
-            {...register1("cuisine")}
-            error={errors1.cuisine ? true : false}
-          >
-            {cuisineChoice.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="inherit" color="textSecondary">
-            {errors1.cuisine?.message}
-          </Typography> */}
               <Grid xs={4}>
-                Diet{" "}
-                <Grid container spacing={2}>
-                  {dietChoices.map((item, index) => (
-                    <Grid item xs={6} sm={4} md={6} key={index}>
-                      <div
-                        key={item}
-                        item={item}
-                        onClick={() => handleDietClick(item.label)}
-                        isSelectedDiet={() => selectedDiet === item.label}
-                        style={{
-                          background: isSelectedDiet(item.label)
-                            ? "lightblue"
-                            : "white",
-                        }}
-                      >
-                        <center>
-                          {/* <img src={item.image} width="40%" height="40%" /> */}
-                        </center>
-                        <Typography
-                          sx={{
-                            color: "#000000",
+                <Box
+                  sx={{
+                    // mx: "5%",
+                    color: "#99756E",
+                    border: 1.8,
+                    pb: "64%",
+                    borderRadius: 4,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "#99756E",
+                      border: 3,
+                      borderColor: "##99756E",
+                      fontWeight: "bold",
+                      borderRadius: 4,
+                      mx: "35%",
+
+                      fontSize: "150%",
+                      mt: 1.5,
+                    }}
+                  >
+                    DIET
+                  </Typography>
+
+                  <Grid container spacing={2}>
+                    {dietChoices.map((item, index) => (
+                      <Grid item xs={6} sm={4} md={6} key={index}>
+                        <div
+                          key={item}
+                          item={item}
+                          onClick={() => handleDietClick(item.label)}
+                          isSelectedDiet={() => selectedDiet === item.label}
+                          style={{
+                            background: isSelectedDiet(item.label)
+                              ? "lightblue"
+                              : "white",
                           }}
                         >
-                          <img src={item.image} height="50" weight="50" />
-                          <br />
-                          {item.label}
-                        </Typography>
-                      </div>
-                    </Grid>
-                  ))}
-                </Grid>
+                          <center>
+                            {/* <img src={item.image} width="40%" height="40%" /> */}
+                          </center>
+                          <Typography
+                            sx={{
+                              color: "#000000",
+                            }}
+                          >
+                            <img src={item.image} height="50" weight="50" />
+                            <br />
+                            {item.label}
+                          </Typography>
+                        </div>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
               </Grid>
-              {/* <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            // onChange={handleChange}
-            name="diet"
-            width="100%"
-            {...register1("diet")}
-            error={errors1.diet ? true : false}
-          >
-            {dietChoices.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="inherit" color="textSecondary">
-            {errors1.diet?.message}
-          </Typography> */}
-              <br />
               <Grid xs={4}>
-                Allergens
-                <Grid container spacing={2}>
-                  {allergens.map((item, index) => (
-                    <Grid item xs={6} sm={4} md={4} key={index}>
-                      <div
-                        key={item}
-                        item={item}
-                        onClick={() => handleAllergensClick(item.label)}
-                        isSelectedDiet={() => selectedDiet === item.label}
-                        style={{
-                          background: isSelectedAllergen(item.label)
-                            ? "pink"
-                            : "white",
-                        }}
-                      >
-                        <center>
-                          {/* <img src={item.image} width="40%" height="40%" /> */}
-                        </center>
-                        <Typography
-                          sx={{
-                            color: "#000000",
+                <Box
+                  sx={{
+                    mx: "5%",
+
+                    color: "#99756E",
+                    border: 1.8,
+                    pb: "5%",
+                    borderRadius: 4,
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: "#99756E",
+                      border: 3,
+                      borderColor: "##99756E",
+                      fontWeight: "bold",
+                      borderRadius: 4,
+                      mx: "30%",
+                      mb: "3%",
+                      fontSize: "1.5rem",
+                      "@media (max-width: 600px)": { fontSize: "1.2rem" },
+                      mt: 1.5,
+                    }}
+                  >
+                    ALLERGEN
+                  </Typography>
+
+                  <Grid container spacing={2}>
+                    {allergens.map((item, index) => (
+                      <Grid item xs={6} sm={4} md={4} key={index}>
+                        <div
+                          key={item}
+                          item={item}
+                          onClick={() => handleAllergensClick(item.label)}
+                          isSelectedDiet={() => selectedDiet === item.label}
+                          style={{
+                            background: isSelectedAllergen(item.label)
+                              ? "pink"
+                              : "white",
                           }}
                         >
-                          <img src={item.image} height="50" weight="50" />
-                          <br />
-                          {item.label}
-                        </Typography>
-                      </div>
-                    </Grid>
-                  ))}
-                </Grid>
+                          <center>
+                            {/* <img src={item.image} width="40%" height="40%" /> */}
+                          </center>
+                          <Typography
+                            sx={{
+                              color: "#000000",
+                            }}
+                          >
+                            <img src={item.image} height="50" weight="50" />
+                            <br />
+                            {item.label}
+                          </Typography>
+                        </div>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
               </Grid>
             </Grid>
-          </Box>
-          {/* <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            // onChange={handleChange}
-            name="allergens"
-            width="100%"
-            {...register1("allergens")}
-            error={errors1.allergens ? true : false}
-          >
-            {allergens.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="inherit" color="textSecondary">
-            {errors1.allergens?.message}
-          </Typography> */}
-          <button type="submit">Generate</button>
-          {/* <button onClick={generate}>Generate</button> */}
-          <ToastContainer />
-        </form>
-      </Box>
-      //?
-      <div className="parent-div">
-        <PopupTrigger>Hover me!</PopupTrigger>
-      </div>
-      //?
-      {console.log(generatedMeal)}
-      {generatedMeal?.map((item) => {
-        <Typography> item.Day</Typography>;
-        // console.log(item.Day);
-      })}
-      <Button onClick={regenerate}>Regenerate</Button>
-      {generatedMeal.length === 0 ? (
-        <div>tryee </div>
-      ) : (
-        // <Grid container spacing={2}>
+            <Box sx={{ mx: "28%" }}>
+              <Grid container spacing={2} sx={{ mt: "1%" }}>
+                <Grid xs={3}>
+                  <img src="/images/calories.png" />
+                  {minCalories} - {maxCalories} Calories
+                </Grid>
+                <Grid xs={3}>
+                  <img src="/images/carbs.png" /> {carbs} Carbs
+                </Grid>
+                <Grid xs={3}>
+                  {" "}
+                  <img src="/images/fat.png" /> {fat} Fat
+                </Grid>
+                <Grid xs={3}>
+                  <img src="/images/protein.png" /> {protein} Protein
+                </Grid>
+              </Grid>
+            </Box>
+            <Button
+              sx={{
+                mt: 3,
+                background: "#E66253",
+                color: "#ffffff",
+                fontSize: 16,
 
-        generatedMeal.map((item, index) => (
-          // <Grid item xs={3} sm={4} md={6} key={index}>
-          <Box>
-            <Typography> {item.Day}</Typography> <br />
-            <Box sx={{ mx: "5%" }}>
-              <Grid container spacing={2}>
-                {item.meals.map((items) => (
-                  <>
-                    <Grid item xs={3} sm={4} md={6} key={index}>
-                      <div className="parent-div">
-                        <PopupTrigger
-                        // ref={triggerRef}
-                        // onMouseEnter={handleMouseEnter}
-                        // onMouseLeave={handleMouseLeave}
-                        >
+                borderRadius: 3,
+                px: 10,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                  borderColor: "#E66253",
+                },
+              }}
+              type="submit"
+            >
+              GENERATE
+            </Button>
+          </form>
+        </Box>
+      ) : (
+        <></>
+      )}
+      {divPhase === "loading" ? <>calculator</> : <></>}
+
+      {/* {generatedMeal.length === 0 && divPhase === "calculator" ? ( */}
+      {generatedMeal.length === 0 && divPhase === "meal" ? (
+        <div>
+          <img src="/images/generator loading.gif" width="35%" height="35%" />
+        </div>
+      ) : generatedMeal.length > 0 ? (
+        <Box>
+          {generatedMeal.map((item, index) => (
+            // <Grid item xs={3} sm={4} md={6} key={index}>
+            <Box>
+              <Modal
+                open={isOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box sx={style}>
+                  Save
+                  <TextField
+                    name="mealname"
+                    label="mealname"
+                    variant="outlined"
+                    value={mealName}
+                    onChange={handleChange}
+                    required={true}
+                  />
+                  <Button onClick={saveMeal}>Save Meal Plan</Button>
+                </Box>
+              </Modal>
+            </Box>
+          ))}
+
+          <Typography
+            sx={{ color: "#99756E", fontSize: "2em", fontWeight: "bold" }}
+          >
+            The Generated Meal Plan for You Is....
+          </Typography>
+
+          <Grid container spacing={2} sx={{ mt: 4 }}>
+            <Grid xs={6} display="flex" justifyContent="flex-end">
+              <img
+                src={
+                  generatedMeal[getRandomInRange(0, 4)].meals[
+                    getRandomInRange(0, 3)
+                  ].details.recipe.image
+                }
+                width="30%"
+                height="70%"
+              />{" "}
+              <img
+                src={
+                  generatedMeal[getRandomInRange(0, 4)].meals[
+                    getRandomInRange(0, 3)
+                  ].details.recipe.image
+                }
+                width="30%"
+                height="70%"
+              />
+            </Grid>
+            <Grid xs={6} display="flex" justifyContent="flex-start">
+              {" "}
+              <img
+                src={
+                  generatedMeal[getRandomInRange(0, 4)].meals[
+                    getRandomInRange(0, 3)
+                  ].details.recipe.image
+                }
+                width="30%"
+                height="70%"
+              />
+              <img
+                src={
+                  generatedMeal[getRandomInRange(0, 4)].meals[
+                    getRandomInRange(0, 3)
+                  ].details.recipe.image
+                }
+                width="30%"
+                height="70%"
+              />
+            </Grid>
+          </Grid>
+
+          <Typography display="flex" justifyContent="center">
+            Cuisine: {selectedCuisine}
+            <br />
+            Diet Info: {selectedDiet} <br />
+            Allergen: {selectedAllergen}
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid item xs={1}>
+              <Button
+                onClick={handlePrevC}
+                sx={{ marginTop: "450%", background: "#ffffff" }}
+              >
+                <img src="/images/left arrow.png" width="30px" height="30px" />
+              </Button>
+            </Grid>
+            <Grid item xs={10}>
+              <Slider
+                {...settings}
+                ref={sliderRefC}
+                sx={{
+                  color: "#000000",
+                  border: 1,
+                  borderColor: "#000000",
+                  ml: "30px",
+                  mr: "30px",
+                }}
+              >
+                {generatedMeal.map((item, index) => (
+                  <Box key={index} onClick={() => handleSlideClick(item)}>
+                    <Box
+                      sx={{
+                        color: "#000000",
+                        border: 3,
+                        borderColor: "#898246",
+                        borderRadius: 3,
+                        ml: "0px",
+                        mr: "0px",
+                        py: "2%",
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          color: "#99756E",
+                          fontWeight: "bold",
+                          fontSize: "200%",
+                        }}
+                      >
+                        {item.Day}
+                      </Typography>
+                      {item.meals.map((items) => (
+                        <Box sx={{ mt: "5%", ml: "5%" }}>
                           <Grid container spacing={2}>
-                            <Grid xs={6}>
-                              <img
-                                src={items.details.recipe.image}
-                                width="150"
-                                height="150"
-                              />
-                            </Grid>
-                            <Grid xs={6}>
+                            <Grid xs={2.1}>
                               {" "}
-                              <Typography>{items.Meal}</Typography>
-                              {items.details.recipe.label} <br />
-                              per serving
+                              <div className="parent-div">
+                                <PopupTrigger
+                                // ref={triggerRef}
+                                // onMouseEnter={handleMouseEnter}
+                                // onMouseLeave={handleMouseLeave}
+                                >
+                                  <img
+                                    src={items.details.recipe.image}
+                                    width="150"
+                                    height="150"
+                                  />
+                                  <Popup>
+                                    hi Ingredients
+                                    {Math.floor(
+                                      items.details.recipe.digest[0].total
+                                    )}
+                                    {items.details.recipe.ingredientLines.map(
+                                      (ing) => (
+                                        <Typography>{ing}</Typography>
+                                      )
+                                    )}
+                                  </Popup>
+                                </PopupTrigger>
+                              </div>
+                            </Grid>
+                            <Grid xs={5}>
+                              {" "}
+                              <Typography
+                                display="flex"
+                                justifyContent="flex-start"
+                              >
+                                {items.Meal}
+                              </Typography>
+                              <Typography
+                                display="flex"
+                                justifyContent="flex-start"
+                              >
+                                {items.details.recipe.label}
+                              </Typography>
+                              <Typography
+                                display="flex"
+                                justifyContent="flex-start"
+                              >
+                                per serving{" "}
+                              </Typography>
                               <br />
-                              <br />
-                              <Grid container spacing={2}>
+                            </Grid>
+                            <Grid xs={4}>
+                              <Grid container spacing={2} sx={{ mt: 4 }}>
                                 <Grid xs={6}>
-                                  Calories:{" "}
-                                  {Math.floor(
-                                    items.details.recipe.calories /
-                                      items.details.recipe.yield
-                                  )}{" "}
+                                  {" "}
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/calories.png" />
+                                    </Grid>
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {" "}
+                                      {Math.floor(
+                                        items.details.recipe.calories /
+                                          items.details.recipe.yield
+                                      )}{" "}
+                                      calories
+                                    </Grid>
+                                  </Grid>
                                   <br />
-                                  Protein:{" "}
-                                  {Math.floor(
-                                    items.details.recipe.digest[2].total
-                                  )}{" "}
-                                  <br />
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/carbs.png" />
+                                    </Grid>
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        items.details.recipe.digest[1].total
+                                      )}{" "}
+                                      carbs
+                                    </Grid>
+                                  </Grid>
                                 </Grid>
                                 <Grid xs={6}>
                                   {" "}
-                                  Fat:{" "}
-                                  {Math.floor(
-                                    items.details.recipe.digest[0].total
-                                  )}{" "}
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/fat.png" />
+                                    </Grid>
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        items.details.recipe.digest[0].total
+                                      )}{" "}
+                                      fats
+                                    </Grid>
+                                  </Grid>
                                   <br />
-                                  Carbs:{" "}
-                                  {Math.floor(
-                                    items.details.recipe.digest[1].total
-                                  )}{" "}
-                                  <br />
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/protein.png" />
+                                    </Grid>
+
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        items.details.recipe.digest[2].total
+                                      )}{" "}
+                                      protein
+                                    </Grid>
+                                  </Grid>
                                 </Grid>
                               </Grid>
                             </Grid>
                           </Grid>
-                        </PopupTrigger>
-                        {/* <Popup ref={popupRef}>
-                          {isHovered && (
-                            <div>
-                              Ingredients
-                              {Math.floor(items.recipe.digest[0].total)}
-                              {items.recipe.ingredientLines.map((ing) => (
-                                <Typography>{ing}</Typography>
-                              ))}
-                            </div>
-                          )}
-                        </Popup> */}
-                        <Popup>
-                          Ingredients
-                          {Math.floor(items.details.recipe.digest[0].total)}
-                          {items.details.recipe.ingredientLines.map((ing) => (
-                            <Typography>{ing}</Typography>
-                          ))}
-                        </Popup>
-                      </div>
-                    </Grid>
-                  </>
+
+                          <Link to={items.details.recipe.url} target="_blank">
+                            <Button
+                              sx={{
+                                background: "#E66253",
+                                color: "#ffffff",
+                                fontSize: 16,
+
+                                borderRadius: 3,
+                                px: 5,
+                                "&:hover": {
+                                  backgroundColor: "#ffffff",
+                                  color: "#E66253",
+                                  border: 1,
+                                  borderColor: "#E66253",
+                                },
+                              }}
+                            >
+                              Recipe
+                            </Button>
+                          </Link>
+                        </Box>
+                      ))}
+
+                      {/* <Grid>
+                        <img
+                          src={item.image}
+                          width="140"
+                          height="140"
+                          style={{ marginLeft: 10 }}
+                        />
+                      </Grid>
+
+                      <Grid>
+                        <img
+                          src="/images/star.png"
+                          width="10"
+                          height="10"
+                          style={{ marginLeft: 10 }}
+                        />
+                        <Typography sx={{ color: "#000000" }}>
+                          {item.comment}
+                        </Typography>
+                      </Grid> */}
+                    </Box>
+                  </Box>
                 ))}
-              </Grid>
-            </Box>
-            <Modal
-              open={isOpen}
-              onClose={handleClose}
-              aria-labelledby="modal-title"
-              aria-describedby="modal-description"
-            >
-              <Box sx={style}>
-                Save
-                <TextField
-                  name="mealname"
-                  label="mealname"
-                  variant="outlined"
-                  value={mealName}
-                  onChange={handleChange}
-                  required={true}
-                />
-                <Button onClick={saveMeal}>Save Meal Plan</Button>
-              </Box>
-            </Modal>
-          </Box>
-        ))
+              </Slider>
+            </Grid>
+            <Grid item xs={1}>
+              {" "}
+              {/* Button container (adjust width as needed) */}
+              <Button
+                onClick={handleNextC}
+                sx={{ marginTop: "450%", background: "#ffffff" }}
+              >
+                <img src="/images/right arrow.png" width="30px" height="30px" />
+              </Button>
+            </Grid>
+          </Grid>
+          <Button
+            onClick={handleOpen}
+            sx={{
+              mt: 5,
+              background: "#E66253",
+              color: "#ffffff",
+              fontSize: 16,
+              mx: 2,
+              borderRadius: 3,
+              px: 5,
+              "&:hover": {
+                backgroundColor: "#ffffff",
+                color: "#E66253",
+                border: 1,
+                borderColor: "#E66253",
+              },
+            }}
+          >
+            Save Meal Plan
+          </Button>
+          <Button
+            onClick={regenerate}
+            sx={{
+              mt: 5,
+              background: "#E66253",
+              color: "#ffffff",
+              fontSize: 16,
+              mx: 2,
+              borderRadius: 3,
+              px: 5,
+              "&:hover": {
+                backgroundColor: "#ffffff",
+                color: "#E66253",
+                border: 1,
+                borderColor: "#E66253",
+              },
+            }}
+          >
+            Regenerate
+          </Button>
+        </Box>
+      ) : (
+        <></>
       )}
-      <Button onClick={handleOpen}>Save Meal Plan</Button>
     </div>
   );
 }
