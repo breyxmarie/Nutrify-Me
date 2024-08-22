@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -16,9 +16,47 @@ import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { Modal, Tab, Tabs } from "@mui/material";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function MealPlanShopMealPlans() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
+
+  //? sliders
+  const sliderRefs = useRef([]);
+  const [slidersReady, setSlidersReady] = useState(false);
+
+  const sliderRefC = useRef(null);
+  const handleNextC = () => {
+    // console.log("handleNextC called with index:", index);
+    // if (sliderRefs.current[index]) {
+    // console.log("Calling slickNext for slider:", sliderRefs.current[index]);
+    sliderRefC.current.slickNext();
+    // } else {
+    //   // console.error("Slider reference not found for index:", index);
+    // }
+  };
+
+  const handlePrevC = () => {
+    // console.log("handlePrevC called with index:", index);
+    // if (sliderRefs.current[index]) {
+    // console.log("Calling slickPrev for slider:", sliderRefs.current[index]);
+    sliderRefC.current.slickPrev();
+    // } else {
+    //   //console.error("Slider reference not found for index:", index);
+    // }
+  };
+
+  const settings = {
+    dots: true, // Enable pagination dots
+    infinite: true, // Enable infinite looping
+    slidesToShow: 1, // Number of slides visible at once
+    slidesToScroll: 1, // Number of slides to scroll per click
+  };
+
+  //?
+
   // ! modal style
 
   const style = {
@@ -288,7 +326,27 @@ function MealPlanShopMealPlans() {
     const selects = shopMeal.filter((item) => item.mealplan_id == num);
 
     const days = groupByDay(selects);
-    console.log(planName, num);
+    console.log(days);
+
+    const data = [];
+
+    for (let i = 1; i < 6; i++) {
+      console.log("Iteration:", i);
+      const meals = [];
+      {
+        days[i]
+          .sort((a, b) => {
+            const order = ["breakfast", "lunch", "snack", "dinner"];
+            return order.indexOf(a.type) - order.indexOf(b.type);
+          })
+          .map((item, index) => meals.push(item));
+      }
+
+      data.push({ day: i, meal: meals });
+    }
+
+    console.log(data);
+
     setMealDetailsDiv(
       // <Box>
       //   {selectedMeal ? (
@@ -307,11 +365,156 @@ function MealPlanShopMealPlans() {
       //   )}
       // </Box>
 
-      <Box sx={{ ml: 10 }}>
-        {planName}
-        {Object.keys(days).map((day) => (
+      <Box
+        sx={{
+          mx: 5,
+          border: 3,
+          borderColor: "#898246",
+          borderRadius: 4,
+          pb: 10,
+        }}
+      >
+        <Typography
+          sx={{ color: "#898246", fontWeight: "bold", fontSize: "2em" }}
+        >
+          {planName}
+        </Typography>
+        <Grid
+          container
+          spacing={2}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {/* {console.log(item)} */}
+          <Grid item xs={2}>
+            <Button
+              onClick={() => handlePrevC()}
+              sx={{ mt: "115%", background: "#ffffff" }}
+            >
+              <img src="/images/left arrow.png" width="30px" height="30px" />
+            </Button>
+          </Grid>
+          <Grid item xs={8}>
+            <Slider
+              {...settings}
+              ref={sliderRefC}
+              sx={{
+                color: "#000000",
+                border: 1,
+                borderColor: "#000000",
+              }}
+            >
+              {data.map((item) => (
+                <Box sx={{ mx: "15%" }}>
+                  {console.log(item)}
+
+                  <Typography
+                    sx={{
+                      color: "#898246",
+                      fontWeight: "bold",
+                      fontSize: "1.5em",
+                      mr: "30%",
+                    }}
+                  >
+                    Day {item.day}
+                  </Typography>
+                  <Grid container spacing={2} sx={{ mt: 2 }}>
+                    {item.meal.map((items, index) => (
+                      <Grid xs={5} key={index}>
+                        <Typography>{items.type}</Typography>
+                        <br />
+                        <br />
+
+                        <Grid container spacing={2} xs={{ mt: 10 }}>
+                          <Grid xs={6}>
+                            <img src={items.image} width="50%" height="80%" />
+                          </Grid>
+                          <Grid xs={4}>{items.food}</Grid>
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Box>
+              ))}
+            </Slider>
+          </Grid>
+          <Grid item xs={2}>
+            {" "}
+            {/* Button container (adjust width as needed) */}
+            <Button
+              onClick={() => handleNextC()}
+              sx={{ mt: "80%", background: "#ffffff" }}
+            >
+              <img src="/images/right arrow.png" width="30px" height="30px" />
+            </Button>
+          </Grid>
+        </Grid>
+
+        {/* {days.map((item, index) => (
+          <>hi</>
+        ))} */}
+        {/* {Object.keys(days).map((day, index) => (
+          <Grid container spacing={2}>
+            <Grid item xs={1}>
+              <Button
+                onClick={() => handlePrevC(index)}
+                sx={{ mt: "235%", background: "#ffffff" }}
+              >
+                <img src="/images/left arrow.png" width="30px" height="30px" />
+              </Button>
+            </Grid>
+            <Grid item xs={10}>
+              <Slider
+                {...settings}
+                ref={(ref) => {
+                  if (ref) {
+                    sliderRefs.current[index] = ref;
+                  }
+                }}
+                sx={{
+                  color: "#000000",
+                  border: 1,
+                  borderColor: "#000000",
+                  ml: "30px",
+                  mr: "30px",
+                }}
+              >
+                <Typography key={day}>{day}</Typography>
+
+                <Grid container spacing={2} sx={{ my: 2 }}>
+                  {days[day]
+                    .sort((a, b) => {
+                      const order = ["breakfast", "lunch", "snack", "dinner"];
+                      return order.indexOf(a.type) - order.indexOf(b.type);
+                    })
+                    .map((item, index) => (
+                      <Box>
+                        <Grid xs={3} sm={4} md={6} sx={{ mx: 2 }} key={index}>
+                          <Grid></Grid>
+                          <Grid></Grid>
+                        </Grid>
+                      </Box>
+                    ))}
+                </Grid>
+              </Slider>
+            </Grid>
+            <Grid item xs={1}>
+           
+              <Button
+                onClick={() => handleNextC(index)}
+                sx={{ mt: "235%", background: "#ffffff" }}
+              >
+                <img src="/images/right arrow.png" width="30px" height="30px" />
+              </Button>
+            </Grid>
+          </Grid>
+        ))} */}
+        {/*  */}
+        {/* {Object.keys(days).map((day) => (
           <>
             <Typography key={day}>{day}</Typography>
+
             <Grid container spacing={2} sx={{ my: 2 }}>
               {days[day]
                 .sort((a, b) => {
@@ -333,7 +536,7 @@ function MealPlanShopMealPlans() {
                 ))}
             </Grid>
           </>
-        ))}
+        ))} */}
       </Box>
     );
   };
@@ -564,7 +767,7 @@ function MealPlanShopMealPlans() {
 
         <Grid container spacing={2}>
           <Grid xs={6}>{mealDetailsDiv}</Grid>
-          <Grid xs={6}>
+          <Grid xs={4} display="flex" justifyContent="flex-start">
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 value={value}

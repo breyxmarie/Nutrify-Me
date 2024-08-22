@@ -112,15 +112,47 @@ function MealPlanShopRequest() {
         fontFamily: "Poppins",
       }}
     >
-      {console.log(pendingOrder)}
-      Pending Orders
-      {pendingOrder.map((item) => (
-        <Box>
-          {item.request.date}
-          {item.request.status}
-          {console.log(item)}
-          <Button onClick={() => handleOpen(item.meal)}>View Details</Button>
-          {item.meal.meal.map((items) => (
+      <Typography
+        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em" }}
+      >
+        {" "}
+        Pending Orders
+      </Typography>
+      <Grid container spacing={2}>
+        {pendingOrder.map((item, index) => (
+          <Grid item xs={3} sm={4} md={6} key={index}>
+            <Box
+              sx={{
+                background: "#898246",
+                borderRadius: 4,
+                mx: "30%",
+                color: "#ffffff",
+                py: 2,
+              }}
+            >
+              Date: {item.request.date}
+              <br />
+              Status: {item.request.status}
+              <br />
+              <Button
+                onClick={() => handleOpen(item.meal)}
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 5,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }}
+              >
+                View Details
+              </Button>
+              {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -128,19 +160,52 @@ function MealPlanShopRequest() {
                 <>{item1.Meal}</>
               ))}
             </Box>
-          ))}
-        </Box>
-      ))}
-      Approved Orders:
-      {approvedOrder.map((item) => (
-        <Box>
-          {item.request.date}
-          {item.request.status} <br />
-          Price:
-          {item.request.price} <br />
-          <Button onClick={() => handleOpen(item.meal)}>View Details</Button>
-          <Button onClick={() => pay(item)}>Pay Now</Button>
-          {item.meal.meal.map((items) => (
+          ))} */}
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+      <Typography
+        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 3 }}
+      >
+        {" "}
+        Approved Orders
+      </Typography>
+      <Grid container spacing={2}>
+        {approvedOrder.map((item, index) => (
+          <Grid item xs={3} sm={4} md={6} key={index}>
+            <Box
+              sx={{
+                background: "#898246",
+                borderRadius: 4,
+                mx: "30%",
+                color: "#ffffff",
+                py: 2,
+              }}
+            >
+              Date: {item.request.date}
+              <br />
+              Status: {item.request.status}
+              <br />
+              <Button
+                onClick={() => handleOpen(item.meal)}
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 5,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }}
+              >
+                View Details
+              </Button>
+              {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -148,9 +213,13 @@ function MealPlanShopRequest() {
                 <>{item1.Meal}</>
               ))}
             </Box>
-          ))}
-        </Box>
-      ))}
+          ))} */}
+            </Box>
+          </Grid>
+        ))}
+      </Grid>
+      {/* //! */}
+
       <Modal
         open={isOpen}
         onClose={handleClose}
@@ -162,15 +231,28 @@ function MealPlanShopRequest() {
           {console.log(selectedOrder.meal)}
           {selectedOrder?.meal?.map((item) => (
             <Box>
-              {item.Day}
+              <center>
+                <Typography sx={{ fontWeight: "bold", fontSize: "1.3em" }}>
+                  {item.Day}{" "}
+                </Typography>
+              </center>
               {console.log(item.meals)}
-              {item.meals.map((items) => (
-                <Box>
-                  {items.Meal}
+              <Grid container spacing={2}>
+                {item.meals.map((items, index) => (
+                  <Grid item xs={3} sm={4} md={6} key={index}>
+                    <center>
+                      <Box>
+                        <img src={items?.details.recipe.image} width="40%" />
+                        <br />
+                        {items.Meal}
+                        <br />
 
-                  {items?.details.recipe.label}
-                </Box>
-              ))}
+                        {items?.details.recipe.label}
+                      </Box>
+                    </center>
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
           ))}
         </Box>

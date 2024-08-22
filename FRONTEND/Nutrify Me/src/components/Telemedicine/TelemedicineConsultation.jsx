@@ -65,10 +65,10 @@ function TelemedicineConsultation() {
     "007eJxTYNgo7/7gmKK17tGmvXNZXURTHti8Dvs+55Ts1bPfFZ3FDtkrMKQkmpkbWCSaGCaZmJkkm6clGRskmiclWZiamFmYmRkn/VcySmsIZGSIDZdgZmSAQBCfh8E5P6+4NKcksSQzP4+BAQAvoyGl";
   const CHANNEL = "Consultation";
 
-  const clients = AgoraRTC.createClient({
-    mode: "rtc",
-    codec: "vp8",
-  });
+  // const clients = AgoraRTC.createClient({
+  //   mode: "rtc",
+  //   codec: "vp8",
+  // });
 
   const [users, setUsers] = useState([]);
   const [localTracks, setLocalTracks] = useState([]);

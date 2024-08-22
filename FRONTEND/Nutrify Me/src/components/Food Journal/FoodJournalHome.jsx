@@ -221,7 +221,7 @@ function FoodJournalHome() {
       days.push(
         <div className="col col-center" key={i}>
           {/* {format(addDays(startDate, i), dateFormat)} */}
-          <Box sx={{ border: 2 }}>
+          <Box sx={{ border: 0.8, borderColor: "#898246" }}>
             {format(addDays(startDate, i), dateFormat)}
           </Box>
         </div>
@@ -247,7 +247,7 @@ function FoodJournalHome() {
               isSameDay(day, new Date())
                 ? "today"
                 : isSameDay(day, selectedDate)
-                ? "selected"
+                ? "selecteds"
                 : ""
             }`}
             key={day}
@@ -260,7 +260,17 @@ function FoodJournalHome() {
             {/* { () :
 ()} */}
 
-            <span className="number">{formattedDate}</span>
+            <span
+              className={`numbers ${
+                isSameDay(day, new Date())
+                  ? "today"
+                  : isSameDay(day, selectedDate)
+                  ? "selecteds"
+                  : ""
+              }`}
+            >
+              {formattedDate}
+            </span>
             {/* <span className="bg">{formattedDate}</span> */}
           </div>
         );
@@ -278,16 +288,46 @@ function FoodJournalHome() {
   };
   const renderFooter = () => {
     return (
-      <div className="header row flex-middle">
+      <div className="header row flex-middle" style={{ marginBottom: "100px" }}>
         <div className="col col-start">
           {/* <div className="icon" onClick={() => changeWeekHandle("prev")}>
             prev week
           </div> */}
-          <div onClick={() => changeWeekHandle("prev")}>prev week</div>
+          <div onClick={() => changeWeekHandle("prev")}>
+            <Button
+              sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                mt: 1,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 0.5,
+                  borderColor: "#E66253",
+                },
+              }}
+            >
+              prev week
+            </Button>
+          </div>
         </div>
         {/* <div>{currentWeek}</div> */}
         <div className="col col-end" onClick={() => changeWeekHandle("next")}>
-          <div className="icon">next week</div>
+          <Button
+            sx={{
+              background: "#E66253",
+              color: "#ffffff",
+              mt: 1,
+              "&:hover": {
+                backgroundColor: "#ffffff",
+                color: "#E66253",
+                border: 0.5,
+                borderColor: "#E66253",
+              },
+            }}
+          >
+            next week
+          </Button>
         </div>
       </div>
     );

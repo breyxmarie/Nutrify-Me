@@ -19,19 +19,19 @@ function TelemedicinePaypalPayment() {
   const [paid, setPaid] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
 
-  //   const createOrder = async (data, actions) => {
-  //     // console.log(process.env.BASE_URL);
-  //     return actions.order.create({
-  //       purchase_units: [
-  //         {
-  //           amount: {
-  //             currency_code: "PHP",
-  //             value: "0.01",
-  //           },
-  //         },
-  //       ],
-  //     });
-  //   };
+  const createOrder = async (data, actions) => {
+    // console.log(process.env.BASE_URL);
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            currency_code: "PHP",
+            value: "0.01",
+          },
+        },
+      ],
+    });
+  };
 
   const clientID =
     //  "AUcMPBLNq5ZPvQzgd-YTAwdx3xBdlt3HeoWHSSBkzmXpPD-SMWHxM6MYnXEFTyFmdwzLRB35Csq-rNua";
@@ -45,46 +45,47 @@ function TelemedicinePaypalPayment() {
     "base64"
   );
 
-  const createOrder = async (data, actions) => {
-    const payout = {
-      sender_batch_header: {
-        sender_batch_id: Math.floor(Math.random() * 1000000), // Replace with a unique ID
-        email_subject: "You have a payout!",
-        email_message: "You have received a payment.",
-      },
-      items: [
-        {
-          recipient_type: "EMAIL",
-          amount: {
-            value: 0.01,
-            currency: "PHP", // Replace with desired currency
-          },
-          receiver: "nrmbelandres@gmail.com",
-        },
-      ],
-    };
-    console.log(payout);
-    // return actions.order.create(payout);
+  // const createOrder = async (data, actions) => {
+  //   const payout = {
+  //     sender_batch_header: {
+  //       sender_batch_id: Math.floor(Math.random() * 1000000), // Replace with a unique ID
+  //       email_subject: "You have a payout!",
+  //       email_message: "You have received a payment.",
+  //     },
+  //     items: [
+  //       {
+  //         recipient_type: "EMAIL",
+  //         amount: {
+  //           value: 0.01,
+  //           currency: "PHP", // Replace with desired currency
+  //         },
+  //         receiver: "nrmbelandres@gmail.com",
+  //       },
+  //     ],
+  //   };
+  // console.log(payout);
+  // return actions.order.create(payout);
 
-    try {
-      const response = await axios.post(
-        "https://api-m.sandbox.paypal.com/v1/payments/payouts",
-        payout,
-        {
-          headers: {
-            Authorization: `Basic ${basicAuth}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.error("Error creating payout:", error);
-    }
-  };
+  // try {
+  //   const response = await axios.post(
+  //     "https://api-m.sandbox.paypal.com/v1/payments/payouts",
+  //     payout,
+  //     {
+  //       headers: {
+  //         Authorization: `Basic ${basicAuth}`,
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   console.log(response.data);
+  // } catch (error) {
+  //   console.error("Error creating payout:", error);
+  // }
+  //};
 
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
+    setPaid(true);
     console.log(order);
   };
 

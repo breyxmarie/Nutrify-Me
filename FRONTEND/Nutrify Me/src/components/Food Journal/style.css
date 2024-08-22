@@ -52,8 +52,8 @@ body {
   font-size: 1em;
   font-weight: 300;
   line-height: 1.5;
-  color: var(--text-color);
-  background: var(--bg-color);
+  /* color: var(--text-color);
+  background: var(--bg-color); */
   position: relative;
 }
 /* 
@@ -92,7 +92,7 @@ main {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
-  border: 1px solid #1a8fff;
+  /* border: 1px solid #1a8fff; */
 }
 
 .row-middle {
@@ -103,6 +103,7 @@ main {
   flex-grow: 1;
   flex-basis: 0;
   max-width: 100%;
+
   /* background-color: #1a8fff; */
   border-image: linear-gradient(45deg, #ff1a79 0%, #eb82b3 40%);
 }
@@ -111,17 +112,27 @@ main {
   flex-grow: 1;
   flex-basis: 0;
   max-width: 100%;
-  background-color: #1a8fff;
-  border-image: linear-gradient(45deg, #ff1a79 0%, #eb82b3 40%);
-  border-color: "#000000";
-  border: 1px solid #1a8fff;
+  color: #ffffff;
+  /* border-color: "#000000"; */
+  /* border: 1px solid #1a8fff; */
+}
+
+.col .cell:hover {
+  flex-grow: 1;
+  flex-basis: 0;
+  max-width: 100%;
+  color: #ffffff;
+  background-color: #ffffff;
+  /* border-color: "#000000"; */
+  /* border: 1px solid #1a8fff; */
 }
 
 .col-start {
   justify-content: flex-start;
   text-align: left;
-  border: 1px solid #1a8fff;
-  color: #1a8fff;
+  /* border: 1px solid #1a8fff; */
+  /* color: #1a8fff; */
+  margin-left: 30px;
 }
 
 .col-center {
@@ -172,19 +183,32 @@ main {
   margin-right: 1em;
 }
 
-.calendar .days {
+.days {
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 130%;
+  /* padding: 0.75em 0; */
+  /* border-bottom: 1px solid var(--border-color);
+  border: 1px solid #898246;
+  border-color: #898246; */
+  color: #99756e;
+}
+
+/* .calendar .days {
   text-transform: uppercase;
   font-weight: 400;
   color: var(--text-color-light);
   font-size: 70%;
   padding: 0.75em 0;
   border-bottom: 1px solid var(--border-color);
-}
+
+} */
 
 .calendar .body .cell {
   position: relative;
   height: 4em;
-  border-right: 1px solid var(--border-color);
+  /* border-right: 1px solid var(--border-color); */
   overflow: hidden;
   cursor: pointer;
   background: var(--neutral-color);
@@ -197,13 +221,13 @@ main {
   transition: 0.5s ease-out;
 }
 
-.col .cell .selected {
+.col .cell .selecteds {
   border-left: 10px solid transparent;
   border-image: linear-gradient(45deg, #1a8fff 0%, #53cbf1 40%);
   border-image-slice: 1;
 }
 
-.calendar .body .selected {
+.calendar .body .selecteds {
   border-left: 10px solid transparent;
   border-image: linear-gradient(45deg, #1a8fff 0%, #53cbf1 40%);
   border-image-slice: 1;
@@ -217,12 +241,35 @@ main {
   border-bottom: 1px solid var(--border-color);
 }
 
+.dates {
+  border-bottom: none;
+}
+
 .calendar .body .row:last-child {
   border-bottom: none;
 }
 
 .calendar .body .cell:last-child {
   border-right: none;
+}
+
+.numbers {
+  color: #99756e;
+  font-weight: 600;
+  font-size: 1.3em;
+}
+
+.numbers:hover {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1.3em;
+}
+
+.cell:hover {
+  color: #ffffff;
+  background-color: #e3aca5;
+  font-weight: 600;
+  font-size: 1.3em;
 }
 
 .calendar .body .cell .number {
@@ -253,8 +300,8 @@ main {
 }
 
 .calendar .body .cell:hover .bg,
-.calendar .body .selected .bg {
-  opacity: 0.05;
+.calendar .body .selecteds .bg {
+  /* opacity: 0.05; */
   transition: 0.5s ease-in;
 }
 .calendar .body .cell.today .bg {
@@ -268,12 +315,46 @@ main {
   width: calc(100% / 7);
 }
 
-.cell.selected {
+.cell .selecteds {
   text-align: center;
-  color: #ff1a79;
+  /* color: #ff1a79; */
+  /* Adjust width as needed */
+  /* width: 50px;
+  border: 1px solid #1a8fff; */
+
+  width: 500px; /* Adjust the size as needed */
+  height: 500px; /* Keep the same value as width for a circular shape */
+  border-radius: 50%;
+  padding-left: 7px;
+  padding-right: 7px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border: 4px solid #898246; /* Adjust the border style, width, and color */
+  text-align: center;
+  line-height: 50px;
+}
+
+.circle-container {
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 3px solid #e66253; /* Adjust the border style, width, and color */
+  text-align: center;
+  line-height: 50px; /* Adjust for vertical centering */
+}
+
+.circle-container span {
+  display: block; /* Ensure the number is centered within the circle */
+}
+
+.today {
+  text-align: center;
+  color: #e66253;
+  text-decoration: underline;
   /* Adjust width as needed */
   width: 50px; /* Example */
-  border: 1px solid #1a8fff;
+  height: 50px;
+  /* border: 1px solid #1a8fff; */
 }
 
 .cell.today {
@@ -282,7 +363,7 @@ main {
   /* Adjust width as needed */
   width: 50px; /* Example */
   height: 50px;
-  border: 1px solid #1a8fff;
+  /* border: 1px solid #1a8fff; */
 }
 
 .spinner {
