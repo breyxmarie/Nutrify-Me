@@ -145,3 +145,8 @@ class DeployedOrderSerializer(serializers.ModelSerializer):
         model = DeployedOrder
         fields = ('deployed_id', 'user', 'order','address', 'order_details', 'date', 'time',
                    'status')
+        
+class ProfilingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profiling
+        fields = ('profiling_id', 'user_id', 'age', 'gender', 'targetCalories', 'common_sys', 'common_dia', 'hypertension', 'dateofBP', 'takingMeds', 'targetCalories')

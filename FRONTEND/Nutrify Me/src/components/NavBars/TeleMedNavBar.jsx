@@ -17,7 +17,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 const pages = [
   { names: "APPOINTMENTS", links: "/telemedicine-home" },
   { names: " MEET US", links: "/telemedicine-meet-us" },
-  { names: "MESSAGES", links: "/telemedicine-messages" },
+  // { names: "MESSAGES", links: "/telemedicine-messages" },
 ];
 
 const StyledLink = `
@@ -156,7 +156,7 @@ function TeleMedNavBar() {
               borderRadius: 4,
               justifyContent: "space-between",
               alignItems: "center",
-              px: 2,
+              px: "7%",
               mx: "30%",
             }}
           >
@@ -184,6 +184,7 @@ function TeleMedNavBar() {
                 sx={{
                   textcolor: "#99756E",
                   display: "block",
+
                   transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
 
                   "&:hover": {
@@ -196,6 +197,7 @@ function TeleMedNavBar() {
                   color: "#99756E",
                   textDecoration: "none",
                   //height: "50px",
+                  fontWeight: "bold",
                   display: "block",
                   transition: "background-color 0.2s ease-in-out",
                   paddingTop: "20px",

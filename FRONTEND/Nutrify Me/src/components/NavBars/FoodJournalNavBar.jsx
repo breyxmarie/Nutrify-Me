@@ -153,6 +153,14 @@ function FoodJournalNavBar() {
                   textDecoration: "none",
                   //height: "50px",
                   display: "block",
+                  transition: "background-color 0.2s ease-in-out",
+                  paddingTop: "20px",
+                  paddingBottom: "20px",
+                  "&:hover": {
+                    // Target the element on hover
+                    background: "#000000",
+                    boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
+                  },
                 }}
                 onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
                 onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
@@ -163,9 +171,7 @@ function FoodJournalNavBar() {
                 to={page.links}
                 selected={page.links === path}
               >
-                <p className="border w-full h-full px-4 centered">
-                  {page.names}
-                </p>
+                {page.names}
               </NavLink>
             ))}
           </Box>

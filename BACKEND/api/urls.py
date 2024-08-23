@@ -46,6 +46,8 @@ urlpatterns = [
     path('theme/<int:pk>', ThemeAPI),
     path('deployedorder/', DeployedOrderAPI),
     path('deployedorder/<int:pk>', DeployedOrderAPI),
+    path('profiling/', ProfilingAPI),
+    path('profiling/<int:pk>', ProfilingAPI),
     path('savefilelicense', SaveFileLicense),
 
 

@@ -250,3 +250,19 @@ class DeployedOrder(models.Model):
     status = models.CharField(max_length=50) 
     class Meta:
         db_table = "deployed_order"
+
+class Profiling(models.Model):
+    profiling_id = models.AutoField(primary_key=True)
+    user_id =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings67")
+    age = models.IntegerField()
+    gender = models.CharField(max_length=100)
+    targetCalories = models.IntegerField()
+    common_sys = models.IntegerField()
+    common_dia = models.IntegerField()
+    hypertension = models.BooleanField(default=0)
+    dateofBP = models.DateField()
+    takingMeds = models.BooleanField(default=0)
+    targetCalories = models.IntegerField()
+
+    class Meta:
+        db_table = "profiling"

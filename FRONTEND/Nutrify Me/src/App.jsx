@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import Home from "./components/Home";
+import ContactUs from "./components/ContactUs";
 import AboutUs from "./components/AboutUs";
 import MainHome from "./components/MainHome";
 import UserNotLogInNavBar from "./components/NavBars/UserNotLogInNavBar";
@@ -115,17 +116,29 @@ function App() {
                       <UserNotLogInNavBar />
                       <Home />
 
-                      <UserFooterNotLogIn />
+                      <Footer />
                     </>
                   }
                 />{" "}
+                <Route
+                  path="/contact-us"
+                  element={
+                    <>
+                      {/* <MainUserNavBar /> */}
+                      <UserNotLogInNavBar />
+                      <ContactUs />
+
+                      <Footer />
+                    </>
+                  }
+                />
                 <Route
                   path="/about-us"
                   element={
                     <>
                       <UserNotLogInNavBar />
                       <AboutUs />
-                      <UserFooter />
+                      <Footer />
                     </>
                   }
                 />

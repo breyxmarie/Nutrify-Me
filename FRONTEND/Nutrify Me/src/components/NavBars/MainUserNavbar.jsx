@@ -86,13 +86,13 @@ function MainUserNavbar() {
 
   return (
     <AppBar position="" className="w-full" style={{ width: "100vw" }}>
-      <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 2 }}>
+      <Container maxWidth="100%" sx={{ background: "#ffffff", paddingTop: 1 }}>
         <Toolbar disableGutters>
           <Typography
             variant="h6"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/user-home"
             sx={{
               ml: 2,
               display: { xs: "none", md: "flex" },
@@ -164,7 +164,7 @@ function MainUserNavbar() {
             variant="h5"
             noWrap
             component="a"
-            href="#app-bar-with-responsive-menu"
+            href="/user-home"
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -225,6 +225,7 @@ function MainUserNavbar() {
                 style={{
                   color: "#99756E",
                   textDecoration: "none",
+                  //  fontWeight: "bold",
                   //height: "50px",
                   display: "block",
                   transition: "background-color 0.2s ease-in-out",
@@ -236,8 +237,10 @@ function MainUserNavbar() {
                     boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
                   },
                 }}
-                onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
-                onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
+                //  onMouseOver={(e) => (e.target.style.background = "#e3aca5")}
+                onMouseOver={(e) => (e.target.style.fontWeight = "bold")}
+                //   onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
+                onMouseOut={(e) => (e.target.style.fontWeight = "")}
                 className="activeLink border w-full h-full px-4 centered"
                 //activeClassName="StyledLink" // Define your active class in CSS
                 // className="normalLink"

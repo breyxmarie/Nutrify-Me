@@ -140,19 +140,23 @@ function TelemedicineHome() {
       );
       setModalDayContent(
         <div>
-          Scheduled Appointment: <br />
-          Date: {dayjs(newDate).format("MMMM DD YYYY")} <br />
-          Nutritionist: {nutrition.first_name} {nutrition.last_name}
-          <br />
-          Time: {temp.time}
+          <center>
+            Scheduled Appointment: <br />
+            Date: {dayjs(newDate).format("MMMM DD YYYY")} <br />
+            Nutritionist: {nutrition.first_name} {nutrition.last_name}
+            <br />
+            Time: {dayjs("2024-08-15" + temp.time).format("hh mm A")}
+          </center>
         </div>
       );
     } else {
       console.log("No Appointment");
       setModalDayContent(
         <div>
-          {dayjs(newDate).format("MMMM DD YYYY")} <br />
-          No Appointment
+          <center>
+            {dayjs(newDate).format("MMMM DD YYYY")} <br />
+            No Appointment for this Day
+          </center>
         </div>
       );
     }
@@ -1716,10 +1720,7 @@ function TelemedicineHome() {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box sx={style}>
-                hii
-                {modalDayContent}
-              </Box>
+              <Box sx={style}>{modalDayContent}</Box>
             </Modal>
 
             {/* // ! add calendar */}

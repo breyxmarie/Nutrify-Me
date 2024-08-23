@@ -19,6 +19,7 @@ import ColorContext from "../ColorContext"; // Import the context
 import ImageContext from "../ImageContext";
 import LogIn from "../LogIn";
 import Grid from "@mui/material/Grid";
+import { useNavigate } from "react-router-dom";
 
 const pages = [
   { names: "HOME", links: "/" },
@@ -52,6 +53,7 @@ const LinkPages = [
 const settings = ["Profile", "Logout"];
 
 function userNotLogInNavBar() {
+  const navigate = useNavigate();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -81,6 +83,9 @@ function userNotLogInNavBar() {
     setAnchorElUser(null);
   };
 
+  const openContact = () => {
+    navigate("/contact-us");
+  };
   return (
     <AppBar position="">
       {/* sx={{ zIndex: -1 }} */}
@@ -193,12 +198,25 @@ function userNotLogInNavBar() {
                         textDecoration: "none",
                         //height: "50px",
                         display: "block",
-                        // mx: "70px",
+                        transition: "background-color 0.2s ease-in-out",
+                        paddingTop: "20px",
+                        paddingBottom: "20px",
+                        "&:hover": {
+                          // Target the element on hover
+                          background: "#000000",
+                          boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
+                        },
                       }}
-                      onMouseEnter={(e) =>
+                      // onMouseEnter={(e) =>
+                      //   (e.target.style.background = "#b9a09b")
+                      // }
+                      // onMouseLeave={(e) =>
+                      //   (e.target.style.background = "#FFFFFF")
+                      // }
+                      onMouseOver={(e) =>
                         (e.target.style.background = "#b9a09b")
                       }
-                      onMouseLeave={(e) =>
+                      onMouseOut={(e) =>
                         (e.target.style.background = "#FFFFFF")
                       }
                       className="activeLink"
@@ -208,9 +226,9 @@ function userNotLogInNavBar() {
                       to={page.links}
                       selected={page.links === path}
                     >
-                      <p className="border w-full h-full px-4 centered">
-                        {page.names}
-                      </p>
+                      {/* <p className="border w-full h-full px-4 centered"> */}
+                      {page.names}
+                      {/* </p> */}
                     </NavLink>
                   ))}
                 </Box>
@@ -218,30 +236,45 @@ function userNotLogInNavBar() {
             </Grid>
 
             <Grid xs sx={{ mt: "25px" }}>
+              {/* <Button
+                variant="contained"
+                //  className="userButton"
+                onMouseEnter={(e) => (e.target.style.background = primaryColor)}
+                onMouseLeave={(e) => (e.target.style.background = primaryColor)}
+                sx={{
+                  borderRadius: 4,
+                  background: primaryColor,
+                  mr: "15px ",
+                }}
+                onClick={openContact}
+              >
+                CONTACT US
+              </Button> */}
               <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <Box>
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Button
-                        variant="contained"
-                        className="userButton"
-                        onMouseEnter={(e) =>
-                          (e.target.style.background = primaryColor)
-                        }
-                        onMouseLeave={(e) =>
-                          (e.target.style.background = primaryColor)
-                        }
-                        sx={{
-                          borderRadius: 4,
-                          background: primaryColor,
-                          mr: "15px ",
-                        }}
-                      >
-                        CONTACT US
-                      </Button>
-                    </IconButton>
-                  </Box>
-                </Tooltip>
+                {/* <Tooltip title="Open settings"> */}
+                <Box>
+                  {/* <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}> */}
+                  <Button
+                    variant="contained"
+                    //  className="userButton"
+                    onMouseEnter={(e) =>
+                      (e.target.style.background = primaryColor)
+                    }
+                    onMouseLeave={(e) =>
+                      (e.target.style.background = primaryColor)
+                    }
+                    sx={{
+                      borderRadius: 4,
+                      background: primaryColor,
+                      mr: "15px ",
+                    }}
+                    onClick={openContact}
+                  >
+                    CONTACT US
+                  </Button>
+                  {/* </IconButton> */}
+                </Box>
+                {/* </Tooltip> */}
                 <Box sx={{ my: "5px" }}>
                   <Link
                     href=""

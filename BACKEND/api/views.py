@@ -722,6 +722,42 @@ def DeployedOrderAPI(request, pk=0):
             return JsonResponse("Update Successfully",  safe=False)
         return JsonResponse("Failed to Update", safe=False)
     elif request.method == 'DELETE':
-        deployedOrder = DeployedOrder.objects.get(theme_id=pk)
+        deployedOrder = DeployedOrder.objects.get(deployed_id=pk)
         deployedOrder.delete()
         return JsonResponse("Deployed Order was deleted Successfully", safe = False)
+    
+
+@csrf_exempt
+def ProfilingAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            profiling = Profiling.objects.all()
+            serializer = ProfilingSerializer(profiling, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                profiling = Profiling.objects.get(pk=pk)
+                serializer = ProfilingSerializer(profiling)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'Profiling not found'}, status=404)
+    elif request.method == 'POST':
+        profiling_data = JSONParser().parse(request)
+        profiling_serializer = ProfilingSerializer(data = profiling_data)
+        if profiling_serializer.is_valid():
+            profiling_serializer.save()
+            return JsonResponse("Profiling Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Profiling",safe=False)
+    elif request.method == 'PUT':
+        profiling_data = JSONParser().parse(request)
+        profilings = Profiling.objects.get(profiling_id=profiling_data['profiling_id'])
+        profiling_serializer = ProfilingSerializer(profilings, data = profiling_data)
+        if profiling_serializer.is_valid():
+            profiling_serializer.save()
+            return JsonResponse("Update Profiling Successfully",  safe=False)
+        return JsonResponse("Failed to Update Profiling", safe=False)
+    elif request.method == 'DELETE':
+        profiling = Profiling.objects.get(profiling_id=pk)
+        profiling.delete()
+        return JsonResponse("Profiling was deleted Successfully", safe = False)

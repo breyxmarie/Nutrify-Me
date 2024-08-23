@@ -79,7 +79,7 @@ function MealPlanShopCheckout() {
   const location = useLocation();
   const { cartItems } = location.state || {};
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
-  const [selectedAddress, setSelectedAddress] = useState(1);
+  const [selectedAddress, setSelectedAddress] = useState(0);
   const [notes, setNotes] = useState("n/a");
   const [payment, setPayment] = useState("");
   const [shipping, setShipping] = useState("");
@@ -106,7 +106,7 @@ function MealPlanShopCheckout() {
         (item) => item.user_id === loggedInUser.user_id
       );
       setAddressData(filteredData);
-      console.log(response);
+      console.log(filteredData);
       // getMealData();
 
       setTimeout(async () => {
@@ -1351,418 +1351,335 @@ function MealPlanShopCheckout() {
           </Map>
         </div>
       </APIProvider> */}
+      {/* ... input fields for pickup, delivery, goods */}
+      {/* <button onClick={handleGetQuotes}>Get Quotes</button> */}
       {/* <p>Address</p>
       {barangayAddr}, {cityAddr}, {provinceAddr}, {regionAddr}
       //! test google maps //! */}
       {/* //? */}
-      <div>
-        {/* ... input fields for pickup, delivery, goods */}
-        <button onClick={handleGetQuotes}>Get Quotes</button>
-        {quotes.length > 0 && (
+      {cartData.length === 0 ? (
+        <Box> No Items on Cart</Box>
+      ) : (
+        <>
           <div>
-            {/* Display available quote options */}
-            <button onClick={() => handleCreateOrder(selectedQuote)}>
-              Create Order
-            </button>
-          </div>
-        )}
-        {orderId && (
-          <div>
-            <button onClick={handleTrackOrder}>Track Order</button>
-            {orderStatus && (
+            {quotes.length > 0 && (
               <div>
-                {/* Display order status information here */}
-                {/* Example: Show estimated delivery time, tracking URL, etc. */}
+                {/* Display available quote options */}
+                <button onClick={() => handleCreateOrder(selectedQuote)}>
+                  Create Order
+                </button>
+              </div>
+            )}
+            {orderId && (
+              <div>
+                <button onClick={handleTrackOrder}>Track Order</button>
+                {orderStatus && (
+                  <div>
+                    {/* Display order status information here */}
+                    {/* Example: Show estimated delivery time, tracking URL, etc. */}
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
-      {/* //! */}
-      <form onSubmit={handleSubmit1(onSubmitHandler1)}>
-        <Typography
-          sx={{ color: "#99756E", fontSize: "30px", fontWeight: "bold", m: 5 }}
-        >
-          CHECKOUT
-        </Typography>
 
-        <Box sx={{ borderRadius: 0, border: 1, mx: 20 }}>
-          <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
-            <Grid xs={2}>
-              <img src="/images/location.png" />
-            </Grid>
-            <Grid
-              xs={8}
+          <form onSubmit={handleSubmit1(onSubmitHandler1)}>
+            <Typography
               sx={{
-                textAlign: "left",
                 color: "#99756E",
+                fontSize: "30px",
                 fontWeight: "bold",
+                m: 5,
               }}
             >
-              Delivery Address
-              {addressData.length === 0 ? (
-                <Typography sx={{ color: "#000000" }}>Loading...</Typography>
-              ) : (
-                <>
-                  {console.log(
-                    addressData[selectedAddress].lang,
-                    selectedAddress,
-                    selectedLong,
-                    selectedLat
-                  )}
-                  <Typography sx={{ color: "#000000" }}>
-                    {addressData[selectedAddress]?.name} |{" "}
-                    {addressData[selectedAddress]?.phone} <br />
-                    {addressData[selectedAddress]?.address}
-                  </Typography>
+              CHECKOUT
+            </Typography>
 
-                  <APIProvider
-                    apiKey={API_KEY}
-                    onLoad={() => console.log("Maps API has loaded.")}
-                  >
-                    <div style={{ height: "100px" }}>
-                      {/* <Map
-            defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
-            defaultZoom={10}
-          /> */}
-                      <Map
-                        defaultZoom={13}
-                        //  defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
-                        center={{
-                          // lat: addressData[selectedAddress].lang,
-                          // lng: addressData[selectedAddress].longi,
-                          lat: parseFloat(selectedLong),
-                          lng: parseFloat(selectedLat),
-                        }}
+            <Box sx={{ borderRadius: 0, border: 1, mx: 20 }}>
+              <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
+                <Grid xs={2}>
+                  <img src="/images/location.png" />
+                </Grid>
+                <Grid
+                  xs={8}
+                  sx={{
+                    textAlign: "left",
+                    color: "#99756E",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Delivery Address
+                  {addressData.length === 0 ? (
+                    <Typography sx={{ color: "#000000" }}>
+                      Loading...
+                    </Typography>
+                  ) : (
+                    <>
+                      {console.log(
+                        addressData[selectedAddress].lang,
+                        selectedAddress,
+                        selectedLong,
+                        selectedLat
+                      )}
+                      <Typography sx={{ color: "#000000" }}>
+                        {addressData[selectedAddress]?.name} |{" "}
+                        {addressData[selectedAddress]?.phone} <br />
+                        {addressData[selectedAddress]?.address}
+                      </Typography>
 
-                        // onCameraChanged={(ev: MapCameraChangedEvent) =>
-                        //   console.log(
-                        //     "camera changed:",
-                        //     ev.detail.center,
-                        //     "zoom:",
-                        //     ev.detail.zoom
-                        //   )
-                        // }
+                      <APIProvider
+                        apiKey={API_KEY}
+                        onLoad={() => console.log("Maps API has loaded.")}
                       >
-                        <Marker
-                          position={{
-                            lat: parseFloat(selectedLong),
-                            lng: parseFloat(selectedLat),
-                          }}
-                        />
-                      </Map>
-                    </div>
-                  </APIProvider>
-                </>
-              )}
-              {/* <Typography sx={{ color: "#000000" }}>
-                {addressData[0].name} |{addressData[0].phone} <br />
-                {addressData[0].address}
-              </Typography> */}
-              {/* {addressData.slice(1).map((item, index) => (
-                <Typography sx={{ color: "#000000" }}>
-                  {item.name} |{item.phone} <br />
-                  {item.address}
-                </Typography>
-              ))} */}
-            </Grid>
+                        <div style={{ height: "100px" }}>
+                          <Map
+                            defaultZoom={13}
+                            //  defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
+                            center={{
+                              // lat: addressData[selectedAddress].lang,
+                              // lng: addressData[selectedAddress].longi,
+                              lat: parseFloat(selectedLong),
+                              lng: parseFloat(selectedLat),
+                            }}
+                          >
+                            <Marker
+                              position={{
+                                lat: parseFloat(selectedLong),
+                                lng: parseFloat(selectedLat),
+                              }}
+                            />
+                          </Map>
+                        </div>
+                      </APIProvider>
+                    </>
+                  )}
+                </Grid>
 
-            <Grid xs={2}>
-              {" "}
-              <Button onClick={handleOpen}>
-                <img src="/images/right outline arrow.png" />
-              </Button>
-              <Modal
-                open={isOpen}
-                onClose={handleClose}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-              >
-                <Box sx={style}>
-                  <Button sx={{ float: "right" }} onClick={handleClose}>
-                    <img src="/images/close.png" height="10" weight="10" />
-                  </Button>
-                  <Tabs
-                    value={activeTab}
-                    style={{
-                      color: "#f00", // Change text color to red
-                      fontSize: "18px", // Increase font size
-                      fontWeight: "bold", // Make text bold
-                    }}
-                    onChange={handleTabChange}
-                    indicatorColor="primary"
-                    centered
-                  >
-                    {tabContent.map((tab, index) => (
-                      <Tab
-                        key={index}
-                        label={tab.title}
-                        style={{
-                          color: "#ffffff", // Change text color to red
-                          fontSize: "14px", // Increase font size
-                          //fontWeight: "bold", // Make text bold
-                        }}
-                      />
-                    ))}
-                  </Tabs>
-                  {tabContent.map((tab, index) => (
-                    <Box key={index} hidden={activeTab !== index}>
-                      {tab.content}
-                    </Box>
-                  ))}
-                </Box>
-              </Modal>
-            </Grid>
-          </Grid>
-        </Box>
-        <br />
-        <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
-          {shopMeal.map((item, index) => (
-            <Grid container spacing={2} sx={{ mt: "20px" }}>
-              <Grid xs={4}>
-                {" "}
-                <img src={item.image} width="150" height="180" />
-              </Grid>
-              <Grid xs={4} sx={{ textAlign: "left" }}>
-                <Typography sx={{ color: "#99756E", mt: 3 }}>
-                  {item.name}
-                </Typography>
-                <Typography sx={{ color: "#E66253", mt: "12%" }}>
+                <Grid xs={2}>
                   {" "}
-                  Php {item.price}
+                  <Button onClick={handleOpen}>
+                    <img src="/images/right outline arrow.png" />
+                  </Button>
+                  <Modal
+                    open={isOpen}
+                    onClose={handleClose}
+                    aria-labelledby="modal-title"
+                    aria-describedby="modal-description"
+                  >
+                    <Box sx={style}>
+                      <Button sx={{ float: "right" }} onClick={handleClose}>
+                        <img src="/images/close.png" height="10" weight="10" />
+                      </Button>
+                      <Tabs
+                        value={activeTab}
+                        style={{
+                          color: "#f00", // Change text color to red
+                          fontSize: "18px", // Increase font size
+                          fontWeight: "bold", // Make text bold
+                        }}
+                        onChange={handleTabChange}
+                        indicatorColor="primary"
+                        centered
+                      >
+                        {tabContent.map((tab, index) => (
+                          <Tab
+                            key={index}
+                            label={tab.title}
+                            style={{
+                              color: "#ffffff", // Change text color to red
+                              fontSize: "14px", // Increase font size
+                              //fontWeight: "bold", // Make text bold
+                            }}
+                          />
+                        ))}
+                      </Tabs>
+                      {tabContent.map((tab, index) => (
+                        <Box key={index} hidden={activeTab !== index}>
+                          {tab.content}
+                        </Box>
+                      ))}
+                    </Box>
+                  </Modal>
+                </Grid>
+              </Grid>
+            </Box>
+            <br />
+            <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
+              {shopMeal.map((item, index) => (
+                <Grid container spacing={2} sx={{ mt: "20px" }}>
+                  <Grid xs={4}>
+                    {" "}
+                    <img src={item.image} width="150" height="180" />
+                  </Grid>
+                  <Grid xs={4} sx={{ textAlign: "left" }}>
+                    <Typography sx={{ color: "#99756E", mt: 3 }}>
+                      {item.name}
+                    </Typography>
+                    <Typography sx={{ color: "#E66253", mt: "12%" }}>
+                      {" "}
+                      Php {item.price}
+                    </Typography>
+                  </Grid>
+                  <Grid xs={4} sx={{ mt: "5%" }}>
+                    x {item.quantity}
+                  </Grid>
+                </Grid>
+              ))}
+              <br />
+              <br />
+
+              <Box sx={{ mx: 5 }}>
+                <Typography sx={{ textAlign: "left", color: "#99756E" }}>
+                  Order Notes (Optional)
                 </Typography>
-              </Grid>
-              <Grid xs={4} sx={{ mt: "5%" }}>
-                x {item.quantity}
-              </Grid>
-            </Grid>
-          ))}
-          <br />
-          <br />
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                  multiline
+                  rows={4}
+                  placeholder="Type message here"
+                  onChange={(event) => setNotes(event.target.value)}
+                />
+              </Box>
+            </Box>
 
-          <Box sx={{ mx: 5 }}>
-            <Typography sx={{ textAlign: "left", color: "#99756E" }}>
-              Order Notes (Optional)
-            </Typography>
-            <TextField
-              id="outlined-multiline-flexible"
-              sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-              multiline
-              rows={4}
-              placeholder="Type message here"
-              onChange={(event) => setNotes(event.target.value)}
-            />
-          </Box>
-        </Box>
+            <br />
 
-        <br />
-
-        <Box sx={{ textAlign: "left", border: 1, mx: 20, color: "#99756E" }}>
-          <Typography
-            sx={{ ml: 5, mt: 5, color: "#99756E", fontWeight: "bold" }}
-          >
-            PAYMENT OPTION{" "}
-          </Typography>
-          <br />
-          {/* <PayPalScriptProvider options={initialOptions}>
-            <PayPalPayment /> 
-          </PayPalScriptProvider>   clientId:
-      "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
-    */}
-
-          <PayPalScriptProvider options={initialOptions}>
-            <PayPalButtons
-              createOrder={(data, actions) => createOrder(data, actions)}
-              onApprove={(data, actions) => onApprove(data, actions)}
-            />
-          </PayPalScriptProvider>
-
-          {/* <PayPalScriptProvider
-            options={{
-              clientId:
-                "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
-              components: "card-fields",
-            }}
-          >
-            {" "}
-            <PayPalCardFieldsProvider
-              createOrder={createOrder}
-              onApprove={onApprove}
-              onError={onError}
+            <Box
+              sx={{ textAlign: "left", border: 1, mx: 20, color: "#99756E" }}
             >
-              <PayPalNameField />
-              <PayPalNumberField />
-              <PayPalExpiryField />
-              <PayPalCVVField />
-
-              <SubmitPayment />
-            </PayPalCardFieldsProvider>
-          </PayPalScriptProvider> */}
-          <FormControl sx={{ ml: 15, mb: 3 }}>
-            <FormLabel id="demo-radio-buttons-group-label">
-              Payment Method
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              name="payment"
-              value={payment} // Use the state variable for value
-              onChange={handleChange}
-              error={errors1.payment ? true : false}
-            >
-              <FormControlLabel
-                value="Cash on Delivery"
-                control={<Radio />}
-                label="Cash on Delivery"
-                onChange={handleChange}
-                {...register1("payment")} // Pass register to each Radio button
-                error={errors1.payment ? true : false}
-              />
-              <FormControlLabel
-                value="Paypal"
-                control={<Radio />}
-                label="Paypal"
-                onChange={handleChange}
-                {...register1("payment")}
-                error={errors1.payment ? true : false}
-              />
-              {/* <FormControlLabel
-                value="GCash"
-                control={<Radio />}
-                label="GCash"
-                onChange={handleChange}
-                {...register1("payment")}
-                error={errors1.payment ? true : false}
-              /> */}
-            </RadioGroup>
-            <Typography variant="inherit" color="textSecondary">
-              {errors1.payment?.message}
-            </Typography>
-          </FormControl>
-          <Button type="submit">Submit</Button>
-        </Box>
-        <br />
-        <br />
-        <Box sx={{ border: 1, mx: 20, color: "#99756E", fontSize: "20px" }}>
-          <Typography
-            sx={{
-              color: "#99756E",
-              fontWeight: "bold",
-              my: 5,
-              fontSize: "30px",
-            }}
-          >
-            PAYMENT DETAILS
-          </Typography>
-          <hr />
-          <br />
-          <Grid container spacing={2} sx={{ my: 5 }}>
-            {" "}
-            <Grid xs={6}>ORDER SUBTOTAL</Grid>
-            <Grid xs={6}>Php {subTotalPrices}</Grid>
-          </Grid>
-
-          <hr />
-          <br />
-          <Grid container spacing={2} sx={{ my: 5 }}>
-            {" "}
-            <Grid xs={6}>
-              SHIPPING DETAILS <br />
-              Courier: Lalamove
-            </Grid>
-            <Grid xs={6}>
-              Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
+              <Typography
+                sx={{ ml: 5, mt: 5, color: "#99756E", fontWeight: "bold" }}
+              >
+                PAYMENT OPTION{" "}
+              </Typography>
               <br />
-              Extra Mileage:{" "}
-              {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
-              <br />
-              Total:{" "}
-              {
-                shippingDetails?.data?.data?.priceBreakdown
-                  ?.totalExcludePriorityFee
-              }
-              {/* <FormControl sx={{ ml: 15, mb: 3 }}>
+
+              <PayPalScriptProvider options={initialOptions}>
+                <PayPalButtons
+                  createOrder={(data, actions) => createOrder(data, actions)}
+                  onApprove={(data, actions) => onApprove(data, actions)}
+                />
+              </PayPalScriptProvider>
+
+              <FormControl sx={{ ml: 15, mb: 3 }}>
                 <FormLabel id="demo-radio-buttons-group-label">
-                  Shipping/Delivery
+                  Payment Method
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="demo-radio-buttons-group-label"
-                  name="shipping"
-                  value={shipping} // Use the state variable for value
-                  onChange={handleChangeShipping}
-                  error={errors1.shipping ? true : false}
+                  name="payment"
+                  value={payment} // Use the state variable for value
+                  onChange={handleChange}
+                  error={errors1.payment ? true : false}
                 >
                   <FormControlLabel
-                    value="Grab Delivery"
+                    value="Cash on Delivery"
                     control={<Radio />}
-                    label="Grab Delivery"
-                    onChange={handleChangeShipping}
-                    {...register1("shipping")}
-                    error={errors1.shipping ? true : false}
+                    label="Cash on Delivery"
+                    onChange={handleChange}
+                    {...register1("payment")} // Pass register to each Radio button
+                    error={errors1.payment ? true : false}
                   />
                   <FormControlLabel
-                    value="Lalamove"
+                    value="Paypal"
                     control={<Radio />}
-                    label="Lalamove"
-                    onChange={handleChangeShipping}
-                    {...register1("shipping")}
-                    error={errors1.shipping ? true : false}
-                  />
-                  <FormControlLabel
-                    value="Move It"
-                    control={<Radio />}
-                    label="Move It"
-                    onChange={handleChangeShipping}
-                    {...register1("shipping")}
-                    error={errors1.shipping ? true : false}
+                    label="Paypal"
+                    onChange={handleChange}
+                    {...register1("payment")}
+                    error={errors1.payment ? true : false}
                   />
                 </RadioGroup>
                 <Typography variant="inherit" color="textSecondary">
-                  {errors1.shipping?.message}
+                  {errors1.payment?.message}
                 </Typography>
-              </FormControl> */}
-            </Grid>
-          </Grid>
-          <hr />
-          <br />
-          <Grid container spacing={2} sx={{ my: 5 }}>
-            {" "}
-            <Grid xs={6}>SHIPPING FEE</Grid>
-            <Grid xs={6}>Php {shippingPrice}</Grid>
-          </Grid>
-          <br />
+              </FormControl>
+              <Button type="submit">Submit</Button>
+            </Box>
+            <br />
+            <br />
+            <Box sx={{ border: 1, mx: 20, color: "#99756E", fontSize: "20px" }}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  my: 5,
+                  fontSize: "30px",
+                }}
+              >
+                PAYMENT DETAILS
+              </Typography>
+              <hr />
+              <br />
+              <Grid container spacing={2} sx={{ my: 5 }}>
+                {" "}
+                <Grid xs={6}>ORDER SUBTOTAL</Grid>
+                <Grid xs={6}>Php {subTotalPrices}</Grid>
+              </Grid>
 
-          <Grid container spacing={2}>
-            {" "}
-            <Grid xs={6}>TOTAL</Grid>
-            <Grid xs={6}>Php {totalOrderPrice}</Grid>
-          </Grid>
-        </Box>
-        <br />
-        <br />
+              <hr />
+              <br />
+              <Grid container spacing={2} sx={{ my: 5 }}>
+                {" "}
+                <Grid xs={6}>
+                  SHIPPING DETAILS <br />
+                  Courier: Lalamove
+                </Grid>
+                <Grid xs={6}>
+                  Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
+                  <br />
+                  Extra Mileage:{" "}
+                  {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
+                  <br />
+                  Total:{" "}
+                  {
+                    shippingDetails?.data?.data?.priceBreakdown
+                      ?.totalExcludePriorityFee
+                  }
+                </Grid>
+              </Grid>
+              <hr />
+              <br />
+              <Grid container spacing={2} sx={{ my: 5 }}>
+                {" "}
+                <Grid xs={6}>SHIPPING FEE</Grid>
+                <Grid xs={6}>Php {shippingPrice}</Grid>
+              </Grid>
+              <br />
 
-        {/* <Link to={"/meal-plan-shop-home"}> */}
-        <Button
-          onClick={() => placeOrder()}
-          type="submit"
-          sx={{
-            background: "#E66253",
-            color: "#ffffff",
-            ml: 2,
-            height: "100%",
-            px: 2,
-            fontSize: "15px",
-            "&:hover": {
-              backgroundColor: "#ffffff",
-              color: "#E66253",
-              border: 1,
-            },
-          }}
-        >
-          {" "}
-          PLACE ORDER
-        </Button>
-        {/* </Link> */}
-      </form>
+              <Grid container spacing={2}>
+                {" "}
+                <Grid xs={6}>TOTAL</Grid>
+                <Grid xs={6}>Php {totalOrderPrice}</Grid>
+              </Grid>
+            </Box>
+            <br />
+            <br />
+
+            <Button
+              onClick={() => placeOrder()}
+              type="submit"
+              sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                ml: 2,
+                height: "100%",
+                px: 2,
+                fontSize: "15px",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                },
+              }}
+            >
+              {" "}
+              PLACE ORDER
+            </Button>
+            {/* </Link> */}
+          </form>
+        </>
+      )}
     </div>
   );
 }

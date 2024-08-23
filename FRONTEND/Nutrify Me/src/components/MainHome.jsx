@@ -23,7 +23,6 @@ function MainHome() {
   }));
   return (
     <div className="content" style={{ paddingBottom: "40px" }}>
-      <h1>hi {loggedInUser.first_name}</h1>
       {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}

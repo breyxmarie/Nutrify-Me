@@ -19,6 +19,11 @@ import {
 } from "select-philippines-address";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import LalamoveApi from "./Meal Plan Shop/LalamoveApi";
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
 
 function Registration() {
   const [userData, setUserData] = useState();
@@ -91,6 +96,7 @@ function Registration() {
       .max(12, "Password cannot exceed more than 12 characters")
       .oneOf([yup.ref("password")], "Passwords do not match"),
   });
+
   const {
     register,
     handleSubmit,
@@ -100,54 +106,75 @@ function Registration() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmitHandler = (data) => {
+  const onSubmitHandler = async (data) => {
     console.log({ data });
     console.log("hi");
 
-    try {
-      AxiosInstance.post(`user/`, {
-        username: data.username,
-        password: data.password,
-        first_name: data.first_name,
-        last_name: data.last_name,
-        privilege: "User",
-        email: data.email,
-        image: "http://127.0.0.1:8000/Photos/profile.png",
-        active: true,
-      }).then((res) => {
-        console.log(res, res.data);
+    const temp =
+      data.street + " " + regionAddr + " " + provinceAddr + " " + cityAddr;
+
+    let lats;
+    let lngs;
+    console.log(
+      getGeocode({ address: temp }).then((results) => {
+        const { lat, lng } = getLatLng(results[0]);
+        console.log("Coordinate: ", lat, lng);
+        lats = lat;
+        lngs = lng;
+        // setSearchOriginLatitude(lat);
+        // setSearchOriginLongtitude(lng);
+
         try {
-          AxiosInstance.post(`address/`, {
-            user_id: res.data.id,
-            phone: data.phone,
-            address:
-              data.street +
-              " " +
-              barangayAddr +
-              " " +
-              cityAddr +
-              " " +
-              provinceAddr +
-              " " +
-              regionAddr,
-            name: data.first_name + " " + data.last_name,
-            default: false,
-            postalcode: data.postalCode,
-            longi: 0,
-            lang: 0,
+          AxiosInstance.post(`user/`, {
+            username: data.username,
+            password: data.password,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            privilege: "User",
+            email: data.email,
+            image: "http://127.0.0.1:8000/Photos/profile.png",
+            active: true,
           }).then((res) => {
             console.log(res, res.data);
-            navigate("/Profiling", {
-              state: { email: data.email, name: data.first_name },
-            });
+            let id = res.data.id;
+            try {
+              AxiosInstance.post(`address/`, {
+                user_id: res.data.id,
+                phone: data.phone,
+                address:
+                  data.street +
+                  " " +
+                  barangayAddr +
+                  " " +
+                  cityAddr +
+                  " " +
+                  provinceAddr +
+                  " " +
+                  regionAddr,
+                name: data.first_name + " " + data.last_name,
+                default: false,
+                postalcode: data.postalCode,
+                longi: lat,
+                lang: lng,
+              }).then((res) => {
+                console.log(res, res.data);
+                navigate("/Profiling", {
+                  state: {
+                    email: data.email,
+                    name: data.first_name,
+                    userId: id,
+                  },
+                });
+              });
+            } catch (error) {
+              console.log(error.response);
+            }
           });
         } catch (error) {
           console.log(error.response);
         }
-      });
-    } catch (error) {
-      console.log(error.response);
-    }
+      })
+    );
 
     reset();
   };
@@ -230,20 +257,20 @@ function Registration() {
       barangayAddr
     );
 
-    const temp =
-      addressValue + " " + regionAddr + " " + provinceAddr + " " + cityAddr;
-    //e.target.selectedOptions[0].text;
+    // const temp =
+    //   addressValue + " " + regionAddr + " " + provinceAddr + " " + cityAddr;
+    // //e.target.selectedOptions[0].text;
 
-    console.log(temp);
-    setValue(temp);
-    console.log(
-      getGeocode({ address: temp }).then((results) => {
-        const { lat, lng } = getLatLng(results[0]);
-        console.log("Coordinate: ", lat, lng);
-        setSearchOriginLatitude(lat);
-        setSearchOriginLongtitude(lng);
-      })
-    );
+    // console.log(temp);
+    // setValue(temp);
+    // console.log(
+    //   getGeocode({ address: temp }).then((results) => {
+    //     const { lat, lng } = getLatLng(results[0]);
+    //     console.log("Coordinate: ", lat, lng);
+    //     setSearchOriginLatitude(lat);
+    //     setSearchOriginLongtitude(lng);
+    //   })
+    // );
   };
 
   useEffect(() => {
