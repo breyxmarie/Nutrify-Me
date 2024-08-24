@@ -1,5 +1,5 @@
 import MealPlanShopNavBar from "../NavBars/MealPlanShopNavBar";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -13,11 +13,31 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import AxiosInstance from "../forms/AxiosInstance";
 import "pure-react-carousel/dist/react-carousel.es.css";
-
+import dayjs from "dayjs";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 function MealPlanShopHome() {
+  //! get meal data
+  const [shopMealPlan, setShopMealPlan] = useState(null);
+
+  const getMealPlanData = () => {
+    AxiosInstance.get(`shopmealplan`).then((res) => {
+      console.log(res);
+      setShopMealPlan(
+        res.data.filter(
+          (item) =>
+            item.start_week == dayjs().startOf("week").format("YYYY-MM-DD")
+        )
+      );
+    });
+  };
+
+  useEffect(() => {
+    getMealPlanData();
+  }, []);
+
+  //!
   const handleNextC = () => {
     //* add sa carousel to handle prev and next buttons
     sliderRefC.current.slickNext(); // Trigger next slide transition
@@ -124,7 +144,11 @@ function MealPlanShopHome() {
       <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
-          width: "100%",
+          mt: 2,
+          borderRadius: 3,
+          mx: "4%",
+          mr: "6%",
+          width: "92.5%",
           height: "500px",
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -143,28 +167,68 @@ function MealPlanShopHome() {
           MEAL PLANS
         </Typography>
         <Grid container spacing={2}>
-          {mealPlan.slice(0, 2).map((plan, index) => (
-            <Grid item xs={3} sm={4} md={6} key={index}>
-              <img src={plan.image} width="350px" height="350px" />
-              <Typography variant="body1">{plan.name}</Typography>
-              <Typography variant="body1">{plan.description}</Typography>
-              <Button
-                sx={{
-                  borderRadius: 4,
-                  background: "#D9D9D9",
-                  color: "#000000",
-                  px: 4,
-                  py: 1,
-                }}
-              >
-                ORDER NOW
-              </Button>
-            </Grid>
-          ))}
+          {console.log(shopMealPlan)}
+          {shopMealPlan === null ? (
+            <></>
+          ) : (
+            <>
+              {shopMealPlan.slice(0, 2).map((plan, index) => (
+                <Grid item xs={3} sm={4} md={6} key={index}>
+                  <img src={plan.image} width="20%" height="50%" />
+                  <Typography variant="body1">{plan.name}</Typography>
+                  <Typography variant="body1">{plan.description}</Typography>
+                  <Link
+                    to="/meal-plan-shop-meal-plans"
+                    style={{
+                      color: "#ffffff",
+                      textDecoration: "underline",
+                      fontSize: "20px",
+                    }}
+                  >
+                    <Button
+                      sx={{
+                        borderRadius: 4,
+                        background: "#D9D9D9",
+                        color: "#000000",
+                        px: 4,
+                        py: 1,
+                      }}
+                    >
+                      ORDER NOW
+                    </Button>
+                  </Link>
+                </Grid>
+              ))}
+            </>
+          )}
         </Grid>
-        <Button sx={{ background: "#E66253", color: "#ffffff", px: 5, py: 1 }}>
-          VIEW MORE
-        </Button>
+        <Link
+          to="/meal-plan-shop-meal-plans"
+          style={{
+            color: "#ffffff",
+            textDecoration: "underline",
+            fontSize: "20px",
+          }}
+        >
+          <Button
+            sx={{
+              background: "#E66253",
+              color: "#ffffff",
+              ml: 2,
+              height: "100%",
+              px: 4,
+              py: 1,
+              fontSize: "15px",
+              "&:hover": {
+                backgroundColor: "#ffffff",
+                color: "#E66253",
+                border: 1,
+              },
+            }}
+          >
+            VIEW MORE
+          </Button>
+        </Link>
       </Box>
       <br />
       <Box
@@ -191,23 +255,28 @@ function MealPlanShopHome() {
               fontWeight: "bold",
             }}
           >
-            WANT TO PERSONALIZE THE <br />
-            MEAL PLAN FOR YOUR <br />
-            DIETARY NEEDS?
+            WANT TO GENERATE A <br />
+            MEAL PLAN FOR <br />
+            YOUR DIETARY NEEDS?
           </Typography>
-          <Link to={"/meal-plan-shop-customize-meal"}>
+          <Link to={"/meal-plan-generator-consent"}>
             <Button
               sx={{
                 background: "#E66253",
                 color: "#ffffff",
-                px: 5,
+                px: 6,
                 py: 1,
                 mt: "10px",
                 fontSize: 20,
                 ml: "40%",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                },
               }}
             >
-              CUSTOMIZE
+              GENERATE
             </Button>
           </Link>
         </Box>
@@ -294,7 +363,7 @@ function MealPlanShopHome() {
             you should eat?
           </Typography>
           <Link
-            to="/telemedicine-consultation"
+            to="/telemedicine-home"
             style={{
               color: "#ffffff",
               textDecoration: "underline",

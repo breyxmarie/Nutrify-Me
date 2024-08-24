@@ -1635,7 +1635,11 @@ function TelemedicineHome() {
       <Box
         sx={{
           backgroundImage: "url('/images/telemedPic.png')",
-          width: "100%",
+          mt: 2,
+          borderRadius: 3,
+          mx: "4%",
+          mr: "6%",
+          width: "92.5%",
           height: "500px",
           backgroundSize: "cover",
           backgroundPosition: "center",

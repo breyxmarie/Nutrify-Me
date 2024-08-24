@@ -11,7 +11,11 @@ function AboutUs() {
       <Box
         sx={{
           backgroundImage: "url('/images/AboutUsImage.png')",
-          width: "100%",
+          borderRadius: 3,
+          mx: "4%",
+          mr: "6%",
+          width: "92.5%",
+          mt: 4,
           height: "900px",
           backgroundSize: "cover",
           backgroundPosition: "center",

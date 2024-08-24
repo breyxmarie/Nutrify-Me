@@ -31,11 +31,16 @@ function MainHome() {
           component="section"
           sx={{
             // display: "flex",
+            mt: 2,
+            borderRadius: 3,
+            mx: "4%",
+            mr: "6%",
+            width: "92.5%",
             justifyContent: "center",
             backgroundImage: "url('/images/HomeImage.png')",
             display: "flex",
             alignItems: "center",
-            width: "100%",
+
             height: "700px" /* Adjust height as per your requirement */,
             backgroundSize: "cover",
             backgroundPosition: "center",

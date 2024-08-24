@@ -89,7 +89,7 @@ function Home() {
             backgroundImage: "url('/images/HomeImage.png')",
             display: "flex",
             alignItems: "center",
-            width: "90%",
+            width: "92%",
             height: "700px" /* Adjust height as per your requirement */,
             backgroundSize: "cover",
             backgroundPosition: "center",

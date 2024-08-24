@@ -12,6 +12,7 @@ import { Typography } from "@mui/material";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import AxiosInstance from "../forms/AxiosInstance";
+import { ToastContainer, toast } from "react-toastify";
 
 function MealPlanShopCart() {
   const location = useLocation();
@@ -145,6 +146,7 @@ function MealPlanShopCart() {
         //image: data.type, dito get yun details for res chuchu and update add na si meal plan
       }).then((res) => {
         console.log(res, res.data);
+        toast.success("Meal Plan Deleted from the Cart");
         getCartData();
         getMealData();
         // window.location.reload();
@@ -190,6 +192,7 @@ function MealPlanShopCart() {
         fontFamily: "Poppins",
       }}
     >
+      <ToastContainer />
       <Typography
         sx={{ color: "#99756E", fontWeight: "bold", fontSize: "30px" }}
       >
@@ -209,7 +212,7 @@ function MealPlanShopCart() {
         </Grid>
         <hr />
         <br />
-        {cartData.length > 0 ? (
+        {cartData[0]?.orders.length > 0 ? (
           // Render cart items if data is available
           shopMeal.map((item, index) => (
             <Grid container spacing={2} sx={{ py: 2 }}>
@@ -257,14 +260,15 @@ function MealPlanShopCart() {
               <Grid xs={2}>{item.price}</Grid>
             </Grid>
           ))
-        ) : cartData.length === 0 ? (
+        ) : // ) : (
+        cartData[0]?.orders.length === 0 ? (
           // Display "Cart is empty" message if data is empty
           <p>Your cart is empty.</p>
         ) : (
-          // Display loading message while data is being fetched
+          //  Display loading message while data is being fetched
           <p>Loading cart data...</p>
         )}
-
+        {/* {console.log(cartData[0].orders.length)} */}
         <hr />
         <Grid container spacing={2} sx={{ mt: 2 }}>
           <Grid xs={3}>
@@ -300,8 +304,8 @@ function MealPlanShopCart() {
               Apply Coupon
             </Button> */}
           </Grid>
-          <Grid xs={6}>
-            SUBTOTAL
+          <Grid xs={3}>
+            SUBTOTAL{"            "}
             {/* <Button
               sx={{
                 float: "right",
@@ -321,6 +325,7 @@ function MealPlanShopCart() {
             </Button> */}
             {calculateSubTotalPrice()}
           </Grid>
+          <Grid xs = ></Grid>
         </Grid>
       </Box>
       <br />

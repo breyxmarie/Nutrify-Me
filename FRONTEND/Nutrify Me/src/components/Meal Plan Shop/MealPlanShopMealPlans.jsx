@@ -19,6 +19,7 @@ import { useLoggedInUser } from "../LoggedInUserContext";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function MealPlanShopMealPlans() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
@@ -574,6 +575,7 @@ function MealPlanShopMealPlans() {
           //image: data.type, dito get yun details for res chuchu and update add na si meal plan
         }).then((res) => {
           console.log(res, res.data);
+          toast.success("Added to Cart");
         });
       } catch (error) {
         console.log(error);
@@ -587,6 +589,7 @@ function MealPlanShopMealPlans() {
           user_id: loggedInUser.user_id,
           orders: [num],
         }).then((res) => {
+          toast.success("Added to Cart");
           console.log(res, res.data);
           getCartData();
         });
@@ -624,11 +627,20 @@ function MealPlanShopMealPlans() {
               <Button
                 sx={{
                   borderRadius: 4,
-                  background: "#D9D9D9",
-                  color: "#000000",
-                  px: 4,
+                  background: "#E66253",
+                  color: "#ffffff",
+                  ml: 2,
+                  height: "100%",
+                  px: 2,
                   py: 1,
+                  fontSize: "15px",
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 1,
+                  },
                 }}
+                onClick={() => addToCart(plan.shop_mealplan_id)}
               >
                 ADD TO CART
               </Button>
@@ -670,30 +682,50 @@ function MealPlanShopMealPlans() {
           )
           .map((plan, index) => (
             <Grid item xs={3} sm={4} md={6} key={index}>
-              <img src={plan.image} width="350px" height="350px" />
-              <Typography variant="body1">{plan.name}</Typography>
+              <img src={plan.image} width="20%" height="50%" />
+              <Typography
+                variant="body1"
+                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em" }}
+              >
+                {plan.name}
+              </Typography>
               <Typography variant="body1">{plan.description}</Typography>
-
+              <Typography variant="body1">PHP {plan.price}</Typography>
               <Button
                 sx={{
                   borderRadius: 4,
                   background: "#D9D9D9",
                   color: "#000000",
-                  px: 4,
+                  ml: 2,
+
+                  px: 2,
                   py: 1,
+                  fontSize: "15px",
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#000000",
+                    border: 1,
+                  },
                 }}
                 onClick={() => addToCart(plan.shop_mealplan_id)}
               >
                 ADD TO CART
               </Button>
-
               <Button
                 sx={{
                   borderRadius: 4,
-                  background: "#D9D9D9",
-                  color: "#000000",
-                  px: 4,
+                  background: "#E66253",
+                  color: "#ffffff",
+                  ml: 2,
+
+                  px: 2,
                   py: 1,
+                  fontSize: "15px",
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 1,
+                  },
                 }}
                 //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
                 onClick={() => setMealDetails(plan.shop_mealplan_id, plan.name)}
@@ -730,6 +762,7 @@ function MealPlanShopMealPlans() {
         color: "#000000",
       }}
     >
+      <ToastContainer />
       <Modal
         open={open}
         onClose={handleClose}
@@ -747,7 +780,10 @@ function MealPlanShopMealPlans() {
       <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
-          width: "100%",
+          mx: "4%",
+          mr: "4%",
+          width: "92.5%",
+          borderRadius: 3,
           height: "500px",
           backgroundSize: "cover",
           backgroundPosition: "center",

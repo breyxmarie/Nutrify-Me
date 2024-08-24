@@ -256,7 +256,9 @@ function MealPlanShopTrackOrders() {
               {/* {console.log(item)} */}
               <Grid xs={8} sx={{ color: "#99756E", textAlign: "left" }}>
                 {item.name} <br />
-                Date of Delivery: {item.schedule_date} <br />
+                <Typography>Date of Delivery: </Typography>
+                {item.schedule_date[0]} - {item.schedule_date[1]}
+                <br />
                 <Link
                   to={`/meal-plan-shop-order/${item.order_id}`}
                   state={item}

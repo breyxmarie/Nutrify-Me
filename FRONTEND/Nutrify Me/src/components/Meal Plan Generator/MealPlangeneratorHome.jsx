@@ -67,7 +67,10 @@ function MealPlangeneratorHome() {
       <Box
         sx={{
           backgroundImage: "url('/images/meal plan gen.png')",
+          mx: "4%",
+          mr: "10%",
           width: "90%",
+          borderRadius: 3,
           height: "500px",
           backgroundSize: "cover",
           backgroundPosition: "center",
