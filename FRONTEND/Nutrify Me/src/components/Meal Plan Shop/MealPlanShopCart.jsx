@@ -304,7 +304,7 @@ function MealPlanShopCart() {
               Apply Coupon
             </Button> */}
           </Grid>
-          <Grid xs={3}>
+          <Grid xs={1.7}>
             SUBTOTAL{"            "}
             {/* <Button
               sx={{
@@ -323,9 +323,8 @@ function MealPlanShopCart() {
             >
               Update Cart
             </Button> */}
-            {calculateSubTotalPrice()}
           </Grid>
-          <Grid xs = ></Grid>
+          <Grid xs={2}>{calculateSubTotalPrice()}</Grid>
         </Grid>
       </Box>
       <br />
