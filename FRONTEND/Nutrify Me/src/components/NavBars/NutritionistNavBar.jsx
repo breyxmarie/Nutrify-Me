@@ -218,8 +218,8 @@ function NutritionistNavBar() {
                   display: "block",
                   transition: "background-color 0.2s ease-in-out",
                 }}
-                onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
-                onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
+                onMouseOver={(e) => (e.target.style.fontWeight = "bold")}
+                onMouseOut={(e) => (e.target.style.fontWeight = "")}
                 className="activeLink"
                 //activeClassName="StyledLink" // Define your active class in CSS
                 // className="normalLink"

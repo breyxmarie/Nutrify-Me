@@ -60,6 +60,7 @@ function MealPlanShopMealPlans() {
   // ! modal style
 
   const style = {
+    overflowY: "auto", // Enable vertical scrolling
     position: "absolute",
     top: "50%",
     left: "50%",

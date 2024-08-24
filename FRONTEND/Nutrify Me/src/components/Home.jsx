@@ -81,11 +81,15 @@ function Home() {
           component="section"
           sx={{
             // display: "flex",
+            mt: 2,
+            borderRadius: 3,
+            mx: "4%",
+            mr: "6%",
             justifyContent: "center",
             backgroundImage: "url('/images/HomeImage.png')",
             display: "flex",
             alignItems: "center",
-            width: "100%",
+            width: "90%",
             height: "700px" /* Adjust height as per your requirement */,
             backgroundSize: "cover",
             backgroundPosition: "center",
@@ -171,6 +175,7 @@ function Home() {
                   borderRadius: 20,
                   width: 30,
                   fontWeight: "bold",
+                  color: "#ffffff",
                 }}
               >
                 1
@@ -190,6 +195,7 @@ function Home() {
                   background: "#99756E",
                   borderRadius: 20,
                   width: 30,
+                  color: "#ffffff",
                 }}
               >
                 2
@@ -210,6 +216,7 @@ function Home() {
                   background: "#99756E",
                   borderRadius: 20,
                   width: 30,
+                  color: "#ffffff",
                 }}
               >
                 3
@@ -230,6 +237,7 @@ function Home() {
                   background: "#99756E",
                   borderRadius: 20,
                   width: 30,
+                  color: "#ffffff",
                 }}
               >
                 4

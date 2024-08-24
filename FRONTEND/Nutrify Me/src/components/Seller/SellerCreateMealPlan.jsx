@@ -19,12 +19,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+import { ToastContainer, toast } from "react-toastify";
 
 function SellerCreateMealPlan() {
   const [indexmeal, setIndexmeal] = useState();
   const [tempMeal, setTempMeal] = useState([
     {
-      day: "Sunday", // Optional: Add a day property for reference
+      day: "Day 1", // Optional: Add a day property for reference
       meals: {
         Breakfast: {
           food: "",
@@ -65,7 +66,7 @@ function SellerCreateMealPlan() {
       },
     },
     {
-      day: "Monday", // Optional: Add a day property for reference
+      day: "Day 2", // Optional: Add a day property for reference
       meals: {
         Breakfast: {
           food: "",
@@ -106,49 +107,7 @@ function SellerCreateMealPlan() {
       },
     },
     {
-      day: "Tuesday", // Optional: Add a day property for reference
-      meals: {
-        Breakfast: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-        Lunch: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-        Snack: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-        Dinner: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-      },
-    },
-
-    {
-      day: "Wednesday", // Optional: Add a day property for reference
+      day: "Day 3", // Optional: Add a day property for reference
       meals: {
         Breakfast: {
           food: "",
@@ -190,7 +149,7 @@ function SellerCreateMealPlan() {
     },
 
     {
-      day: "Thursday",
+      day: "Day 4", // Optional: Add a day property for reference
       meals: {
         Breakfast: {
           food: "",
@@ -232,49 +191,7 @@ function SellerCreateMealPlan() {
     },
 
     {
-      day: "Friday",
-      meals: {
-        Breakfast: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-        Lunch: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-        Snack: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-        Dinner: {
-          food: "",
-          calories: 0,
-          carbs: 0,
-          fat: 0,
-          protein: 0,
-          description: "",
-          image: "",
-        },
-      },
-    },
-
-    {
-      day: "Saturday", // Optional: Add a day property for reference
+      day: "Day 5",
       meals: {
         Breakfast: {
           food: "",
@@ -318,7 +235,7 @@ function SellerCreateMealPlan() {
   const [day, setDay] = useState();
   const schema = yup.object().shape({
     name: yup.string().required("Name is required"),
-    type: yup.string().required("Please Select a type"),
+    // type: yup.string().required("Please Select a type"),
     calories: yup.number().required("Calories is required"),
     //.integer("Please enter an integer value"),
     fat: yup.number().required("Fat is required"),
@@ -336,6 +253,7 @@ function SellerCreateMealPlan() {
     mealtype: yup.string().required("Meal Type is required"),
 
     description: yup.string().required("Description is required"),
+    price: yup.string().required("Price is required"),
     // .integer("Please enter an integer value"),
     // Other fields
 
@@ -447,8 +365,10 @@ function SellerCreateMealPlan() {
             description: data.description,
             start_week: currentWeekStart,
             end_week: currentWeekEnd,
+            price: data.price,
             //  price: ,
           }).then((res) => {
+            toast.success("Meal Plan Created");
             console.log(res.data.id);
             tempMeal.forEach((dayObject) => {
               console.log("Day:", dayObject.day);
@@ -462,7 +382,8 @@ function SellerCreateMealPlan() {
                 const mealDetails = dayObject.meals[mealName];
                 console.log("Day (Meal Name):", mealName);
                 console.log("Meal details:", mealDetails);
-
+                const data = dayObject.day;
+                const extractedNumber = data.match(/\d+/)[0];
                 try {
                   AxiosInstance.post(`shopmeal/`, {
                     mealplan_id: res.data.id,
@@ -473,7 +394,7 @@ function SellerCreateMealPlan() {
                     carbs: mealDetails.carbs,
                     food: mealDetails.food,
                     image: mealDetails.image,
-                    day: dayObject.day,
+                    day: extractedNumber,
                     //image: data.type,
                   }).then((res) => {
                     console.log(res, res.data);
@@ -576,7 +497,9 @@ function SellerCreateMealPlan() {
   };
 
   function updateMeal(day, mealName, newMealDetails) {
+    console.log(day, mealName, newMealDetails);
     return tempMeal.map((mealObj) => {
+      console.log(mealObj, day);
       if (mealObj.day === day) {
         // Create a new object with updated meal details
         const updatedMeal = {
@@ -896,6 +819,8 @@ function SellerCreateMealPlan() {
   ];
 
   const style = {
+    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
+    overflowY: "auto", // Enable vertical scrolling
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -1149,6 +1074,7 @@ function SellerCreateMealPlan() {
         color: "#99756E",
       }}
     >
+      <ToastContainer />
       <Modal
         open={open}
         onClose={handleClose}
@@ -1156,8 +1082,20 @@ function SellerCreateMealPlan() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <Grid container spacing={2}>
+            <Grid xs={2}>
+              {" "}
+              <img src="/images/food journal icon.png" />
+            </Grid>
+            <Grid xs={8}>Add Meal</Grid>
+            <Grid xs={2}>
+              <Button sx={{ float: "right" }} onClick={() => handleClose()}>
+                <img src="/images/close.png" height="10" weight="10" />
+              </Button>
+            </Grid>
+          </Grid>
           <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <Grid container spacing={2} sx={{ my: 3 }}>
+            {/* <Grid container spacing={2} sx={{ my: 3 }}>
               <Grid xs={6}>
                 Type of Meal: <br />
                 <Select
@@ -1181,7 +1119,7 @@ function SellerCreateMealPlan() {
                 </Typography>
               </Grid>
               <Grid xs={6}>Stocks</Grid>
-            </Grid>
+            </Grid> */}
             Name: <br />
             <TextField
               id="name"
@@ -1629,6 +1567,21 @@ function SellerCreateMealPlan() {
               />
               <Typography variant="inherit" color="textSecondary">
                 {errors1.description?.message}
+              </Typography>
+              Price
+              <br />
+              <TextField
+                sx={{ width: "100%" }}
+                id="price"
+                name="price"
+                label="Price"
+                size="small"
+                margin="dense"
+                {...register1("price")}
+                error={errors1.price ? true : false}
+              />
+              <Typography variant="inherit" color="textSecondary">
+                {errors1.price?.message}
               </Typography>
               Image:
               <input

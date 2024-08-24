@@ -317,6 +317,7 @@ function FoodJournalHome() {
             sx={{
               background: "#E66253",
               color: "#ffffff",
+              mx: "7%",
               mt: 1,
               "&:hover": {
                 backgroundColor: "#ffffff",
@@ -1814,7 +1815,9 @@ function FoodJournalHome() {
                     <Grid xs={2}>
                       <img src="/images/food journal icon.png" />
                     </Grid>
-                    <Grid xs={8}>Journal Entry</Grid>
+                    <Grid xs={8} display="flex" justifyContent="flex-start">
+                      Journal Entry
+                    </Grid>
                     <Grid xs={2}>
                       <Button sx={{ float: "right" }} onClick={handleClose1}>
                         <img src="/images/close.png" height="10" weight="10" />
@@ -1829,7 +1832,7 @@ function FoodJournalHome() {
                             {" "}
                             Title:{" "}
                           </Grid>
-                          <Grid xs={2}>
+                          <Grid xs={6}>
                             {" "}
                             <TextField
                               id="title"
@@ -1838,6 +1841,11 @@ function FoodJournalHome() {
                               label=""
                               fullWidth
                               margin="dense"
+                              sx={{
+                                mr: 2,
+                                background: "#ffffff",
+                                color: "#000000",
+                              }}
                               {...register1("title")}
                               // error={errors.title ? true : false}
                               // id="filled-basic"
@@ -1888,6 +1896,7 @@ function FoodJournalHome() {
                   <Grid container spacing={2} sx={{ m: 0 }}>
                     <Grid xs={3.8} sx={{ mx: 1 }}>
                       <center> Journal Entry</center>
+                      Journal Entry
                       <br />
                       <TextField
                         id="journal_entry"
@@ -1900,13 +1909,18 @@ function FoodJournalHome() {
                         // error={errors.journal_entry ? true : false}
                         multiline
                         rows={4}
-                        sx={{ width: "100%" }}
+                        sx={{
+                          width: "100%",
+                          mr: 2,
+                          background: "#ffffff",
+                          color: "#000000",
+                        }}
                         // value={idToCall}
                         // onChange={(e) => setIdToCall(e.target.value)}
                       />
-                      <Typography>Blood Pressure</Typography>
-                      <Grid container spacing={2}>
-                        <Grid xs={6}>
+                      <Typography sx={{ mt: 2 }}>Blood Pressure</Typography>
+                      <Grid container spacing={4} sx={{ mx: 3, my: 1.5 }}>
+                        <Grid xs={4} sx={{ mx: 2 }}>
                           {" "}
                           <TextField
                             id="systolic"
@@ -1918,12 +1932,17 @@ function FoodJournalHome() {
                             // error={errors.systolic ? true : false}
                             label="Systolic"
                             variant="filled"
-                            sx={{ mr: 4 }}
+                            sx={{
+                              mr: 4,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+
                             // value={idToCall}
                             // onChange={(e) => setIdToCall(e.target.value)}
                           />
                         </Grid>
-                        <Grid xs={6}>
+                        <Grid xs={4} sx={{ mx: 2 }}>
                           {" "}
                           <TextField
                             id="diastolic"
@@ -1935,13 +1954,29 @@ function FoodJournalHome() {
                             // error={errors.diastolic ? true : false}
                             label="Diastolic"
                             variant="filled"
-                            sx={{ mx: 2 }}
+                            sx={{
+                              mr: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
                             // value={idToCall}
                             // onChange={(e) => setIdToCall(e.target.value)}
                           />
                         </Grid>
                       </Grid>
-                      Meal Plan: <br />
+                      <center>
+                        <button
+                          style={{
+                            background: "#ffffff",
+                            color: primaryColor,
+                            backgroundRadius: 10,
+                          }}
+                          type="submit"
+                        >
+                          SAVE
+                        </button>
+                      </center>
+                      {/* Meal Plan: <br />
                       <Select
                         labelId="demo-simple-select-filled-label"
                         id="demo-simple-select-filled"
@@ -1952,7 +1987,7 @@ function FoodJournalHome() {
                         {planOptions.map((option) => (
                           <MenuItem value={option}>{option}</MenuItem>
                         ))}
-                      </Select>
+                      </Select> */}
                     </Grid>
 
                     {foodEntry !== 0 ? (
@@ -1989,7 +2024,7 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid xs={6}>
                               {" "}
-                              <TextField
+                              {/* <TextField
                                 id="filled-basic"
                                 label="Meal Plan:"
                                 variant="filled"
@@ -2006,7 +2041,7 @@ function FoodJournalHome() {
 
                                 // value={idToCall}
                                 // onChange={(e) => setIdToCall(e.target.value)}
-                              />
+                              /> */}
                             </Grid>{" "}
                             <Grid container spacing={2}>
                               <Grid xs={6}>
@@ -2264,7 +2299,7 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid xs={6}>
                               {" "}
-                              <TextField
+                              {/* <TextField
                                 id="filled-basic"
                                 label="Meal Plan:"
                                 variant="filled"
@@ -2281,7 +2316,7 @@ function FoodJournalHome() {
 
                                 // value={idToCall}
                                 // onChange={(e) => setIdToCall(e.target.value)}
-                              />
+                              /> */}
                             </Grid>
                             <Grid container spacing={2}>
                               <Grid xs={6}>
@@ -2530,7 +2565,7 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid xs={6}>
                               {" "}
-                              <TextField
+                              {/* <TextField
                                 id="filled-basic"
                                 label="Meal Plan:"
                                 variant="filled"
@@ -2547,7 +2582,7 @@ function FoodJournalHome() {
 
                                 // value={idToCall}
                                 // onChange={(e) => setIdToCall(e.target.value)}
-                              />
+                              /> */}
                             </Grid>
                           </Grid>
                           <Grid container spacing={2}>
@@ -2815,7 +2850,7 @@ function FoodJournalHome() {
                             </Grid>
                             <Grid xs={6}>
                               {" "}
-                              <TextField
+                              {/* <TextField
                                 id="filled-basic"
                                 label="Meal Plan:"
                                 variant="filled"
@@ -2832,7 +2867,7 @@ function FoodJournalHome() {
 
                                 // value={idToCall}
                                 // onChange={(e) => setIdToCall(e.target.value)}
-                              />
+                              /> */}
                             </Grid>
                           </Grid>
                           <Grid container spacing={2}>
@@ -3052,16 +3087,6 @@ function FoodJournalHome() {
                       <></>
                     )}
                   </Grid>
-                  <button
-                    style={{
-                      background: "#ffffff",
-                      color: primaryColor,
-                      backgroundRadius: 10,
-                    }}
-                    type="submit"
-                  >
-                    SAVE
-                  </button>
                 </form>
               </Box>
             </Modal>
@@ -3114,14 +3139,20 @@ function FoodJournalHome() {
                             {" "}
                             Title:{" "}
                           </Grid>
-                          <Grid xs={2}>
+                          <Grid xs={6}>
                             {" "}
                             <TextField
+                              size="small"
                               id="title"
                               name="title"
                               label=""
                               fullWidth
                               margin="dense"
+                              sx={{
+                                mr: 2,
+                                background: "#ffffff",
+                                color: "#000000",
+                              }}
                               {...register("title")}
                               // error={errors.title ? true : false}
                               // id="filled-basic"
@@ -3162,8 +3193,14 @@ function FoodJournalHome() {
                     </Grid>{" "}
                   </center>
                   <Grid container spacing={2} sx={{ m: 0 }}>
-                    <Grid xs={3.8} sx={{ mx: 1 }}>
+                    <Grid
+                      xs={3.8}
+                      sx={{ mx: 1 }}
+                      display="flex"
+                      justifyContent="flex-start"
+                    >
                       <center> Journal Entry</center>
+                      Journal Entry
                       <br />
                       <TextField
                         id="journal_entry"
@@ -3175,12 +3212,21 @@ function FoodJournalHome() {
                         // error={errors.journal_entry ? true : false}
                         multiline
                         rows={4}
-                        sx={{ width: "100%" }}
+                        sx={{
+                          width: "100%",
+                          mr: 2,
+                          background: "#ffffff",
+                          color: "#000000",
+                        }}
                         // value={idToCall}
                         // onChange={(e) => setIdToCall(e.target.value)}
                       />
-                      <Typography>Blood Pressure</Typography>
-                      <Grid container spacing={2}>
+                      <Typography
+                        sx={{ color: "#ffffff", fontWeight: "bold", my: 2 }}
+                      >
+                        Blood Pressure
+                      </Typography>
+                      <Grid container spacing={2} sx={{}}>
                         <Grid xs={6}>
                           {" "}
                           <TextField
@@ -3192,7 +3238,12 @@ function FoodJournalHome() {
                             // error={errors.systolic ? true : false}
                             label="Systolic"
                             variant="filled"
-                            sx={{ mr: 4 }}
+                            sx={{
+                              width: "100%",
+                              mr: 4,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
                             // value={idToCall}
                             // onChange={(e) => setIdToCall(e.target.value)}
                           />
@@ -3208,13 +3259,19 @@ function FoodJournalHome() {
                             // error={errors.diastolic ? true : false}
                             label="Diastolic"
                             variant="filled"
-                            sx={{ mx: 2 }}
+                            sx={{
+                              width: "100%",
+                              mr: 2,
+                              mx: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
                             // value={idToCall}
                             // onChange={(e) => setIdToCall(e.target.value)}
                           />
                         </Grid>
                       </Grid>
-                      Meal Plan: <br />
+                      {/* Meal Plan: <br />
                       <Select
                         labelId="demo-simple-select-filled-label"
                         id="demo-simple-select-filled"
@@ -3225,7 +3282,7 @@ function FoodJournalHome() {
                         {planOptions.map((option) => (
                           <MenuItem value={option}>{option}</MenuItem>
                         ))}
-                      </Select>
+                      </Select> */}
                     </Grid>
                     <Grid xs={7} sx={{ ml: 10 }}>
                       Meals
@@ -3258,7 +3315,7 @@ function FoodJournalHome() {
                           </Grid>
                           <Grid xs={6}>
                             {" "}
-                            <TextField
+                            {/* <TextField
                               id="filled-basic"
                               label="Meal Plan:"
                               variant="filled"
@@ -3275,7 +3332,7 @@ function FoodJournalHome() {
 
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
-                            />
+                            /> */}
                           </Grid>{" "}
                           <Grid container spacing={2}>
                             <Grid xs={6}>
@@ -3514,7 +3571,7 @@ function FoodJournalHome() {
                           </Grid>
                           <Grid xs={6}>
                             {" "}
-                            <TextField
+                            {/* <TextField
                               id="filled-basic"
                               label="Meal Plan:"
                               variant="filled"
@@ -3531,7 +3588,7 @@ function FoodJournalHome() {
 
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
-                            />
+                            /> */}
                           </Grid>
                           <Grid container spacing={2}>
                             <Grid xs={6}>
@@ -3760,7 +3817,7 @@ function FoodJournalHome() {
                           </Grid>
                           <Grid xs={6}>
                             {" "}
-                            <TextField
+                            {/* <TextField
                               id="filled-basic"
                               label="Meal Plan:"
                               variant="filled"
@@ -3777,7 +3834,7 @@ function FoodJournalHome() {
 
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
-                            />
+                            /> */}
                           </Grid>
                         </Grid>
                         <Grid container spacing={2}>
@@ -4002,7 +4059,7 @@ function FoodJournalHome() {
                           </Grid>
                           <Grid xs={6}>
                             {" "}
-                            <TextField
+                            {/* <TextField
                               id="filled-basic"
                               label="Meal Plan:"
                               variant="filled"
@@ -4019,7 +4076,7 @@ function FoodJournalHome() {
 
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
-                            />
+                            /> */}
                           </Grid>
                         </Grid>
                         <Grid container spacing={2}>

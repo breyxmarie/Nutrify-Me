@@ -206,8 +206,8 @@ function MealPlanGeneratorNavBar() {
                     boxShadow: "0px 3px 6px rgba(0, 0, 0, 0.2)",
                   },
                 }}
-                onMouseOver={(e) => (e.target.style.background = "#b9a09b")}
-                onMouseOut={(e) => (e.target.style.background = "#FFFFFF")}
+                onMouseOver={(e) => (e.target.style.fontWeight = "bold")}
+                onMouseOut={(e) => (e.target.style.fontWeight = "")}
                 className="activeLink border w-full h-full px-4 centered"
                 //activeClassName="StyledLink" // Define your active class in CSS
                 // className="normalLink"
