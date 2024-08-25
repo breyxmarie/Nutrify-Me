@@ -206,34 +206,35 @@ function Profiling() {
       {}
       {haveHypertension === null ? (
         <>
-          Do you Have Hypertension?
-          {hypertensionChoices.map((item, index) => (
-            <Grid item xs={6} sm={4} md={4} key={index}>
-              <div
-                key={index}
-                onClick={() => handleHypertensionClick(item)}
-                style={{
-                  background: isSelectedHypertension(item)
-                    ? "#D4CE98"
-                    : "white",
-                }}
-              >
-                <center>
-                  {/* <img src={item.image} width="40%" height="40%" /> */}
-                </center>
-                <Typography
-                  sx={{
-                    color: "#000000",
+          <Typography>Do you Have Hypertension?</Typography>
+
+          <Grid container spacing={2}>
+            {hypertensionChoices.map((item, index) => (
+              <Grid item xs={6} sm={4} md={4} key={index}>
+                <div
+                  key={index}
+                  onClick={() => handleHypertensionClick(item)}
+                  style={{
+                    background: isSelectedHypertension(item)
+                      ? "#D4CE98"
+                      : "white",
                   }}
                 >
-                  {item} <br />
-                  <br />
-                  <br />
-                  <br />
-                </Typography>
-              </div>
-            </Grid>
-          ))}
+                  <center>
+                    {/* <img src={item.image} width="40%" height="40%" /> */}
+                  </center>
+                  <Typography
+                    sx={{
+                      color: "#000000",
+                      border: 1,
+                    }}
+                  >
+                    {item} <br />
+                  </Typography>
+                </div>
+              </Grid>
+            ))}
+          </Grid>
         </>
       ) : (
         <></>

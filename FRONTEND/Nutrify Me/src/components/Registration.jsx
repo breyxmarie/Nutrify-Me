@@ -165,6 +165,7 @@ function Registration() {
                     userId: id,
                   },
                 });
+                reset();
               });
             } catch (error) {
               console.log(error.response);
@@ -175,8 +176,6 @@ function Registration() {
         }
       })
     );
-
-    reset();
   };
   //!
   const registerNutritionist = () => {
