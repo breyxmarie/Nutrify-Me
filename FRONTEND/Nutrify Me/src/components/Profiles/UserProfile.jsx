@@ -672,7 +672,10 @@ function UserProfile() {
         <form onSubmit={handleSubmit(onSubmitHandler)}>
           <Grid container spacing={2} sx={{ my: 3 }}>
             <Grid xs={10} sx={{ mx: "30%" }}>
-              Profile Picture: Upload Image:
+              <Typography sx={{ color: "#000000" }}>
+                Profile Picture: Upload Image:
+              </Typography>
+
               {/* // * upload image */}
               <input
                 type="file"
