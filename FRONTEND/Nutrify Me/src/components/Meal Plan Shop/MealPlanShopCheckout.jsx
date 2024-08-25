@@ -1555,12 +1555,12 @@ function MealPlanShopCheckout() {
               </Typography>
               <br />
 
-              <PayPalScriptProvider options={initialOptions}>
+              {/* <PayPalScriptProvider options={initialOptions}>
                 <PayPalButtons
                   createOrder={(data, actions) => createOrder(data, actions)}
                   onApprove={(data, actions) => onApprove(data, actions)}
                 />
-              </PayPalScriptProvider>
+              </PayPalScriptProvider> */}
 
               <FormControl sx={{ ml: 15, mb: 3 }}>
                 <FormLabel id="demo-radio-buttons-group-label">
@@ -1594,7 +1594,7 @@ function MealPlanShopCheckout() {
                   {errors1.payment?.message}
                 </Typography>
               </FormControl>
-              <Button type="submit">Submit</Button>
+              {/* <Button type="submit">Submit</Button> */}
             </Box>
             <br />
             <br />

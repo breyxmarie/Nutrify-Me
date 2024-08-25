@@ -212,7 +212,9 @@ function Profiling() {
       {}
       {haveHypertension === null ? (
         <>
-          <Typography sx={{ fotnWeight: "bold", fontSize: "1.5em" }}>
+          <Typography
+            sx={{ fotnWeight: "bold", fontSize: "1.5em", color: "#000000" }}
+          >
             Do you Have Hypertension?
           </Typography>
 
