@@ -65,6 +65,403 @@ function UserProfile() {
     let fileName = "";
     if (data.file.length < 1) {
       console.log("no file");
+
+      if (data.username === loggedInUser.username) {
+        console.log("same");
+
+        try {
+          console.log(fileName);
+          AxiosInstance.put(`user/`, {
+            user_id: loggedInUser.user_id,
+            username: data.username,
+            password: data.password,
+            first_name: data.firstname,
+            last_name: data.lastname,
+            privilege: "User",
+            email: loggedInUser.email,
+            image: loggedInUser.image,
+          }).then((res) => {
+            //  console.log(res, res.data);
+            // navigate("/Profiling", {
+            //   state: { email: data.email, name: data.first_name },
+            // });
+
+            // navigate("/Log-In?success=newPassword");
+
+            AxiosInstance.get(`user/`).then((res) => {
+              // {
+              //   res.data.map((item, index) =>
+              //   //  console.log(item.username, item.password)
+              //   );
+              // }
+              //  console.log(res.data);
+              const newUser = res.data.find(
+                (user) => user.user_id === loggedInUser.user_id
+              );
+              setLoggedInUser(newUser);
+
+              setProfileDiv(
+                <>
+                  <Button
+                    sx={{
+                      color: "#539801",
+                      border: 1,
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor: "#539801",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                    onClick={editProfile}
+                  >
+                    EDIT
+                  </Button>
+                  <Grid container spacing={2} sx={{ my: 3 }}>
+                    <Grid xs={6} sx={{ ml: "30%" }}>
+                      <Typography
+                        sx={{
+                          color: "#E66253",
+                          fontWeight: "bold",
+                          textAlign: "left",
+                        }}
+                      >
+                        Username
+                      </Typography>
+
+                      <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+                        {loggedInUser.username}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}> </Grid>
+                  </Grid>
+                  <Grid container spacing={2} sx={{ my: 3 }}>
+                    <Grid xs={10} sx={{ ml: "30%" }}>
+                      <Typography
+                        sx={{
+                          color: "#E66253",
+                          fontWeight: "bold",
+                          textAlign: "left",
+                        }}
+                      >
+                        Name:{" "}
+                      </Typography>
+
+                      <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+                        {newUser.first_name} {""}
+                        {newUser.last_name}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}> </Grid>
+                  </Grid>
+                  <Grid container spacing={2} sx={{ my: 3 }}>
+                    <Grid xs={2} sx={{ ml: "30%" }}>
+                      <Typography
+                        sx={{
+                          color: "#E66253",
+                          fontWeight: "bold",
+                          textAlign: "left",
+                        }}
+                      >
+                        Passoword:{" "}
+                      </Typography>
+
+                      <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+                        {newUser.password}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}></Grid>
+                  </Grid>{" "}
+                  <Grid container spacing={2} sx={{ my: 3 }}>
+                    <Grid xs={2} sx={{ ml: "30%" }}>
+                      <Typography
+                        sx={{
+                          color: "#E66253",
+                          fontWeight: "bold",
+                          textAlign: "left",
+                        }}
+                      >
+                        E-mail:{" "}
+                      </Typography>
+
+                      <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+                        {loggedInUser.email}
+                      </Typography>
+                    </Grid>
+                    <Grid xs={6}></Grid>
+                  </Grid>
+                  <Box sx={{ ml: "21%", mt: "50px" }}>
+                    <Typography
+                      sx={{
+                        color: "#99756E",
+                        fontWeight: "bold",
+                        fontSize: "25px",
+                        float: "left",
+                        ml: 20,
+                      }}
+                    >
+                      Account Removal
+                    </Typography>
+                    <br />
+                    <br />
+                    <br />
+                    <Button
+                      sx={{
+                        background: "#E66253",
+                        color: "#ffffff",
+                        float: "left",
+                        ml: 20,
+                        px: 3,
+                        "&:hover": {
+                          backgroundColor: "#ffffff",
+                          color: "#E66253",
+                          border: 0.5,
+                          borderColor: "#E66253",
+                        },
+                      }}
+                    >
+                      DEACTIVATE ACCOUNT
+                    </Button>
+                  </Box>
+                  <br />
+                  <br />
+                  <br />
+                  <Button
+                    sx={{
+                      color: "#B3B3B3",
+                      border: 1,
+                      fontWeight: "bold",
+                      px: 5,
+                      "&:hover": {
+                        backgroundColor: "#B3B3B3",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                  >
+                    {" "}
+                    LOG OUT
+                  </Button>
+                </>
+              );
+            });
+          });
+        } catch (error) {
+          console.log(error.response);
+        }
+      } else {
+        // console.log("not same");
+
+        let check = false;
+        AxiosInstance.get(`user/`).then((res) => {
+          // {
+          //   res.data.map((item, index) =>
+          //     console.log(item.username, item.password)
+          //   );
+          // }
+          // console.log(res.data);
+          check = res.data.some((user) => user.username === data.username);
+          // console.log(check);
+          const updatedDiv = document.getElementById("error-message");
+          if (check) {
+            updatedDiv.textContent = "username taken";
+            //  console.log("username taken");
+          } else {
+            updatedDiv.textContent = "username available";
+
+            try {
+              AxiosInstance.put(`user/`, {
+                user_id: loggedInUser.user_id,
+                username: data.username,
+                password: data.password,
+                first_name: data.firstname,
+                last_name: data.lastname,
+                privilege: "User",
+                email: loggedInUser.email,
+              }).then((res) => {
+                //  console.log(res, res.data);
+                // navigate("/Profiling", {
+                //   state: { email: data.email, name: data.first_name },
+                // });
+
+                // navigate("/Log-In?success=newPassword");
+
+                AxiosInstance.get(`user/`).then((res) => {
+                  // {
+                  //   res.data.map((item, index) =>
+                  //     console.log(item.username, item.password)
+                  //   );
+                  // }
+                  console.log(res.data);
+                  const newUser = res.data.find(
+                    (user) => user.user_id === loggedInUser.user_id
+                  );
+                  setLoggedInUser(newUser);
+
+                  setProfileDiv(
+                    <>
+                      <Button
+                        sx={{
+                          color: "#539801",
+                          border: 1,
+                          fontWeight: "bold",
+                          "&:hover": {
+                            backgroundColor: "#539801",
+                            color: "#ffffff",
+                            border: 0.5,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                        onClick={editProfile}
+                      >
+                        EDIT
+                      </Button>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={6} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Username
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {loggedInUser.username}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}> </Grid>
+                      </Grid>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={10} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Name:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {newUser.first_name} {""}
+                            {newUser.last_name}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}> </Grid>
+                      </Grid>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={2} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Passoword:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {newUser.password}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}></Grid>
+                      </Grid>{" "}
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={2} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            E-mail:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {loggedInUser.email}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}></Grid>
+                      </Grid>
+                      <Box sx={{ ml: "21%", mt: "50px" }}>
+                        <Typography
+                          sx={{
+                            color: "#99756E",
+                            fontWeight: "bold",
+                            fontSize: "25px",
+                            float: "left",
+                            ml: 20,
+                          }}
+                        >
+                          Account Removal
+                        </Typography>
+                        <br />
+                        <br />
+                        <br />
+                        <Button
+                          sx={{
+                            background: "#E66253",
+                            color: "#ffffff",
+                            float: "left",
+                            ml: 20,
+                            px: 3,
+                            "&:hover": {
+                              backgroundColor: "#ffffff",
+                              color: "#E66253",
+                              border: 0.5,
+                              borderColor: "#E66253",
+                            },
+                          }}
+                        >
+                          DEACTIVATE ACCOUNT
+                        </Button>
+                      </Box>
+                      <br />
+                      <br />
+                      <br />
+                      <Button
+                        sx={{
+                          color: "#B3B3B3",
+                          border: 1,
+                          fontWeight: "bold",
+                          px: 5,
+                          "&:hover": {
+                            backgroundColor: "#B3B3B3",
+                            color: "#ffffff",
+                            border: 0.5,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                      >
+                        {" "}
+                        LOG OUT
+                      </Button>
+                    </>
+                  );
+                });
+              });
+            } catch (error) {
+              console.log(error.response);
+            }
+          }
+        });
+      }
     } else {
       console.log("there is  file");
       const formData = new FormData();
@@ -80,6 +477,411 @@ function UserProfile() {
         }).then((res) => {
           fileName = res.data;
           console.log(fileName);
+
+          if (data.username === loggedInUser.username) {
+            console.log("same");
+
+            try {
+              console.log(fileName);
+              AxiosInstance.put(`user/`, {
+                user_id: loggedInUser.user_id,
+                username: data.username,
+                password: data.password,
+                first_name: data.firstname,
+                last_name: data.lastname,
+                privilege: "User",
+                email: loggedInUser.email,
+                image: "http://127.0.0.1:8000/Photos/" + fileName,
+              }).then((res) => {
+                //  console.log(res, res.data);
+                // navigate("/Profiling", {
+                //   state: { email: data.email, name: data.first_name },
+                // });
+
+                // navigate("/Log-In?success=newPassword");
+
+                AxiosInstance.get(`user/`).then((res) => {
+                  // {
+                  //   res.data.map((item, index) =>
+                  //   //  console.log(item.username, item.password)
+                  //   );
+                  // }
+                  //  console.log(res.data);
+                  const newUser = res.data.find(
+                    (user) => user.user_id === loggedInUser.user_id
+                  );
+                  setLoggedInUser(newUser);
+
+                  setProfileDiv(
+                    <>
+                      <Button
+                        sx={{
+                          color: "#539801",
+                          border: 1,
+                          fontWeight: "bold",
+                          "&:hover": {
+                            backgroundColor: "#539801",
+                            color: "#ffffff",
+                            border: 0.5,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                        onClick={editProfile}
+                      >
+                        EDIT
+                      </Button>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={6} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Username
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {loggedInUser.username}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}> </Grid>
+                      </Grid>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={10} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Name:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {newUser.first_name} {""}
+                            {newUser.last_name}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}> </Grid>
+                      </Grid>
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={2} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            Passoword:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {newUser.password}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}></Grid>
+                      </Grid>{" "}
+                      <Grid container spacing={2} sx={{ my: 3 }}>
+                        <Grid xs={2} sx={{ ml: "30%" }}>
+                          <Typography
+                            sx={{
+                              color: "#E66253",
+                              fontWeight: "bold",
+                              textAlign: "left",
+                            }}
+                          >
+                            E-mail:{" "}
+                          </Typography>
+
+                          <Typography
+                            sx={{ color: "#99756E", textAlign: "left" }}
+                          >
+                            {loggedInUser.email}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={6}></Grid>
+                      </Grid>
+                      <Box sx={{ ml: "21%", mt: "50px" }}>
+                        <Typography
+                          sx={{
+                            color: "#99756E",
+                            fontWeight: "bold",
+                            fontSize: "25px",
+                            float: "left",
+                            ml: 20,
+                          }}
+                        >
+                          Account Removal
+                        </Typography>
+                        <br />
+                        <br />
+                        <br />
+                        <Button
+                          sx={{
+                            background: "#E66253",
+                            color: "#ffffff",
+                            float: "left",
+                            ml: 20,
+                            px: 3,
+                            "&:hover": {
+                              backgroundColor: "#ffffff",
+                              color: "#E66253",
+                              border: 0.5,
+                              borderColor: "#E66253",
+                            },
+                          }}
+                        >
+                          DEACTIVATE ACCOUNT
+                        </Button>
+                      </Box>
+                      <br />
+                      <br />
+                      <br />
+                      <Button
+                        sx={{
+                          color: "#B3B3B3",
+                          border: 1,
+                          fontWeight: "bold",
+                          px: 5,
+                          "&:hover": {
+                            backgroundColor: "#B3B3B3",
+                            color: "#ffffff",
+                            border: 0.5,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                      >
+                        {" "}
+                        LOG OUT
+                      </Button>
+                    </>
+                  );
+                });
+              });
+            } catch (error) {
+              console.log(error.response);
+            }
+          } else {
+            // console.log("not same");
+
+            let check = false;
+            AxiosInstance.get(`user/`).then((res) => {
+              // {
+              //   res.data.map((item, index) =>
+              //     console.log(item.username, item.password)
+              //   );
+              // }
+              // console.log(res.data);
+              check = res.data.some((user) => user.username === data.username);
+              // console.log(check);
+              const updatedDiv = document.getElementById("error-message");
+              if (check) {
+                updatedDiv.textContent = "username taken";
+                //  console.log("username taken");
+              } else {
+                updatedDiv.textContent = "username available";
+
+                try {
+                  AxiosInstance.put(`user/`, {
+                    user_id: loggedInUser.user_id,
+                    username: data.username,
+                    password: data.password,
+                    first_name: data.firstname,
+                    last_name: data.lastname,
+                    privilege: "User",
+                    email: loggedInUser.email,
+                  }).then((res) => {
+                    //  console.log(res, res.data);
+                    // navigate("/Profiling", {
+                    //   state: { email: data.email, name: data.first_name },
+                    // });
+
+                    // navigate("/Log-In?success=newPassword");
+
+                    AxiosInstance.get(`user/`).then((res) => {
+                      // {
+                      //   res.data.map((item, index) =>
+                      //     console.log(item.username, item.password)
+                      //   );
+                      // }
+                      console.log(res.data);
+                      const newUser = res.data.find(
+                        (user) => user.user_id === loggedInUser.user_id
+                      );
+                      setLoggedInUser(newUser);
+
+                      setProfileDiv(
+                        <>
+                          <Button
+                            sx={{
+                              color: "#539801",
+                              border: 1,
+                              fontWeight: "bold",
+                              "&:hover": {
+                                backgroundColor: "#539801",
+                                color: "#ffffff",
+                                border: 0.5,
+                                borderColor: "#ffffff",
+                              },
+                            }}
+                            onClick={editProfile}
+                          >
+                            EDIT
+                          </Button>
+                          <Grid container spacing={2} sx={{ my: 3 }}>
+                            <Grid xs={6} sx={{ ml: "30%" }}>
+                              <Typography
+                                sx={{
+                                  color: "#E66253",
+                                  fontWeight: "bold",
+                                  textAlign: "left",
+                                }}
+                              >
+                                Username
+                              </Typography>
+
+                              <Typography
+                                sx={{ color: "#99756E", textAlign: "left" }}
+                              >
+                                {loggedInUser.username}
+                              </Typography>
+                            </Grid>
+                            <Grid xs={6}> </Grid>
+                          </Grid>
+                          <Grid container spacing={2} sx={{ my: 3 }}>
+                            <Grid xs={10} sx={{ ml: "30%" }}>
+                              <Typography
+                                sx={{
+                                  color: "#E66253",
+                                  fontWeight: "bold",
+                                  textAlign: "left",
+                                }}
+                              >
+                                Name:{" "}
+                              </Typography>
+
+                              <Typography
+                                sx={{ color: "#99756E", textAlign: "left" }}
+                              >
+                                {newUser.first_name} {""}
+                                {newUser.last_name}
+                              </Typography>
+                            </Grid>
+                            <Grid xs={6}> </Grid>
+                          </Grid>
+                          <Grid container spacing={2} sx={{ my: 3 }}>
+                            <Grid xs={2} sx={{ ml: "30%" }}>
+                              <Typography
+                                sx={{
+                                  color: "#E66253",
+                                  fontWeight: "bold",
+                                  textAlign: "left",
+                                }}
+                              >
+                                Passoword:{" "}
+                              </Typography>
+
+                              <Typography
+                                sx={{ color: "#99756E", textAlign: "left" }}
+                              >
+                                {newUser.password}
+                              </Typography>
+                            </Grid>
+                            <Grid xs={6}></Grid>
+                          </Grid>{" "}
+                          <Grid container spacing={2} sx={{ my: 3 }}>
+                            <Grid xs={2} sx={{ ml: "30%" }}>
+                              <Typography
+                                sx={{
+                                  color: "#E66253",
+                                  fontWeight: "bold",
+                                  textAlign: "left",
+                                }}
+                              >
+                                E-mail:{" "}
+                              </Typography>
+
+                              <Typography
+                                sx={{ color: "#99756E", textAlign: "left" }}
+                              >
+                                {loggedInUser.email}
+                              </Typography>
+                            </Grid>
+                            <Grid xs={6}></Grid>
+                          </Grid>
+                          <Box sx={{ ml: "21%", mt: "50px" }}>
+                            <Typography
+                              sx={{
+                                color: "#99756E",
+                                fontWeight: "bold",
+                                fontSize: "25px",
+                                float: "left",
+                                ml: 20,
+                              }}
+                            >
+                              Account Removal
+                            </Typography>
+                            <br />
+                            <br />
+                            <br />
+                            <Button
+                              sx={{
+                                background: "#E66253",
+                                color: "#ffffff",
+                                float: "left",
+                                ml: 20,
+                                px: 3,
+                                "&:hover": {
+                                  backgroundColor: "#ffffff",
+                                  color: "#E66253",
+                                  border: 0.5,
+                                  borderColor: "#E66253",
+                                },
+                              }}
+                            >
+                              DEACTIVATE ACCOUNT
+                            </Button>
+                          </Box>
+                          <br />
+                          <br />
+                          <br />
+                          <Button
+                            sx={{
+                              color: "#B3B3B3",
+                              border: 1,
+                              fontWeight: "bold",
+                              px: 5,
+                              "&:hover": {
+                                backgroundColor: "#B3B3B3",
+                                color: "#ffffff",
+                                border: 0.5,
+                                borderColor: "#ffffff",
+                              },
+                            }}
+                          >
+                            {" "}
+                            LOG OUT
+                          </Button>
+                        </>
+                      );
+                    });
+                  });
+                } catch (error) {
+                  console.log(error.response);
+                }
+              }
+            });
+          }
         });
       } catch (error) {
         console.error("Error uploading file:", error); // Handle errors
@@ -87,403 +889,6 @@ function UserProfile() {
     }
 
     let usernameFinal = data.username;
-
-    if (data.username === loggedInUser.username) {
-      console.log("same");
-
-      try {
-        console.log(fileName);
-        AxiosInstance.put(`user/`, {
-          user_id: loggedInUser.user_id,
-          username: data.username,
-          password: data.password,
-          first_name: data.firstname,
-          last_name: data.lastname,
-          privilege: "User",
-          email: loggedInUser.email,
-          image: "http://127.0.0.1:8000/Photos/" + fileName,
-        }).then((res) => {
-          //  console.log(res, res.data);
-          // navigate("/Profiling", {
-          //   state: { email: data.email, name: data.first_name },
-          // });
-
-          // navigate("/Log-In?success=newPassword");
-
-          AxiosInstance.get(`user/`).then((res) => {
-            // {
-            //   res.data.map((item, index) =>
-            //   //  console.log(item.username, item.password)
-            //   );
-            // }
-            //  console.log(res.data);
-            const newUser = res.data.find(
-              (user) => user.user_id === loggedInUser.user_id
-            );
-            setLoggedInUser(newUser);
-
-            setProfileDiv(
-              <>
-                <Button
-                  sx={{
-                    color: "#539801",
-                    border: 1,
-                    fontWeight: "bold",
-                    "&:hover": {
-                      backgroundColor: "#539801",
-                      color: "#ffffff",
-                      border: 0.5,
-                      borderColor: "#ffffff",
-                    },
-                  }}
-                  onClick={editProfile}
-                >
-                  EDIT
-                </Button>
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={6} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      Username
-                    </Typography>
-
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {loggedInUser.username}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}> </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={10} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      Name:{" "}
-                    </Typography>
-
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {newUser.first_name} {""}
-                      {newUser.last_name}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}> </Grid>
-                </Grid>
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={2} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      Passoword:{" "}
-                    </Typography>
-
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {newUser.password}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}></Grid>
-                </Grid>{" "}
-                <Grid container spacing={2} sx={{ my: 3 }}>
-                  <Grid xs={2} sx={{ ml: "30%" }}>
-                    <Typography
-                      sx={{
-                        color: "#E66253",
-                        fontWeight: "bold",
-                        textAlign: "left",
-                      }}
-                    >
-                      E-mail:{" "}
-                    </Typography>
-
-                    <Typography sx={{ color: "#99756E", textAlign: "left" }}>
-                      {loggedInUser.email}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={6}></Grid>
-                </Grid>
-                <Box sx={{ ml: "21%", mt: "50px" }}>
-                  <Typography
-                    sx={{
-                      color: "#99756E",
-                      fontWeight: "bold",
-                      fontSize: "25px",
-                      float: "left",
-                      ml: 20,
-                    }}
-                  >
-                    Account Removal
-                  </Typography>
-                  <br />
-                  <br />
-                  <br />
-                  <Button
-                    sx={{
-                      background: "#E66253",
-                      color: "#ffffff",
-                      float: "left",
-                      ml: 20,
-                      px: 3,
-                      "&:hover": {
-                        backgroundColor: "#ffffff",
-                        color: "#E66253",
-                        border: 0.5,
-                        borderColor: "#E66253",
-                      },
-                    }}
-                  >
-                    DEACTIVATE ACCOUNT
-                  </Button>
-                </Box>
-                <br />
-                <br />
-                <br />
-                <Button
-                  sx={{
-                    color: "#B3B3B3",
-                    border: 1,
-                    fontWeight: "bold",
-                    px: 5,
-                    "&:hover": {
-                      backgroundColor: "#B3B3B3",
-                      color: "#ffffff",
-                      border: 0.5,
-                      borderColor: "#ffffff",
-                    },
-                  }}
-                >
-                  {" "}
-                  LOG OUT
-                </Button>
-              </>
-            );
-          });
-        });
-      } catch (error) {
-        console.log(error.response);
-      }
-    } else {
-      // console.log("not same");
-
-      let check = false;
-      AxiosInstance.get(`user/`).then((res) => {
-        // {
-        //   res.data.map((item, index) =>
-        //     console.log(item.username, item.password)
-        //   );
-        // }
-        // console.log(res.data);
-        check = res.data.some((user) => user.username === data.username);
-        // console.log(check);
-        const updatedDiv = document.getElementById("error-message");
-        if (check) {
-          updatedDiv.textContent = "username taken";
-          //  console.log("username taken");
-        } else {
-          updatedDiv.textContent = "username available";
-
-          try {
-            AxiosInstance.put(`user/`, {
-              user_id: loggedInUser.user_id,
-              username: data.username,
-              password: data.password,
-              first_name: data.firstname,
-              last_name: data.lastname,
-              privilege: "User",
-              email: loggedInUser.email,
-            }).then((res) => {
-              //  console.log(res, res.data);
-              // navigate("/Profiling", {
-              //   state: { email: data.email, name: data.first_name },
-              // });
-
-              // navigate("/Log-In?success=newPassword");
-
-              AxiosInstance.get(`user/`).then((res) => {
-                // {
-                //   res.data.map((item, index) =>
-                //     console.log(item.username, item.password)
-                //   );
-                // }
-                console.log(res.data);
-                const newUser = res.data.find(
-                  (user) => user.user_id === loggedInUser.user_id
-                );
-                setLoggedInUser(newUser);
-
-                setProfileDiv(
-                  <>
-                    <Button
-                      sx={{
-                        color: "#539801",
-                        border: 1,
-                        fontWeight: "bold",
-                        "&:hover": {
-                          backgroundColor: "#539801",
-                          color: "#ffffff",
-                          border: 0.5,
-                          borderColor: "#ffffff",
-                        },
-                      }}
-                      onClick={editProfile}
-                    >
-                      EDIT
-                    </Button>
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={6} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          Username
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {loggedInUser.username}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}> </Grid>
-                    </Grid>
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={10} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          Name:{" "}
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {newUser.first_name} {""}
-                          {newUser.last_name}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}> </Grid>
-                    </Grid>
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={2} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          Passoword:{" "}
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {newUser.password}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}></Grid>
-                    </Grid>{" "}
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={2} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          E-mail:{" "}
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {loggedInUser.email}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}></Grid>
-                    </Grid>
-                    <Box sx={{ ml: "21%", mt: "50px" }}>
-                      <Typography
-                        sx={{
-                          color: "#99756E",
-                          fontWeight: "bold",
-                          fontSize: "25px",
-                          float: "left",
-                          ml: 20,
-                        }}
-                      >
-                        Account Removal
-                      </Typography>
-                      <br />
-                      <br />
-                      <br />
-                      <Button
-                        sx={{
-                          background: "#E66253",
-                          color: "#ffffff",
-                          float: "left",
-                          ml: 20,
-                          px: 3,
-                          "&:hover": {
-                            backgroundColor: "#ffffff",
-                            color: "#E66253",
-                            border: 0.5,
-                            borderColor: "#E66253",
-                          },
-                        }}
-                      >
-                        DEACTIVATE ACCOUNT
-                      </Button>
-                    </Box>
-                    <br />
-                    <br />
-                    <br />
-                    <Button
-                      sx={{
-                        color: "#B3B3B3",
-                        border: 1,
-                        fontWeight: "bold",
-                        px: 5,
-                        "&:hover": {
-                          backgroundColor: "#B3B3B3",
-                          color: "#ffffff",
-                          border: 0.5,
-                          borderColor: "#ffffff",
-                        },
-                      }}
-                    >
-                      {" "}
-                      LOG OUT
-                    </Button>
-                  </>
-                );
-              });
-            });
-          } catch (error) {
-            console.log(error.response);
-          }
-        }
-      });
-    }
 
     // try {
     //   AxiosInstance.put(`user/`, {
