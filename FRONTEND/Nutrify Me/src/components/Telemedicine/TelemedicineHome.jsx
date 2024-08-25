@@ -682,6 +682,8 @@ function TelemedicineHome() {
         );
 
         console.log(filteredAvailableTime);
+        console.log(checkDate);
+        console.log(res.data);
         filteredAvailableTime.map((filter) => {
           // checkNut.forEach((item) => {
           //   if (item.date === checkDate) {
@@ -702,6 +704,15 @@ function TelemedicineHome() {
         });
 
         console.log(availableTime);
+        console.log(filteredAvailableTime);
+
+        console.log(availableTime.length);
+
+        if (availableTime.length === 0) {
+          setFreeTime(filteredAvailableTime);
+        } else {
+          setFreeTime(availableTime);
+        }
         res.data.forEach((item) => {
           // Format the time
           const formattedTime = convertTimeFormat(item.time);
@@ -734,8 +745,10 @@ function TelemedicineHome() {
           // availableTime = filteredAvailableTime;
 
           // Use filteredAvailableTime for further processing
-          console.log(availableTime);
-          setFreeTime(availableTime);
+
+          // if (availableTime)
+
+          //   setFreeTime(availableTime);
         });
         console.log(freeTime);
         //  setSelectedDates(dayjs());
@@ -1459,6 +1472,7 @@ function TelemedicineHome() {
         nutritionist_id: selectedNutritionist,
       }).then((res) => {
         console.log(res.data);
+        GetData();
         handleClose();
         // navigate("/?success=registered");
       });
@@ -1944,6 +1958,7 @@ function TelemedicineHome() {
                               minDate={dayjs()}
                               //  open // Keep the calendar open
                             />
+                            {console.log(freeTime)}
                             <Typography sx={{ mb: 1 }}>Select Time</Typography>
                             <Select
                               labelId="demo-simple-select-filled-label"

@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import { Container } from "@mui/material";
 import AxiosInstance from "./forms/AxiosInstance";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // import {
 //   MaterialReactTable,
@@ -17,6 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 // } from "material-react-table";
 
 function Home() {
+  const navigate = useNavigate();
   //? toast
   const query = new URLSearchParams(window.location.search);
   const myParam = query.get("success");
@@ -135,6 +137,7 @@ function Home() {
                   background: "#E66253",
                   fontSize: "20px",
                 }}
+                onClick={() => navigate("/Log-In")}
               >
                 BOOK AN APPOINTMENT
               </Button>
@@ -296,6 +299,7 @@ function Home() {
                 background: "#E66253",
                 fontSize: "20px",
               }}
+              onClick={() => navigate("/Log-In")}
             >
               VIEW MEAL PLANS
             </Button>
@@ -303,7 +307,7 @@ function Home() {
         </Grid>
       </Box>
 
-      <Box sx={{ color: "#99756E" }}>
+      <Box sx={{ color: "#99756E", mx: "5%", mr: "8%" }}>
         <h2 style={{ justifyContent: "center" }}> Patients Testimonials</h2>
         <Grid container spacing={2} sx={{ mx: 0 }}>
           <Grid item xs={8}>
@@ -326,8 +330,8 @@ function Home() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
@@ -365,8 +369,8 @@ function Home() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
@@ -403,8 +407,8 @@ function Home() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
@@ -442,8 +446,8 @@ function Home() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>

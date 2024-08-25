@@ -169,7 +169,9 @@ function MealPlanShopHome() {
         <Grid container spacing={2}>
           {console.log(shopMealPlan)}
           {shopMealPlan === null ? (
-            <></>
+            <>
+              <Typography>No Meal Plans Available</Typography>
+            </>
           ) : (
             <>
               {shopMealPlan.slice(0, 2).map((plan, index) => (

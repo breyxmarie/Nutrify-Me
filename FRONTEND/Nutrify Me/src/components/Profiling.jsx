@@ -16,8 +16,13 @@ import emailjs from "@emailjs/browser";
 import OTP from "./OTP";
 import { useLocation } from "react-router-dom";
 import Button from "@mui/material/Button";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Dayjs from "dayjs";
 
 function Profiling() {
+  const [dates, setDates] = useState();
   const navigate = useNavigate();
   const otpnum = Math.floor(Math.random() * 10000000);
   const location = useLocation();
@@ -65,7 +70,7 @@ function Profiling() {
     common_sys: yup.string().required("Systolic is Required"),
     common_dia: yup.string().required("Diastolic is Required"),
     // hypertension: yup.string().required("Do you have hypertension is Required"),
-    dateofBP: yup.string().required("Date is Required"),
+    //dateofBP: yup.string().required("Date is Required"),
     takingMeds: yup.string().required("Taking any meds is Required"),
     targetCalories: yup.string().required("Target Calories is Required"),
   });
@@ -90,6 +95,7 @@ function Profiling() {
         meds = 0;
         break;
     }
+    console.log(dates);
     try {
       AxiosInstance.post(`profiling/`, {
         user_id: location.state.userId,
@@ -99,7 +105,7 @@ function Profiling() {
         common_sys: data.common_sys,
         common_dia: data.common_dia,
         hypertension: 1,
-        dateofBP: data.dateofBP,
+        dateofBP: dates,
         takingMeds: meds,
       }).then((res) => {
         // navigate(`/`);
@@ -147,8 +153,8 @@ function Profiling() {
         common_sys: 0,
         common_dia: 0,
         hypertension: 0,
-        dateofBP: "2000-10-0",
-        takingMeds: false,
+        dateofBP: "2000-10-10",
+        takingMeds: 0,
       }).then((res) => {
         // navigate(`/`);
         console.log(res);
@@ -377,7 +383,7 @@ function Profiling() {
                 <Typography textAlign="left" sx={{ color: "#000000" }}>
                   When were you diagnose with Hypertension?
                 </Typography>
-                <TextField
+                {/* <TextField
                   id="first_name"
                   name="first_name"
                   type="text"
@@ -386,7 +392,19 @@ function Profiling() {
                   margin="dense"
                   {...register("dateofBP")}
                   error={errors.dateofBP ? true : false}
-                />
+                /> */}
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    sx={{ background: "#ffffff", width: "100%" }}
+                    onChange={(e) =>
+                      setDates(Dayjs(e["$d"]).format("YYYY-MM-DD"))
+                    }
+                    // name="date_entry"
+                    // {...register("date_entry")}
+                    // error={errors.date_entry ? true : false}
+                  />
+                </LocalizationProvider>
                 <Typography variant="inherit" color="textSecondary">
                   {errors.dateofBP?.message}
                 </Typography>

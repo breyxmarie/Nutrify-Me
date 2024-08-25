@@ -9,8 +9,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import UserFooter from "./UserFooter";
 import { useLoggedInUser } from "./LoggedInUserContext";
+import { useNavigate } from "react-router-dom";
 
 function MainHome() {
+  const navigate = useNavigate();
   const { loggedInUser } = useLoggedInUser();
 
   console.log(loggedInUser);
@@ -87,6 +89,7 @@ function MainHome() {
                   fontSize: "20px",
                   "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
                 }}
+                onClick={() => navigate("/telemedicine-home")}
               >
                 BOOK AN APPOINTMENT
               </Button>
@@ -245,6 +248,7 @@ function MainHome() {
                 fontSize: "20px",
                 "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
               }}
+              onClick={() => navigate("/meal-plan-shop-meal-plans")}
             >
               VIEW MEAL PLANS
             </Button>
@@ -252,9 +256,12 @@ function MainHome() {
         </Grid>
       </Box>
 
-      <Box sx={{ color: "#99756E" }}>
-        <h2 style={{ justifyContent: "center" }}> Patients Testimonials</h2>
-        <Grid container spacing={2} sx={{ mx: 0 }}>
+      <Box sx={{ color: "#99756E", mx: "5%", mr: "0%" }}>
+        <h2 style={{ justifyContent: "center", fontSize: "2.2em" }}>
+          {" "}
+          Patients Testimonials
+        </h2>
+        <Grid container spacing={2}>
           <Grid item xs={8}>
             <Item sx={{ border: 3, borderRadius: 4 }}>
               <Grid
@@ -275,8 +282,8 @@ function MainHome() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="50%"
-                    height="40%"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
@@ -314,8 +321,8 @@ function MainHome() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
@@ -352,8 +359,8 @@ function MainHome() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
@@ -391,8 +398,8 @@ function MainHome() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="100%"
+                    height="100%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>

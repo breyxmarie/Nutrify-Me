@@ -674,66 +674,78 @@ function MealPlanShopMealPlans() {
     setMealPlanDiv(
       <>
         {/* <Grid container spacing={2}> */}
-        {shopMealPlan
-          .filter(
-            (item) =>
-              item.start_week ==
-              dayjs(value).startOf("week").format("YYYY-MM-DD")
-          )
-          .map((plan, index) => (
-            <Grid item xs={3} sm={4} md={6} key={index}>
-              <img src={plan.image} width="20%" height="50%" />
-              <Typography
-                variant="body1"
-                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em" }}
-              >
-                {plan.name}
-              </Typography>
-              <Typography variant="body1">{plan.description}</Typography>
-              <Typography variant="body1">PHP {plan.price}</Typography>
-              <Button
-                sx={{
-                  borderRadius: 4,
-                  background: "#D9D9D9",
-                  color: "#000000",
-                  ml: 2,
+        {shopMealPlan === null ? (
+          <></>
+        ) : (
+          <>
+            {shopMealPlan
+              .filter(
+                (item) =>
+                  item.start_week ==
+                  dayjs(value).startOf("week").format("YYYY-MM-DD")
+              )
+              .map((plan, index) => (
+                <Grid item xs={3} sm={4} md={6} key={index}>
+                  <img src={plan.image} width="20%" height="50%" />
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "#99756E",
+                      fontWeight: "bold",
+                      fontSize: "1.5em",
+                    }}
+                  >
+                    {plan.name}
+                  </Typography>
+                  <Typography variant="body1">{plan.description}</Typography>
+                  <Typography variant="body1">PHP {plan.price}</Typography>
+                  <Button
+                    sx={{
+                      borderRadius: 4,
+                      background: "#D9D9D9",
+                      color: "#000000",
+                      ml: 2,
 
-                  px: 2,
-                  py: 1,
-                  fontSize: "15px",
-                  "&:hover": {
-                    backgroundColor: "#ffffff",
-                    color: "#000000",
-                    border: 1,
-                  },
-                }}
-                onClick={() => addToCart(plan.shop_mealplan_id)}
-              >
-                ADD TO CART
-              </Button>
-              <Button
-                sx={{
-                  borderRadius: 4,
-                  background: "#E66253",
-                  color: "#ffffff",
-                  ml: 2,
+                      px: 2,
+                      py: 1,
+                      fontSize: "15px",
+                      "&:hover": {
+                        backgroundColor: "#ffffff",
+                        color: "#000000",
+                        border: 1,
+                      },
+                    }}
+                    onClick={() => addToCart(plan.shop_mealplan_id)}
+                  >
+                    ADD TO CART
+                  </Button>
+                  <Button
+                    sx={{
+                      borderRadius: 4,
+                      background: "#E66253",
+                      color: "#ffffff",
+                      ml: 2,
 
-                  px: 2,
-                  py: 1,
-                  fontSize: "15px",
-                  "&:hover": {
-                    backgroundColor: "#ffffff",
-                    color: "#E66253",
-                    border: 1,
-                  },
-                }}
-                //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
-                onClick={() => setMealDetails(plan.shop_mealplan_id, plan.name)}
-              >
-                VIEW
-              </Button>
-            </Grid>
-          ))}
+                      px: 2,
+                      py: 1,
+                      fontSize: "15px",
+                      "&:hover": {
+                        backgroundColor: "#ffffff",
+                        color: "#E66253",
+                        border: 1,
+                      },
+                    }}
+                    //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
+                    onClick={() =>
+                      setMealDetails(plan.shop_mealplan_id, plan.name)
+                    }
+                  >
+                    VIEW
+                  </Button>
+                </Grid>
+              ))}
+          </>
+        )}
         {/* </Grid> */}
       </>
     );

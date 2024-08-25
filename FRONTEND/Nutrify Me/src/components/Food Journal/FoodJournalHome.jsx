@@ -1918,7 +1918,13 @@ function FoodJournalHome() {
                         // value={idToCall}
                         // onChange={(e) => setIdToCall(e.target.value)}
                       />
-                      <Typography sx={{ mt: 2 }}>Blood Pressure</Typography>
+                      <Typography
+                        sx={{ mt: 2 }}
+                        display="flex"
+                        justifyContent="flex-start"
+                      >
+                        Blood Pressure
+                      </Typography>
                       <Grid container spacing={4} sx={{ mx: 3, my: 1.5 }}>
                         <Grid xs={4} sx={{ mx: 2 }}>
                           {" "}
@@ -3191,92 +3197,102 @@ function FoodJournalHome() {
                         </Grid>
                       </Grid>
                     </Grid>{" "}
+                    <Typography
+                      sx={{
+                        color: "#ffffff",
+                        fontWeight: "bold",
+                        my: 2,
+                        ml: "5%",
+                      }}
+                      display="flex"
+                      justifyContent="flex-start"
+                    >
+                      Blood Pressure
+                    </Typography>
+                    <Grid container spacing={2} sx={{ mx: "5%", mr: "10%" }}>
+                      <Grid xs={4}>
+                        {" "}
+                        <TextField
+                          id="systolic"
+                          name="systolic"
+                          fullWidth
+                          margin="dense"
+                          {...register("systolic")}
+                          // error={errors.systolic ? true : false}
+                          label="Systolic"
+                          variant="filled"
+                          sx={{
+                            width: "100%",
+                            mr: 4,
+                            background: "#ffffff",
+                            color: "#000000",
+                          }}
+                          // value={idToCall}
+                          // onChange={(e) => setIdToCall(e.target.value)}
+                        />
+                      </Grid>
+                      <Grid xs={4}>
+                        {" "}
+                        <TextField
+                          id="diastolic"
+                          name="diastolic"
+                          fullWidth
+                          margin="dense"
+                          {...register("diastolic")}
+                          // error={errors.diastolic ? true : false}
+                          label="Diastolic"
+                          variant="filled"
+                          sx={{
+                            width: "100%",
+                            mr: 2,
+                            mx: 2,
+                            background: "#ffffff",
+                            color: "#000000",
+                          }}
+                          // value={idToCall}
+                          // onChange={(e) => setIdToCall(e.target.value)}
+                        />
+                      </Grid>
+                    </Grid>
                   </center>
                   <Grid container spacing={2} sx={{ m: 0 }}>
                     <Grid
                       xs={3.8}
-                      sx={{ mx: 1 }}
+                      sx={{ mx: 1, mt: 1 }}
                       display="flex"
                       justifyContent="flex-start"
                     >
-                      <center> Journal Entry</center>
+                      <Box sx={{ mx: "5%" }}>
+                        <center> Journal Entry</center>
 
+                        <TextField
+                          id="journal_entry"
+                          name="journal_entry"
+                          label=""
+                          fullWidth
+                          margin="dense"
+                          {...register("journal_entry")}
+                          // error={errors.journal_entry ? true : false}
+                          multiline
+                          rows={6}
+                          sx={{
+                            width: "200%",
+                            mr: 2,
+                            background: "#ffffff",
+                            color: "#000000",
+                          }}
+                          // value={idToCall}
+                          // onChange={(e) => setIdToCall(e.target.value)}
+                        />
+                      </Box>
                       <br />
-                      <TextField
-                        id="journal_entry"
-                        name="journal_entry"
-                        label=""
-                        fullWidth
-                        margin="dense"
-                        {...register("journal_entry")}
-                        // error={errors.journal_entry ? true : false}
-                        multiline
-                        rows={4}
-                        sx={{
-                          width: "100%",
-                          mr: 2,
-                          background: "#ffffff",
-                          color: "#000000",
-                        }}
-                        // value={idToCall}
-                        // onChange={(e) => setIdToCall(e.target.value)}
-                      />
-
-                      <br />
-                      <br />
-
                       <br />
 
-                      <Typography
-                        sx={{ color: "#ffffff", fontWeight: "bold", my: 2 }}
-                      >
-                        Blood Pressure
-                      </Typography>
-                      <Grid container spacing={2} sx={{}}>
-                        <Grid xs={6}>
-                          {" "}
-                          <TextField
-                            id="systolic"
-                            name="systolic"
-                            fullWidth
-                            margin="dense"
-                            {...register("systolic")}
-                            // error={errors.systolic ? true : false}
-                            label="Systolic"
-                            variant="filled"
-                            sx={{
-                              width: "100%",
-                              mr: 4,
-                              background: "#ffffff",
-                              color: "#000000",
-                            }}
-                            // value={idToCall}
-                            // onChange={(e) => setIdToCall(e.target.value)}
-                          />
-                        </Grid>
-                        <Grid xs={6}>
-                          {" "}
-                          <TextField
-                            id="diastolic"
-                            name="diastolic"
-                            fullWidth
-                            margin="dense"
-                            {...register("diastolic")}
-                            // error={errors.diastolic ? true : false}
-                            label="Diastolic"
-                            variant="filled"
-                            sx={{
-                              width: "100%",
-                              mr: 2,
-                              mx: 2,
-                              background: "#ffffff",
-                              color: "#000000",
-                            }}
-                            // value={idToCall}
-                            // onChange={(e) => setIdToCall(e.target.value)}
-                          />
-                        </Grid>
-                      </Grid>
+                      <br />
+
+                      <br />
+                      <br />
+                      <br />
 
                       {/* Meal Plan: <br />
                       <Select
@@ -3292,7 +3308,14 @@ function FoodJournalHome() {
                       </Select> */}
                     </Grid>
                     <Grid xs={7} sx={{ ml: 10 }}>
-                      Meals
+                      <center>
+                        <Typography
+                          sx={{ fontWeight: "bold", fontSize: "1.5em", mt: 1 }}
+                        >
+                          {" "}
+                          Meals{" "}
+                        </Typography>
+                      </center>
                       <Box>
                         <Typography>Breakfast</Typography>
                         <Grid container spacing={2} sx={{ my: 2 }}>

@@ -1743,12 +1743,12 @@ function MealPlanTest() {
                 }}
               >
                 <Typography sx={{ color: "#898246" }}>
-                  This calculator uses a standard ____ equation to estimate your
-                  Calorie needs. We also make some rough macronutrient
-                  suggestions, but you're free to completely customize these
-                  values when you create a free account. Lorem ipsum dolor sit
-                  amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua.
+                  This calculator uses a standard{" "}
+                  <b>Harris-Benedict equation </b>to estimate your Calorie
+                  needs. The Total Daily Energy Expenditure base on your goal
+                  and activity level to determine the needed calories and amcro
+                  nutrients per day. We also make some rough macronutrient
+                  suggestions.
                 </Typography>
               </Box>
             </Typography>
@@ -1761,7 +1761,7 @@ function MealPlanTest() {
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
                 >
-                  <Typography> I want to....</Typography>
+                  <Typography sx={{ mt: 1.2 }}> I want to....</Typography>
                 </Grid>{" "}
                 <Grid
                   xs={4}
@@ -1800,7 +1800,7 @@ function MealPlanTest() {
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
                 >
-                  <Typography>Gender</Typography>
+                  <Typography sx={{ mt: 1.2 }}>Gender</Typography>
                 </Grid>
                 <Grid
                   xs={4}
@@ -1838,7 +1838,7 @@ function MealPlanTest() {
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
                 >
-                  <Typography sx={{ mt: "15%" }}>Height</Typography>
+                  <Typography sx={{ mt: "15%" }}>Height (in kg)</Typography>
                 </Grid>
                 <Grid
                   xs={4}
@@ -1850,7 +1850,6 @@ function MealPlanTest() {
                   <TextField
                     id="height"
                     name="height"
-                    label="Height"
                     size="small"
                     fullWidth
                     margin="dense"
@@ -1870,7 +1869,7 @@ function MealPlanTest() {
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
                 >
-                  <Typography> Weight</Typography>
+                  <Typography sx={{ mt: 2 }}> Weight (in cm)</Typography>
                 </Grid>
                 <Grid
                   xs={4}
@@ -1882,7 +1881,6 @@ function MealPlanTest() {
                   <TextField
                     id="weight"
                     name="weight"
-                    label="Weight"
                     size="small"
                     fullWidth
                     margin="dense"
@@ -1903,7 +1901,7 @@ function MealPlanTest() {
                   sx={{ ml: "8%" }}
                 >
                   {" "}
-                  <Typography> Age</Typography>
+                  <Typography sx={{ mt: 2 }}> Age</Typography>
                 </Grid>
                 <Grid
                   xs={4}
@@ -1915,7 +1913,6 @@ function MealPlanTest() {
                   <TextField
                     id="age"
                     name="age"
-                    label="Age"
                     fullWidth
                     size="small"
                     margin="dense"
@@ -1936,7 +1933,7 @@ function MealPlanTest() {
                   sx={{ ml: "8%" }}
                 >
                   {" "}
-                  <Typography> Activity Level</Typography>
+                  <Typography sx={{ mt: 1 }}> Activity Level</Typography>
                 </Grid>
                 <Grid
                   xs={4}

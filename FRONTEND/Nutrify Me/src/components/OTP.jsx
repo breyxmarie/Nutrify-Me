@@ -103,7 +103,15 @@ function OTP() {
             src="/images/transparentLogo.png"
             style={{ maxWidth: "50%", maxHeight: "50%" }}
           />{" "}
-          <Box sx={{ background: "#DEEBD6", py: 3, px: 2, mb: 2 }}>
+          <Box
+            sx={{
+              background: "#DEEBD6",
+              py: 3,
+              px: 2,
+              mb: 2,
+              color: "#000000",
+            }}
+          >
             We’ve sent a verification code to your email -{" "}
             {location.state.email}
           </Box>
@@ -141,7 +149,7 @@ function OTP() {
               }}
               onClick={() => sendEmail(forms)}
             >
-              RESEND OTP
+              RESEND VERIFICATION CODE
             </Button>
             <br />
             <br />

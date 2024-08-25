@@ -21,6 +21,7 @@ import "react-international-phone/style.css";
 import emailjs from "@emailjs/browser";
 import ColorContext from "./ColorContext"; // Import the context
 import ImageContext from "./ImageContext";
+import { ToastContainer, toast } from "react-toastify";
 
 function UserFooter() {
   const { logo, setLogo } = useContext(ImageContext);
@@ -49,6 +50,7 @@ function UserFooter() {
       .then(
         () => {
           console.log("SUCCESS!");
+          toast("Message Sent!");
         },
         (error) => {
           console.log("FAILED...", error.text);
@@ -88,6 +90,7 @@ function UserFooter() {
         className="container"
         style={{ background: primaryColor, color: "#ffffff", padding: 20 }}
       >
+        <ToastContainer />
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <Box
@@ -123,7 +126,7 @@ function UserFooter() {
           >
             TELEMEDICINE <br />
             <Link
-              to="/contact"
+              to="/telemedicine-home"
               style={{
                 color: "#ffffff",
               }}
@@ -132,7 +135,7 @@ function UserFooter() {
             </Link>
             <br />
             <Link
-              to="/about"
+              to="/telemedicine-home"
               style={{
                 color: "#ffffff",
               }}
@@ -141,7 +144,7 @@ function UserFooter() {
             </Link>
             <br />
             <Link
-              to="/contact"
+              to="/telemedicine-meet-us"
               style={{
                 color: "#ffffff",
               }}
@@ -149,19 +152,10 @@ function UserFooter() {
               Meet Us
             </Link>
             <br />
-            <Link
-              to="/about"
-              style={{
-                color: "#ffffff",
-              }}
-            >
-              Services
-            </Link>
-            <br />
             <br />
             E-COMMERCE <br />
             <Link
-              to="/contact"
+              to="/meal-plan-shop-home"
               style={{
                 color: "#ffffff",
               }}
@@ -170,7 +164,7 @@ function UserFooter() {
             </Link>
             <br />
             <Link
-              to="/about"
+              to="/meal-plan-shop-meal-plans"
               style={{
                 color: "#ffffff",
               }}
@@ -179,18 +173,27 @@ function UserFooter() {
             </Link>
             <br />
             <Link
-              to="/contact"
+              to="/meal-plan-shop-request"
               style={{
                 color: "#ffffff",
               }}
             >
-              Meal Plan History
+              Request Orders
+            </Link>
+            <br />
+            <Link
+              to="/meal-plan-shop-track-orders"
+              style={{
+                color: "#ffffff",
+              }}
+            >
+              Track Orders
             </Link>
           </Grid>
           <Grid item xs={2} style={{ textAlign: "left" }}>
             MEAL PLAN GENERATOR <br />
             <Link
-              to="/contact"
+              to="/meal-plan-generator-consent"
               style={{
                 color: "#ffffff",
               }}
@@ -199,7 +202,7 @@ function UserFooter() {
             </Link>
             <br />
             <Link
-              to="/contact"
+              to="/meal-plan-generator-history"
               style={{
                 color: "#ffffff",
               }}
@@ -212,7 +215,7 @@ function UserFooter() {
             <br />
             <br />
             <Link
-              to="/contact"
+              to="/food-journal-home"
               style={{
                 color: "#ffffff",
               }}
@@ -221,7 +224,7 @@ function UserFooter() {
             </Link>
             <br />
             <Link
-              to="/contact"
+              to="/food-journal-progress-report"
               style={{
                 color: "#ffffff",
               }}
@@ -294,6 +297,11 @@ function UserFooter() {
                   fontWeight: "bold",
                   borderRadius: 6,
                   mt: 2,
+                  "&:hover": {
+                    backgroundColor: "#E66253 ",
+                    color: "#ffffff",
+                    border: 1,
+                  },
                 }}
                 onClick={sendEmail}
               >
