@@ -223,14 +223,28 @@ function Profiling() {
                   <center>
                     {/* <img src={item.image} width="40%" height="40%" /> */}
                   </center>
-                  <Typography
+
+                  <Button
+                    onClick={() => handleHypertensionClick(item)}
                     sx={{
-                      color: "#000000",
-                      border: 1,
+                      borderRadius: 4,
+                      background: "#E66253",
+                      color: "#ffffff",
+                      ml: 2,
+                      height: "100%",
+                      px: 2,
+                      py: 1,
+                      fontSize: "15px",
+                      "&:hover": {
+                        backgroundColor: "#ffffff",
+                        color: "#E66253",
+                        border: 1,
+                      },
                     }}
                   >
-                    {item} <br />
-                  </Typography>
+                    {" "}
+                    {item}{" "}
+                  </Button>
                 </div>
               </Grid>
             ))}
