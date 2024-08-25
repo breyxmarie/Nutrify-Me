@@ -314,7 +314,7 @@ function SellerCreateMealPlan() {
     // try {
     //   AxiosInstance.post(`shopmealplan/`, {
     //     name: tempType,
-    //     image: "http://127.0.0.1:8000/Photos/food.png",
+    //     image: "https://nightxperson.pythonanywhere.com/Photos/food.png",
     //     description: "random",
     //     start_week: currentWeekStart,
     //     end_week: currentWeekEnd,
@@ -361,7 +361,8 @@ function SellerCreateMealPlan() {
           // console.log(value, currentWeekStart, currentWeekEnd);
           AxiosInstance.post(`shopmealplan/`, {
             name: data.mealtype,
-            image: "http://127.0.0.1:8000/Photos/" + response.data,
+            image:
+              "https://nightxperson.pythonanywhere.com/Photos/" + response.data,
             description: data.description,
             start_week: currentWeekStart,
             end_week: currentWeekEnd,
@@ -551,7 +552,8 @@ function SellerCreateMealPlan() {
           protein: data.protein,
           carbs: data.carbs,
           food: data.name,
-          image: "http://127.0.0.1:8000/Photos/" + response.data,
+          image:
+            "https://nightxperson.pythonanywhere.com/Photos/" + response.data,
         };
 
         setTempMeal(updateMeal(day, tempTypeForMeal, updatedMealInfo));
@@ -668,7 +670,7 @@ function SellerCreateMealPlan() {
     //         protein: data.protein,
     //         carbs: data.carbs,
     //         food: data.name,
-    //         image: "http://127.0.0.1:8000/Photos/" + response.data,
+    //         image: "https://nightxperson.pythonanywhere.com/Photos/" + response.data,
     //         day: "Monday",
     //         //image: data.type,
     //       }).then((res) => {

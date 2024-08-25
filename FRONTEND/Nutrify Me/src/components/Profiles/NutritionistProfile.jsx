@@ -529,7 +529,7 @@ function NutritionistProfile() {
           last_name: data.lastname,
           privilege: "User",
           email: loggedInUser.email,
-          image: "http://127.0.0.1:8000/Photos/" + fileName,
+          image: "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
           active: 1,
         }).then((res) => {
           console.log(res, res.data);

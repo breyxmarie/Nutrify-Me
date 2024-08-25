@@ -152,7 +152,7 @@ function HomePage() {
         last_name: data.last_name,
         privilege: "Nutritionist",
         email: data.email,
-        image: "http://127.0.0.1:8000/Photos/profile.png",
+        image: "https://nightxperson.pythonanywhere.com/Photos/profile.png",
         active: 1,
       }).then((res) => {
         console.log(res);
@@ -167,7 +167,7 @@ function HomePage() {
             license_id: data.license_id,
             schedule_day: [],
             schedule_time: [],
-            image: "http://127.0.0.1:8000/Photos/profile.png",
+            image: "https://nightxperson.pythonanywhere.com/Photos/profile.png",
             license_pic: data.license_pic,
           }).then((res) => {
             console.log(res);

@@ -44,7 +44,9 @@ function Customization() {
           },
         });
         console.log(response.data); // Handle successful response
-        setLogo("http://127.0.0.1:8000/Photos/" + response.data);
+        setLogo(
+          "https://nightxperson.pythonanywhere.com/Photos/" + response.data
+        );
       } catch (error) {
         console.error("Error uploading file:", error); // Handle errors
       }

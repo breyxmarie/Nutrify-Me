@@ -101,7 +101,9 @@ function RegistrationNutritionist() {
           password: data.password,
           first_name: data.first_name,
           last_name: data.last_name,
-          license_pic: "http://127.0.0.1:8000/Photos/license/" + uploadedPhoto,
+          license_pic:
+            "https://nightxperson.pythonanywhere.com/Photos/license/" +
+            uploadedPhoto,
           email: data.email,
           phone: data.phone,
           license_id: data.license_id,

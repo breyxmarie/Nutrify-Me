@@ -132,7 +132,7 @@ function Registration() {
             last_name: data.last_name,
             privilege: "User",
             email: data.email,
-            image: "http://127.0.0.1:8000/Photos/profile.png",
+            image: "https://nightxperson.pythonanywhere.com/Photos/profile.png",
             active: true,
           }).then((res) => {
             console.log(res, res.data);
