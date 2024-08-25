@@ -195,7 +195,7 @@ function Profiling() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "40px",
+        marginTop: "10px",
         fontFamily: "Poppins",
       }}
     >
@@ -206,13 +206,13 @@ function Profiling() {
       {}
       {haveHypertension === null ? (
         <>
-          <Typography sx={{ fotnWeight: "bold", fontSize: "1em" }}>
+          <Typography sx={{ fotnWeight: "bold", fontSize: "1.5em" }}>
             Do you Have Hypertension?
           </Typography>
 
-          <Grid container spacing={2} sx={{ mx: "25%" }}>
+          <Grid container spacing={2} sx={{ mx: "45%" }}>
             {hypertensionChoices.map((item, index) => (
-              <Grid item xs={4} key={index}>
+              <Grid item xs={3} key={index}>
                 <div
                   key={index}
                   onClick={() => handleHypertensionClick(item)}
