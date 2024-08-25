@@ -495,7 +495,7 @@ function UserProfile() {
                 privilege: "User",
                 email: loggedInUser.email,
                 image:
-                  "https://nightxperson.pythonanywhere.com/Photos/ " + fileName,
+                  "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
                 active: 1,
               }).then((res) => {
                 //  console.log(res, res.data);
