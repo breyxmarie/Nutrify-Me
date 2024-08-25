@@ -89,7 +89,7 @@ function UserProfile() {
     let usernameFinal = data.username;
 
     if (data.username === loggedInUser.username) {
-      //console.log("same");
+      console.log("same");
 
       try {
         console.log(fileName);
@@ -668,7 +668,7 @@ function UserProfile() {
     GetData();
     setProfileDiv(
       <>
-        <button onClick={click}>click</button>
+        {/* <button onClick={click}>click</button> */}
         <form onSubmit={handleSubmit(onSubmitHandler)}>
           <Grid container spacing={2} sx={{ my: 3 }}>
             <Grid xs={10} sx={{ mx: "30%" }}>
