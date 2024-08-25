@@ -210,9 +210,9 @@ function Profiling() {
             Do you Have Hypertension?
           </Typography>
 
-          <Grid container spacing={2} sx={{ mx: "35%", mr: "15%" }}>
+          <Grid container spacing={2} sx={{ mx: "35%", mr: "20%" }}>
             {hypertensionChoices.map((item, index) => (
-              <Grid item xs={2} key={index}>
+              <Grid item xs={1.5} key={index}>
                 <div
                   key={index}
                   onClick={() => handleHypertensionClick(item)}
