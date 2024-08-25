@@ -210,7 +210,7 @@ function Profiling() {
             Do you Have Hypertension?
           </Typography>
 
-          <Grid container spacing={2} sx={{ mx: "35%", mr: "18%", mt: "2%" }}>
+          <Grid container spacing={2} sx={{ mx: "35%", mr: "16%", mt: "2%" }}>
             {hypertensionChoices.map((item, index) => (
               <Grid item xs={1.5} key={index}>
                 <div
