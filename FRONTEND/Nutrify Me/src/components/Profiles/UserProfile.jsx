@@ -81,7 +81,7 @@ function UserProfile() {
             email: loggedInUser.email,
             image: loggedInUser.image,
           }).then((res) => {
-            //  console.log(res, res.data);
+            console.log(res, res.data);
             // navigate("/Profiling", {
             //   state: { email: data.email, name: data.first_name },
             // });
