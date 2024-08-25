@@ -210,7 +210,7 @@ function Profiling() {
 
           <Grid container spacing={2}>
             {hypertensionChoices.map((item, index) => (
-              <Grid item xs={6} sm={4} md={4} key={index} sx={{ mx: "15%" }}>
+              <Grid item xs={4} key={index} sx={{ mx: "15%" }}>
                 <div
                   key={index}
                   onClick={() => handleHypertensionClick(item)}
