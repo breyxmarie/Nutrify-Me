@@ -64,7 +64,7 @@ function Profiling() {
     gender: yup.string().required("Gender is Required"),
     common_sys: yup.string().required("Systolic is Required"),
     common_dia: yup.string().required("Diastolic is Required"),
-    hypertension: yup.string().required("Do you have hypertension is Required"),
+    // hypertension: yup.string().required("Do you have hypertension is Required"),
     dateofBP: yup.string().required("Date is Required"),
     takingMeds: yup.string().required("Taking any meds is Required"),
     targetCalories: yup.string().required("Target Calories is Required"),
@@ -206,7 +206,7 @@ function Profiling() {
       {}
       {haveHypertension === null ? (
         <>
-          {" "}
+          Do you Have Hypertension?
           {hypertensionChoices.map((item, index) => (
             <Grid item xs={6} sm={4} md={4} key={index}>
               <div
@@ -340,7 +340,7 @@ function Profiling() {
                   {errors.common_dia?.message}
                 </Typography>
 
-                <Typography textAlign="left" sx={{ color: "#000000" }}>
+                {/* <Typography textAlign="left" sx={{ color: "#000000" }}>
                   Do You Have Hypertension?
                 </Typography>
                 <TextField
@@ -355,7 +355,7 @@ function Profiling() {
                 />
                 <Typography variant="inherit" color="textSecondary">
                   {errors.hypertension?.message}
-                </Typography>
+                </Typography> */}
 
                 <Typography textAlign="left" sx={{ color: "#000000" }}>
                   When were you diagnose with Hypertension?
