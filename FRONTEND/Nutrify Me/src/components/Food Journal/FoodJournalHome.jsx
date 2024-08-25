@@ -3200,7 +3200,7 @@ function FoodJournalHome() {
                       justifyContent="flex-start"
                     >
                       <center> Journal Entry</center>
-                      Journal Entry
+
                       <br />
                       <TextField
                         id="journal_entry"
@@ -3221,6 +3221,12 @@ function FoodJournalHome() {
                         // value={idToCall}
                         // onChange={(e) => setIdToCall(e.target.value)}
                       />
+
+                      <br />
+                      <br />
+
+                      <br />
+
                       <Typography
                         sx={{ color: "#ffffff", fontWeight: "bold", my: 2 }}
                       >
@@ -3271,6 +3277,7 @@ function FoodJournalHome() {
                           />
                         </Grid>
                       </Grid>
+
                       {/* Meal Plan: <br />
                       <Select
                         labelId="demo-simple-select-filled-label"

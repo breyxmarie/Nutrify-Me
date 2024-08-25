@@ -83,7 +83,7 @@ function UserFooter() {
   const onSubmitHandler = (data) => {};
 
   return (
-    <footer className="footer" style={{ width: "100vw" }}>
+    <footer className="footer" style={{ width: "100vw", marginTop: "5%" }}>
       <div
         className="container"
         style={{ background: primaryColor, color: "#ffffff", padding: 20 }}

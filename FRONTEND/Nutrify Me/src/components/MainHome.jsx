@@ -275,8 +275,8 @@ function MainHome() {
                 >
                   <img
                     src="/images/HomeImage.png"
-                    width="250px"
-                    height="250px"
+                    width="50%"
+                    height="40%"
                   ></img>
                 </Grid>
                 <Grid xs={4} sx={{ m: "10%" }}>
