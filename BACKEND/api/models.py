@@ -88,7 +88,7 @@ class ShopMealPlan(models.Model):
     name = models.CharField(max_length=1000)
     image = models.CharField(max_length=3000)
     # image = models.ImageField(blank=True, null=True, upload_to='Photos/meal_plan')
-    description= models.CharField(max_length=200)
+    description= models.CharField(max_length=2000)
     start_week = models.DateField(auto_now=False)
     end_week = models.DateField(auto_now=False)
     price = models.IntegerField()

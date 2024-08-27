@@ -120,6 +120,7 @@ function MainUserNavbar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{ color: "#E66253", border: 2 }}
             >
               <MenuIcon />
             </IconButton>
@@ -139,7 +140,12 @@ function MainUserNavbar() {
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none", color: "#000000" },
+                display: {
+                  xs: "block",
+                  md: "none",
+                  color: "#000000",
+                  border: 2,
+                },
               }}
             >
               {pages.map(
@@ -152,6 +158,7 @@ function MainUserNavbar() {
                     component={Link}
                     to={page.links}
                     selected={page.links === path}
+                    sx={{ color: "#000000" }}
                   >
                     <Typography textAlign="center">{page.names}</Typography>
                   </MenuItem>
@@ -187,7 +194,7 @@ function MainUserNavbar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 7,
-              mx: 9,
+              mx: "2%",
             }}
           >
             {pages.map((page) => (

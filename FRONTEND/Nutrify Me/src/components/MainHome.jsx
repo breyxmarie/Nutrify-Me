@@ -122,7 +122,7 @@ function MainHome() {
           {" "}
           {/* Grid of items */}
           <Item>
-            <img src="/images/diagnostic 1.png" width="170px" height="170px" />
+            <img src="/images/diagnostic 1.png" width="50%" height="50%" />
             <center>
               <h2
                 style={{

@@ -166,7 +166,7 @@ function MealPlanShopHome() {
         >
           MEAL PLANS
         </Typography>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ mb: 8 }}>
           {console.log(shopMealPlan)}
           {shopMealPlan === null ? (
             <>
@@ -292,9 +292,16 @@ function MealPlanShopHome() {
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={1}>
-            <button onClick={handlePrevC} style={{ marginTop: "80%" }}>
-              <img src="/images/left arrow.png" width="30px" height="30px" />
-            </button>
+            <Button
+              onClick={handlePrevC}
+              style={{ marginTop: "60%", backgroundColor: "#ffffff" }}
+            >
+              <img
+                src="/images/left arrow.png"
+                max-width="100%"
+                height="200%"
+              />
+            </Button>
           </Grid>
           <Grid item xs={10}>
             <Slider
@@ -316,15 +323,15 @@ function MealPlanShopHome() {
                       border: 3,
                       borderColor: "#898246",
                       borderRadius: 3,
-                      ml: "230px",
-                      mr: "230px",
+                      ml: "10%",
+                      mr: "10%",
                     }}
                   >
                     <Grid>
                       <img
                         src={item.image}
-                        width="140"
-                        height="140"
+                        width="10%"
+                        height="10%"
                         style={{ marginLeft: 10 }}
                       />
                     </Grid>
@@ -348,12 +355,16 @@ function MealPlanShopHome() {
           <Grid item xs={1}>
             {" "}
             {/* Button container (adjust width as needed) */}
-            <button
+            <Button
               onClick={handleNextC}
-              style={{ marginTop: "70%", background: "#ffffff" }}
+              sx={{ marginTop: "60%", background: "#ffffff" }}
             >
-              <img src="/images/right arrow.png" width="30px" height="30px" />
-            </button>
+              <img
+                src="/images/right arrow.png"
+                max-width="100%"
+                height="100%"
+              />
+            </Button>
           </Grid>
         </Grid>
 

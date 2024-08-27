@@ -68,6 +68,7 @@ function MealPlanShopNavBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{ color: "#E66253", border: 2 }}
             >
               <MenuIcon />
             </IconButton>
