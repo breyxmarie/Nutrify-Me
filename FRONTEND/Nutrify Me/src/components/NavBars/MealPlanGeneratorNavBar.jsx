@@ -73,7 +73,12 @@ function MealPlanGeneratorNavBar() {
       onUpdate={() => window.scrollTo(0, 0)}
       position=""
       className="w-full"
-      style={{ top: "115px", height: "0px", width: "100vw" }}
+      style={{
+        top: "115px",
+        height: "0px",
+        width: "100vw",
+        marginBottom: "8%",
+      }}
     >
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
         <Toolbar disableGutters>

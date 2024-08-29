@@ -3299,6 +3299,7 @@ function FoodJournalHome() {
                         <br />
                         <center>
                           <Button
+                            type="submit"
                             sx={{
                               fontWeight: "bold",
                               background: "#ffffff",

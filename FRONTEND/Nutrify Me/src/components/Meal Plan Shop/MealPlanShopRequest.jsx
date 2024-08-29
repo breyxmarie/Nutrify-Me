@@ -242,7 +242,7 @@ function MealPlanShopRequest() {
                   <Grid item xs={3} sm={4} md={6} key={index}>
                     <center>
                       <Box>
-                        <img src={items?.details.recipe.image} width="40%" />
+                        <img src={items?.image} width="40%" />
                         <br />
                         {items.Meal}
                         <br />
