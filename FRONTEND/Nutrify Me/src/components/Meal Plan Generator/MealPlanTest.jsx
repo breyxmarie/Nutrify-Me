@@ -2137,7 +2137,7 @@ function MealPlanTest() {
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
                 >
-                  <Typography sx={{ mt: "15%" }}>Height (in kg)</Typography>
+                  <Typography sx={{ mt: "15%" }}>Height (in cm)</Typography>
                 </Grid>
                 <Grid
                   xs={4}
@@ -2168,7 +2168,7 @@ function MealPlanTest() {
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
                 >
-                  <Typography sx={{ mt: 2 }}> Weight (in cm)</Typography>
+                  <Typography sx={{ mt: 2 }}> Weight (in kg)</Typography>
                 </Grid>
                 <Grid
                   xs={4}

@@ -40,10 +40,9 @@ function ForgetPassword() {
     //   publicKey: "YOUR_PUBLIC_KEY",
     // })
 
-    console.log(forms);
     emailjs
-      .send("service_noi5des", "template_7z5u07k", forms, {
-        publicKey: "0EeKPcuAJ_JJUjZ4w",
+      .send("service_wg6c081", "template_6kdeecp", forms, {
+        publicKey: "Edy32nqIcGC7RcJ0z",
       })
       .then(
         () => {
@@ -84,12 +83,12 @@ function ForgetPassword() {
   const [userData, setUserData] = useState();
   const GetData = async () => {
     await AxiosInstance.get(`user/`).then((res) => {
-      {
-        res.data.map((item, index) =>
-          console.log(item.username, item.password)
-        );
-      }
-      console.log(res.data);
+      // {
+      //   res.data.map((item, index) =>
+      //     console.log(item.username, item.password)
+      //   );
+      // }
+      // console.log(res.data);
       setUserData(res.data);
     });
   };
@@ -150,7 +149,6 @@ function ForgetPassword() {
   });
 
   const onSubmitEmail = (data) => {
-    console.log(data);
     // if (parseInt(data.otp) === parseInt(location.state.otp)) {
     //   toast.success("hi");
     //   navigate("/Log-In?success=true");
@@ -221,7 +219,7 @@ function ForgetPassword() {
         />
 
         {validation}
-        {console.log(errors1.email?.message)}
+
         <Typography
           variant="inherit"
           color="textSecondary"
@@ -240,6 +238,7 @@ function ForgetPassword() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
       {/* {forgetDiv} */}
@@ -265,7 +264,7 @@ function ForgetPassword() {
         <button type="submit">SUBMIT</button>
       </form> */}
 
-      <div>
+      <Box sx={{ mx: "30%" }}>
         <Typography>
           Enter your e-mail for verification, we will send a 4-digit code to
           your e-mail.
@@ -291,10 +290,27 @@ function ForgetPassword() {
           >
             {errors1.email?.message}
           </Typography>
-
-          <button type="submit">CONTINUE</button>
+          <center>
+            <Button
+              type="submit"
+              sx={{
+                display: "block",
+                float: "center",
+                background: "#E66253",
+                fontSize: "13px",
+                mt: 2,
+                color: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                },
+              }}
+            >
+              CONTINUE
+            </Button>
+          </center>
         </form>
-      </div>
+      </Box>
     </div>
   );
 }

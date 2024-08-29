@@ -73,7 +73,7 @@ function ForgetPasswordNew() {
   const onSubmitHandler = (data) => {
     if (parseInt(data.otp) === parseInt(location.state.otp)) {
       toast.success("hi");
-      navigate("/Log-In?success=true");
+      // navigate("/Log-In?success=true");
     } else {
       // alert("Enter a valid OTP please");
     }
@@ -173,9 +173,10 @@ function ForgetPasswordNew() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
-      <div>
+      <Box sx={{ mx: "30%" }}>
         <Typography>
           Set the new password to your account to log-in and access all
           features.
@@ -201,10 +202,27 @@ function ForgetPasswordNew() {
           >
             {errors1.password?.message}
           </Typography>
+          <center>
+            <Button
+              type="submit"
+              sx={{
+                display: "block",
 
-          <button type="submit">CONTINUE</button>
+                background: "#E66253",
+                fontSize: "13px",
+                mt: 2,
+                color: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                },
+              }}
+            >
+              CONTINUE
+            </Button>
+          </center>
         </form>
-      </div>
+      </Box>
     </div>
   );
 }

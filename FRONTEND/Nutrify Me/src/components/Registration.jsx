@@ -524,7 +524,7 @@ function Registration() {
                 id="conpassword"
                 name="conpassword"
                 label="Confirm Password"
-                type="text"
+                type="password"
                 fullWidth
                 margin="dense"
                 {...register("conpassword")}

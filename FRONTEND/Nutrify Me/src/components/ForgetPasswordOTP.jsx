@@ -213,6 +213,7 @@ function ForgetPasswordOTP() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
       {/* {forgetDiv} */}
@@ -238,7 +239,7 @@ function ForgetPasswordOTP() {
         <button type="submit">SUBMIT</button>
       </form> */}
 
-      <div>
+      <Box sx={{ mx: "30%" }}>
         <Typography>
           We’ve sent a 4-digit code to your email - {location.state.email}
         </Typography>
@@ -261,10 +262,27 @@ function ForgetPasswordOTP() {
             color="textSecondary"
             id="error-message"
           ></Typography>
-
-          <button type="submit">SEND PIN</button>
+          <center>
+            <Button
+              type="submit"
+              sx={{
+                display: "block",
+                float: "center",
+                background: "#E66253",
+                fontSize: "13px",
+                mt: 2,
+                color: "#ffffff",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                },
+              }}
+            >
+              SEND PIN
+            </Button>
+          </center>
         </form>
-      </div>
+      </Box>
     </div>
   );
 }
