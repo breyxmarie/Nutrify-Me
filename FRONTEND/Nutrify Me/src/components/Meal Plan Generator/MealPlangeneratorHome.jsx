@@ -141,9 +141,9 @@ function MealPlangeneratorHome() {
               </Grid>
               <Grid xs={2}>
                 {" "}
-                <Typography>{item.name}</Typography>
-                <Typography>{item.date}</Typography>
-                <Button>Request To Order</Button>
+                <Typography sx={{ color: "#000000" }}>{item.name}</Typography>
+                <Typography sx={{ color: "#000000" }}>{item.date}</Typography>
+                {/* <Button>Request To Order</Button> */}
               </Grid>
             </Grid>
           </>

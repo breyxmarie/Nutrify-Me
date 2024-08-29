@@ -174,33 +174,39 @@ function MealPlanShopHome() {
             </>
           ) : (
             <>
-              {shopMealPlan.slice(0, 2).map((plan, index) => (
-                <Grid item xs={3} sm={4} md={6} key={index}>
-                  <img src={plan.image} width="20%" height="50%" />
-                  <Typography variant="body1">{plan.name}</Typography>
-                  <Typography variant="body1">{plan.description}</Typography>
-                  <Link
-                    to="/meal-plan-shop-meal-plans"
-                    style={{
-                      color: "#ffffff",
-                      textDecoration: "underline",
-                      fontSize: "20px",
-                    }}
-                  >
-                    <Button
-                      sx={{
-                        borderRadius: 4,
-                        background: "#D9D9D9",
-                        color: "#000000",
-                        px: 4,
-                        py: 1,
+              <Grid container={2} sx={{ mx: "5%" }}>
+                {shopMealPlan.slice(0, 2).map((plan, index) => (
+                  <Grid item xs={3} sm={4} md={6} key={index}>
+                    <img src={plan.image} width="20%" height="50%" />
+                    <Typography sx={{ fontWeight: "bold", fontSize: "1.5em" }}>
+                      {plan.name}
+                    </Typography>
+                    <Typography sx={{ mx: "20%" }}>
+                      {plan.description}
+                    </Typography>
+                    <Link
+                      to="/meal-plan-shop-meal-plans"
+                      style={{
+                        color: "#ffffff",
+                        textDecoration: "underline",
+                        fontSize: "20px",
                       }}
                     >
-                      ORDER NOW
-                    </Button>
-                  </Link>
-                </Grid>
-              ))}
+                      <Button
+                        sx={{
+                          borderRadius: 4,
+                          background: "#D9D9D9",
+                          color: "#000000",
+                          px: 4,
+                          py: 1,
+                        }}
+                      >
+                        ORDER NOW
+                      </Button>
+                    </Link>
+                  </Grid>
+                ))}
+              </Grid>
             </>
           )}
         </Grid>

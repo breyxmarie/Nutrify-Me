@@ -49,7 +49,7 @@ function MealPlanGeneratorConsent() {
         >
           CONSENT
         </Typography>
-        <p>
+        <p style={{ color: "#000000" }}>
           The purpose of this consent form is to inform you about the meal plan
           generator and to obtain your consent to use the provided information
           to create personalized meal plans. The meal plan generator aims to

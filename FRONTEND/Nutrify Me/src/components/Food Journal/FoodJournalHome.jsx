@@ -1796,6 +1796,12 @@ function FoodJournalHome() {
                 borderRadius: 3,
                 color: "#ffffff",
                 px: 5,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                  borderColor: "#E66253",
+                },
               }}
               onClick={handleOpen1}
             >
@@ -3110,6 +3116,12 @@ function FoodJournalHome() {
                 borderRadius: 3,
                 color: "#ffffff",
                 px: 5,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                  borderColor: "#E66253",
+                },
               }}
               onClick={handleOpen}
             >
@@ -3257,12 +3269,12 @@ function FoodJournalHome() {
                   </center>
                   <Grid container spacing={2} sx={{ m: 0 }}>
                     <Grid
-                      xs={3.8}
-                      sx={{ mx: 1, mt: 1 }}
+                      xs={6}
+                      sx={{ mx: 0, mt: 1 }}
                       display="flex"
                       justifyContent="flex-start"
                     >
-                      <Box sx={{ mx: "5%" }}>
+                      <Box sx={{ width: "80%" }}>
                         <center> Journal Entry</center>
 
                         <TextField
@@ -3276,7 +3288,7 @@ function FoodJournalHome() {
                           multiline
                           rows={6}
                           sx={{
-                            width: "200%",
+                            //  width: "150%",
                             mr: 2,
                             background: "#ffffff",
                             color: "#000000",
@@ -3284,6 +3296,25 @@ function FoodJournalHome() {
                           // value={idToCall}
                           // onChange={(e) => setIdToCall(e.target.value)}
                         />
+                        <br />
+                        <center>
+                          <Button
+                            sx={{
+                              fontWeight: "bold",
+                              background: "#ffffff",
+                              color: primaryColor,
+                              backgroundRadius: 10,
+                              "&:hover": {
+                                backgroundColor: " #E66253",
+                                color: "#ffffff",
+                                border: 1,
+                                borderColor: "#ffffff",
+                              },
+                            }}
+                          >
+                            SUBMIT
+                          </Button>
+                        </center>
                       </Box>
                       <br />
                       <br />
@@ -3307,7 +3338,7 @@ function FoodJournalHome() {
                         ))}
                       </Select> */}
                     </Grid>
-                    <Grid xs={7} sx={{ ml: 10 }}>
+                    <Grid xs={6} sx={{ ml: 0 }}>
                       <center>
                         <Typography
                           sx={{ fontWeight: "bold", fontSize: "1.5em", mt: 1 }}
@@ -4304,7 +4335,7 @@ function FoodJournalHome() {
                       </Box>
                     </Grid>
                   </Grid>
-                  <button
+                  {/* <button
                     style={{
                       background: "#ffffff",
                       color: primaryColor,
@@ -4313,7 +4344,7 @@ function FoodJournalHome() {
                     type="submit"
                   >
                     SUBMIT
-                  </button>
+                  </button> */}
                 </form>
               </Box>
             </Modal>
