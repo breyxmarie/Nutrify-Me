@@ -70,12 +70,12 @@ function FoodJournalHome() {
         )
       );
 
-      console.log(
-        res.data.filter(
-          (items) => items.date == day && items.user_id == loggedInUser.user_id
-        )
-        //[0].journal_id
-      );
+      // console.log(
+      //   res.data.filter(
+      //     (items) => items.date == day && items.user_id == loggedInUser.user_id
+      //   )
+      //   //[0].journal_id
+      // );
       // console.log( setTimeDiv
       //   res.data.filter(
       //     (item) => item.date == day && item.user_id == loggedInUser.user_id
@@ -2816,7 +2816,7 @@ function FoodJournalHome() {
                               <TextField
                                 id="dinner_food"
                                 name="dinner_food"
-                                defaultValue={foodEntry[3].food}
+                                defaultValue={foodEntry[3]?.food}
                                 fullWidth
                                 label="Food Eaten:"
                                 //    {...register("dinner_food")}
@@ -2833,7 +2833,7 @@ function FoodJournalHome() {
                               <TextField
                                 id="dinner_food"
                                 name="dinner_food"
-                                defaultValue={foodEntry[3].food}
+                                defaultValue={foodEntry[3]?.food}
                                 // value={
                                 //   dinnerFood === null
                                 //     ? foodEntry[3]?.food
