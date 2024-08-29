@@ -2009,6 +2009,7 @@ function MealPlanTest() {
         paddingBottom: "40px",
         marginTop: "90px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
       {divPhase === "calculator" ? (

@@ -28,6 +28,7 @@ function MealPlanGeneratorConsent() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
       {" "}
@@ -80,8 +81,13 @@ function MealPlanGeneratorConsent() {
           collection and use of your information as described.
         </p>
         <br />
-        <input type="checkbox" checked={isChecked} onChange={handleChange} />I
-        agree with terms and conditions.
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={handleChange}
+          style={{ color: "#000000" }}
+        />
+        I agree with terms and conditions.
         <br />
         <br />
         <Button
