@@ -28,9 +28,9 @@ function MealPlanHistory() {
       setMealData(
         res.data.filter((items) => items.user_id == loggedInUser.user_id)
       );
-      console.log(
-        res.data.filter((items) => items.user_id == loggedInUser.user_id)
-      );
+      // console.log(
+      //   res.data.filter((items) => items.user_id == loggedInUser.user_id)
+      // );
     });
   };
 
@@ -96,22 +96,22 @@ function MealPlanHistory() {
   }, []);
 
   const handleNextC = (index) => {
-    console.log("handleNextC called with index:", index);
+    //console.log("handleNextC called with index:", index);
     if (sliderRefs.current[index]) {
       console.log("Calling slickNext for slider:", sliderRefs.current[index]);
       sliderRefs.current[index].slickNext();
     } else {
-      console.error("Slider reference not found for index:", index);
+      //  console.error("Slider reference not found for index:", index);
     }
   };
 
   const handlePrevC = (index) => {
-    console.log("handlePrevC called with index:", index);
+    // console.log("handlePrevC called with index:", index);
     if (sliderRefs.current[index]) {
-      console.log("Calling slickPrev for slider:", sliderRefs.current[index]);
+      // console.log("Calling slickPrev for slider:", sliderRefs.current[index]);
       sliderRefs.current[index].slickPrev();
     } else {
-      console.error("Slider reference not found for index:", index);
+      // console.error("Slider reference not found for index:", index);
     }
   };
 
@@ -147,6 +147,7 @@ function MealPlanHistory() {
     //Pending
     //Approved
     //Disapproved
+
     try {
       AxiosInstance.post(`requestedmeals/`, {
         user_id: loggedInUser.user_id,
@@ -155,7 +156,7 @@ function MealPlanHistory() {
         status: "Pending",
         price: 0,
       }).then((res) => {
-        console.log(res, res.data);
+        //  console.log(res, res.data);
         toast.success("Request Sent");
       });
     } catch (error) {
@@ -194,22 +195,27 @@ function MealPlanHistory() {
                         {" "}
                         <Grid container spacing={2} sx={{ mx: 0 }}>
                           <Grid xs={6}>
-                            {console.log(item.meal)}
+                            {/* {console.log(item.meal)} */}
                             <img
                               src={
                                 item.meal[getRandomInRange(0, 4)].meals[
                                   getRandomInRange(0, 3)
-                                ].details.recipe.image
+                                ].image
                               }
                               width="100"
                               height="100"
                             />{" "}
+                            {console.log(
+                              item.meal[getRandomInRange(0, 4)].meals[
+                                getRandomInRange(0, 3)
+                              ].image
+                            )}
                             <br />
                             <img
                               src={
                                 item.meal[getRandomInRange(0, 4)].meals[
                                   getRandomInRange(0, 3)
-                                ].details.recipe.image
+                                ].image
                               }
                               width="100"
                               height="100"
@@ -221,7 +227,7 @@ function MealPlanHistory() {
                               src={
                                 item.meal[getRandomInRange(0, 4)].meals[
                                   getRandomInRange(0, 3)
-                                ].details.recipe.image
+                                ].image
                               }
                               width="100"
                               height="100"
@@ -231,7 +237,7 @@ function MealPlanHistory() {
                               src={
                                 item.meal[getRandomInRange(0, 4)].meals[
                                   getRandomInRange(0, 3)
-                                ].details.recipe.image
+                                ].image
                               }
                               width="100"
                               height="100"
@@ -345,7 +351,7 @@ function MealPlanHistory() {
                                           <Typography>{items1.Meal}</Typography>
                                           <center>
                                             <img
-                                              src={items1.details.recipe.image}
+                                              src={items1.image}
                                               width="100"
                                               height="100"
                                             />
@@ -471,7 +477,7 @@ function MealPlanHistory() {
                                         <Popup>
                                           Ingredients
                                           <img
-                                            src={items1.details.recipe.image}
+                                            src={items1.image}
                                             width="100"
                                             height="100"
                                           />

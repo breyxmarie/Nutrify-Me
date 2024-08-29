@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Error><Code>AuthorizationQueryParametersError</Code><Message>Error parsing the X-Amz-Credential parameter; the Credential is mal-formed; expecting "&lt;YOUR-AKID&gt;/YYYYMMDD/REGION/SERVICE/aws4_request".</Message><RequestId>3P378443MT6076PR</RequestId><HostId>PViFK2PCu2SqBHXR0ft4Gh0cakjWBuS46G51XNIxipvo65KwG4FU7Ioidgy9wr8iGqk7WnlJ9rA=</HostId></Error>

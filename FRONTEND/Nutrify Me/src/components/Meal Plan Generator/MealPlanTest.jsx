@@ -123,7 +123,7 @@ function MealPlanTest() {
   const handleCuisineClick = (item) => {
     // Handle click event for each slide item
     // Replace this with your desired logic (e.g., navigate, open modal)
-    console.log("Clicked item:", item);
+    // console.log("Clicked item:", item);
     const newSelectedCuisine = [...selectedCuisine]; // Create a copy
 
     if (newSelectedCuisine.includes(item)) {
@@ -140,12 +140,12 @@ function MealPlanTest() {
 
   const handleDietClick = (item) => {
     setSelectedDiet(item);
-    console.log(item);
+    // console.log(item);
   };
 
   const handleAllergensClick = (item) => {
     setSelectedAllergen(item);
-    console.log(item);
+    //  console.log(item);
   };
 
   //? calculator
@@ -320,7 +320,7 @@ function MealPlanTest() {
   const convertPromiseintoArray = (datas) => {
     datas.then((array) => {
       const retrieve = array; // This will print the resolved array
-      console.log(retrieve);
+      // console.log(retrieve);
 
       return retrieve;
     });
@@ -342,10 +342,10 @@ function MealPlanTest() {
     //   // Handle errors appropriately (e.g., return a default value or throw)
     // }
 
-    console.log(caloriesGoal);
+    // console.log(caloriesGoal);
     const cal = distribute(minCalories, maxCalories);
-    console.log(cal);
-    console.log("click");
+    // console.log(cal);
+    // console.log("click");
 
     // const datas = await getRecipesApi(
     //   `q=&dishType=main&mealType=dinner&calories=${cal.mindinner}-${cal.maxdinner}`
@@ -628,7 +628,7 @@ function MealPlanTest() {
     ) {
       if (selectedAllergen === "None") {
         if (selectedDiet === "High-Protein") {
-          console.log("no allergen and high protein");
+          // console.log("no allergen and high protein");
 
           const diet = selectedDiet.toLowerCase();
 
@@ -693,7 +693,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          console.log(cuisineFood);
+          // console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -712,9 +712,9 @@ function MealPlanTest() {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
                 if (items.length > 10) {
-                  console.log("has content");
+                  //    console.log("has content");
                 } else {
-                  console.log("no content");
+                  //   console.log("no content");
 
                   switch (index) {
                     case 0:
@@ -811,7 +811,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          console.log(cuisineFood);
+          //  console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&diet=low-sodium&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -830,9 +830,9 @@ function MealPlanTest() {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
                 if (items.length > 10) {
-                  console.log("has content");
+                  //    console.log("has content");
                 } else {
-                  console.log("no content");
+                  //    console.log("no content");
 
                   switch (index) {
                     case 0:
@@ -864,9 +864,9 @@ function MealPlanTest() {
           }
           setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
-          console.log("no allergen and high blood friendly");
+          // console.log("no allergen and high blood friendly");
         } else {
-          console.log("paleo vegetarian");
+          //  console.log("paleo vegetarian");
 
           const diet = selectedDiet.toLowerCase();
 
@@ -931,7 +931,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          console.log(cuisineFood);
+          //  console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -950,9 +950,9 @@ function MealPlanTest() {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
                 if (items.length > 10) {
-                  console.log("has content");
+                  //    console.log("has content");
                 } else {
-                  console.log("no content");
+                  //  console.log("no content");
 
                   switch (index) {
                     case 0:
@@ -987,7 +987,7 @@ function MealPlanTest() {
         }
       } else {
         if (selectedDiet === "High-Protein") {
-          console.log("allergen high protein");
+          //  console.log("allergen high protein");
 
           const diet = selectedDiet.toLowerCase();
           const allergen = selectedAllergen.toLowerCase();
@@ -1052,7 +1052,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          console.log(cuisineFood);
+          //   console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -1071,9 +1071,9 @@ function MealPlanTest() {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
                 if (items.length > 10) {
-                  console.log("has content");
+                  //     console.log("has content");
                 } else {
-                  console.log("no content");
+                  //   console.log("no content");
 
                   switch (index) {
                     case 0:
@@ -1106,7 +1106,7 @@ function MealPlanTest() {
           setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         } else if (selectedDiet === "High Blood Friendly") {
-          console.log("allergen and high blood friendly");
+          //   console.log("allergen and high blood friendly");
 
           const diet = selectedDiet.toLowerCase();
           const allergen = selectedAllergen.toLowerCase();
@@ -1171,7 +1171,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          console.log(cuisineFood);
+          // console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&diet=low-sodium&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -1190,9 +1190,9 @@ function MealPlanTest() {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
                 if (items.length > 10) {
-                  console.log("has content");
+                  //   console.log("has content");
                 } else {
-                  console.log("no content");
+                  //     console.log("no content");
 
                   switch (index) {
                     case 0:
@@ -1223,11 +1223,11 @@ function MealPlanTest() {
             );
           }
 
-          console.log(cuisineFood);
+          //  console.log(cuisineFood);
           setCuisineMeals(cuisineFood);
           setGeneratedMeal(randomizeFood(cuisineFood));
         } else {
-          console.log("paleo vegetarian");
+          //   console.log("paleo vegetarian");
 
           const diet = selectedDiet.toLowerCase();
           const allergen = selectedAllergen.toLowerCase();
@@ -1293,7 +1293,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          console.log(cuisineFood);
+          //  console.log(cuisineFood);
 
           let tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&health=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -1323,9 +1323,9 @@ function MealPlanTest() {
             cuisineFood.map((item) =>
               item.meals.map((items, index) => {
                 if (items.length > 10) {
-                  console.log("has content");
+                  //    console.log("has content");
                 } else {
-                  console.log("no content");
+                  //    console.log("no content");
 
                   switch (index) {
                     case 0:
@@ -1364,6 +1364,223 @@ function MealPlanTest() {
     }
   };
 
+  const getBlob = async (imageLink) => {
+    try {
+      const response = await axios.get(
+        `https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`,
+        {
+          responseType: "blob",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // mode: 'no-cors' // Uncomment if necessary for CORS issues
+        }
+      );
+
+      if (response.status === 200) {
+        const imageBlob = response.data;
+        //   console.log(imageBlob);
+        return imageBlob; // Return the image blob for further processing
+      } else {
+        throw new Error(`Error fetching image: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Error fetching image:", error);
+      throw error; // Re-throw the error for potential handling elsewhere
+    }
+    // fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // mode: "no-cors",
+    // })
+    //   .then((response) => response.blob())
+    //   .then((imageBlob) => {
+    //     // Handle the image blob
+    //     console.log(imageBlob);
+    //     return imageBlob;
+    //   });
+  };
+
+  function processResponseData(data) {
+    //    console.log(data);
+    const fileName = data;
+    //   console.log(fileName);
+  }
+
+  async function getImage(imageLink) {
+    //  console.log(imageLink);
+    // const response = await axios.get(
+    //   //`https://cors-anywhere.herokuapp.com/${BtempMeal.recipe.image}`,
+    //   BtempMeal.recipe.image,
+
+    //   {
+    //     responseType: "blob",
+    //   }
+    // );
+    // console.log(response);
+
+    // fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // mode: "no-cors",
+    // })
+    //   .then((response) => response.blob())
+    //   .then((imageBlob) => {
+    // Handle the image blob
+    // const blob = getBlob(imageLink);
+    // console.log(blob);
+    // const formData = new FormData();
+    // blob.then((result) => {
+    //   let imageFile = new File([result], "image.jpg", {
+    //     type: "image/jpeg",
+    //   });
+    //   console.log(imageFile);
+
+    //   formData.append("file", imageFile);
+
+    // });
+
+    // try {
+    //   AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }).then((res) => {
+    //     console.log(res.data);
+    //     // filename = res.data;
+    //     return res.data;
+    //     // console.log(filename, "hi");
+    //     //  meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // console.log(formData);
+
+    try {
+      const response = await axios.get(
+        `https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`,
+        { responseType: "blob" }
+      );
+      const imageBlob = response.data;
+
+      const formData = new FormData();
+      const imageFile = new File([imageBlob], "image.jpg", {
+        type: "image/jpeg",
+      });
+      formData.append("file", imageFile);
+
+      const res = await AxiosInstance.post("shopmealplan/savefile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      //  console.log(res.data);
+      return res.data; // Return the response data if needed
+    } catch (error) {
+      console.error(error);
+    }
+
+    // console.log(imageBlob);
+
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching image:", error);
+    // });
+
+    // console.log(response);
+    // const imageFile = new File([response], "image.jpg", {
+    //   type: "image/jpeg",
+    // });
+
+    // const formData = new FormData();
+    // formData.append("file", imageFile);
+    // try {
+    //   await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }).then((res) => {
+    //     console.log(res);
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    // fetch(`https://cors-anywhere.herokuapp.com/${imageLink}`, {
+    // fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // mode: "no-cors",
+    // })
+    //   .then((response) => response.blob())
+    //   .then((imageBlob) => {
+    //     // Handle the image blob
+    //     console.log(imageBlob);
+    //     //  const imageBlob = getBlob(imageLink);
+    //     //   console.log(imageBlob);
+    //     let imageFile = new File([imageBlob], "image.jpg", {
+    //       type: "image/jpeg",
+    //     });
+    //     console.log(imageFile);
+
+    //     const formData = new FormData();
+    //     formData.append("file", imageFile);
+    //     // try {
+    //     //   await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     //     headers: {
+    //     //       "Content-Type": "multipart/form-data",
+    //     //     },
+    //     //   }).then((res) => {
+    //     //     return processResponseData(res.data);
+    //     //     // console.log(res.data);
+    //     //     // const fileName = res.data;
+    //     //     // console.log(fileName);
+    //     //     // return fileName;
+    //     //   });
+    //     // } catch (error) {
+    //     //   console.log(error);
+    //     // }
+    //   });
+
+    // const res = await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+
+    // const fileName = res.data;
+    // return fileName;
+
+    // // })
+    // .catch((error) => {
+    //   console.error("Error fetching image:", error);
+    // });
+
+    //console.log(response);
+    // const imageFile = new File([response], "image.jpg", {
+    //   type: "image/jpeg",
+    // });
+
+    // const formData = new FormData();
+    // formData.append("file", imageFile);
+    // try {
+    //   await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }).then((res) => {
+    //     console.log(res);
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
+
   const randomizeFood = (cuisineFood) => {
     let mealPlan = [];
 
@@ -1379,7 +1596,35 @@ function MealPlanTest() {
           getRandomInRange(0, cuisineFood[tempNum].meals[0].length - 1)
         ];
       if (BtempMeal) {
-        meals.push({ Meal: "Breakfast", details: BtempMeal });
+        // let image = getImage(BtempMeal.recipe.image);
+        // console.log(getImage(BtempMeal.recipe.image));
+        // let fileName;
+
+        // console.log(fileName);
+
+        // try {
+        //   image.then((result) => {
+        //     console.log(result); // Output: "image_wnJ8DkF.jpg"
+        //     fileName = result;
+        //     meals.push({
+        //       Meal: "Breakfast",
+        //       details: BtempMeal,
+        //       image: "http://127.0.0.1:8000/Photos/" + result,
+        //     });
+        //   });
+        // } catch (error) {
+        //   meals.push({
+        //     Meal: "Breakfast",
+        //     details: BtempMeal,
+        //     image: "http://127.0.0.1:8000/Photos/image_Wfh8v0g.jpg",
+        //   });
+        // }
+
+        meals.push({
+          Meal: "Breakfast",
+          details: BtempMeal,
+          image: null,
+        });
       } else {
         // while (BtempMeal === undefined) {
         //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -1400,7 +1645,7 @@ function MealPlanTest() {
           getRandomInRange(0, cuisineFood[tempNum].meals[1].length - 1)
         ];
       if (LtempMeal) {
-        meals.push({ Meal: "Lunch", details: LtempMeal });
+        meals.push({ Meal: "Lunch", details: LtempMeal, image: null });
       } else {
         // while (LtempMeal === undefined) {
         //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -1421,7 +1666,7 @@ function MealPlanTest() {
           getRandomInRange(0, cuisineFood[tempNum].meals[2].length - 1)
         ];
       if (StempMeal) {
-        meals.push({ Meal: "Snack", details: StempMeal });
+        meals.push({ Meal: "Snack", details: StempMeal, image: null });
       } else {
         // while (StempMeal === undefined) {
         //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -1442,7 +1687,7 @@ function MealPlanTest() {
           getRandomInRange(0, cuisineFood[tempNum].meals[3].length - 1)
         ];
       if (DtempMeal) {
-        meals.push({ Meal: "Dinner", details: DtempMeal });
+        meals.push({ Meal: "Dinner", details: DtempMeal, image: null });
       } else {
         // while (DtempMeal === undefined) {
         //   tempNum = getRandomInRange(0, cuisineFood.length - 1);
@@ -1655,7 +1900,28 @@ function MealPlanTest() {
     setMealName();
   };
 
-  const saveMeal = () => {
+  const saveMeal = async () => {
+    for (let i = 0; i < 5; i++) {
+      for (let j = 0; j < generatedMeal[i].meals.length; j++) {
+        const meal = generatedMeal[i].meals[j];
+        const imageUrl = meal.details.recipe.image;
+        // console.log(imageUrl);
+        try {
+          const imageData = await getImage(imageUrl);
+          // console.log(imageData);
+          // console.log(imageData);
+          // imageData.then((result) => {
+          //   console.log(imageData);
+
+          // });
+          meal.image =
+            `https://nightxperson.pythonanywhere.com/Photos/` + imageData;
+          // Directly modify the 'image' property
+        } catch (error) {
+          console.error("Error fetching image:", error);
+        }
+      }
+    }
     try {
       AxiosInstance.post(`generatedmeal/`, {
         date: dayjs().format("YYYY-MM-DD"),
@@ -1674,7 +1940,7 @@ function MealPlanTest() {
       }).then((res) => {
         // navigate(`/`);
         handleClose();
-        console.log(res);
+        // console.log(res);
       });
     } catch (error) {
       console.log(error);
@@ -1682,7 +1948,39 @@ function MealPlanTest() {
   };
   //?
 
-  const regenerate = () => {
+  const regenerate = async () => {
+    // for (let i = 0; i < 5; i++) {
+    //   for (let j = 0; j < generatedMeal[i].meals.length; j++) {
+    //     const meal = generatedMeal[i].meals[j];
+    //     const imageUrl = meal.details.recipe.image;
+    //     console.log(imageUrl);
+    //     try {
+    //       const imageData = await getImage(
+    //         `http://127.0.0.1:8000/Photos/` + imageUrl
+    //       );
+    //       // console.log(imageData);
+    //       // console.log(imageData);
+    //       // imageData.then((result) => {
+    //       //   console.log(imageData);
+
+    //       // });
+    //       meal.image = imageData;
+    //       // Directly modify the 'image' property
+    //     } catch (error) {
+    //       console.error("Error fetching image:", error);
+    //     }
+    //   }
+
+    // generatedMeal[i].meals.map(
+    //   (item, index) => (
+    //     console.log(item.details.recipe.image),
+    //     getImage(item.details.recipe.image).then((result) => {
+    //       generatedMeal[i].meals[index].images = result;
+    //     })
+    //   )
+    // );
+    // }
+    // console.log(generatedMeal);
     setGeneratedMeal(randomizeFood(cuisineMeals));
   };
 
