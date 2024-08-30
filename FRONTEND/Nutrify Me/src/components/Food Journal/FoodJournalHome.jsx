@@ -291,7 +291,7 @@ function FoodJournalHome() {
   };
   const renderFooter = () => {
     return (
-      <div className="header row flex-middle" style={{ marginBottom: "100px" }}>
+      <div className="header row flex-middle" style={{ marginBottom: "2%" }}>
         <div className="col col-start">
           {/* <div className="icon" onClick={() => changeWeekHandle("prev")}>
             prev week
