@@ -126,7 +126,8 @@ const LalamoveApi = {
         //`${this.baseUrl}/v3/orders`,
 
         // `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
-        `https://thingproxy.freeboard.io/fetch/${this.baseUrl}/v3/quotations`,
+        // `https://thingproxy.freeboard.io/fetch/${this.baseUrl}/v3/quotations`,
+        ` https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${this.baseUrl}/v3/quotations`,
 
         //! watch out here for deployment baka mag kaerror
         body,

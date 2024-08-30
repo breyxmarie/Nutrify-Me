@@ -136,7 +136,7 @@ function MealPlanShopHome() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "5%",
+        marginTop: "8%",
         fontFamily: "Poppins",
         color: "#000000",
       }}

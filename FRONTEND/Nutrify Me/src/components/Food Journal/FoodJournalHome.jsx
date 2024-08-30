@@ -183,6 +183,9 @@ function FoodJournalHome() {
     }
   };
 
+  //selectedDate
+
+  //dayjs(selectedDate).format("YYYY-MM-DD")
   const onDateClickHandle = async (day, dayStr) => {
     setSelectedDate(day);
     getJournalData(dayjs(day).format("YYYY-MM-DD"));
@@ -369,7 +372,10 @@ function FoodJournalHome() {
 
   // * New Journal Entry
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    //dayjs(selectedDate).format("YYYY-MM-DD")
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   // * uodate
@@ -1400,7 +1406,7 @@ function FoodJournalHome() {
 
     try {
       AxiosInstance.post(`journalentry/`, {
-        date: dates,
+        date: dayjs(selectedDate).format("YYYY-MM-DD"),
         title: data.title,
         entry: data.journal_entry,
         systolic: data.systolic,
@@ -1468,6 +1474,25 @@ function FoodJournalHome() {
             journal_id: res.data.id,
           }).then((res) => {
             console.log(res, res.data);
+            getJournalData(dayjs().format("YYYY-MM-DD"));
+            setCaloriesBvalue(0);
+            setFatBvalue(0);
+            setProteinBvalue(0);
+            setCarbsBvalue(0);
+            setCaloriesLvalue(0);
+            setFatLvalue(0);
+            setProteinLvalue(0);
+            setCarbsLvalue(0);
+            setCaloriesSvalue(0);
+            setFatSvalue(0);
+            setProteinSvalue(0);
+            setCarbsSvalue(0);
+            setCaloriesDvalue(0);
+            setFatDvalue(0);
+            setProteinDvalue(0);
+            setCarbsDvalue(0);
+            reset();
+            handleClose();
           });
         } catch (error) {
           console.log(error.response);
@@ -1535,8 +1560,15 @@ function FoodJournalHome() {
     resolver: yupResolver(updateSchema),
   });
 
+  const [journalId, setJournalId] = useState();
+  const [foodEntries, setFoodEntries] = useState([]);
   const [open1, setOpen1] = React.useState(false);
-  const handleOpen1 = () => setOpen1(true);
+  const handleOpen1 = (id, date, entry) => {
+    setFoodEntries(entry);
+    setDates(date);
+    setJournalId(id);
+    setOpen1(true);
+  };
   const handleClose1 = () => {
     handleReset();
     setOpen1(false);
@@ -1552,6 +1584,7 @@ function FoodJournalHome() {
 
     try {
       AxiosInstance.put(`journalentry/`, {
+        journal_id: journalId,
         date: dates,
         title: data.title,
         entry: data.journal_entry,
@@ -1559,17 +1592,18 @@ function FoodJournalHome() {
         diastolic: data.diastolic,
         user_id: loggedInUser.user_id,
       }).then((res) => {
-        console.log(res.data.id);
+        console.log(res);
 
         try {
           AxiosInstance.put(`foodentry/`, {
+            foodentry_id: foodEntries[0].foodentry_id,
             type: "Breakfast",
             food: data.breakfast_food,
             calories: data.breakfast_calories,
             fat: data.breakfast_fat,
             protein: data.breakfast_protein,
             carbs: data.breakfast_carbs,
-            journal_id: res.data.id,
+            journal_id: journalId,
           }).then((res) => {
             console.log(res, res.data);
           });
@@ -1579,13 +1613,14 @@ function FoodJournalHome() {
 
         try {
           AxiosInstance.put(`foodentry/`, {
+            foodentry_id: foodEntries[1].foodentry_id,
             type: "Lunch",
             food: data.lunch_food,
             calories: data.lunch_calories,
             fat: data.lunch_fat,
             protein: data.lunch_protein,
             carbs: data.lunch_carbs,
-            journal_id: res.data.id,
+            journal_id: journalId,
           }).then((res) => {
             console.log(res, res.data);
           });
@@ -1595,13 +1630,14 @@ function FoodJournalHome() {
 
         try {
           AxiosInstance.put(`foodentry/`, {
+            foodentry_id: foodEntries[2].foodentry_id,
             type: "Snack",
             food: data.snack_food,
             calories: data.snack_calories,
             fat: data.snack_fat,
             protein: data.snack_protein,
             carbs: data.snack_carbs,
-            journal_id: res.data.id,
+            journal_id: journalId,
           }).then((res) => {
             console.log(res, res.data);
           });
@@ -1611,13 +1647,14 @@ function FoodJournalHome() {
 
         try {
           AxiosInstance.put(`foodentry/`, {
+            foodentry_id: foodEntries[3].foodentry_id,
             type: "Dinner",
             food: data.dinner_food,
             calories: data.dinner_calories,
             fat: data.dinner_fat,
             protein: data.dinner_protein,
             carbs: data.dinner_carbs,
-            journal_id: res.data.id,
+            journal_id: journalId,
           }).then((res) => {
             console.log(res, res.data);
           });
@@ -1783,7 +1820,6 @@ function FoodJournalHome() {
         )}
       </div> */}
 
-      {console.log(journalEntry)}
       {journalEntry.length > 0 && foodEntry.length > 0 ? (
         <Grid container spacing={2} sx={{ mt: 3 }}>
           <Grid xs={6}> </Grid>
@@ -1803,7 +1839,13 @@ function FoodJournalHome() {
                   borderColor: "#E66253",
                 },
               }}
-              onClick={handleOpen1}
+              onClick={() =>
+                handleOpen1(
+                  journalEntry[0].journal_id,
+                  journalEntry[0].date,
+                  foodEntry
+                )
+              }
             >
               View Journal Details
             </Button>
@@ -1878,9 +1920,9 @@ function FoodJournalHome() {
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                               <DatePicker
                                 sx={{ background: "#ffffff", width: "400%" }}
-                                onChange={(e) =>
-                                  setDates(Dayjs(e["$d"]).format("YYYY-MM-DD"))
-                                }
+                                // onChange={(e) =>
+                                //   setDates(Dayjs(e["$d"]).format("YYYY-MM-DD"))
+                                // }
                                 // value={Dayjs(journalEntry[0].date).format(
                                 //   "YYYY-MM-DD"
                                 // )}
@@ -1888,6 +1930,7 @@ function FoodJournalHome() {
                                 defaultValue={dayjs(
                                   new Date(journalEntry[0].date)
                                 )}
+                                disabled={true}
 
                                 // name="date_entry"
                                 // {...register("date_entry")}
@@ -2138,9 +2181,11 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("breakfast_fat")}
+                                      fullWidth
+                                      margin="dense"
+                                      {...register1("breakfast_fat")}
                                       value={
-                                        typeof fatBvalue === "number"
+                                        fatBvalue != 0
                                           ? fatBvalue
                                           : foodEntry[0]?.fat
                                       }
@@ -2193,9 +2238,9 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("breakfast_protein")}
+                                      {...register1("breakfast_protein")}
                                       value={
-                                        typeof proteinBvalue != 0
+                                        proteinBvalue != 0
                                           ? proteinBvalue
                                           : foodEntry[0]?.protein
 
@@ -2246,7 +2291,7 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("breakfast_carbs")}
+                                      {...register1("breakfast_carbs")}
                                       value={
                                         carbsBvalue != 0
                                           ? carbsBvalue
@@ -2290,7 +2335,7 @@ function FoodJournalHome() {
                                 name="lunch_food"
                                 margin="dense"
                                 defaultValue={foodEntry[1].food}
-                                {...register("lunch_food")}
+                                {...register1("lunch_food")}
                                 error={errors.lunch_food ? true : false}
                                 label="Food Eaten:"
                                 variant="filled"
@@ -2354,7 +2399,7 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("lunch_calories")}
+                                      {...register1("lunch_calories")}
                                       value={
                                         caloriesLvalue != 0
                                           ? caloriesLvalue
@@ -2405,7 +2450,7 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("lunch_fat")}
+                                      {...register1("lunch_fat")}
                                       value={
                                         fatLvalue != 0
                                           ? fatLvalue
@@ -2460,7 +2505,7 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("lunch_protein")}
+                                      {...register1("lunch_protein")}
                                       value={
                                         proteinLvalue != 0
                                           ? proteinLvalue
@@ -2511,7 +2556,7 @@ function FoodJournalHome() {
                                       step={1}
                                       max={1000}
                                       label=""
-                                      {...register("lunch_carbs")}
+                                      {...register1("lunch_carbs")}
                                       value={
                                         carbsLvalue != 0
                                           ? carbsLvalue
@@ -2621,7 +2666,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("snack_calories")}
+                                    {...register1("snack_calories")}
                                     value={
                                       caloriesSvalue != 0
                                         ? caloriesSvalue
@@ -2669,7 +2714,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("snack_fat")}
+                                    {...register1("snack_fat")}
                                     value={
                                       fatSvalue != 0
                                         ? fatSvalue
@@ -2724,7 +2769,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("snack_protein")}
+                                    {...register1("snack_protein")}
                                     value={
                                       proteinSvalue != 0
                                         ? proteinSvalue
@@ -2775,7 +2820,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("snack_carbs")}
+                                    {...register1("snack_carbs")}
                                     value={
                                       carbsSvalue != 0
                                         ? carbsSvalue
@@ -2841,7 +2886,7 @@ function FoodJournalHome() {
                                 // }
                                 //  onChange={(e) => setDinnerFood(e.target.value)}
                                 margin="dense"
-                                {...register("dinner_food")}
+                                {...register1("dinner_food")}
                                 error={errors.title ? true : false}
                                 label="Food Eaten:"
                                 variant="filled"
@@ -2906,7 +2951,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("dinner_calories")}
+                                    {...register1("dinner_calories")}
                                     value={
                                       caloriesDvalue != 0
                                         ? caloriesDvalue
@@ -2954,7 +2999,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("dinner_fat")}
+                                    {...register1("dinner_fat")}
                                     value={
                                       fatDvalue != 0
                                         ? fatDvalue
@@ -3009,7 +3054,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("dinner_protein")}
+                                    {...register1("dinner_protein")}
                                     value={
                                       proteinDvalue != 0
                                         ? proteinDvalue
@@ -3060,7 +3105,7 @@ function FoodJournalHome() {
                                     step={1}
                                     max={1000}
                                     label=""
-                                    {...register("dinner_carbs")}
+                                    {...register1("dinner_carbs")}
                                     value={
                                       carbsDvalue != 0
                                         ? carbsDvalue
@@ -3200,6 +3245,8 @@ function FoodJournalHome() {
                                 onChange={(e) =>
                                   setDates(Dayjs(e["$d"]).format("YYYY-MM-DD"))
                                 }
+                                defaultValue={dayjs(selectedDate)}
+                                disabled={true}
                                 // name="date_entry"
                                 // {...register("date_entry")}
                                 // error={errors.date_entry ? true : false}
@@ -3422,7 +3469,7 @@ function FoodJournalHome() {
                                     label=""
                                     fullWidth
                                     margin="dense"
-                                    {...register1("breakfast_calories")}
+                                    {...register("breakfast_calories")}
                                     // error={
                                     //   errors.breakfast_calorie ? true : false
                                     // }
@@ -3433,7 +3480,7 @@ function FoodJournalHome() {
                                     // }
 
                                     value={
-                                      caloriesBvalue === "number"
+                                      typeof caloriesBvalue === "number"
                                         ? caloriesBvalue
                                         : 0
                                     }
@@ -4430,12 +4477,12 @@ function FoodJournalHome() {
               </Grid>
             </Grid>
           </Box>
-          <Typography>{journalEntry[0]?.title}</Typography>
+          {/* <Typography>{journalEntry[0]?.title}</Typography>
           <Typography>{journalEntry[0]?.entry}</Typography>
-          <Typography>{journalEntry[0]?.date}</Typography>
+          <Typography>{journalEntry[0]?.date}</Typography> */}
 
           <br />
-          <Grid container spacing={2}>
+          {/* <Grid container spacing={2}>
             <Grid xs={6}>
               {" "}
               <Typography sx={{ fontSize: "30px" }}>
@@ -4449,7 +4496,7 @@ function FoodJournalHome() {
               <Typography>{journalEntry[0]?.date}</Typography>
               {dayjs(journalEntry[0]?.date).format("dddd, MMMM D, YYYY")};
             </Grid>
-          </Grid>
+          </Grid> */}
         </>
       ) : (
         <div>You haven't added any food entries yet.</div>
