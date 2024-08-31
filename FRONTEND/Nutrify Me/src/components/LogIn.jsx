@@ -147,17 +147,35 @@ function LogIn() {
             <center>
               <img
                 src="/images/transparentLogo.png"
-                style={{ maxWidth: "40%", maxHeight: "10%" }}
+                width="50%"
+                height="50%"
+                // style={{ maxWidth: "40%", maxHeight: "10%" }}
               />
 
               <Grid container spacing={2}>
-                <Grid xs={4}>
-                  <Typography sx={{ mt: "10%", ml: "30%" }}>
+                <Grid xs={2}>
+                  {/* <Typography sx={{ mt: "10%", ml: "30%" }}>
+                    Username
+                  </Typography> */}
+                </Grid>
+                <Grid xs={8}>
+                  <Typography
+                    sx={{
+                      mt: "0%",
+                      ml: "0%",
+                      fontWeight: "bold",
+
+                      fontSize: {
+                        xs: "0.8em", // For extra small screens
+                        sm: "0.8em", // For small screens
+                        md: "1.1em", // For medium screens
+                        lg: "1.1em", // For large screens
+                        xl: "1.5em", // For extra large screens
+                      },
+                    }}
+                  >
                     Username
                   </Typography>
-                </Grid>
-                <Grid xs={6}>
-                  {" "}
                   <TextField
                     size="small"
                     id="username"
@@ -175,12 +193,29 @@ function LogIn() {
               </Grid>
 
               <Grid container spacing={2} sx={{ mt: 2 }}>
-                <Grid xs={4}>
-                  <Typography sx={{ mt: "10%", ml: "30%" }}>
+                <Grid xs={2}>
+                  {/* <Typography sx={{ mt: "10%", ml: "30%" }}>
+                    Password
+                  </Typography> */}
+                </Grid>
+                <Grid xs={8}>
+                  <Typography
+                    sx={{
+                      mt: "0%",
+                      ml: "0%",
+                      fontWeight: "bold",
+
+                      fontSize: {
+                        xs: "0.8em", // For extra small screens
+                        sm: "0.8em", // For small screens
+                        md: "1.1em", // For medium screens
+                        lg: "1.1em", // For large screens
+                        xl: "1.5em", // For extra large screens
+                      },
+                    }}
+                  >
                     Password
                   </Typography>
-                </Grid>
-                <Grid xs={6}>
                   <TextField
                     size="small"
                     id="password"
@@ -200,22 +235,38 @@ function LogIn() {
 
               <br />
               <Grid container spacing={2}>
-                <Grid xs={3.5}></Grid>
-                <Grid xs={3}>
+                {/* <Grid xs={3.5}></Grid> */}
+                <Grid xs={6} sm={4} md={6}>
                   {" "}
-                  <Link to="/ForgetPassword">
-                    <a style={{ textDecoration: "underline" }}>
+                  <Link
+                    to="/ForgetPassword"
+                    style={{
+                      float: "right",
+                    }}
+                  >
+                    <a
+                      style={{
+                        textDecoration: "underline",
+                        fontSize: {
+                          xs: "1.5em", // For extra small screens
+                          sm: "2.0em", // For small screens
+                          md: "2.5em", // For medium screens
+                          lg: "3.0em", // For large screens
+                          xl: "3.5em", // For extra large screens
+                        },
+                      }}
+                    >
                       Forget Password
                     </a>
                   </Link>
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={6} sm={4} md={3}>
                   {" "}
                   <Link to="/Register">
                     <a style={{ textDecoration: "underline" }}>Register</a>
                   </Link>
                 </Grid>
-                <Grid xs={3}></Grid>
+                {/* <Grid xs={3}></Grid> */}
               </Grid>
               {logIn && <Link to={navigate}>Sign In Successful!</Link>}
               <br />
@@ -224,9 +275,18 @@ function LogIn() {
                 sx={{
                   background: "#E66253",
                   color: "#ffffff",
-                  fontSize: 16,
+                  mt: "0%",
+                  ml: "0%",
+
+                  fontSize: {
+                    xs: "0.8em", // For extra small screens
+                    sm: "0.8em", // For small screens
+                    md: "1.1em", // For medium screens
+                    lg: "1.1em", // For large screens
+                    xl: "1.5em", // For extra large screens
+                  },
                   fontWeight: "bold",
-                  px: 10,
+                  px: "5%",
                   "&:hover": {
                     backgroundColor: "#ffffff",
                     color: "#E66253",

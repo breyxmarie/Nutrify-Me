@@ -290,129 +290,130 @@ function Registration() {
         style={{ maxWidth: "15%", maxHeight: "10%" }}
       />
       <form onSubmit={handleSubmit(onSubmitHandler)}>
-        <Grid container spacing={2}>
-          <Grid xs={2}></Grid>
-          <Grid xs={4}>
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Full Name
-            </Typography>
-            <TextField
-              id="first_name"
-              name="first_name"
-              label="First Name"
-              type="text"
-              fullWidth
-              margin="dense"
-              {...register("first_name")}
-              error={errors.first_name ? true : false}
-            />
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Last Name:
-            </Typography>
-            <TextField
-              id="last_name"
-              name="last_name"
-              label="Last Name"
-              type="text"
-              fullWidth
-              margin="dense"
-              {...register("last_name")}
-              error={errors.last_name ? true : false}
-            />
-            Address
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Street Name, Building, House No
-            </Typography>
-            <TextField
-              id="streetName"
-              name="streetName"
-              label="Street Name, Building, House No"
-              type="text"
-              fullWidth
-              margin="dense"
-              {...register("street")}
-              error={errors.street ? true : false}
-            />
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Region
-            </Typography>
-            <select
-              onChange={province}
-              onSelect={region}
-              style={{ width: "100%" }}
-              sx={{ height: "5%" }}
-              // {...register("region")}
-              // error={errors.region ? true : false}
-            >
-              <option disabled>Select Region</option>
-              {regionData &&
-                regionData.length > 0 &&
-                regionData.map((item) => (
-                  <option key={item.region_code} value={item.region_code}>
-                    {item.region_name}
-                  </option>
-                ))}
-            </select>
-            <br />
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Province
-            </Typography>
-            <select
-              onChange={city}
-              style={{ width: "100%" }}
-              sx={{ height: "4%" }}
-              // {...register("province")}
-              // error={errors.province ? true : false}
-            >
-              <option disabled>Select Province</option>
-              {provinceData &&
-                provinceData.length > 0 &&
-                provinceData.map((item) => (
-                  <option key={item.province_code} value={item.province_code}>
-                    {item.province_name}
-                  </option>
-                ))}
-            </select>
-            <br />
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              City
-            </Typography>
-            <select
-              onChange={barangay}
-              style={{ width: "100%" }}
-              sx={{ height: "4%" }}
-              // {...register("city")}
-              // error={errors.city ? true : false}
-            >
-              <option disabled>Select City</option>
-              {cityData &&
-                cityData.length > 0 &&
-                cityData.map((item) => (
-                  <option key={item.city_code} value={item.city_code}>
-                    {item.city_name}
-                  </option>
-                ))}
-            </select>
-            <br />
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Barangay
-            </Typography>
-            <select
-              onChange={brgy}
-              style={{ width: "100%", height: "4% " }}
-              // {...register("barangay")}
-              // error={errors.barangay ? true : false}
-            >
-              <option disabled>Select Barangay</option>
-              {barangayData &&
-                barangayData.length > 0 &&
-                barangayData.map((item) => (
-                  <option key={item.brgy_code} value={item.brgy_code}>
-                    {item.brgy_name}
-                  </option>
-                ))}
-            </select>
-            {/* <TextField
+        <Box sx={{ ml: "5%", mr: "5%" }}>
+          <Grid container spacing={2}>
+            {/* <Grid xs={0}></Grid> */}
+            <Grid xs={12} sm={12} md={6}>
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Full Name
+              </Typography>
+              <TextField
+                id="first_name"
+                name="first_name"
+                label="First Name"
+                type="text"
+                fullWidth
+                margin="dense"
+                {...register("first_name")}
+                error={errors.first_name ? true : false}
+              />
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Last Name:
+              </Typography>
+              <TextField
+                id="last_name"
+                name="last_name"
+                label="Last Name"
+                type="text"
+                fullWidth
+                margin="dense"
+                {...register("last_name")}
+                error={errors.last_name ? true : false}
+              />
+              Address
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Street Name, Building, House No
+              </Typography>
+              <TextField
+                id="streetName"
+                name="streetName"
+                label="Street Name, Building, House No"
+                type="text"
+                fullWidth
+                margin="dense"
+                {...register("street")}
+                error={errors.street ? true : false}
+              />
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Region
+              </Typography>
+              <select
+                onChange={province}
+                onSelect={region}
+                style={{ width: "100%" }}
+                sx={{ height: "5%" }}
+                // {...register("region")}
+                // error={errors.region ? true : false}
+              >
+                <option disabled>Select Region</option>
+                {regionData &&
+                  regionData.length > 0 &&
+                  regionData.map((item) => (
+                    <option key={item.region_code} value={item.region_code}>
+                      {item.region_name}
+                    </option>
+                  ))}
+              </select>
+              <br />
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Province
+              </Typography>
+              <select
+                onChange={city}
+                style={{ width: "100%" }}
+                sx={{ height: "4%" }}
+                // {...register("province")}
+                // error={errors.province ? true : false}
+              >
+                <option disabled>Select Province</option>
+                {provinceData &&
+                  provinceData.length > 0 &&
+                  provinceData.map((item) => (
+                    <option key={item.province_code} value={item.province_code}>
+                      {item.province_name}
+                    </option>
+                  ))}
+              </select>
+              <br />
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                City
+              </Typography>
+              <select
+                onChange={barangay}
+                style={{ width: "100%" }}
+                sx={{ height: "4%" }}
+                // {...register("city")}
+                // error={errors.city ? true : false}
+              >
+                <option disabled>Select City</option>
+                {cityData &&
+                  cityData.length > 0 &&
+                  cityData.map((item) => (
+                    <option key={item.city_code} value={item.city_code}>
+                      {item.city_name}
+                    </option>
+                  ))}
+              </select>
+              <br />
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Barangay
+              </Typography>
+              <select
+                onChange={brgy}
+                style={{ width: "100%", height: "4% " }}
+                // {...register("barangay")}
+                // error={errors.barangay ? true : false}
+              >
+                <option disabled>Select Barangay</option>
+                {barangayData &&
+                  barangayData.length > 0 &&
+                  barangayData.map((item) => (
+                    <option key={item.brgy_code} value={item.brgy_code}>
+                      {item.brgy_name}
+                    </option>
+                  ))}
+              </select>
+              {/* <TextField
               id="barangay"
               name="barangay"
               label="Barangay"
@@ -435,7 +436,7 @@ function Registration() {
               {...register("city")}
               error={errors.city ? true : false}
             /> */}
-            {/* <TextField
+              {/* <TextField
               id="phone"
               name="phone"
               label="Phone Number"
@@ -445,138 +446,150 @@ function Registration() {
               {...register("phone")}
               error={errors.phone ? true : false}
             /> */}
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Phone Number
-            </Typography>
-            <PhoneInput
-              sx={{ width: "100%" }}
-              defaultCountry="ph"
-              // value={phone}
-              // onChange={(phone) => setPhone(phone)}
-              id="phone"
-              name="phone"
-              label="Phone Number"
-              {...register("phone")}
-            />
-            <Typography textAlign="left" sx={{ color: "#000000" }}>
-              Postal Code
-            </Typography>
-            <TextField
-              id="postalCode"
-              name="postalCode"
-              label="Postal Code"
-              type="text"
-              fullWidth
-              margin="dense"
-              {...register("postalCode")}
-              error={errors.postalCode ? true : false}
-            />
-          </Grid>
-          <Grid xs={4}>
-            <Box sx={{ mx: "5%" }}>
               <Typography textAlign="left" sx={{ color: "#000000" }}>
-                Username:
+                Phone Number
+              </Typography>
+              <PhoneInput
+                sx={{ width: "100%" }}
+                defaultCountry="ph"
+                // value={phone}
+                // onChange={(phone) => setPhone(phone)}
+                id="phone"
+                name="phone"
+                label="Phone Number"
+                {...register("phone")}
+              />
+              <Typography textAlign="left" sx={{ color: "#000000" }}>
+                Postal Code
               </Typography>
               <TextField
-                id="username"
-                name="username"
-                label="Username"
+                id="postalCode"
+                name="postalCode"
+                label="Postal Code"
                 type="text"
                 fullWidth
                 margin="dense"
-                {...register("username")}
-                error={errors.username ? true : false}
+                {...register("postalCode")}
+                error={errors.postalCode ? true : false}
               />
+            </Grid>
+            <Grid xs={12} sm={12} md={6}>
+              <Box sx={{ mx: "5%" }}>
+                <Typography textAlign="left" sx={{ color: "#000000" }}>
+                  Username:
+                </Typography>
+                <TextField
+                  id="username"
+                  name="username"
+                  label="Username"
+                  type="text"
+                  fullWidth
+                  margin="dense"
+                  {...register("username")}
+                  error={errors.username ? true : false}
+                />
 
-              <Typography variant="inherit" color="textSecondary">
-                {errors.username?.message}
-              </Typography>
-              <Typography textAlign="left" sx={{ color: "#000000" }}>
-                Email:
-              </Typography>
-              <TextField
-                id="email"
-                name="email"
-                label="Email"
-                type="email"
-                fullWidth
-                margin="dense"
-                {...register("email")}
-                error={errors.email ? true : false}
-              />
-              <Typography textAlign="left" sx={{ color: "#000000" }}>
-                Password:
-              </Typography>
-              <TextField
-                id="password"
-                name="password"
-                label="Password"
-                type="password"
-                fullWidth
-                margin="dense"
-                {...register("password")}
-                error={errors.password ? true : false}
-              />
-              <Typography textAlign="left" sx={{ color: "#000000" }}>
-                Confirm Password
-              </Typography>
-              <TextField
-                id="conpassword"
-                name="conpassword"
-                label="Confirm Password"
-                type="password"
-                fullWidth
-                margin="dense"
-                {...register("conpassword")}
-                error={errors.conpassword ? true : false}
-              />
-              <Typography variant="inherit" color="textSecondary">
-                {errors.conpassword?.message}
-              </Typography>
+                <Typography variant="inherit" color="textSecondary">
+                  {errors.username?.message}
+                </Typography>
+                <Typography textAlign="left" sx={{ color: "#000000" }}>
+                  Email:
+                </Typography>
+                <TextField
+                  id="email"
+                  name="email"
+                  label="Email"
+                  type="email"
+                  fullWidth
+                  margin="dense"
+                  {...register("email")}
+                  error={errors.email ? true : false}
+                />
+                <Typography textAlign="left" sx={{ color: "#000000" }}>
+                  Password:
+                </Typography>
+                <TextField
+                  id="password"
+                  name="password"
+                  label="Password"
+                  type="password"
+                  fullWidth
+                  margin="dense"
+                  {...register("password")}
+                  error={errors.password ? true : false}
+                />
+                <Typography textAlign="left" sx={{ color: "#000000" }}>
+                  Confirm Password
+                </Typography>
+                <TextField
+                  id="conpassword"
+                  name="conpassword"
+                  label="Confirm Password"
+                  type="password"
+                  fullWidth
+                  margin="dense"
+                  {...register("conpassword")}
+                  error={errors.conpassword ? true : false}
+                />
+                <Typography variant="inherit" color="textSecondary">
+                  {errors.conpassword?.message}
+                </Typography>
 
-              <Grid container spacing={2} sx={{ my: "5%" }}>
-                <Grid xs={2}></Grid>
-                <Grid xs={6}>Already have an account?</Grid>
-                <Grid xs={1.5}>
-                  {" "}
-                  <Link to="/Log-In">
-                    <a style={{ textDecoration: "underline" }}>Log In</a>
-                  </Link>
+                <Grid container spacing={2} sx={{ my: "5%" }}>
+                  <Grid xs={2}></Grid>
+                  <Grid xs={6}>Already have an account?</Grid>
+                  <Grid xs={1}>
+                    <Link to="/Log-In">
+                      <a style={{ textDecoration: "underline", float: "left" }}>
+                        Log In
+                      </a>
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Button
-                type="submit"
-                sx={{
-                  background: "#E66253",
-                  color: "#ffffff",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                  px: 10,
-                  "&:hover": {
-                    backgroundColor: "#ffffff",
-                    color: "#E66253",
-                    border: 1,
-                    borderColor: "#E66253",
-                  },
-                }}
-              >
-                Register
-              </Button>
-              <Grid container spacing={2} sx={{ my: "5%" }}>
-                <Grid xs={2}></Grid>
-                <Grid xs={4}>A Nutritionist?</Grid>
-                <Grid xs={3}>
-                  {" "}
-                  <Link to="/RegisterNutritionist">
-                    <a style={{ textDecoration: "underline" }}>Register Here</a>
-                  </Link>
+                <Button
+                  type="submit"
+                  sx={{
+                    background: "#E66253",
+                    color: "#ffffff",
+                    fontSize: {
+                      xs: "0.8em", // For extra small screens
+                      sm: "0.8em", // For small screens
+                      md: "1.0em", // For medium screens
+                      lg: "1.1em", // For large screens
+                      xl: "2.0em", // For extra large screens
+                    },
+                    fontWeight: "bold",
+                    px: "10%",
+                    "&:hover": {
+                      backgroundColor: "#ffffff",
+                      color: "#E66253",
+                      border: 1,
+                      borderColor: "#E66253",
+                    },
+                  }}
+                >
+                  Register
+                </Button>
+                <Grid container spacing={2} sx={{ my: "5%" }}>
+                  <Grid xs={2}></Grid>
+                  <Grid xs={4.5} style={{ float: "right" }}>
+                    A Nutritionist?
+                  </Grid>
+                  <Grid xs={3}>
+                    {" "}
+                    <Link to="/RegisterNutritionist">
+                      <a style={{ textDecoration: "underline", float: "left" }}>
+                        Register Here
+                      </a>
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
+              </Box>
+            </Grid>
+
+            {/* <Grid xs={2}></Grid> */}
           </Grid>
-
-          <Grid xs={2}></Grid>
-        </Grid>
+        </Box>
       </form>
     </div>
   );

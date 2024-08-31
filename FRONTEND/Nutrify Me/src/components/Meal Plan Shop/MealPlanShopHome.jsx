@@ -136,7 +136,7 @@ function MealPlanShopHome() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "8%",
+        marginTop: "80px",
         fontFamily: "Poppins",
         color: "#000000",
       }}
@@ -146,8 +146,8 @@ function MealPlanShopHome() {
           backgroundImage: "url('/images/shop.png')",
           mt: 2,
           borderRadius: 3,
-          mx: "4%",
-          mr: "6%",
+          ml: "4%",
+          mr: "4%",
           width: "92.5%",
           height: "500px",
           backgroundSize: "cover",
@@ -162,7 +162,13 @@ function MealPlanShopHome() {
 
       <Box>
         <Typography
-          sx={{ color: "#99756E", fontSize: "40px", fontWeight: "bold" }}
+          sx={{
+            color: "#99756E",
+            fontSize: "40px",
+            fontWeight: "bold",
+            mt: 2,
+            mb: 0,
+          }}
         >
           MEAL PLANS
         </Typography>
@@ -176,7 +182,14 @@ function MealPlanShopHome() {
             <>
               <Grid container={2} sx={{ mx: "5%" }}>
                 {shopMealPlan.slice(0, 2).map((plan, index) => (
-                  <Grid item xs={3} sm={4} md={6} key={index}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={6}
+                    key={index}
+                    sx={{ mt: 5, mb: 5 }}
+                  >
                     <img src={plan.image} width="20%" height="50%" />
                     <Typography sx={{ fontWeight: "bold", fontSize: "1.5em" }}>
                       {plan.name}
@@ -222,7 +235,7 @@ function MealPlanShopHome() {
             sx={{
               background: "#E66253",
               color: "#ffffff",
-              ml: 2,
+              ml: 0,
               height: "100%",
               px: 4,
               py: 1,
@@ -259,7 +272,13 @@ function MealPlanShopHome() {
               color: "#898246",
 
               textAlign: "right",
-              fontSize: 40,
+              fontSize: {
+                xs: "1.5em", // For extra small screens
+                sm: "2.0em", // For small screens
+                md: "2.5em", // For medium screens
+                lg: "2.5em", // For large screens
+                xl: "3.0em", // For extra large screens
+              },
               fontWeight: "bold",
             }}
           >
@@ -272,10 +291,16 @@ function MealPlanShopHome() {
               sx={{
                 background: "#E66253",
                 color: "#ffffff",
-                px: 6,
+                px: "10%",
                 py: 1,
                 mt: "10px",
-                fontSize: 20,
+                fontSize: {
+                  xs: "0.8em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.0em", // For large screens
+                  xl: "1.5em", // For extra large screens
+                },
                 ml: "40%",
                 "&:hover": {
                   backgroundColor: "#ffffff",

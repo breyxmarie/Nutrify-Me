@@ -20,18 +20,23 @@ const ColorProvider = ({ children }) => {
     tempS = res.data.secondaryColor;
   });
 
-  const [primaryColor, setPrimaryColor] = useState("#E66253");
-  const [secondaryColor, setSecondaryColor] = useState("#898246");
-  // useEffect(() => {
-  //   const res = AxiosInstance.get(`theme`);
-  //   AxiosInstance.get(`theme`).then((res) => {
-  //     console.log(res.data[0].primaryColor);
-  //     console.log(res.data);
+  // const [primaryColor, setPrimaryColor] = useState("#E66253");
+  // const [secondaryColor, setSecondaryColor] = useState("#898246");
 
-  //     setPrimaryColor(res.data.primaryColor);
-  //     setSecondaryColor(res.data.secondaryColor);
-  //   });
-  // }, []);
+  const [primaryColor, setPrimaryColor] = useState();
+  const [secondaryColor, setSecondaryColor] = useState();
+  useEffect(() => {
+    const res = AxiosInstance.get(`theme`);
+    AxiosInstance.get(`theme`).then((res) => {
+      console.log(res.data[0].primaryColor);
+      console.log(res.data);
+
+      const prime = res.data[res.data.length - 1].primaryColor;
+      const second = res.data[res.data.length - 1].secondaryColor;
+      setPrimaryColor(prime);
+      setSecondaryColor(second);
+    });
+  }, []);
   // const [primaryColor, setPrimaryColor] = useState(
   //   () => JSON.parse(localStorage.getItem("primaryColor")) || "#E66253"
   // ); // Read from local storage on initial render

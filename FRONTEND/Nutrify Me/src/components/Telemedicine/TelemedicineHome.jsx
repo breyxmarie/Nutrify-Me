@@ -1270,12 +1270,22 @@ function TelemedicineHome() {
 
         if (temp) {
           setTodayAppointment(
-            <Box>
+            <Box
+              sx={{
+                border: 1,
+                borderColor: "#E66253",
+                px: "10%",
+                borderRadius: 4,
+                py: "10%",
+                mr: "10%",
+              }}
+            >
               {" "}
+              {/* //! ayusin toh */}
               <p>Aubrey</p>
               <p>Time: {temp.time}</p>
               <p>Dietitian: Bea</p>
-              <center>
+              {/* <center>
                 <Link
                   to={{
                     pathname: "/telemedicine-consultation",
@@ -1290,7 +1300,7 @@ function TelemedicineHome() {
                     Go to Consultation
                   </Button>
                 </Link>
-              </center>
+              </center> */}
               <Link
                 to="/telemedicine-consultation"
                 style={{
@@ -1304,7 +1314,20 @@ function TelemedicineHome() {
             </Box>
           );
         } else {
-          setTodayAppointment(<h2>No Scheduled Consultation </h2>);
+          setTodayAppointment(
+            <Box
+              sx={{
+                border: 1,
+                borderColor: "#E66253",
+                px: 5,
+                borderRadius: 4,
+                py: "30px",
+                mr: "150px",
+              }}
+            >
+              <h2>No Scheduled Consultation </h2>
+            </Box>
+          );
         }
       })
       .catch((error) => {
@@ -1517,7 +1540,7 @@ function TelemedicineHome() {
     <div
       className="content"
       style={{
-        paddingBottom: "40px",
+        paddingBottom: "5px",
         marginTop: "80px",
         fontFamily: "Poppins",
       }}
@@ -1651,7 +1674,7 @@ function TelemedicineHome() {
           backgroundImage: "url('/images/telemedPic.png')",
           mt: 2,
           borderRadius: 3,
-          mx: "4%",
+          ml: "4%",
           mr: "6%",
           width: "92.5%",
           height: "500px",
@@ -1668,7 +1691,7 @@ function TelemedicineHome() {
         {" "}
         {/* // ! modify pa dito like what if walang appointment si user */}
         <Grid container spacing={2}>
-          <Grid item xs={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <h2>My Scheduled Appointments</h2>
             {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
@@ -1742,27 +1765,7 @@ function TelemedicineHome() {
             </Modal>
 
             {/* // ! add calendar */}
-            <Button
-              onClick={handleOpen}
-              sx={{
-                background: "#E66253",
-                color: "#ffffff",
-                mx: 10,
 
-                my: 5,
-                px: 5,
-                py: 1,
-                fontSize: 20,
-                "&:hover": {
-                  backgroundColor: "#ffffff",
-                  color: "#E66253",
-                  border: 1,
-                  borderColor: "#E66253",
-                },
-              }}
-            >
-              Book a Consultation
-            </Button>
             <Modal
               open={open}
               onClose={handleClose}
@@ -1987,17 +1990,17 @@ function TelemedicineHome() {
               </form>
             </Modal>
           </Grid>
-          <Grid item xs={6} sx={{ textAlign: "left" }}>
+          <Grid item xs={12} sm={12} md={6} sx={{ textAlign: "left" }}>
             <h2>Today's Agenda</h2>
             <Box
-              sx={{
-                border: 1,
-                borderColor: "#E66253",
-                px: 5,
-                borderRadius: 4,
-                py: "30px",
-                mr: "150px",
-              }}
+            // sx={{
+            //   border: 1,
+            //   borderColor: "#E66253",
+            //   px: 5,
+            //   borderRadius: 4,
+            //   py: "30px",
+            //   mr: "150px",
+            // }}
             >
               {todayAppointment}
               {/* <h2>No Scheduled Consultation </h2>
@@ -2059,6 +2062,27 @@ function TelemedicineHome() {
             </center>
           </Grid>
         </Grid>
+        <Button
+          onClick={handleOpen}
+          sx={{
+            background: "#E66253",
+            color: "#ffffff",
+            ml: "2%",
+
+            mt: 5,
+            px: "5%",
+            py: "1%",
+            fontSize: 20,
+            "&:hover": {
+              backgroundColor: "#ffffff",
+              color: "#E66253",
+              border: 1,
+              borderColor: "#E66253",
+            },
+          }}
+        >
+          Book a Consultation
+        </Button>
       </Box>
     </div>
   );

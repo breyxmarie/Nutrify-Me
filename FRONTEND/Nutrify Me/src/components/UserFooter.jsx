@@ -91,25 +91,54 @@ function UserFooter() {
         style={{ background: primaryColor, color: "#ffffff", padding: 20 }}
       >
         <ToastContainer />
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
+        <Grid container spacing={2} sx={{ mr: "20%" }}>
+          <Grid item xs={6} sm={4} md={3}>
             <Box
               sx={{
                 borderRadius: 50,
                 border: 10,
                 borderColor: secondaryColor,
                 background: "#ffffff",
-                width: "200px",
-                height: "190px",
-                ml: 20,
+                width: {
+                  xs: "50px", // Extra small devices (less than 600px)
+                  sm: "80px", // Small devices (600px and up)
+                  md: "100px", // Medium devices (900px and up)
+                  lg: "200px", // Large devices (1200px and up)
+                  xl: "35%", // Extra large devices (1536px and up)
+                },
+                height: {
+                  xs: "50px",
+                  sm: "80px",
+                  md: "100px",
+                  lg: "200px",
+                  xl: "60%",
+                },
+                ml: { xs: "35%", md: "25%", lg: "25%" }, // Adjust margin for different screen sizes
               }}
             >
               <img
+                // style={{
+                //   width: {
+                //     xs: "50px", // Extra small devices (less than 600px)
+                //     sm: "80px", // Small devices (600px and up)
+                //     md: "80px", // Medium devices (900px and up)
+                //     lg: "230px", // Large devices (1200px and up)
+                //     xl: "35%", // Extra large devices (1536px and up)
+                //   },
+                //   height: {
+                //     xs: "50px",
+                //     sm: "80px",
+                //     md: "80px",
+                //     lg: "180px",
+                //     xl: "60%",
+                //   },
+                //   marginTop: 20,
+                // }}
                 src={logo}
-                width="100px"
-                height="120px"
-                style={{ marginTop: 20 }}
-              ></img>
+                width="50%" // Use 100% width for better responsiveness on smaller screens
+                height="57%"
+                style={{ marginTop: "18%" }}
+              />
             </Box>
 
             <p>
@@ -119,7 +148,9 @@ function UserFooter() {
           </Grid>
           <Grid
             item
-            xs={2}
+            xs={6}
+            sm={4}
+            md={3}
             style={{
               textAlign: "left",
             }}
@@ -190,7 +221,7 @@ function UserFooter() {
               Track Orders
             </Link>
           </Grid>
-          <Grid item xs={2} style={{ textAlign: "left" }}>
+          <Grid item xs={6} sm={4} md={3} style={{ textAlign: "left" }}>
             MEAL PLAN GENERATOR <br />
             <Link
               to="/meal-plan-generator-consent"
@@ -232,7 +263,7 @@ function UserFooter() {
               Progress Report
             </Link>
           </Grid>
-          <Grid item xs={3} sx={{ textAlign: "left" }}>
+          <Grid item xs={6} sm={4} md={3} sx={{ textAlign: "left" }}>
             CONTACT US
             <br />
             <form ref={form} onSubmit={handleSubmit(onSubmitHandler)}>
@@ -263,13 +294,17 @@ function UserFooter() {
               />
               <br />
               <br />
-              <PhoneInput
-                sx={{ width: "100%" }}
-                defaultCountry="ph"
-                value={phone}
-                onChange={(phone) => setPhone(phone)}
-                name="from_number"
-              />
+              <Box sx={{ width: "20px", ml: "0%" }}>
+                {/* <PhoneInput
+                  // style={{ width: "80%" }}
+                  style={{ width: "1000px" }} // Adjust the width as needed
+                  //width="50%"
+                  defaultCountry="ph"
+                  value={phone}
+                  onChange={(phone) => setPhone(phone)}
+                  name="from_number"
+                /> */}
+              </Box>
               <br />
               <TextField
                 id="outlined-multiline-flexible"

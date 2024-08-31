@@ -1,5 +1,5 @@
 import { Button, Typography } from "@mui/material";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import ColorContext from "../ColorContext"; // Import the context
 import ImageContext from "../ImageContext";
 import ReactColorPicker from "@super-effective/react-color-picker";
@@ -12,9 +12,29 @@ function Customization() {
   const { logo, setLogo } = useContext(ImageContext);
   const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
     useContext(ColorContext);
-  const [colorPrimary, setColorPrimary] = useState("#000000");
-  const [colorSecondary, setColorSecondary] = useState("#000000");
 
+  let tempP;
+  let tempS;
+
+  const getData = () => {
+    AxiosInstance.get(`theme`).then((res) => {
+      console.log(res.data[0].primaryColor);
+      console.log(res.data.length);
+
+      tempP = res.data[res.data.length - 1].primaryColor;
+      tempS = res.data[res.data.length - 1].secondaryColor;
+
+      setColorPrimary(tempP);
+      setColorSecondary(tempS);
+    });
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const [colorPrimary, setColorPrimary] = useState();
+  const [colorSecondary, setColorSecondary] = useState();
   const onColorChangePrimary = (updatedColor) => {
     setColorPrimary(updatedColor);
   };
@@ -24,7 +44,20 @@ function Customization() {
     setPrimaryColor(updatedColor);
   };
 
-  const changeColor = () => {
+  const changeColor = (async) => {
+    try {
+      AxiosInstance.post(`theme/`, {
+        theme_id: 1,
+        primaryColor: colorPrimary,
+        secondaryColor: colorSecondary,
+        logo: "/images/logo.png",
+      }).then((res) => {
+        console.log(res);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
     setPrimaryColor(colorPrimary);
     setSecondaryColor(colorSecondary);
   };
@@ -47,6 +80,20 @@ function Customization() {
         setLogo(
           "https://nightxperson.pythonanywhere.com/Photos/" + response.data
         );
+
+        try {
+          AxiosInstance.post(`theme/`, {
+            theme_id: 1,
+            primaryColor: colorPrimary,
+            secondaryColor: colorSecondary,
+            logo:
+              "https://nightxperson.pythonanywhere.com/Photos/" + response.data,
+          }).then((res) => {
+            console.log(res);
+          });
+        } catch (error) {
+          console.log(error);
+        }
       } catch (error) {
         console.error("Error uploading file:", error); // Handle errors
       }

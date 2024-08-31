@@ -118,7 +118,13 @@ function Home() {
                   color: "#99756E",
                   fontWeight: "bold",
                   textAlign: "right",
-                  fontSize: "40px",
+                  fontSize: {
+                    xs: "1.5em", // For extra small screens
+                    sm: "2.0em", // For small screens
+                    md: "2.5em", // For medium screens
+                    lg: "3.0em", // For large screens
+                    xl: "3.5em", // For extra large screens
+                  },
                 }}
               >
                 DIETICIANS AVAILABLE 24/7 <br />
@@ -135,7 +141,14 @@ function Home() {
                   mx: "auto",
                   display: "block",
                   background: "#E66253",
-                  fontSize: "20px",
+                  fontSize: {
+                    xs: "0.8em", // For extra small screens
+                    sm: "0.8em", // For small screens
+                    md: "1.0em", // For medium screens
+                    lg: "1.5em", // For large screens
+                    xl: "2.0em", // For extra large screens
+                  },
+                  "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
                 }}
                 onClick={() => navigate("/Log-In")}
               >
@@ -151,24 +164,131 @@ function Home() {
           sx={{
             color: "#99756E",
             border: 1,
-            fontSize: "70px",
+            fontSize: {
+              xs: "2.0em", // For extra small screens
+              sm: "4.0em", // For small screens
+              md: "4.5em", // For medium screens
+              lg: "5.0em", // For large screens
+              xl: "3.5em", // For extra large screens
+            },
             fontWeight: "bold",
             mx: "30%",
+            my: "1%",
             borderRadius: 8,
           }}
         >
           The Process
         </Typography>
 
-        <Box
+        <Box sx={{ mr: "2%", ml: "2%" }}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={4} md={3}>
+              <img
+                src="/images/diagnostic 1.png"
+                width="170px"
+                height="170px"
+              />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    fontWeight: "bold",
+                    color: "#ffffff",
+                  }}
+                >
+                  1
+                </h2>
+              </center>
+              <h2 style={{ fontWeight: "bold" }}>Profiling</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </p>
+            </Grid>
+            <Grid item xs={6} sm={4} md={3}>
+              <img
+                src="/images/diagnostic 2.png"
+                width="170px"
+                height="170px"
+              />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    color: "#ffffff",
+                  }}
+                >
+                  2
+                </h2>
+              </center>
+              <h2>Appointment</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </p>
+            </Grid>
+            <Grid item xs={6} sm={4} md={3}>
+              <img
+                src="/images/diagnostic 3.png"
+                width="170px"
+                height="170px"
+              />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    color: "#ffffff",
+                  }}
+                >
+                  3
+                </h2>
+              </center>
+              <h2>Diet Recommendation</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </p>
+            </Grid>
+            <Grid item xs={6} sm={4} md={3}>
+              <img
+                src="/images/diagnostic 4.png"
+                width="170px"
+                height="170px"
+              />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    color: "#ffffff",
+                  }}
+                >
+                  4
+                </h2>
+              </center>
+              <h2>Meal Plan Ordering</h2>
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </p>
+            </Grid>
+          </Grid>
+        </Box>
+        {/* <Box
           sx={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: 2,
           }}
         >
-          {" "}
-          {/* Grid of items */}
+         
           <Item>
             <img src="/images/diagnostic 1.png" width="170px" height="170px" />
             <center>
@@ -232,7 +352,7 @@ function Home() {
             </p>
           </Item>
           <Item>
-            {" "}
+           
             <img src="/images/diagnostic 4.png" width="170px" height="170px" />
             <center>
               <h2
@@ -252,7 +372,7 @@ function Home() {
               eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
             </p>
           </Item>
-        </Box>
+        </Box> */}
       </Box>
 
       <Box
@@ -281,7 +401,13 @@ function Home() {
                 color: "#99756E",
                 fontWeight: "bold",
                 textAlign: "left",
-                fontSize: "40px",
+                fontSize: {
+                  xs: "1.5em", // For extra small screens
+                  sm: "2.0em", // For small screens
+                  md: "2.5em", // For medium screens
+                  lg: "3.0em", // For large screens
+                  xl: "3.5em", // For extra large screens
+                },
               }}
             >
               LOOKING FOR MEAL PLANS CATERED TO LESSEN HYPERTENSION?
@@ -297,7 +423,13 @@ function Home() {
                 float: "left",
 
                 background: "#E66253",
-                fontSize: "20px",
+                fontSize: {
+                  xs: "0.8em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.5em", // For large screens
+                  xl: "2.0em", // For extra large screens
+                },
               }}
               onClick={() => navigate("/Log-In")}
             >
@@ -306,162 +438,168 @@ function Home() {
           </Grid>
         </Grid>
       </Box>
+      <Box sx={{ color: "#99756E", ml: "1%", mr: "15%" }}>
+        <h2 style={{ justifyContent: "center", fontSize: "2.2em" }}>
+          Patients Testimonials
+        </h2>
+        <Grid container spacing={2}>
+          <Grid item xs={8}>
+            {/* <Item sx={{ border: 3, borderRadius: 4 }}> */}
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                color: "#99756E",
+                mx: "50px",
+                border: 3,
+                borderRadius: 4,
+              }}
+            >
+              <Grid
+                xs={4}
+                sx={{
+                  m: "5%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "5%",
+                }}
+              >
+                <img src="/images/HomeImage.png" width="100%" height="80%" />
+              </Grid>
+              <Grid xs={4} sx={{ m: "10%" }}>
+                {" "}
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <p>
+                  Lorem ipsum dolor sit amet, con adipiscing elit, sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+                </p>
+              </Grid>
+            </Grid>
+            {/* </Item> */}
+          </Grid>
+          <Grid item xs={4}></Grid>
+          <Grid item xs={4}></Grid>
+          <Grid item xs={8}>
+            {/* <Item sx={{ border: 3, borderRadius: 4, mr: "10%" }}> */}
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                color: "#99756E",
+                mx: "50px",
+                border: 3,
+                borderRadius: 4,
+              }}
+            >
+              <Grid
+                xs={4}
+                sx={{
+                  m: "5%",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <img
+                  src="/images/HomeImage.png"
+                  width="100%"
+                  height="100%"
+                ></img>
+              </Grid>
+              <Grid xs={4} sx={{ m: "10%" }}>
+                {" "}
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <p>
+                  Lorem ipsum dolor sit amet, con adipiscing elit, sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+                </p>
+              </Grid>
+            </Grid>
+            {/* </Item> */}
+          </Grid>
 
-      <Box sx={{ color: "#99756E", mx: "5%", mr: "8%" }}>
-        <h2 style={{ justifyContent: "center" }}> Patients Testimonials</h2>
-        <Grid container spacing={2} sx={{ mx: 0 }}>
           <Grid item xs={8}>
-            <Item sx={{ border: 3, borderRadius: 4 }}>
+            {/* <Item sx={{ border: 3, borderRadius: 4 }}> */}
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                color: "#99756E",
+                mx: "50px",
+                border: 3,
+                borderRadius: 4,
+              }}
+            >
               <Grid
-                container
-                spacing={2}
+                xs={4}
                 sx={{
-                  color: "#99756E",
-                  mx: "50px",
+                  m: "5%",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Grid
-                  xs={4}
-                  sx={{
-                    m: "5%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    src="/images/HomeImage.png"
-                    width="100%"
-                    height="100%"
-                  ></img>
-                </Grid>
-                <Grid xs={4} sx={{ m: "10%" }}>
-                  {" "}
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <p>
-                    Lorem ipsum dolor sit amet, con adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                  </p>
-                </Grid>
+                <img
+                  src="/images/HomeImage.png"
+                  width="100%"
+                  height="100%"
+                ></img>
               </Grid>
-            </Item>
+              <Grid xs={4} sx={{ m: "10%" }}>
+                {" "}
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <p>
+                  Lorem ipsum dolor sit amet, con adipiscing elit, sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+                </p>
+              </Grid>
+            </Grid>
+            {/* </Item> */}
           </Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={4}></Grid>
           <Grid item xs={8}>
-            <Item sx={{ border: 3, borderRadius: 4, mr: "10%" }}>
+            {/* <Item sx={{ border: 3, borderRadius: 4, mr: "10%" }}> */}
+            <Grid
+              container
+              spacing={2}
+              sx={{
+                color: "#99756E",
+                mx: "50px",
+                border: 3,
+                borderRadius: 4,
+              }}
+            >
               <Grid
-                container
-                spacing={2}
+                xs={4}
                 sx={{
-                  color: "#99756E",
-                  mx: "50px",
+                  m: "5%",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Grid
-                  xs={4}
-                  sx={{
-                    m: "5%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    src="/images/HomeImage.png"
-                    width="100%"
-                    height="100%"
-                  ></img>
-                </Grid>
-                <Grid xs={4} sx={{ m: "10%" }}>
-                  {" "}
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <p>
-                    Lorem ipsum dolor sit amet, con adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                  </p>
-                </Grid>
+                <img
+                  src="/images/HomeImage.png"
+                  width="100%"
+                  height="100%"
+                ></img>
               </Grid>
-            </Item>
-          </Grid>
-
-          <Grid item xs={8}>
-            <Item sx={{ border: 3, borderRadius: 4 }}>
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  color: "#99756E",
-                  mx: "50px",
-                }}
-              >
-                <Grid
-                  xs={4}
-                  sx={{
-                    m: "5%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    src="/images/HomeImage.png"
-                    width="100%"
-                    height="100%"
-                  ></img>
-                </Grid>
-                <Grid xs={4} sx={{ m: "10%" }}>
-                  {" "}
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <p>
-                    Lorem ipsum dolor sit amet, con adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                  </p>
-                </Grid>
+              <Grid xs={4} sx={{ m: "10%" }}>
+                {" "}
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <img src="/images/star.png" width="30px" height="30px" />
+                <p>
+                  Lorem ipsum dolor sit amet, con adipiscing elit, sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+                </p>
               </Grid>
-            </Item>
-          </Grid>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={8}>
-            <Item sx={{ border: 3, borderRadius: 4, mr: "10%" }}>
-              <Grid
-                container
-                spacing={2}
-                sx={{
-                  color: "#99756E",
-                  mx: "50px",
-                }}
-              >
-                <Grid
-                  xs={4}
-                  sx={{
-                    m: "5%",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <img
-                    src="/images/HomeImage.png"
-                    width="100%"
-                    height="100%"
-                  ></img>
-                </Grid>
-                <Grid xs={4} sx={{ m: "10%" }}>
-                  {" "}
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <img src="/images/star.png" width="30px" height="30px" />
-                  <p>
-                    Lorem ipsum dolor sit amet, con adipiscing elit, sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                  </p>
-                </Grid>
-              </Grid>
-            </Item>
+            </Grid>
+            {/* </Item> */}
           </Grid>
         </Grid>
       </Box>
