@@ -327,11 +327,7 @@ function MealPlanShopHome() {
               onClick={handlePrevC}
               style={{ marginTop: "60%", backgroundColor: "#ffffff" }}
             >
-              <img
-                src="/images/left arrow.png"
-                max-width="100%"
-                height="200%"
-              />
+              <img src="/images/left arrow.png" width="50%" height="50%" />
             </Button>
           </Grid>
           <Grid item xs={10}>
@@ -390,11 +386,7 @@ function MealPlanShopHome() {
               onClick={handleNextC}
               sx={{ marginTop: "60%", background: "#ffffff" }}
             >
-              <img
-                src="/images/right arrow.png"
-                max-width="100%"
-                height="100%"
-              />
+              <img src="/images/right arrow.png" width="50%" height="50%" />
             </Button>
           </Grid>
         </Grid>

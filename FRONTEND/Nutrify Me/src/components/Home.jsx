@@ -64,7 +64,10 @@ function Home() {
   }, []);
   //!
   return (
-    <div className="content" style={{ paddingBottom: "40px" }}>
+    <div
+      className="content"
+      style={{ paddingBottom: "40px", color: "#000000" }}
+    >
       {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}
@@ -201,7 +204,9 @@ function Home() {
                   1
                 </h2>
               </center>
-              <h2 style={{ fontWeight: "bold" }}>Profiling</h2>
+              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
+                Profiling
+              </h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -225,7 +230,9 @@ function Home() {
                   2
                 </h2>
               </center>
-              <h2>Appointment</h2>
+              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
+                Appointment
+              </h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -249,7 +256,9 @@ function Home() {
                   3
                 </h2>
               </center>
-              <h2>Diet Recommendation</h2>
+              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
+                Diet Recommendation
+              </h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
@@ -273,7 +282,9 @@ function Home() {
                   4
                 </h2>
               </center>
-              <h2>Meal Plan Ordering</h2>
+              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
+                Meal Plan Ordering
+              </h2>
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
