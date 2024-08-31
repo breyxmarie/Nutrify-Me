@@ -321,80 +321,92 @@ function MealPlanShopHome() {
         >
           Patient’s Testimonials
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={1}>
-            <Button
-              onClick={handlePrevC}
-              style={{ marginTop: "60%", backgroundColor: "#ffffff" }}
-            >
-              <img src="/images/left arrow.png" width="50%" height="50%" />
-            </Button>
-          </Grid>
-          <Grid item xs={10}>
-            <Slider
-              {...settings}
-              ref={sliderRefC}
-              sx={{
-                color: "#000000",
-                border: 1,
-                borderColor: "#000000",
-                ml: "30px",
-                mr: "30px",
-              }}
-            >
-              {testimonial.map((item, index) => (
-                <Box key={index} onClick={() => handleSlideClick(item)}>
-                  <Box
-                    sx={{
-                      color: "#000000",
-                      border: 3,
-                      borderColor: "#898246",
-                      borderRadius: 3,
-                      ml: "10%",
-                      mr: "10%",
-                    }}
-                  >
-                    <Grid>
-                      <img
-                        src={item.image}
-                        width="10%"
-                        height="10%"
-                        style={{ marginLeft: 10 }}
-                      />
-                    </Grid>
+        <Box sx={{ ml: 5, mr: 5 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={0.5}>
+              <Button
+                onClick={handlePrevC}
+                style={{ marginTop: "100%", backgroundColor: "#ffffff" }}
+              >
+                <img src="/images/left arrow.png" width="70%" height="70%" />
+              </Button>
+            </Grid>
+            <Grid item xs={10}>
+              <Slider
+                {...settings}
+                ref={sliderRefC}
+                sx={{
+                  color: "#000000",
+                  border: 1,
+                  borderColor: "#000000",
+                  ml: "30px",
+                  mr: "30px",
+                }}
+              >
+                {testimonial.map((item, index) => (
+                  <Box key={index} onClick={() => handleSlideClick(item)}>
+                    <Box
+                      sx={{
+                        color: "#000000",
+                        border: 3,
+                        borderColor: "#898246",
+                        borderRadius: 3,
+                        ml: "10%",
+                        mr: "10%",
+                      }}
+                    >
+                      <Grid>
+                        <img
+                          src={item.image}
+                          width="10%"
+                          height="10%"
+                          style={{ marginLeft: 10 }}
+                        />
+                      </Grid>
 
-                    <Grid>
-                      <img
-                        src="/images/star.png"
-                        width="10"
-                        height="10"
-                        style={{ marginLeft: 10 }}
-                      />
-                      <Typography sx={{ color: "#000000" }}>
-                        {item.comment}
-                      </Typography>
-                    </Grid>
+                      <Grid>
+                        <img
+                          src="/images/star.png"
+                          width="10"
+                          height="10"
+                          style={{ marginLeft: 10 }}
+                        />
+                        <Typography sx={{ color: "#000000" }}>
+                          {item.comment}
+                        </Typography>
+                      </Grid>
+                    </Box>
                   </Box>
-                </Box>
-              ))}
-            </Slider>
+                ))}
+              </Slider>
+            </Grid>
+            <Grid item xs={0.5}>
+              {" "}
+              {/* Button container (adjust width as needed) */}
+              <Button
+                onClick={handleNextC}
+                sx={{ marginTop: "60%", background: "#ffffff" }}
+              >
+                <img src="/images/right arrow.png" width="70%" height="70%" />
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs={1}>
-            {" "}
-            {/* Button container (adjust width as needed) */}
-            <Button
-              onClick={handleNextC}
-              sx={{ marginTop: "60%", background: "#ffffff" }}
-            >
-              <img src="/images/right arrow.png" width="50%" height="50%" />
-            </Button>
-          </Grid>
-        </Grid>
+        </Box>
 
         <br />
         <br />
         <Box sx={{ background: "#898246", color: "#ffffff", py: 4 }}>
-          <Typography sx={{ fontSize: "40px" }}>
+          <Typography
+            sx={{
+              fontSize: {
+                xs: "1.5em", // For extra small screens
+                sm: "2.0em", // For small screens
+                md: "2.0em", // For medium screens
+                lg: "2.5em", // For large screens
+                xl: "3.0em", // For extra large screens
+              },
+            }}
+          >
             Need to consult with a dietician about the meals <br />
             you should eat?
           </Typography>
@@ -439,7 +451,7 @@ function MealPlanShopHome() {
             </Grid>
             {/* 👇️ show elements on click */}
             {isShown[index] && (
-              <>
+              <Box sx={{ ml: "5%" }}>
                 <h3
                   style={{
                     marginLeft: "18%",
@@ -449,8 +461,7 @@ function MealPlanShopHome() {
                 >
                   {f.answer}
                 </h3>
-                <Box />{" "}
-              </>
+              </Box>
             )}
             {/* 👇️ show component on click */}
             {isShown ? <Box /> : null}

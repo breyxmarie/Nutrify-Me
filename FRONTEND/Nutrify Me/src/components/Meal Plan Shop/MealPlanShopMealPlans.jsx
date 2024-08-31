@@ -408,7 +408,17 @@ function MealPlanShopMealPlans() {
               }}
             >
               {data.map((item) => (
-                <Box sx={{ mx: "8%" }}>
+                <Box
+                  sx={{
+                    mx: {
+                      xs: "20%", // For extra small screens
+                      sm: "10%", // For small screens
+                      md: "8%", // For medium screens (default)
+                      lg: "8%", // For large screens
+                      xl: "8%", // For extra large screens
+                    },
+                  }}
+                >
                   {console.log(item)}
 
                   <Typography
@@ -423,7 +433,13 @@ function MealPlanShopMealPlans() {
                   </Typography>
                   <Grid container spacing={2} sx={{ mt: 2 }}>
                     {item.meal.map((items, index) => (
-                      <Grid xs={6} key={index}>
+                      <Grid
+                        xs={12}
+                        sm={12}
+                        md={6}
+                        key={index}
+                        sx={{ my: "10%" }}
+                      >
                         <Typography>{items.type}</Typography>
                         <br />
 
@@ -677,7 +693,7 @@ function MealPlanShopMealPlans() {
           <></>
         ) : (
           <>
-            <Grid container={2} sx={{ mx: "5%" }}>
+            <Grid container={2} sx={{ mx: "5%", mt: "5%" }}>
               {shopMealPlan
                 .filter(
                   (item) =>
@@ -685,7 +701,22 @@ function MealPlanShopMealPlans() {
                     dayjs(value).startOf("week").format("YYYY-MM-DD")
                 )
                 .map((plan, index) => (
-                  <Grid item xs={3} sm={4} md={6} key={index} sx={{ mt: "5%" }}>
+                  <Grid
+                    item
+                    xs={12}
+                    sm={12}
+                    md={6}
+                    key={index}
+                    sx={{
+                      mb: {
+                        xs: "45%", // For extra small screens
+                        sm: "18%", // For small screens
+                        md: "10%", // For medium screens (default)
+                        lg: "6%", // For large screens
+                        xl: "7%", // For extra large screens
+                      },
+                    }}
+                  >
                     <img src={plan.image} width="20%" height="50%" />
                     <Typography
                       variant="body1"
@@ -771,7 +802,8 @@ function MealPlanShopMealPlans() {
     <div
       className="content"
       style={{
-        paddingBottom: "40px",
+        paddingBottom: "0px",
+        marginBottom: "80px",
         marginTop: "80px",
         fontFamily: "Poppins",
         color: "#000000",
@@ -795,7 +827,7 @@ function MealPlanShopMealPlans() {
       <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
-          mx: "4%",
+          ml: "4%",
           mr: "4%",
           width: "92.5%",
           borderRadius: 3,
@@ -818,8 +850,16 @@ function MealPlanShopMealPlans() {
         </Typography>
 
         <Grid container spacing={2}>
-          <Grid xs={7.5}>{mealDetailsDiv}</Grid>
-          <Grid xs={4} display="flex" justifyContent="flex-start">
+          <Grid xs={12} sm={12} md={7}>
+            {mealDetailsDiv}
+          </Grid>
+          <Grid
+            xs={12}
+            sm={12}
+            md={5}
+            display="flex"
+            justifyContent="flex-start"
+          >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 value={value}
