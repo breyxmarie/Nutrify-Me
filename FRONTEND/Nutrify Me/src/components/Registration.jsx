@@ -554,9 +554,9 @@ function Registration() {
                     fontSize: {
                       xs: "0.8em", // For extra small screens
                       sm: "0.8em", // For small screens
-                      md: "1.0em", // For medium screens
-                      lg: "1.1em", // For large screens
-                      xl: "2.0em", // For extra large screens
+                      md: "0.8em", // For medium screens
+                      lg: "0.8em", // For large screens
+                      xl: "1.1em", // For extra large screens
                     },
                     fontWeight: "bold",
                     px: "10%",
