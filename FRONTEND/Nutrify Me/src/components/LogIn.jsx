@@ -136,172 +136,151 @@ function LogIn() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "0px",
+        marginTop: "0%",
         color: "#99756E",
       }}
     >
-      <Grid container spacing={2}>
-        <Grid xs={4}></Grid>
-        <Grid xs={4}>
-          <form onSubmit={handleSubmit(onSubmitHandler)}>
-            <center>
-              <img
-                src="/images/transparentLogo.png"
-                width="50%"
-                height="50%"
-                // style={{ maxWidth: "40%", maxHeight: "10%" }}
-              />
+      <Box sx={{ ml: "20%", mr: "20%" }}>
+        {" "}
+        <form onSubmit={handleSubmit(onSubmitHandler)}>
+          <center>
+            <img
+              src="/images/transparentLogo.png"
+              width="20%"
+              height="20%"
+              // style={{ maxWidth: "40%", maxHeight: "10%" }}
+            />
 
-              <Grid container spacing={2}>
-                <Grid xs={2}>
-                  {/* <Typography sx={{ mt: "10%", ml: "30%" }}>
-                    Username
-                  </Typography> */}
-                </Grid>
-                <Grid xs={8}>
-                  <Typography
-                    sx={{
-                      mt: "0%",
-                      ml: "0%",
-                      fontWeight: "bold",
+            <Typography
+              sx={{
+                mt: "0%",
+                ml: "0%",
+                fontWeight: "bold",
 
-                      fontSize: {
-                        xs: "0.8em", // For extra small screens
-                        sm: "0.8em", // For small screens
-                        md: "1.1em", // For medium screens
-                        lg: "1.1em", // For large screens
-                        xl: "1.5em", // For extra large screens
-                      },
-                    }}
-                  >
-                    Username
-                  </Typography>
-                  <TextField
-                    size="small"
-                    id="username"
-                    name="username"
-                    // label="Username"
-                    fullWidth
-                    margin="dense"
-                    {...register("username")}
-                    error={errors.username ? true : false}
-                  />
-                  <Typography variant="inherit" color="textSecondary">
-                    {errors.username?.message}
-                  </Typography>
-                </Grid>
-              </Grid>
+                fontSize: {
+                  xs: "0.8em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.1em", // For medium screens
+                  lg: "1.1em", // For large screens
+                  xl: "1.5em", // For extra large screens
+                },
+              }}
+            >
+              Username
+            </Typography>
+            <TextField
+              size="small"
+              id="username"
+              name="username"
+              // label="Username"
+              sx={{ width: "50%" }}
+              margin="dense"
+              {...register("username")}
+              error={errors.username ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.username?.message}
+            </Typography>
 
-              <Grid container spacing={2} sx={{ mt: 2 }}>
-                <Grid xs={2}>
-                  {/* <Typography sx={{ mt: "10%", ml: "30%" }}>
-                    Password
-                  </Typography> */}
-                </Grid>
-                <Grid xs={8}>
-                  <Typography
-                    sx={{
-                      mt: "0%",
-                      ml: "0%",
-                      fontWeight: "bold",
+            <Typography
+              sx={{
+                mt: "0%",
+                ml: "0%",
+                fontWeight: "bold",
 
-                      fontSize: {
-                        xs: "0.8em", // For extra small screens
-                        sm: "0.8em", // For small screens
-                        md: "1.1em", // For medium screens
-                        lg: "1.1em", // For large screens
-                        xl: "1.5em", // For extra large screens
-                      },
-                    }}
-                  >
-                    Password
-                  </Typography>
-                  <TextField
-                    size="small"
-                    id="password"
-                    name="password"
-                    // label="Password"
-                    type="password"
-                    fullWidth
-                    margin="dense"
-                    {...register("password")}
-                    error={errors.password ? true : false}
-                  />
-                  <Typography variant="inherit" color="textSecondary">
-                    {errors.password?.message}
-                  </Typography>
-                </Grid>
-              </Grid>
+                fontSize: {
+                  xs: "0.8em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.1em", // For medium screens
+                  lg: "1.1em", // For large screens
+                  xl: "1.5em", // For extra large screens
+                },
+              }}
+            >
+              Password
+            </Typography>
+            <TextField
+              size="small"
+              id="password"
+              name="password"
+              // label="Password"
 
-              <br />
-              <Grid container spacing={2}>
-                {/* <Grid xs={3.5}></Grid> */}
-                <Grid xs={6} sm={4} md={6}>
-                  {" "}
-                  <Link
-                    to="/ForgetPassword"
+              type="password"
+              sx={{ width: "50%" }}
+              margin="dense"
+              {...register("password")}
+              error={errors.password ? true : false}
+            />
+            <Typography variant="inherit" color="textSecondary">
+              {errors.password?.message}
+            </Typography>
+
+            <br />
+            <Grid container spacing={2}>
+              {/* <Grid xs={3.5}></Grid> */}
+              <Grid xs={6} sm={4} md={6}>
+                {" "}
+                <Link
+                  to="/ForgetPassword"
+                  style={{
+                    float: "right",
+                  }}
+                >
+                  <a
                     style={{
-                      float: "right",
+                      textDecoration: "underline",
+                      fontSize: {
+                        xs: "1.5em", // For extra small screens
+                        sm: "2.0em", // For small screens
+                        md: "2.5em", // For medium screens
+                        lg: "3.0em", // For large screens
+                        xl: "3.5em", // For extra large screens
+                      },
                     }}
                   >
-                    <a
-                      style={{
-                        textDecoration: "underline",
-                        fontSize: {
-                          xs: "1.5em", // For extra small screens
-                          sm: "2.0em", // For small screens
-                          md: "2.5em", // For medium screens
-                          lg: "3.0em", // For large screens
-                          xl: "3.5em", // For extra large screens
-                        },
-                      }}
-                    >
-                      Forget Password
-                    </a>
-                  </Link>
-                </Grid>
-                <Grid xs={6} sm={4} md={3}>
-                  {" "}
-                  <Link to="/Register">
-                    <a style={{ textDecoration: "underline" }}>Register</a>
-                  </Link>
-                </Grid>
-                {/* <Grid xs={3}></Grid> */}
+                    Forget Password
+                  </a>
+                </Link>
               </Grid>
-              {logIn && <Link to={navigate}>Sign In Successful!</Link>}
-              <br />
-              <Button
-                type="submit"
-                sx={{
-                  background: "#E66253",
-                  color: "#ffffff",
-                  mt: "0%",
-                  ml: "0%",
+              <Grid xs={6} sm={4} md={3}>
+                {" "}
+                <Link to="/Register">
+                  <a style={{ textDecoration: "underline" }}>Register</a>
+                </Link>
+              </Grid>
+            </Grid>
+            {logIn && <Link to={navigate}>Sign In Successful!</Link>}
+            <br />
+            <Button
+              type="submit"
+              sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                mt: "0%",
+                ml: "0%",
 
-                  fontSize: {
-                    xs: "0.8em", // For extra small screens
-                    sm: "0.8em", // For small screens
-                    md: "1.1em", // For medium screens
-                    lg: "1.1em", // For large screens
-                    xl: "1.5em", // For extra large screens
-                  },
-                  fontWeight: "bold",
-                  px: "5%",
-                  "&:hover": {
-                    backgroundColor: "#ffffff",
-                    color: "#E66253",
-                    border: 1,
-                    borderColor: "#E66253",
-                  },
-                }}
-              >
-                Log In
-              </Button>
-            </center>
-          </form>
-        </Grid>
-        <Grid xs={4}></Grid>
-      </Grid>
+                fontSize: {
+                  xs: "0.8em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.1em", // For medium screens
+                  lg: "1.1em", // For large screens
+                  xl: "1.5em", // For extra large screens
+                },
+                fontWeight: "bold",
+                px: "5%",
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 1,
+                  borderColor: "#E66253",
+                },
+              }}
+            >
+              Log In
+            </Button>
+          </center>
+        </form>
+      </Box>
 
       <center>
         <Box></Box>
