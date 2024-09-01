@@ -1395,13 +1395,16 @@ function MealPlanShopCheckout() {
               CHECKOUT
             </Typography>
 
-            <Box sx={{ borderRadius: 0, border: 1, mx: 20 }}>
+            <Box
+              sx={{ borderRadius: 0, border: 1, ml: "5%", mr: "5%", pb: "10%" }}
+            >
               <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
-                <Grid xs={2}>
+                <Grid xs={12} md={2}>
                   <img src="/images/location.png" />
                 </Grid>
                 <Grid
-                  xs={8}
+                  xs={12}
+                  md={8}
                   sx={{
                     textAlign: "left",
                     color: "#99756E",
@@ -1423,39 +1426,42 @@ function MealPlanShopCheckout() {
                       )}
                       <Typography sx={{ color: "#000000" }}>
                         {addressData[selectedAddress]?.name} |{" "}
-                        {addressData[selectedAddress]?.phone} <br />
-                        {addressData[selectedAddress]?.address}
+                        {addressData[selectedAddress]?.phone}{" "}
+                      </Typography>
+                      <Typography sx={{ color: "#000000" }}>
+                        {" "}
+                        {addressData[selectedAddress]?.address}{" "}
                       </Typography>
 
-                      <APIProvider
-                        apiKey={API_KEY}
-                        onLoad={() => console.log("Maps API has loaded.")}
-                      >
-                        <div style={{ height: "100px" }}>
+                      <Box sx={{ height: "100%", width: "70%" }}>
+                        <APIProvider
+                          apiKey={API_KEY}
+                          onLoad={() => console.log("Maps API has loaded.")}
+                        >
                           <Map
                             defaultZoom={13}
                             //  defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
                             center={{
-                              // lat: addressData[selectedAddress].lang,
-                              // lng: addressData[selectedAddress].longi,
-                              lat: parseFloat(selectedLong),
-                              lng: parseFloat(selectedLat),
+                              lng: addressData[selectedAddress].lang,
+                              lat: addressData[selectedAddress].longi,
+                              // lat: parseFloat(selectedLat),
+                              // lng: parseFloat(selectedLong),
                             }}
                           >
                             <Marker
                               position={{
-                                lat: parseFloat(selectedLong),
-                                lng: parseFloat(selectedLat),
+                                lng: addressData[selectedAddress].lang,
+                                lat: addressData[selectedAddress].longi,
                               }}
                             />
                           </Map>
-                        </div>
-                      </APIProvider>
+                        </APIProvider>
+                      </Box>
                     </>
                   )}
                 </Grid>
 
-                <Grid xs={2}>
+                <Grid xs={12} md={2}>
                   {" "}
                   <Button onClick={handleOpen}>
                     <img src="/images/right outline arrow.png" />
@@ -1504,24 +1510,24 @@ function MealPlanShopCheckout() {
               </Grid>
             </Box>
             <br />
-            <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
+            <Box sx={{ border: 1, borderRadius: 3, ml: "5%", mr: "5%" }}>
               {shopMeal.map((item, index) => (
                 <Grid container spacing={2} sx={{ mt: "20px" }}>
-                  <Grid xs={4}>
+                  <Grid xs={12} md={4}>
                     {" "}
-                    <img src={item.image} width="150" height="180" />
+                    <img src={item.image} width="50%" height="80%" />
                   </Grid>
-                  <Grid xs={4} sx={{ textAlign: "left" }}>
+                  <Grid xs={12} md={4} sx={{ textAlign: "center" }}>
                     <Typography sx={{ color: "#99756E", mt: 3 }}>
                       {item.name}
                     </Typography>
-                    <Typography sx={{ color: "#E66253", mt: "12%" }}>
+                    <Typography sx={{ color: "#E66253", mt: "2%" }}>
                       {" "}
                       Php {item.price}
                     </Typography>
                   </Grid>
-                  <Grid xs={4} sx={{ mt: "5%" }}>
-                    x {item.quantity}
+                  <Grid xs={12} md={4} sx={{ mt: "5%" }}>
+                    {/* x {item.quantity} */}
                   </Grid>
                 </Grid>
               ))}
@@ -1546,7 +1552,13 @@ function MealPlanShopCheckout() {
             <br />
 
             <Box
-              sx={{ textAlign: "left", border: 1, mx: 20, color: "#99756E" }}
+              sx={{
+                textAlign: "left",
+                border: 1,
+                ml: "5%",
+                mr: "5%",
+                color: "#99756E",
+              }}
             >
               <Typography
                 sx={{ ml: 5, mt: 5, color: "#99756E", fontWeight: "bold" }}
@@ -1562,7 +1574,7 @@ function MealPlanShopCheckout() {
                 />
               </PayPalScriptProvider> */}
 
-              <FormControl sx={{ ml: 15, mb: 3 }}>
+              <FormControl sx={{ ml: "10%", mb: 3 }}>
                 <FormLabel id="demo-radio-buttons-group-label">
                   Payment Method
                 </FormLabel>
@@ -1598,7 +1610,15 @@ function MealPlanShopCheckout() {
             </Box>
             <br />
             <br />
-            <Box sx={{ border: 1, mx: 20, color: "#99756E", fontSize: "20px" }}>
+            <Box
+              sx={{
+                border: 1,
+                ml: "5%",
+                mr: "5%",
+                color: "#99756E",
+                fontSize: "20px",
+              }}
+            >
               <Typography
                 sx={{
                   color: "#99756E",

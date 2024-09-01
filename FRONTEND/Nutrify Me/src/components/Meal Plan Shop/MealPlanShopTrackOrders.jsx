@@ -239,25 +239,32 @@ function MealPlanShopTrackOrders() {
             }}
           >
             <Grid container spacing={2} sx={{ color: "#000000" }}>
-              <Grid xs={4} sx={{ textAlign: "left", ml: 5 }}>
-                {item.date}
+              <Grid xs={12} sx={{ textAlign: "left", ml: 5 }}>
+                {dayjs(item.date).format("MMMM DD, YYYY")}
               </Grid>
-              <Grid xs={6} sx={{ textAlign: "right" }}>
+              <Grid xs={12} sx={{ textAlign: "right" }}>
                 {item.number}
               </Grid>
             </Grid>
             <br />
             <br />
             <Grid container spacing={2}>
-              <Grid xs={2}>
+              <Grid xs={12} sm={4} md={4} lg={2}>
                 {" "}
                 <img src="/images/food.png" width="60%" height="100%" />
               </Grid>
               {/* {console.log(item)} */}
-              <Grid xs={8} sx={{ color: "#99756E", textAlign: "left" }}>
+              <Grid
+                xs={12}
+                sm={6}
+                md={4}
+                lg={8}
+                sx={{ color: "#99756E", textAlign: "left" }}
+              >
                 {item.name} <br />
                 <Typography>Date of Delivery: </Typography>
-                {item.schedule_date[0]} - {item.schedule_date[1]}
+                {dayjs(item.schedule_date[0]).format("MMMM DD, YYYY")} -{" "}
+                {dayjs(item.schedule_date[1]).format("MMMM DD, YYYY")}
                 <br />
                 <Link
                   to={`/meal-plan-shop-order/${item.order_id}`}
@@ -271,7 +278,7 @@ function MealPlanShopTrackOrders() {
                   </a>
                 </Link>
               </Grid>
-              <Grid xs={2}>
+              <Grid xs={12} sm={4} md={4} lg={2}>
                 <Box
                   sx={{
                     borderRadius: 5,
@@ -312,7 +319,7 @@ function MealPlanShopTrackOrders() {
           >
             <Grid container spacing={2} sx={{ color: "#000000" }}>
               <Grid xs={4} sx={{ textAlign: "left", ml: 5 }}>
-                {item.date}
+                {dayjs(item.date).format("MMMM DD, YYYY")}
               </Grid>
               <Grid xs={6} sx={{ textAlign: "right" }}>
                 {item.number}
@@ -321,14 +328,23 @@ function MealPlanShopTrackOrders() {
             <br />
             <br />
             <Grid container spacing={2}>
-              <Grid xs={2}>
+              <Grid xs={12} sm={4} md={4} lg={2}>
                 {" "}
                 <img src="/images/food.png" width="60%" height="100%" />
               </Grid>
               {/* {console.log(item)} */}
-              <Grid xs={8} sx={{ color: "#99756E", textAlign: "left" }}>
+              <Grid
+                xs={12}
+                sm={6}
+                md={4}
+                lg={8}
+                sx={{ color: "#99756E", textAlign: "left" }}
+              >
                 {item.name} <br />
-                Date of Delivery: {item.schedule_date} <br />
+                Date of Delivery:{" "}
+                {dayjs(item.schedule_date[0]).format("MMMM DD, YYYY")} -{" "}
+                {dayjs(item.schedule_date[1]).format("MMMM DD, YYYY")}
+                <br />
                 <Link
                   to={`/meal-plan-shop-order/${item.order_id}`}
                   state={item}
@@ -341,7 +357,7 @@ function MealPlanShopTrackOrders() {
                   </a>
                 </Link>
               </Grid>
-              <Grid xs={2}>
+              <Grid xs={12} sm={4} md={4} lg={2}>
                 <Box
                   sx={{
                     borderRadius: 5,
@@ -384,7 +400,7 @@ function MealPlanShopTrackOrders() {
           >
             <Grid container spacing={2} sx={{ color: "#000000" }}>
               <Grid xs={4} sx={{ textAlign: "left", ml: 5 }}>
-                {item.date}
+                {dayjs(item.date).format("MMMM DD, YYYY")}
               </Grid>
               <Grid xs={6} sx={{ textAlign: "right" }}>
                 {item.number}
@@ -393,14 +409,22 @@ function MealPlanShopTrackOrders() {
             <br />
             <br />
             <Grid container spacing={2}>
-              <Grid xs={2}>
+              <Grid xs={12} sm={4} md={4} lg={2}>
                 {" "}
                 <img src="/images/food.png" width="60%" height="100%" />
               </Grid>
               {/* {console.log(item)} */}
-              <Grid xs={8} sx={{ color: "#99756E", textAlign: "left" }}>
+              <Grid
+                xs={12}
+                sm={6}
+                md={4}
+                lg={8}
+                sx={{ color: "#99756E", textAlign: "left" }}
+              >
                 {item.name} <br />
-                Date of Delivery: {item.schedule_date} <br />
+                Date of Delivery:{" "}
+                {dayjs(item.schedule_date[0]).format("MMMM DD, YYYY")} -{" "}
+                {dayjs(item.schedule_date[1]).format("MMMM DD, YYYY")} <br />
                 {/* <Link
                   to={`/meal-plan-shop-order/${item.order_id}`}
                   state={{
@@ -433,7 +457,7 @@ function MealPlanShopTrackOrders() {
                   </a>
                 </Link>
               </Grid>
-              <Grid xs={2}>
+              <Grid xs={12} sm={4} md={4} lg={2}>
                 <Box
                   sx={{
                     borderRadius: 5,

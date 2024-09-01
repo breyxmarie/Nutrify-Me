@@ -120,12 +120,12 @@ function MealPlanShopRequest() {
       </Typography>
       <Grid container spacing={2}>
         {pendingOrder.map((item, index) => (
-          <Grid item xs={3} sm={4} md={6} key={index}>
+          <Grid item xs={12} sm={6} md={3} key={index}>
             <Box
               sx={{
                 background: "#898246",
                 borderRadius: 4,
-                mx: "30%",
+                mx: "10%",
                 color: "#ffffff",
                 py: 2,
               }}
@@ -173,7 +173,7 @@ function MealPlanShopRequest() {
       </Typography>
       <Grid container spacing={2}>
         {approvedOrder.map((item, index) => (
-          <Grid item xs={3} sm={4} md={6} key={index}>
+          <Grid item xs={12} sm={6} md={3} key={index}>
             <Box
               sx={{
                 background: "#898246",
