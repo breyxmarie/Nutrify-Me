@@ -884,7 +884,102 @@ function MealPlanShopMealPlans() {
           {shopMealPlan.length === 0 ? (
             <Typography>Loading...</Typography>
           ) : (
-            <>{mealPlanDiv}</>
+            // <>{mealPlanDiv}</>
+            <>
+              {shopMealPlan === null ? (
+                <></>
+              ) : (
+                <>
+                  <Grid container={2} sx={{ mx: "5%", mt: "5%" }}>
+                    {shopMealPlan
+                      .filter(
+                        (item) =>
+                          item.start_week ==
+                          dayjs(value).startOf("week").format("YYYY-MM-DD")
+                      )
+                      .map((plan, index) => (
+                        <Grid
+                          item
+                          xs={12}
+                          sm={12}
+                          md={6}
+                          key={index}
+                          sx={{
+                            mb: {
+                              xs: "45%", // For extra small screens
+                              sm: "18%", // For small screens
+                              md: "10%", // For medium screens (default)
+                              lg: "6%", // For large screens
+                              xl: "7%", // For extra large screens
+                            },
+                          }}
+                        >
+                          <img src={plan.image} width="20%" height="50%" />
+                          <Typography
+                            variant="body1"
+                            sx={{
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1.5em",
+                            }}
+                          >
+                            {plan.name}
+                          </Typography>
+                          <Typography sx={{ mx: "20%" }}>
+                            {plan.description}
+                          </Typography>
+                          <Typography variant="body1">
+                            PHP {plan.price}
+                          </Typography>
+                          <Button
+                            sx={{
+                              borderRadius: 4,
+                              background: "#D9D9D9",
+                              color: "#000000",
+                              ml: 2,
+
+                              px: 2,
+                              py: 1,
+                              fontSize: "15px",
+                              "&:hover": {
+                                backgroundColor: "#ffffff",
+                                color: "#000000",
+                                border: 1,
+                              },
+                            }}
+                            onClick={() => addToCart(plan.shop_mealplan_id)}
+                          >
+                            ADD TO CART
+                          </Button>
+                          <Button
+                            sx={{
+                              borderRadius: 4,
+                              background: "#E66253",
+                              color: "#ffffff",
+                              ml: 2,
+
+                              px: 2,
+                              py: 1,
+                              fontSize: "15px",
+                              "&:hover": {
+                                backgroundColor: "#ffffff",
+                                color: "#E66253",
+                                border: 1,
+                              },
+                            }}
+                            //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
+                            onClick={() =>
+                              setMealDetails(plan.shop_mealplan_id, plan.name)
+                            }
+                          >
+                            VIEW
+                          </Button>
+                        </Grid>
+                      ))}
+                  </Grid>
+                </>
+              )}
+            </>
           )}
         </Grid>
       </Box>
