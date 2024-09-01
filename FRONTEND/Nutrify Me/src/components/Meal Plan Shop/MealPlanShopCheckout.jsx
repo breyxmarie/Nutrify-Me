@@ -664,8 +664,6 @@ function MealPlanShopCheckout() {
   useEffect(() => {
     if (cartData.length > 0 && shopMeal.length === 0) {
       getMealData();
-    } else {
-      getMealData();
     }
 
     console.log(cartData[0], "this is the cart");
