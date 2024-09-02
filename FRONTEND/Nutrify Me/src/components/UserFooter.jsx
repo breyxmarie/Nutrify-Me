@@ -31,7 +31,9 @@ function UserFooter() {
 
   //! email stuff
   const form = useRef();
-
+  const [names, setNames] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const sendEmail = (e) => {
     //e.preventDefault();
     // const newLogo = "/images/snacks.png"; // Replace with actual new logo path
@@ -51,6 +53,11 @@ function UserFooter() {
         () => {
           console.log("SUCCESS!");
           toast("Message Sent!");
+
+          setNames("");
+          setEmail("");
+
+          setMessage("");
         },
         (error) => {
           console.log("FAILED...", error.text);
@@ -88,11 +95,15 @@ function UserFooter() {
     <footer className="footer" style={{ width: "100vw", marginTop: "5%" }}>
       <div
         className="container"
-        style={{ background: primaryColor, color: "#ffffff", padding: 20 }}
+        style={{
+          background: primaryColor,
+          color: "#ffffff",
+          padding: 20,
+        }}
       >
         <ToastContainer />
         <Grid container spacing={2} sx={{ mr: "20%" }}>
-          <Grid item xs={6} sm={4} md={3}>
+          <Grid item xs={6} sm={4} md={2.5}>
             <Box
               sx={{
                 borderRadius: 50,
@@ -100,20 +111,20 @@ function UserFooter() {
                 borderColor: secondaryColor,
                 background: "#ffffff",
                 width: {
-                  xs: "50px", // Extra small devices (less than 600px)
-                  sm: "80px", // Small devices (600px and up)
-                  md: "100px", // Medium devices (900px and up)
+                  xs: "100px", // Extra small devices (less than 600px)
+                  sm: "120px", // Small devices (600px and up)
+                  md: "150px", // Medium devices (900px and up)
                   lg: "200px", // Large devices (1200px and up)
                   xl: "35%", // Extra large devices (1536px and up)
                 },
                 height: {
-                  xs: "50px",
-                  sm: "80px",
-                  md: "100px",
+                  xs: "100px",
+                  sm: "120px",
+                  md: "150px",
                   lg: "200px",
                   xl: "60%",
                 },
-                ml: { xs: "35%", md: "25%", lg: "25%" }, // Adjust margin for different screen sizes
+                ml: { xs: "15%", sm: "20%", md: "15%", lg: "10%", xl: "10%" }, // Adjust margin for different screen sizes
               }}
             >
               <img
@@ -150,7 +161,7 @@ function UserFooter() {
             item
             xs={6}
             sm={4}
-            md={3}
+            md={2}
             style={{
               textAlign: "left",
             }}
@@ -184,7 +195,7 @@ function UserFooter() {
             </Link>
             <br />
             <br />
-            E-COMMERCE <br />
+            MEAL PLAN SHOP <br />
             <Link
               to="/meal-plan-shop-home"
               style={{
@@ -263,39 +274,58 @@ function UserFooter() {
               Progress Report
             </Link>
           </Grid>
-          <Grid item xs={6} sm={4} md={3} sx={{ textAlign: "left" }}>
-            CONTACT US
-            <br />
-            <form ref={form} onSubmit={handleSubmit(onSubmitHandler)}>
-              {" "}
-              <TextField
-                sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-                // value={value}
-                // id="outlined-basic"
-                // label={label}
-                // variant="standard"
+          <Grid
+            item
+            xs={6}
+            sm={4}
+            md={4}
+            sx={
+              {
+                // textAlign: "center",
+                // display: "flex",
+                // alignItems: "left",
+                // justifyContent: "left",
+              }
+            }
+          >
+            <Box sx={{ mr: 5 }}>
+              CONTACT US
+              <br />
+              <form ref={form} onSubmit={handleSubmit(onSubmitHandler)}>
+                {" "}
+                <TextField
+                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                  // value={value}
+                  // id="outlined-basic"
+                  // label={label}
+                  // variant="standard"
 
-                id="outlined-basic"
-                // label="Outlined"
-                variant="outlined"
-                placeholder="name"
-                name="from_name"
-                // error={!!error}
-                // helperText={error?.message}
-              />
-              <br />
-              <br />
-              <TextField
-                sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-                id="outlined-basic"
-                variant="outlined"
-                placeholder="Email"
-                name="from_email"
-              />
-              <br />
-              <br />
-              <Box sx={{ width: "20px", ml: "0%" }}>
-                {/* <PhoneInput
+                  id="outlined-basic"
+                  // label="Outlined"
+                  variant="outlined"
+                  placeholder="name"
+                  name="from_name"
+                  value={names}
+                  onChange={(e) => setNames(e.target.value)}
+                  // on
+                  // error={!!error}
+                  // helperText={error?.message}
+                />
+                <br />
+                <br />
+                <TextField
+                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                  id="outlined-basic"
+                  variant="outlined"
+                  placeholder="Email"
+                  name="from_email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <br />
+                <br />
+                <Box sx={{ width: "20px", ml: "0%" }}>
+                  {/* <PhoneInput
                   // style={{ width: "80%" }}
                   style={{ width: "1000px" }} // Adjust the width as needed
                   //width="50%"
@@ -304,51 +334,54 @@ function UserFooter() {
                   onChange={(phone) => setPhone(phone)}
                   name="from_number"
                 /> */}
-              </Box>
-              <br />
-              <TextField
-                id="outlined-multiline-flexible"
-                sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
-                multiline
-                rows={4}
-                placeholder="Type message here"
-                name="message"
-              />
-              {/* <MyTextField
+                </Box>
+                <br />
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
+                  multiline
+                  rows={4}
+                  placeholder="Type message here"
+                  name="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+                {/* <MyTextField
                 label="Name"
                 name={"name"}
                 control={control}
                 placeholder="Provide a project name"
                 width={"100%"}
               /> */}
-              <br />
-              <Button
-                variant="contained"
-                type="submit"
-                sx={{
-                  width: "30%",
-                  background: "#ffffff",
-                  color: primaryColor,
-                  fontWeight: "bold",
-                  borderRadius: 6,
-                  mt: 2,
-                  "&:hover": {
-                    backgroundColor: "#E66253 ",
-                    color: "#ffffff",
-                    border: 1,
-                  },
-                }}
-                onClick={sendEmail}
-              >
-                SEND
-                <img
-                  src="/images/paperplane.png"
-                  width="20px"
-                  height="20px"
-                  style={{ margin: 0, marginTop: 5 }}
-                ></img>
-              </Button>
-            </form>
+                <br />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  sx={{
+                    width: "30%",
+                    background: "#ffffff",
+                    color: primaryColor,
+                    fontWeight: "bold",
+                    borderRadius: 6,
+                    mt: 2,
+                    "&:hover": {
+                      backgroundColor: "#E66253 ",
+                      color: "#ffffff",
+                      border: 1,
+                    },
+                  }}
+                  onClick={sendEmail}
+                >
+                  SEND
+                  <img
+                    src="/images/paperplane.png"
+                    width="20px"
+                    height="20px"
+                    style={{ margin: 0, marginTop: 5 }}
+                  ></img>
+                </Button>
+              </form>
+            </Box>
           </Grid>
         </Grid>
       </div>

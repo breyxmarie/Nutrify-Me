@@ -297,7 +297,8 @@ function MainHome() {
               }}
             >
               <Grid
-                xs={4}
+                xs={12}
+                md={4}
                 sx={{
                   m: "5%",
                   alignItems: "center",
@@ -307,7 +308,7 @@ function MainHome() {
               >
                 <img src="/images/HomeImage.png" width="100%" height="80%" />
               </Grid>
-              <Grid xs={4} sx={{ m: "10%" }}>
+              <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
                 <img src="/images/star.png" width="30px" height="30px" />
                 <img src="/images/star.png" width="30px" height="30px" />
@@ -335,7 +336,8 @@ function MainHome() {
               }}
             >
               <Grid
-                xs={4}
+                xs={12}
+                md={4}
                 sx={{
                   m: "5%",
                   alignItems: "center",
@@ -348,7 +350,7 @@ function MainHome() {
                   height="100%"
                 ></img>
               </Grid>
-              <Grid xs={4} sx={{ m: "10%" }}>
+              <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
                 <img src="/images/star.png" width="30px" height="30px" />
                 <img src="/images/star.png" width="30px" height="30px" />
@@ -375,7 +377,8 @@ function MainHome() {
               }}
             >
               <Grid
-                xs={4}
+                xs={12}
+                md={4}
                 sx={{
                   m: "5%",
                   alignItems: "center",
@@ -388,7 +391,7 @@ function MainHome() {
                   height="100%"
                 ></img>
               </Grid>
-              <Grid xs={4} sx={{ m: "10%" }}>
+              <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
                 <img src="/images/star.png" width="30px" height="30px" />
                 <img src="/images/star.png" width="30px" height="30px" />
@@ -416,7 +419,8 @@ function MainHome() {
               }}
             >
               <Grid
-                xs={4}
+                xs={12}
+                md={4}
                 sx={{
                   m: "5%",
                   alignItems: "center",
@@ -429,7 +433,7 @@ function MainHome() {
                   height="100%"
                 ></img>
               </Grid>
-              <Grid xs={4} sx={{ m: "10%" }}>
+              <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
                 <img src="/images/star.png" width="30px" height="30px" />
                 <img src="/images/star.png" width="30px" height="30px" />
