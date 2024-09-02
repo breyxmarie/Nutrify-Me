@@ -1396,7 +1396,18 @@ function MealPlanShopCheckout() {
             </Typography>
 
             <Box
-              sx={{ borderRadius: 0, border: 1, ml: "5%", mr: "5%", pb: "10%" }}
+              sx={{
+                borderRadius: 0,
+                border: 1,
+                ml: "5%",
+                mr: "5%",
+                pb: {
+                  xs: "18%", // Extra small devices (less than 600px)
+                  sm: "15%", // Small devices (600px and up)
+                  md: "15%", // Medium devices (900px and up)
+                  lg: "10%",
+                },
+              }}
             >
               <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
                 <Grid xs={12} md={2}>
@@ -1433,10 +1444,26 @@ function MealPlanShopCheckout() {
                         {addressData[selectedAddress]?.address}{" "}
                       </Typography>
 
-                      <Box sx={{ height: "100%", width: "70%" }}>
-                        <APIProvider
-                          apiKey={API_KEY}
-                          onLoad={() => console.log("Maps API has loaded.")}
+                      <APIProvider
+                        apiKey={API_KEY}
+                        onLoad={() => console.log("Maps API has loaded.")}
+                      >
+                        <Box
+                          sx={{
+                            width: {
+                              xs: "80%", // Extra small devices (less than 600px)
+                              sm: "70%", // Small devices (600px and up)
+                              md: "50%", // Medium devices (900px and up)
+                              lg: "40%", // Large devices (1200px and up)
+                              xl: "35%", // Extra large devices (1536px and up)
+                            },
+                            height: {
+                              xs: "150%", // Extra small devices (less than 600px)
+                              sm: "150%", // Small devices (600px and up)
+                              md: "180%", // Medium devices (900px and up)
+                              lg: "200%", // Large devices (1200px and up)
+                            },
+                          }}
                         >
                           <Map
                             defaultZoom={13}
@@ -1455,8 +1482,8 @@ function MealPlanShopCheckout() {
                               }}
                             />
                           </Map>
-                        </APIProvider>
-                      </Box>
+                        </Box>
+                      </APIProvider>
                     </>
                   )}
                 </Grid>
@@ -1624,7 +1651,13 @@ function MealPlanShopCheckout() {
                   color: "#99756E",
                   fontWeight: "bold",
                   my: 5,
-                  fontSize: "30px",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1.5em", // For medium screens
+                    lg: "2.0em", // For large screens
+                    xl: "2em", // For extra large screens
+                  },
                 }}
               >
                 PAYMENT DETAILS
@@ -1633,7 +1666,19 @@ function MealPlanShopCheckout() {
               <br />
               <Grid container spacing={2} sx={{ my: 5 }}>
                 {" "}
-                <Grid xs={6}>ORDER SUBTOTAL</Grid>
+                <Grid
+                  xs={6}
+                  sx={{
+                    fontSize: {
+                      xs: "1em", // For extra small screens
+                      sm: "1em", // For small screens
+                      md: "1em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
+                  ORDER SUBTOTAL
+                </Grid>
                 <Grid xs={6}>Php {subTotalPrices}</Grid>
               </Grid>
 
@@ -1641,7 +1686,17 @@ function MealPlanShopCheckout() {
               <br />
               <Grid container spacing={2} sx={{ my: 5 }}>
                 {" "}
-                <Grid xs={6}>
+                <Grid
+                  xs={6}
+                  sx={{
+                    fontSize: {
+                      xs: "1em", // For extra small screens
+                      sm: "1em", // For small screens
+                      md: "1em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   SHIPPING DETAILS <br />
                   Courier: Lalamove
                 </Grid>

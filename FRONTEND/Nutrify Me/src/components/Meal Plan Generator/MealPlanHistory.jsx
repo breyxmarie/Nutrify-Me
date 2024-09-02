@@ -182,7 +182,7 @@ function MealPlanHistory() {
         (item, index) => (
           //  item.meal.map((items) => (
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid xs={10}>
+            <Grid xs={12} md={10}>
               <Box>
                 <Accordion>
                   <AccordionSummary
@@ -191,7 +191,7 @@ function MealPlanHistory() {
                     id="panel1-header"
                   >
                     <Grid container spacing={2} sx={{ mx: "10%", mt: 5 }}>
-                      <Grid xs={4}>
+                      <Grid sx={12} md={4}>
                         {" "}
                         <Grid container spacing={2} sx={{ mx: 0 }}>
                           <Grid xs={6}>
@@ -245,10 +245,12 @@ function MealPlanHistory() {
                           </Grid>
                         </Grid>
                       </Grid>
-                      <Grid xs={4}>
+                      <Grid sx={6} md={4}>
                         {" "}
                         <Typography>{item.name}</Typography>
-                        <Typography>{item.date}</Typography>
+                        <Typography>
+                          {dayjs(item.date).format("MMMM DD, YYYY")}
+                        </Typography>
                         <br />
                         <br />
                         <br />
@@ -270,7 +272,7 @@ function MealPlanHistory() {
                           Request To Order
                         </Button> */}
                       </Grid>
-                      <Grid xs={4} alignItems="center">
+                      <Grid sx={6} md={4} alignItems="center">
                         <Typography
                           display="flex"
                           justifyContent="flex-start"
@@ -291,10 +293,26 @@ function MealPlanHistory() {
 
                   <AccordionDetails>
                     <Typography>{item.name}</Typography>
-                    <Typography>{item.date}</Typography>
+                    <Typography>
+                      {" "}
+                      {dayjs(item.date).format("MMMM DD, YYYY")}
+                    </Typography>
 
                     <Grid container spacing={2}>
-                      <Grid item xs={1}>
+                      <Grid
+                        item
+                        xs={0}
+                        sm={0}
+                        md={1}
+                        lg={1}
+                        sx={{
+                          display: {
+                            xs: "none", // Hide on extra small screens
+                            sm: "none",
+                            md: "block", // Display on small screens and up
+                          },
+                        }}
+                      >
                         <Button
                           onClick={() => handlePrevC(index)}
                           sx={{ mt: "235%", background: "#ffffff" }}
@@ -306,7 +324,7 @@ function MealPlanHistory() {
                           />
                         </Button>
                       </Grid>
-                      <Grid item xs={10}>
+                      <Grid item xs={12} md={10}>
                         <Slider
                           {...settings}
                           ref={(ref) => {
@@ -345,7 +363,7 @@ function MealPlanHistory() {
 
                                 <Grid container spacing={2} sx={{ mx: "0%" }}>
                                   {items.meals.map((items1) => (
-                                    <Grid item xs={3} sm={3} md={3} key={index}>
+                                    <Grid item xs={6} sm={3} md={3} key={index}>
                                       <div className="parent-div">
                                         <PopupTrigger>
                                           <Typography>{items1.Meal}</Typography>
@@ -458,7 +476,12 @@ function MealPlanHistory() {
                                               sx={{
                                                 background: "#E66253",
                                                 color: "#ffffff",
-                                                fontSize: 16,
+                                                fontSize: {
+                                                  xs: "0.6em", // For extra small screens
+                                                  sm: "0.8em", // For small screens
+                                                  md: "1.0em", // For medium screens
+                                                  lg: "1.0em", // For large screens
+                                                },
                                                 mt: 3,
                                                 borderRadius: 3,
                                                 px: 5,
@@ -491,7 +514,20 @@ function MealPlanHistory() {
                           ))}
                         </Slider>
                       </Grid>
-                      <Grid item xs={1}>
+                      <Grid
+                        item
+                        xs={0}
+                        sm={0}
+                        md={1}
+                        lg={1}
+                        sx={{
+                          display: {
+                            xs: "none", // Hide on extra small screens
+                            sm: "none",
+                            md: "block", // Display on small screens and up
+                          },
+                        }}
+                      >
                         {" "}
                         {/* Button container (adjust width as needed) */}
                         <Button
@@ -505,21 +541,44 @@ function MealPlanHistory() {
                           />
                         </Button>
                       </Grid>
+
+                      <Typography
+                        sx={{
+                          color: "#000000",
+                          display: {
+                            xs: "block", // Hide on extra small screens
+                            sm: "block",
+                            md: "none",
+                          },
+                          fontWeight: "bold",
+                          mt: 4,
+                          mx: "auto",
+                        }}
+                      >
+                        Swipe to See More
+                      </Typography>
                     </Grid>
                   </AccordionDetails>
                 </Accordion>
               </Box>
             </Grid>
-            <Grid xs={1.5}>
+            <Grid xs={12} md={1.5}>
               {" "}
               <Button
                 sx={{
-                  mx: "auto",
+                  mx: {
+                    xs: "auto",
+                    md: "auto",
+                  },
                   display: "block",
-                  float: "right",
+                  // float: "right",
                   background: "#E66253",
                   fontSize: "13px",
-                  mt: "60%",
+
+                  mt: {
+                    xs: "5%",
+                    md: "60%",
+                  },
                   color: "#ffffff",
                   "&:hover": {
                     backgroundColor: "#ffffff",

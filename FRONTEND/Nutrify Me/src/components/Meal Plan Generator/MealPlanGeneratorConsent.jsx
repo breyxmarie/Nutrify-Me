@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Grid from "@mui/material/Grid";
 
 function MealPlanGeneratorConsent() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function MealPlanGeneratorConsent() {
       className="content"
       style={{
         paddingBottom: "40px",
-        marginTop: "80px",
+        marginTop: "5%",
         fontFamily: "Poppins",
         color: "#000000",
       }}
@@ -50,7 +51,19 @@ function MealPlanGeneratorConsent() {
         >
           CONSENT
         </Typography>
-        <p style={{ color: "#000000" }}>
+        <Typography
+          sx={{
+            color: "#000000",
+            fontSize: {
+              xs: "0.5em", // For extra small screens
+              sm: "0.8em", // For small screens
+              md: "1m", // For medium screens
+              lg: "1.0em", // For large screens
+            },
+            ml: "10%",
+            mr: "10%",
+          }}
+        >
           The purpose of this consent form is to inform you about the meal plan
           generator and to obtain your consent to use the provided information
           to create personalized meal plans. The meal plan generator aims to
@@ -79,17 +92,50 @@ function MealPlanGeneratorConsent() {
           the information provided in this consent form. You voluntarily agree
           to participate in the meal plan generator and consent to the
           collection and use of your information as described.
-        </p>
+        </Typography>
         <br />
-        <input
-          type="checkbox"
-          checked={isChecked}
-          onChange={handleChange}
-          style={{ color: "#000000" }}
-        />
-        I agree with terms and conditions.
-        <br />
-        <br />
+        <Box sx={{ mr: "20%", ml: "0%", mt: "2%" }}>
+          <Grid container spacing={2}>
+            <Grid
+              xs={6}
+              sx={{
+                display: "flex",
+                alignItems: "right",
+                justifyContent: "right",
+              }}
+            >
+              <input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleChange}
+                style={{ color: "#000000" }}
+              />
+            </Grid>
+            <Grid
+              xs={6}
+              sx={{
+                display: "flex",
+                alignItems: "left",
+                justifyContent: "left",
+              }}
+            >
+              <Typography
+                sx={{
+                  color: "#000000",
+                  fontSize: {
+                    xs: "0.5em", // For extra small screens
+                    sm: "0.8em", // For small screens
+                    md: "1m", // For medium screens
+                    lg: "1.0em", // For large screens
+                  },
+                }}
+              >
+                I agree with terms and conditions.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+
         <Button
           variant="contained"
           onClick={proceed}
@@ -97,6 +143,8 @@ function MealPlanGeneratorConsent() {
             mx: "auto",
             display: "block",
             //  float: "right",
+            mt: 2,
+            mb: 3,
             background: "#E66253",
             fontSize: "12px",
             "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },

@@ -77,7 +77,7 @@ function MealPlanGeneratorNavBar() {
         top: "115px",
         height: "0px",
         width: "100vw",
-        marginBottom: "8%",
+        marginBottom: "10%",
       }}
     >
       <Container maxWidth="100%" sx={{ background: "#ffffff", padding: 0 }}>
@@ -95,7 +95,15 @@ function MealPlanGeneratorNavBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
-              sx={{ color: "#E66253", border: 2 }}
+              sx={{
+                color: "#E66253",
+                border: 2,
+                ml: {
+                  xs: "10%",
+                  sm: "0%",
+                  md: "0%",
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>

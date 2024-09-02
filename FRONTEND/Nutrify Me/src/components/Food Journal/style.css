@@ -92,6 +92,35 @@ main {
   flex-direction: row;
   flex-wrap: wrap;
   width: 100%;
+  @media screen and (max-width: 480px) {
+    /* Styles for extra small screens */
+
+    font-size: 12px;
+  }
+
+  @media screen and (min-width: 481px) and (max-width: 599px) {
+    /* Styles for small screens */
+
+    font-size: 14px;
+  }
+
+  @media screen and (min-width: 600px) and (max-width: 767px) {
+    /* Styles for medium screens */
+
+    font-size: 16px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    /* Styles for large screens */
+
+    font-size: 18px;
+  }
+
+  @media screen and (min-width: 1024px) {
+    /* Styles for extra large screens */
+
+    font-size: 20px;
+  }
   /* border: 1px solid #1a8fff; */
 }
 
@@ -193,6 +222,36 @@ main {
   border: 1px solid #898246;
   border-color: #898246; */
   color: #99756e;
+
+  @media screen and (max-width: 480px) {
+    /* Styles for extra small screens */
+
+    font-size: 12px;
+  }
+
+  @media screen and (min-width: 481px) and (max-width: 599px) {
+    /* Styles for small screens */
+
+    font-size: 14px;
+  }
+
+  @media screen and (min-width: 600px) and (max-width: 767px) {
+    /* Styles for medium screens */
+
+    font-size: 16px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1023px) {
+    /* Styles for large screens */
+
+    font-size: 18px;
+  }
+
+  @media screen and (min-width: 1024px) {
+    /* Styles for extra large screens */
+
+    font-size: 20px;
+  }
 }
 
 /* .calendar .days {

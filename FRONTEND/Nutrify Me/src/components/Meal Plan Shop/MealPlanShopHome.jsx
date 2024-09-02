@@ -429,8 +429,8 @@ function MealPlanShopHome() {
 
         <br />
         {faqs.map((f, index) => (
-          <div key={index}>
-            <hr style={{ marginLeft: "10%", marginRight: "10%" }} />
+          <div key={index} style={{ marginLeft: "10%", marginRight: "10%" }}>
+            <hr style={{ marginLeft: "0%", marginRight: "0%" }} />
             <br />
             <Grid container spacing={2}>
               <Grid xs={6}>

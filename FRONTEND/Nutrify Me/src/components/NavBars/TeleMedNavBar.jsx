@@ -90,7 +90,15 @@ function TeleMedNavBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
-              sx={{ color: "#E66253", border: 2 }}
+              sx={{
+                color: "#E66253",
+                border: 2,
+                ml: {
+                  xs: "10%",
+                  sm: "0%",
+                  md: "0%",
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>

@@ -193,7 +193,7 @@ function MainUserNavbar() {
               borderRadius: 4,
               justifyContent: "space-between",
               alignItems: "center",
-              px: 7,
+              px: 5,
               mx: "2%",
             }}
           >

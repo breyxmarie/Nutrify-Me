@@ -224,7 +224,12 @@ function FoodJournalHome() {
       days.push(
         <div className="col col-center" key={i}>
           {/* {format(addDays(startDate, i), dateFormat)} */}
-          <Box sx={{ border: 0.8, borderColor: "#898246" }}>
+          <Box
+            sx={{
+              border: 0.8,
+              borderColor: "#898246",
+            }}
+          >
             {format(addDays(startDate, i), dateFormat)}
           </Box>
         </div>
@@ -835,7 +840,7 @@ function FoodJournalHome() {
           <br />
           <br />
           <Grid container spacing={2}>
-            <Grid xs={4} sx={{ borderRadius: 5 }}>
+            <Grid xs={2} md={4} sx={{ borderRadius: 5 }}>
               CARBS{" "}
               <Box
                 sx={{
@@ -1672,7 +1677,7 @@ function FoodJournalHome() {
     <div
       className="content"
       style={{
-        paddingBottom: "40px",
+        paddingBottom: "0px",
         marginTop: "80px",
         fontFamily: "Poppins",
         marginLeft: "10px",
@@ -1821,9 +1826,11 @@ function FoodJournalHome() {
       </div> */}
 
       {journalEntry.length > 0 && foodEntry.length > 0 ? (
-        <Grid container spacing={2} sx={{ mt: 3 }}>
-          <Grid xs={6}> </Grid>
-          <Grid xs={6}>
+        <Grid container spacing={2} sx={{ mt: 3, mb: 1 }}>
+          <Grid xs={4} md={6}>
+            {" "}
+          </Grid>
+          <Grid xs={8} md={6}>
             {/* {selectedDate } */}
 
             <Button
@@ -1831,7 +1838,19 @@ function FoodJournalHome() {
                 background: primaryColor,
                 borderRadius: 3,
                 color: "#ffffff",
-                px: 5,
+                px: {
+                  xs: 5, // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.5em", // For large screens
+                  xl: "2.0em", // For extra large screens
+                },
+                fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1em", // For large screens
+                },
                 "&:hover": {
                   backgroundColor: "#ffffff",
                   color: "#E66253",
@@ -3152,7 +3171,7 @@ function FoodJournalHome() {
       ) : (
         <Grid container spacing={2}>
           <Grid xs={6}> </Grid>
-          <Grid xs={6}>
+          <Grid xs={6} sx={{ mt: 3 }}>
             {/* {selectedDate } */}
 
             <Button
@@ -3160,7 +3179,19 @@ function FoodJournalHome() {
                 background: primaryColor,
                 borderRadius: 3,
                 color: "#ffffff",
-                px: 5,
+                px: {
+                  xs: 5, // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.5em", // For large screens
+                  xl: "2.0em", // For extra large screens
+                },
+                fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1em", // For large screens
+                },
                 "&:hover": {
                   backgroundColor: "#ffffff",
                   color: "#E66253",
@@ -4435,41 +4466,50 @@ function FoodJournalHome() {
             <br />
             <br />
             <Grid container spacing={2}>
-              <Grid xs={4} sx={{ borderRadius: 5 }}>
-                {nums}
+              <Grid xs={4} md={4} sx={{ borderRadius: 5 }}>
+                {/* {nums} */}
                 CARBS{" "}
                 <Box
                   sx={{
                     background: "#ffffff",
                     color: secondaryColor,
                     borderRadius: 2,
-                    mx: 5,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
                   }}
                 >
                   {carbs}g
                 </Box>
               </Grid>
-              <Grid xs={4}>
+              <Grid xs={4} md={4}>
                 PROTEIN{" "}
                 <Box
                   sx={{
                     background: "#ffffff",
                     color: primaryColor,
                     borderRadius: 2,
-                    mx: 5,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
                   }}
                 >
                   {protein} g
                 </Box>
               </Grid>
-              <Grid xs={4}>
+              <Grid xs={4} md={4}>
                 FATS{" "}
                 <Box
                   sx={{
                     background: "#ffffff",
                     color: secondaryColor,
                     borderRadius: 2,
-                    mx: 5,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
                   }}
                 >
                   {fat} g
@@ -4508,87 +4548,90 @@ function FoodJournalHome() {
       {/* {journalEntry[0].title} */}
       {foodEntry.length > 0 ? (
         foodEntry.map((meal, index) => (
-          <>
-            <Grid container spacing={2} sx={{ mb: "60px" }}>
-              <Grid xs={4}>
-                <img src={getMealPic(index)} height="200px" />
-              </Grid>
-              <Grid xs={6}>
-                <Typography
-                  sx={{ color: "#99756E", fontSize: "30px", textAlign: "left" }}
-                >
-                  {meal.type}:{meal.food}
-                </Typography>
-                <br />
-                <Grid
-                  container
-                  justify="flex-end"
-                  alignItems="left"
-                  spacing={2}
-                  sx={{ mt: 10 }}
-                >
-                  <Grid xs={3}>
-                    <img src="/images/calories.png" />
-                    {meal.calories}
-                  </Grid>
-                  <Grid xs={3}>
-                    {" "}
-                    <img src="/images/fat.png" /> {meal.fat}g
-                  </Grid>
-                  <Grid xs={3}>
-                    {" "}
-                    <img src="/images/carbs.png" /> {meal.carbs}g
-                  </Grid>
-                  <Grid xs={3}>
-                    {" "}
-                    <img src="/images/protein.png" /> {meal.protein}g
-                  </Grid>
+          <Grid container spacing={2} sx={{ mb: "1px" }}>
+            <Grid xs={4}>
+              <img src={getMealPic(index)} height="30%" />
+            </Grid>
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1.3em", // For small screens
+                    md: "1.5em", // For medium screens
+                    lg: "2em", // For large screens
+                  },
+                  textAlign: "left",
+                }}
+              >
+                {meal.type}:{meal.food}
+              </Typography>
+              <br />
+              <Grid
+                container
+                justify="flex-end"
+                alignItems="left"
+                spacing={2}
+                sx={{ mt: 0 }}
+              >
+                <Grid xs={6} md={3}>
+                  <img src="/images/calories.png" />
+                  {meal.calories} calories
+                </Grid>
+                <Grid xs={6} md={3}>
+                  {" "}
+                  <img src="/images/fat.png" /> {meal.fat}g fat
+                </Grid>
+                <Grid xs={6} md={3}>
+                  {" "}
+                  <img src="/images/carbs.png" /> {meal.carbs}g carbs
+                </Grid>
+                <Grid xs={6} md={3}>
+                  {" "}
+                  <img src="/images/protein.png" /> {meal.protein}g protein
                 </Grid>
               </Grid>
-              <Grid xs={2}>
-                {/* <Button
+            </Grid>
+            <Grid xs={2}>
+              {/* <Button
                 sx={{ color: "#E66253", textDecoration: "underline" }}
                 onClick={() => handleSelectMeal(meal)}
               >
                 View Details{" "}
               </Button> */}
 
-                <Modal
-                  open={opens}
-                  onClose={handleCloses}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={styles}>
-                    <Grid container spacing={2}>
-                      <Grid xs={2}>
-                        {" "}
-                        <img src="/images/food journal icon.png" />
-                      </Grid>
-                      <Grid xs={8}>[Date]</Grid>
-                      <Grid xs={2}>
-                        <Button
-                          key={index}
-                          sx={{ float: "right" }}
-                          onClick={() => handleClose()}
-                        >
-                          <img
-                            src="/images/close.png"
-                            height="10"
-                            weight="10"
-                          />
-                        </Button>
-                      </Grid>
+              <Modal
+                open={opens}
+                onClose={handleCloses}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={styles}>
+                  <Grid container spacing={2}>
+                    <Grid xs={2}>
+                      {" "}
+                      <img src="/images/food journal icon.png" />
                     </Grid>
-                    {modalContent}
-                  </Box>
-                </Modal>
-              </Grid>
+                    <Grid xs={8}>[Date]</Grid>
+                    <Grid xs={2}>
+                      <Button
+                        key={index}
+                        sx={{ float: "right" }}
+                        onClick={() => handleClose()}
+                      >
+                        <img src="/images/close.png" height="10" weight="10" />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  {modalContent}
+                </Box>
+              </Modal>
             </Grid>
-          </>
+          </Grid>
         ))
       ) : (
-        <div>You haven't added any food entries yet.</div>
+        <div></div>
       )}
     </div>
   );

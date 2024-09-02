@@ -2019,7 +2019,18 @@ function MealPlanTest() {
               border: 1,
               borderRadius: 3,
               borderColor: "#99756E",
-              mx: "20%",
+              ml: {
+                xs: "5%", // Extra small devices (less than 600px)
+                sm: "5%", // Small devices (600px and up)
+                md: "10%", // Medium devices (900px and up)
+                lg: "10%", // Large devices (1200px and up)
+              },
+              mr: {
+                xs: "5%", // Extra small devices (less than 600px)
+                sm: "5%", // Small devices (600px and up)
+                md: "10%", // Medium devices (900px and up)
+                lg: "10%", // Large devices (1200px and up)
+              },
               pb: "3%",
               pt: "1%",
             }}
@@ -2038,15 +2049,15 @@ function MealPlanTest() {
                   mx: "5%",
                   px: "5%",
                   py: "1.5%",
-                  mb: "5%",
+                  mb: "50px",
                 }}
               >
                 <Typography sx={{ color: "#898246" }}>
                   This calculator uses a standard{" "}
                   <b>Harris-Benedict equation </b>to estimate your Calorie
-                  needs. The Total Daily Energy Expenditure base on your goal
-                  and activity level to determine the needed calories and amcro
-                  nutrients per day. We also make some rough macronutrient
+                  needs. The Total Daily Energy Expenditure is based on your
+                  goal and activity level to determine the needed calories and
+                  macro nutrients per day. We also make some rough macronutrient
                   suggestions.
                 </Typography>
               </Box>
@@ -2055,7 +2066,8 @@ function MealPlanTest() {
             <form onSubmit={handleSubmit(onSubmitHandler)}>
               <Grid container spacing={2}>
                 <Grid
-                  xs={1.5}
+                  xs={2}
+                  lg={1.5}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
@@ -2063,7 +2075,8 @@ function MealPlanTest() {
                   <Typography sx={{ mt: 1.2 }}> I want to....</Typography>
                 </Grid>{" "}
                 <Grid
-                  xs={4}
+                  xs={7}
+                  lg={4}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: 4 }}
@@ -2094,7 +2107,8 @@ function MealPlanTest() {
 
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
-                  xs={1.5}
+                  xs={2}
+                  lg={1.5}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
@@ -2102,7 +2116,8 @@ function MealPlanTest() {
                   <Typography sx={{ mt: 1.2 }}>Gender</Typography>
                 </Grid>
                 <Grid
-                  xs={4}
+                  xs={7}
+                  lg={4}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: 4 }}
@@ -2132,7 +2147,8 @@ function MealPlanTest() {
               </Grid>
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
-                  xs={1.5}
+                  xs={2}
+                  lg={1.5}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
@@ -2140,7 +2156,8 @@ function MealPlanTest() {
                   <Typography sx={{ mt: "15%" }}>Height (in cm)</Typography>
                 </Grid>
                 <Grid
-                  xs={4}
+                  xs={7}
+                  lg={4}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: 4 }}
@@ -2163,7 +2180,8 @@ function MealPlanTest() {
               </Grid>
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
-                  xs={1.5}
+                  xs={2}
+                  lg={1.5}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
@@ -2171,7 +2189,8 @@ function MealPlanTest() {
                   <Typography sx={{ mt: 2 }}> Weight (in kg)</Typography>
                 </Grid>
                 <Grid
-                  xs={4}
+                  xs={7}
+                  lg={4}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: 4 }}
@@ -2194,7 +2213,8 @@ function MealPlanTest() {
               </Grid>
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
-                  xs={1.5}
+                  xs={2}
+                  lg={1.5}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
@@ -2203,7 +2223,8 @@ function MealPlanTest() {
                   <Typography sx={{ mt: 2 }}> Age</Typography>
                 </Grid>
                 <Grid
-                  xs={4}
+                  xs={7}
+                  lg={4}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: 4 }}
@@ -2226,7 +2247,8 @@ function MealPlanTest() {
               </Grid>
               <Grid container spacing={2} sx={{ mt: 2 }}>
                 <Grid
-                  xs={1.5}
+                  xs={2}
+                  lg={1.5}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: "8%" }}
@@ -2235,7 +2257,8 @@ function MealPlanTest() {
                   <Typography sx={{ mt: 1 }}> Activity Level</Typography>
                 </Grid>
                 <Grid
-                  xs={4}
+                  xs={7}
+                  lg={4}
                   display="flex"
                   justifyContent="flex-start"
                   sx={{ ml: 4 }}
@@ -2299,7 +2322,7 @@ function MealPlanTest() {
               MEAL PLAN GENERATOR QUESTIONNAIRE
             </Typography>
             <Grid container spacing={1} sx={{ mx: "0", mt: "1%" }}>
-              <Grid xs={4} sx={{}}>
+              <Grid xs={12} md={4} sx={{}}>
                 <Box
                   sx={{
                     mx: "5%",
@@ -2318,7 +2341,13 @@ function MealPlanTest() {
                       borderRadius: 4,
                       mx: "35%",
 
-                      fontSize: "150%",
+                      fontSize: {
+                        xs: "0.8em", // For extra small screens
+                        sm: "0.8em", // For small screens
+                        md: "1.0em", // For medium screens
+                        lg: "1.5em", // For large screens
+                        xl: "2.0em", // For extra large screens
+                      },
                       mt: 1.5,
                     }}
                   >
@@ -2357,13 +2386,24 @@ function MealPlanTest() {
                   </Grid>
                 </Box>
               </Grid>
-              <Grid xs={4}>
+              <Grid xs={12} md={4}>
                 <Box
                   sx={{
-                    // mx: "5%",
+                    ml: "5%",
+                    mr: "5%",
+                    mt: {
+                      xs: 3, // For extra small screens
+                      sm: 3, // For small screens
+                      md: 0, // For medium screens
+                    },
                     color: "#99756E",
                     border: 1.8,
-                    pb: "64%",
+
+                    pb: {
+                      xs: 3, // For extra small screens
+                      sm: 3, // For small screens
+                      md: "64%", // For medium screens
+                    },
                     borderRadius: 4,
                   }}
                 >
@@ -2371,12 +2411,19 @@ function MealPlanTest() {
                     sx={{
                       color: "#99756E",
                       border: 3,
+
                       borderColor: "##99756E",
                       fontWeight: "bold",
                       borderRadius: 4,
                       mx: "35%",
 
-                      fontSize: "150%",
+                      fontSize: {
+                        xs: "0.8em", // For extra small screens
+                        sm: "0.8em", // For small screens
+                        md: "1.0em", // For medium screens
+                        lg: "1.5em", // For large screens
+                        xl: "2.0em", // For extra large screens
+                      },
                       mt: 1.5,
                     }}
                   >
@@ -2415,11 +2462,15 @@ function MealPlanTest() {
                   </Grid>
                 </Box>
               </Grid>
-              <Grid xs={4}>
+              <Grid xs={12} md={4}>
                 <Box
                   sx={{
                     mx: "5%",
-
+                    mt: {
+                      xs: 3, // For extra small screens
+                      sm: 3, // For small screens
+                      md: 0, // For medium screens
+                    },
                     color: "#99756E",
                     border: 1.8,
                     pb: "5%",
@@ -2435,8 +2486,14 @@ function MealPlanTest() {
                       borderRadius: 4,
                       mx: "30%",
                       mb: "3%",
-                      fontSize: "1.5rem",
-                      "@media (max-width: 600px)": { fontSize: "1.2rem" },
+                      fontSize: {
+                        xs: "0.8em", // For extra small screens
+                        sm: "0.8em", // For small screens
+                        md: "1.0em", // For medium screens
+                        lg: "1.5em", // For large screens
+                        xl: "2.0em", // For extra large screens
+                      },
+
                       mt: 1.5,
                     }}
                   >
@@ -2476,20 +2533,20 @@ function MealPlanTest() {
                 </Box>
               </Grid>
             </Grid>
-            <Box sx={{ mx: "28%" }}>
+            <Box sx={{ mx: "22%", mt: 2 }}>
               <Grid container spacing={2} sx={{ mt: "1%" }}>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                   <img src="/images/calories.png" />
                   {minCalories} - {maxCalories} Calories
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                   <img src="/images/carbs.png" /> {carbs} Carbs
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                   {" "}
                   <img src="/images/fat.png" /> {fat} Fat
                 </Grid>
-                <Grid xs={3}>
+                <Grid xs={12} md={3}>
                   <img src="/images/protein.png" /> {protein} Protein
                 </Grid>
               </Grid>
@@ -2499,7 +2556,11 @@ function MealPlanTest() {
                 mt: 3,
                 background: "#E66253",
                 color: "#ffffff",
-                fontSize: 16,
+                fontSize: {
+                  xs: "0.9em", // For extra small screens
+                  sm: "0.9em", // For small screens
+                  md: "1.2em", // For medium screens
+                },
 
                 borderRadius: 3,
                 px: 10,
@@ -2554,7 +2615,16 @@ function MealPlanTest() {
           ))}
 
           <Typography
-            sx={{ color: "#99756E", fontSize: "2em", fontWeight: "bold" }}
+            sx={{
+              color: "#99756E",
+              fontSize: {
+                xs: "1em", // For extra small screens
+                sm: "1.5em", // For small screens
+                md: "2em", // For medium screens
+                lg: "2.0em", // For large screens
+              },
+              fontWeight: "bold",
+            }}
           >
             The Generated Meal Plan for You Is....
           </Typography>
@@ -2611,7 +2681,20 @@ function MealPlanTest() {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid item xs={1}>
+            <Grid
+              item
+              xs={0}
+              sm={1}
+              md={1}
+              lg={1}
+              sx={{
+                display: {
+                  xs: "none", // Hide on extra small screens
+                  sm: "block",
+                  md: "block", // Display on small screens and up
+                },
+              }}
+            >
               <Button
                 onClick={handlePrevC}
                 sx={{ marginTop: "450%", background: "#ffffff" }}
@@ -2619,16 +2702,16 @@ function MealPlanTest() {
                 <img src="/images/left arrow.png" width="30px" height="30px" />
               </Button>
             </Grid>
-            <Grid item xs={10}>
+            <Grid item xs={12} sm={9} md={10} lg={10}>
               <Slider
                 {...settings}
                 ref={sliderRefC}
-                sx={{
+                style={{
                   color: "#000000",
                   border: 1,
                   borderColor: "#000000",
-                  ml: "30px",
-                  mr: "30px",
+                  marginLeft: "20px",
+                  marginRight: "20px",
                 }}
               >
                 {generatedMeal.map((item, index) => (
@@ -2639,7 +2722,7 @@ function MealPlanTest() {
                         border: 3,
                         borderColor: "#898246",
                         borderRadius: 3,
-                        ml: "0px",
+                        ml: "0%",
                         mr: "0px",
                         py: "2%",
                       }}
@@ -2656,9 +2739,12 @@ function MealPlanTest() {
                       {item.meals.map((items) => (
                         <Box sx={{ mt: "5%", ml: "5%" }}>
                           <Grid container spacing={2}>
-                            <Grid xs={2.1}>
+                            <Grid xs={12} md={3}>
                               {" "}
-                              <div className="parent-div">
+                              <div
+                                className="parent-div"
+                                style={{ marginLeft: "20%" }}
+                              >
                                 <PopupTrigger
                                 // ref={triggerRef}
                                 // onMouseEnter={handleMouseEnter}
@@ -2666,8 +2752,8 @@ function MealPlanTest() {
                                 >
                                   <img
                                     src={items.details.recipe.image}
-                                    width="150"
-                                    height="150"
+                                    width="80%"
+                                    height="70%"
                                   />
                                   <Popup>
                                     hi Ingredients
@@ -2683,43 +2769,65 @@ function MealPlanTest() {
                                 </PopupTrigger>
                               </div>
                             </Grid>
-                            <Grid xs={5}>
+                            <Grid xs={12} sm={12} md={4}>
                               {" "}
-                              <Typography
-                                display="flex"
-                                justifyContent="flex-start"
+                              <Box
+                                sx={{
+                                  mx: "0%",
+                                  mt: {
+                                    xs: 0, // For extra small screens
+                                    sm: 0, // For small screens
+                                    md: 5, // For medium screens
+                                  },
+                                }}
                               >
-                                {items.Meal}
-                              </Typography>
-                              <Typography
-                                display="flex"
-                                justifyContent="flex-start"
-                              >
-                                {items.details.recipe.label}
-                              </Typography>
-                              <Typography
-                                display="flex"
-                                justifyContent="flex-start"
-                              >
-                                per serving{" "}
-                              </Typography>
-                              <br />
+                                <Typography
+                                  display="flex"
+                                  justifyContent="center"
+                                >
+                                  {items.Meal}
+                                </Typography>
+                                <Typography
+                                  display="flex"
+                                  justifyContent="center"
+                                >
+                                  {items.details.recipe.label}
+                                </Typography>
+                                <Typography
+                                  display="flex"
+                                  justifyContent="center"
+                                >
+                                  per serving{" "}
+                                </Typography>
+                                <br />
+                              </Box>
                             </Grid>
-                            <Grid xs={4}>
-                              <Grid container spacing={2} sx={{ mt: 4 }}>
-                                <Grid xs={6}>
+                            <Grid xs={6} md={4}>
+                              <Grid
+                                container
+                                spacing={2}
+                                sx={{
+                                  mt: {
+                                    xs: 2, // For extra small screens
+                                    sm: 2, // For small screens
+                                    md: 8, // For medium screens
+                                  },
+                                  ml: 5,
+                                }}
+                              >
+                                <Grid xs={12} md={6}>
                                   {" "}
                                   <Grid container spacing={2}>
-                                    <Grid xs={2}>
+                                    <Grid xs={1.8}>
                                       {" "}
                                       <img src="/images/calories.png" />
                                     </Grid>
                                     <Grid
                                       xs={8}
+                                      md={8}
                                       display="flex"
                                       justifyContent="flex-start"
                                     >
-                                      {" "}
                                       {Math.floor(
                                         items.details.recipe.calories /
                                           items.details.recipe.yield
@@ -2745,7 +2853,17 @@ function MealPlanTest() {
                                     </Grid>
                                   </Grid>
                                 </Grid>
-                                <Grid xs={6}>
+                                <Grid
+                                  xs={12}
+                                  md={6}
+                                  sx={{
+                                    mt: {
+                                      xs: 3,
+                                      sm: 3,
+                                      md: 0,
+                                    },
+                                  }}
+                                >
                                   {" "}
                                   <Grid container spacing={2}>
                                     <Grid xs={2}>
@@ -2792,7 +2910,12 @@ function MealPlanTest() {
                                 background: "#E66253",
                                 color: "#ffffff",
                                 fontSize: 16,
-
+                                mt: 2,
+                                mb: {
+                                  xs: 4, // For extra small screens
+                                  sm: 2, // For small screens
+                                  md: 0, // For medium screens
+                                },
                                 borderRadius: 3,
                                 px: 5,
                                 "&:hover": {
@@ -2834,7 +2957,20 @@ function MealPlanTest() {
                 ))}
               </Slider>
             </Grid>
-            <Grid item xs={1}>
+            <Grid
+              item
+              xs={0}
+              sm={1}
+              md={1}
+              lg={1}
+              sx={{
+                display: {
+                  xs: "none", // Hide on extra small screens
+                  sm: "block",
+                  md: "block", // Display on small screens and up
+                },
+              }}
+            >
               {" "}
               {/* Button container (adjust width as needed) */}
               <Button
@@ -2845,30 +2981,23 @@ function MealPlanTest() {
               </Button>
             </Grid>
           </Grid>
-          <Button
-            onClick={handleOpen}
+          <Typography
             sx={{
-              mt: 5,
-              background: "#E66253",
-              color: "#ffffff",
-              fontSize: 16,
-              mx: 2,
-              borderRadius: 3,
-              px: 5,
-              "&:hover": {
-                backgroundColor: "#ffffff",
-                color: "#E66253",
-                border: 1,
-                borderColor: "#E66253",
+              color: "#000000",
+              display: {
+                xs: "block", // Hide on extra small screens
+                sm: "none",
               },
+              fontWeight: "bold",
+              mt: 4,
             }}
           >
-            Save Meal Plan
-          </Button>
+            Swipe to See More
+          </Typography>
           <Button
             onClick={regenerate}
             sx={{
-              mt: 5,
+              mt: "5%",
               background: "#E66253",
               color: "#ffffff",
               fontSize: 16,
@@ -2884,6 +3013,26 @@ function MealPlanTest() {
             }}
           >
             Regenerate
+          </Button>
+          <Button
+            onClick={handleOpen}
+            sx={{
+              mt: "5%",
+              background: "#E66253",
+              color: "#ffffff",
+              fontSize: 16,
+              mx: 2,
+              borderRadius: 3,
+              px: 5,
+              "&:hover": {
+                backgroundColor: "#ffffff",
+                color: "#E66253",
+                border: 1,
+                borderColor: "#E66253",
+              },
+            }}
+          >
+            Save Meal Plan
           </Button>
         </Box>
       ) : (

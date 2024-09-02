@@ -67,8 +67,8 @@ function MealPlangeneratorHome() {
       <Box
         sx={{
           backgroundImage: "url('/images/meal plan gen.png')",
-          mx: "4%",
-          mr: "10%",
+          ml: "6%",
+          mr: "6%",
           width: "90%",
           borderRadius: 3,
           height: "500px",
@@ -79,74 +79,113 @@ function MealPlangeneratorHome() {
           objectFit: "cover",
           display: "flex",
           alignItems: "center",
-          ml: 10,
         }}
       />
-      <Typography>MY PAST GENERATED MEAL PLANS</Typography>
+      <Typography
+        sx={{
+          mt: 3,
+          color: "#99756E",
+          fontWeight: "bold",
+          fontSize: {
+            xs: "0.8em", // For extra small screens
+            sm: "1.0em", // For small screens
+            md: "1.5em", // For medium screens
+            lg: "2.0em", // For large screens
+          },
+        }}
+      >
+        MY PAST GENERATED MEAL PLANS
+      </Typography>
       <br />
-      <br />
-      {mealData.slice(0).map(
+      {mealData.slice(8, 10).map(
         (item) => (
           //  item.meal.map((items) => (
-          <>
-            <Grid container spacing={2} sx={{ mx: "30%", mt: 2 }}>
-              <Grid xs={2}>
+          <Box>
+            <Grid container spacing={0}>
+              <Grid
+                xs={12}
+                md={6}
+                lg={7}
+                sx={{
+                  //display: "flex",
+                  alignItems: "right",
+                  justifyContent: "center",
+                }}
+              >
                 {" "}
-                <Grid container spacing={2} sx={{ mx: 0 }}>
-                  <Grid xs={6}>
-                    {" "}
-                    <img
-                      src={
-                        item.meal[getRandomInRange(0, 4)].meals[
-                          getRandomInRange(0, 3)
-                        ].details.recipe.image
+                {/* <Grid container spacing={0} sx={{ mx: 0 }}>
+                  <Grid
+                    xs={6}
+                    md={12}
+                    sx={
+                      {
+                        //  display: "flex",
+                        // alignItems: "right",
+                        // justifyContent: "center",
                       }
-                      width="100"
-                      height="100"
-                    />{" "}
-                    <br />
-                    <img
-                      src={
-                        item.meal[getRandomInRange(0, 4)].meals[
-                          getRandomInRange(0, 3)
-                        ].details.recipe.image
-                      }
-                      width="100"
-                      height="100"
-                    />
-                  </Grid>
-                  <Grid xs={1}>
-                    {" "}
-                    <img
-                      src={
-                        item.meal[getRandomInRange(0, 4)].meals[
-                          getRandomInRange(0, 3)
-                        ].details.recipe.image
-                      }
-                      width="100"
-                      height="100"
-                    />
-                    <br />
-                    <img
-                      src={
-                        item.meal[getRandomInRange(0, 4)].meals[
-                          getRandomInRange(0, 3)
-                        ].details.recipe.image
-                      }
-                      width="100"
-                      height="100"
-                    />
-                  </Grid>
-                </Grid>
+                    }
+                  > */}
+                <img
+                  src={
+                    item.meal[getRandomInRange(0, 4)].meals[
+                      getRandomInRange(0, 3)
+                    ].image
+                  }
+                  width="20%"
+                  height="25%"
+                />{" "}
+                <img
+                  src={
+                    item.meal[getRandomInRange(0, 4)].meals[
+                      getRandomInRange(0, 3)
+                    ].image
+                  }
+                  width="20%"
+                  height="25%"
+                />
+                <br />
+                <img
+                  src={
+                    item.meal[getRandomInRange(0, 4)].meals[
+                      getRandomInRange(0, 3)
+                    ].image
+                  }
+                  width="20%"
+                  height="25%"
+                />
+                <img
+                  src={
+                    item.meal[getRandomInRange(0, 4)].meals[
+                      getRandomInRange(0, 3)
+                    ].image
+                  }
+                  width="20%"
+                  height="25%"
+                />
+                {/* </Grid>
+                </Grid> */}
               </Grid>
-              <Grid xs={2}>
+              <Grid
+                xs={12}
+                md={6}
+                lg={1}
+                sx={
+                  {
+                    // display: "flex",
+                    // alignItems: "left",
+                    // justifyContent: "left",
+                  }
+                }
+              >
                 {" "}
-                <Typography sx={{ color: "#000000" }}>{item.name}</Typography>
+                <Typography sx={{ color: "#000000" }}>
+                  {item.name}
+                </Typography>{" "}
                 <Typography sx={{ color: "#000000" }}>{item.date}</Typography>
                 {/* <Button>Request To Order</Button> */}
               </Grid>
             </Grid>
-          </>
+          </Box>
         )
         //  ))
       )}
@@ -154,8 +193,8 @@ function MealPlangeneratorHome() {
         variant="contained"
         sx={{
           mx: "auto",
-          display: "block",
-          float: "center",
+          //  display: "block",
+          // float: "center",
 
           background: "#E66253",
           fontSize: "10px",
@@ -190,7 +229,13 @@ function MealPlangeneratorHome() {
                 color: "#898246",
                 fontWeight: "bold",
                 textAlign: "right",
-                fontSize: "40px",
+                fontSize: {
+                  xs: "1.0em", // For extra small screens
+                  sm: "2.0em", // For small screens
+                  md: "2.5em", // For medium screens
+                  lg: "3.0em", // For large screens
+                  xl: "3.5em", // For extra large screens
+                },
               }}
             >
               WANT TO GENERATE A NEW PERSONALIZED MEAL PLAN AGAIN?
@@ -206,7 +251,13 @@ function MealPlangeneratorHome() {
                 float: "right",
 
                 background: "#E66253",
-                fontSize: "20px",
+                fontSize: {
+                  xs: "0.8em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.0em", // For large screens
+                  xl: "1.0em", // For extra large screens
+                },
                 "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
               }}
             >
@@ -216,13 +267,37 @@ function MealPlangeneratorHome() {
         </Grid>
       </Box>
       <Box sx={{ color: "#99756E" }}>
-        <Typography>FAQ</Typography>
-        <Typography>How It Works</Typography>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "1.5em", // For extra small screens
+              sm: "2.0em", // For small screens
+              md: "2.5em", // For medium screens
+              lg: "3.0em", // For large screens
+              xl: "3.5em", // For extra large screens
+            },
+          }}
+        >
+          FAQ
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: {
+              xs: "1.0em", // For extra small screens
+              sm: "1.5em", // For small screens
+              md: "2.0em", // For medium screens
+              lg: "2.5em", // For large screens
+              xl: "3.0em", // For extra large screens
+            },
+          }}
+        >
+          How It Works
+        </Typography>
 
         <br />
         {faqs.map((f, index) => (
-          <div key={index}>
-            <hr style={{ marginLeft: "10%", marginRight: "10%" }} />
+          <div key={index} style={{ marginLeft: "10%", marginRight: "10%" }}>
+            <hr style={{ marginLeft: "0%", marginRight: "0%" }} />
             <br />
             <Grid container spacing={2}>
               <Grid xs={6}>

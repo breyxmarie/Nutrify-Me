@@ -69,7 +69,15 @@ function FoodJournalNavBar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
-              sx={{ color: "#E66253", border: 2 }}
+              sx={{
+                color: "#E66253",
+                border: 2,
+                ml: {
+                  xs: "10%",
+                  sm: "0%",
+                  md: "0%",
+                },
+              }}
             >
               <MenuIcon />
             </IconButton>
@@ -138,7 +146,7 @@ function FoodJournalNavBar() {
               alignItems: "center",
               px: 2,
               ml: "35%",
-              mr: "25%",
+              mr: "35%",
             }}
           >
             {pages.map((page) => (
@@ -176,14 +184,14 @@ function FoodJournalNavBar() {
               </NavLink>
             ))}
           </Box>
-          <Link to="/meal-plan-shop-cart" sX={{ mx: "30px" }}>
+          {/* <Link to="/meal-plan-shop-cart" sX={{ mx: "30px" }}>
             <img
               src="/images/shopping cart.png"
               style={{ marginRight: "170px" }}
               width="45"
               height="45"
             />
-          </Link>
+          </Link> */}
         </Toolbar>
       </Container>
     </AppBar>
