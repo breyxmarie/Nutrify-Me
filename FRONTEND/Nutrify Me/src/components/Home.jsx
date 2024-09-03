@@ -154,109 +154,210 @@ function Home() {
           </Grid>
         </Box>
 
-        {/* <Typography
-        variant="h6"
-        component="div"
-        sx={{
-          color: "#99756E",
-          border: 1,
-          fontSize: "70px",
-          fontWeight: "bold",
-          mx: "30%",
-          borderRadius: 8,
-        }}
-      >
-        The Process
-      </Typography>
+        <Typography
+          variant="h6"
+          component="div"
+          sx={{
+            color: "#99756E",
+            border: 1,
+            fontSize: {
+              xs: "1.0em", // For extra small screens
+              sm: "2em", // For small screens
+              md: "3em", // For medium screens
+              lg: "4.0em", // For large screens
+            },
+            fontWeight: "bold",
+            mx: "30%",
+            my: "2%",
+            borderRadius: 8,
+          }}
+        >
+          The Process
+        </Typography>
 
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4, 1fr)",
-          gap: 2,
-        }}
-      >
-      
-        <Item>
-          <img src="/images/diagnostic 1.png" width="50%" height="50%" />
-          <center>
-            <h2
-              style={{
-                background: "#99756E",
-                borderRadius: 20,
-                width: "20%",
-                fontWeight: "bold",
-              }}
-            >
-              1
-            </h2>
-          </center>
-          <h2 style={{ fontWeight: "bold" }}>Profiling</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-          </p>
-        </Item>
-        <Item>
-          <img src="/images/diagnostic 2.png" width="170px" height="170px" />
-          <center>
-            <h2
-              style={{
-                background: "#99756E",
-                borderRadius: 20,
-                width: 30,
-              }}
-            >
-              2
-            </h2>
-          </center>
-          <h2>Appointment</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-          </p>
-        </Item>
-        <Item>
-          {" "}
-          <img src="/images/diagnostic 3.png" width="170px" height="170px" />
-          <center>
-            <h2
-              style={{
-                background: "#99756E",
-                borderRadius: 20,
-                width: 30,
-              }}
-            >
-              3
-            </h2>
-          </center>
-          <h2>Diet Recommendation</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-          </p>
-        </Item>
-        <Item>
-          {" "}
-          <img src="/images/diagnostic 4.png" width="170px" height="170px" />
-          <center>
-            <h2
-              style={{
-                background: "#99756E",
-                borderRadius: 20,
-                width: 30,
-              }}
-            >
-              4
-            </h2>
-          </center>
-          <h2>Meal Plan Ordering</h2>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-          </p>
-        </Item>
-      </Box> */}
+        <Box sx={{ mr: "2%", ml: "2%" }}>
+          <Grid container spacing={2} sx={{ mb: 0 }}>
+            <Grid item xs={6} sm={6} md={3} sx={{ mb: 5 }}>
+              <img src="/images/diagnostic 1.png" width="50%" height="50%" />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    fontWeight: "bold",
+                    color: "#ffffff",
+                  }}
+                >
+                  1
+                </h2>
+              </center>
+              <Typography
+                sx={{
+                  justifyContent: "center",
+                  fontSize: {
+                    xs: "0.8em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1.5em", // For medium screens
+                  },
+                  mb: 0,
+                  fontWeight: "bold",
+                  color: "#898246",
+                }}
+              >
+                Profiling
+              </Typography>
+              <Typography
+                sx={{
+                  mx: 0,
+                  fontSize: {
+                    xs: "0.5em", // For extra small screens
+                    sm: "0.5em", // For small screens
+                    md: "0.8em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
+                }}
+              >
+                Lorem ipsum dolor sit amet, con adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={6} md={3} sx={{ mb: 5 }}>
+              <img src="/images/diagnostic 2.png" width="50%" height="50%" />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    color: "#ffffff",
+                  }}
+                >
+                  2
+                </h2>
+              </center>
+              <Typography
+                sx={{
+                  justifyContent: "center",
+                  fontSize: {
+                    xs: "0.8em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1.5em", // For medium screens
+                  },
+                  mb: 0,
+                  fontWeight: "bold",
+                  color: "#898246",
+                }}
+              >
+                Appointment
+              </Typography>
+              <Typography
+                sx={{
+                  mx: 0,
+                  fontSize: {
+                    xs: "0.5em", // For extra small screens
+                    sm: "0.5em", // For small screens
+                    md: "0.8em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
+                }}
+              >
+                Lorem ipsum dolor sit amet, con adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={6} md={3} sx={{ mb: 5 }}>
+              <img src="/images/diagnostic 3.png" width="50%" height="50%" />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: 30,
+                    color: "#ffffff",
+                  }}
+                >
+                  3
+                </h2>
+              </center>
+
+              <Typography
+                sx={{
+                  justifyContent: "center",
+                  fontSize: {
+                    xs: "0.8em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1.5em", // For medium screens
+                  },
+                  mb: 0,
+                  fontWeight: "bold",
+                  color: "#898246",
+                }}
+              >
+                Diet Recommendation
+              </Typography>
+              <Typography
+                sx={{
+                  mx: 0,
+                  fontSize: {
+                    xs: "0.5em", // For extra small screens
+                    sm: "0.5em", // For small screens
+                    md: "0.8em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
+                }}
+              >
+                Lorem ipsum dolor sit amet, con adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} sm={6} md={3} sx={{ mb: 10 }}>
+              <img src="/images/diagnostic 4.png" width="50%" height="50%" />
+              <center>
+                <h2
+                  style={{
+                    background: "#99756E",
+                    borderRadius: 20,
+                    width: "12%",
+                    color: "#ffffff",
+                  }}
+                >
+                  4
+                </h2>
+              </center>
+
+              <Typography
+                sx={{
+                  justifyContent: "center",
+                  fontSize: {
+                    xs: "0.8em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1.5em", // For medium screens
+                  },
+                  mb: 0,
+                  fontWeight: "bold",
+                  color: "#898246",
+                }}
+              >
+                Meal Plan Ordering
+              </Typography>
+              <Typography
+                sx={{
+                  mx: 0,
+                  fontSize: {
+                    xs: "0.5em", // For extra small screens
+                    sm: "0.5em", // For small screens
+                    md: "0.8em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
+                }}
+              >
+                Lorem ipsum dolor sit amet, con adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.{" "}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
       </Box>
 
       <Box
