@@ -169,7 +169,23 @@ function userNotLogInNavBar() {
           </Box>
           <Grid container spacing={3} sx={{ mt: ".5px" }}>
             <Grid xs>
-              <img src={logo} alt="Logo" width="80" height="120" />
+              <Typography
+                variant="h6"
+                noWrap
+                component="a"
+                href="/"
+                sx={{
+                  ml: 2,
+                  display: { xs: "none", md: "flex" },
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: ".3rem",
+                  color: "inherit",
+                  textDecoration: "none",
+                }}
+              >
+                <img src={logo} alt="Logo" width="80" height="120" />
+              </Typography>
             </Grid>
             <Grid xs={6} sx={{ mt: "20px" }}>
               <Box sx={{ alignItems: "center", mx: "20%" }}>

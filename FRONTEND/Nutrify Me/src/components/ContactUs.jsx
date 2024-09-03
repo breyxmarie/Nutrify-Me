@@ -78,7 +78,11 @@ function ContactUs() {
         sx={{
           backgroundImage: "url('/images/contact us.png')",
           width: "100%",
-          height: "400px",
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "450px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           px: "0",
@@ -92,9 +96,19 @@ function ContactUs() {
         sx={{
           color: "#99756E",
           fontWeight: "bold",
-          fontSize: "2.0em",
+          fontSize: {
+            xs: "1.5em", // For extra small screens
+            sm: "2em", // For small screens
+            md: "2.0em", // For medium screens
+            lg: "2.5em", // For large screens
+          },
           border: 1,
-          mx: "40%",
+          mx: {
+            xs: "20%", // For extra small screens
+            sm: "30%", // For small screens
+            md: "40%", // For medium screens
+            lg: "40%", // For large screens
+          },
           borderRadius: 6,
         }}
       >
@@ -104,14 +118,23 @@ function ContactUs() {
       <form ref={form} onSubmit={handleSubmit(onSubmitHandler)}>
         <Box sx={{ mx: "23%" }}>
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid xs={4} display="flex" justifyContent="flex-start">
+            <Grid xs={12} md={4} display="flex" justifyContent="flex-start">
               <Typography
-                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.0em" }}
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1.5em", // For small screens
+                    md: "2.0em", // For medium screens
+                    lg: "2.0em", // For large screens
+                  },
+                }}
               >
                 Name:{" "}
               </Typography>
             </Grid>
-            <Grid xs={8}>
+            <Grid xs={12} md={8}>
               {" "}
               <TextField
                 sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
@@ -131,14 +154,23 @@ function ContactUs() {
           </Grid>
 
           <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid xs={4} display="flex" justifyContent="flex-start">
+            <Grid xs={12} md={4} display="flex" justifyContent="flex-start">
               <Typography
-                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.0em" }}
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1.5em", // For small screens
+                    md: "2.0em", // For medium screens
+                    lg: "2.0em", // For large screens
+                  },
+                }}
               >
                 E-mail:{" "}
               </Typography>
             </Grid>
-            <Grid xs={8}>
+            <Grid xs={12} md={4}>
               {" "}
               <TextField
                 sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
@@ -150,18 +182,27 @@ function ContactUs() {
             </Grid>
           </Grid>
 
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid xs={4} display="flex" justifyContent="flex-start">
+          <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
+            <Grid xs={12} md={4} display="flex" justifyContent="flex-start">
               <Typography
-                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.0em" }}
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1.5em", // For small screens
+                    md: "2.0em", // For medium screens
+                    lg: "2.0em", // For large screens
+                  },
+                }}
               >
                 Mobile Number:{" "}
               </Typography>
             </Grid>
-            <Grid xs={8}>
+            <Grid xs={10} md={4}>
               {" "}
               <PhoneInput
-                sx={{ width: "100%" }}
+                style={{ width: "80%" }}
                 defaultCountry="ph"
                 value={phone}
                 onChange={(phone) => setPhone(phone)}
@@ -194,12 +235,22 @@ function ContactUs() {
             sx={{
               background: "#ffffff",
               color: "#E66253",
-              fontSize: 16,
+              fontSize: {
+                xs: "0.8em", // For extra small screens
+                sm: "1.0em", // For small screens
+                md: "1.2em", // For medium screens
+                lg: "1.2em", // For large screens
+              },
               fontWeight: "bold",
               borderRadius: 6,
               border: 1,
               borderColor: "#E66253",
-              px: 8,
+              px: {
+                xs: 2, // For extra small screens
+                sm: "1.5em", // For small screens
+                md: 8, // For medium screens
+                lg: 8, // For large screens
+              },
               mt: 3,
               "&:hover": {
                 backgroundColor: "#E66253",
