@@ -175,7 +175,7 @@ function Home() {
           The Process
         </Typography>
 
-        <Box sx={{ mr: "2%", ml: "2%" }}>
+        <Box sx={{ mr: "2%", ml: "2%", color: "#000000" }}>
           <Grid container spacing={2} sx={{ mb: 0 }}>
             <Grid item xs={6} sm={6} md={3} sx={{ mb: 5 }}>
               <img src="/images/diagnostic 1.png" width="50%" height="50%" />
