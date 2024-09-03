@@ -1319,13 +1319,25 @@ function TelemedicineHome() {
               sx={{
                 border: 1,
                 borderColor: "#E66253",
-                px: 5,
+                px: "10%",
                 borderRadius: 4,
-                py: "30px",
-                mr: "150px",
+                py: "10%",
+                mr: "10%",
               }}
             >
-              <h2>No Scheduled Consultation </h2>
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1.5em", // For small screens
+                    md: "1.8em", // For medium screens
+                    lg: "2m", // For large screens
+                  },
+                }}
+              >
+                No Scheduled Consultation{" "}
+              </Typography>
             </Box>
           );
         }
@@ -1677,7 +1689,11 @@ function TelemedicineHome() {
           ml: "4%",
           mr: "6%",
           width: "92.5%",
-          height: "500px",
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "500px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           px: "0",
@@ -1692,7 +1708,22 @@ function TelemedicineHome() {
         {/* // ! modify pa dito like what if walang appointment si user */}
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12} md={6}>
-            <h2>My Scheduled Appointments</h2>
+            <Typography
+              sx={{
+                color: "#99756E",
+                fontSize: {
+                  xs: "1em", // For extra small screens
+                  sm: "1.5em", // For small screens
+                  md: "2.0em", // For medium screens
+                  lg: "2.5em", // For large screens
+                },
+                fontWeight: "bold",
+                mt: 2,
+                mb: 0,
+              }}
+            >
+              My Scheduled Appointments
+            </Typography>
             {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
                 defaultValue={date}
@@ -2072,7 +2103,11 @@ function TelemedicineHome() {
             mt: 5,
             px: "5%",
             py: "1%",
-            fontSize: 20,
+            fontSize: {
+              xs: "0.8em", // For extra small screens
+              sm: "1.3em", // For small screens
+              md: "1.5em", // For medium screens
+            },
             "&:hover": {
               backgroundColor: "#ffffff",
               color: "#E66253",

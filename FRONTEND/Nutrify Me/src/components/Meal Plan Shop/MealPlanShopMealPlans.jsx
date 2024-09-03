@@ -389,7 +389,20 @@ function MealPlanShopMealPlans() {
           alignItems="center"
         >
           {/* {console.log(item)} */}
-          <Grid item xs={1}>
+          <Grid
+            item
+            xs={0}
+            sm={1}
+            md={1}
+            lg={1}
+            sx={{
+              display: {
+                xs: "none", // Hide on extra small screens
+                sm: "block",
+                md: "block", // Display on small screens and up
+              },
+            }}
+          >
             <Button
               onClick={() => handlePrevC()}
               sx={{ mt: "115%", background: "#ffffff" }}
@@ -456,7 +469,20 @@ function MealPlanShopMealPlans() {
               ))}
             </Slider>
           </Grid>
-          <Grid item xs={1}>
+          <Grid
+            item
+            xs={0}
+            sm={1}
+            md={1}
+            lg={1}
+            sx={{
+              display: {
+                xs: "none", // Hide on extra small screens
+                sm: "block",
+                md: "block", // Display on small screens and up
+              },
+            }}
+          >
             {" "}
             {/* Button container (adjust width as needed) */}
             <Button
@@ -467,6 +493,20 @@ function MealPlanShopMealPlans() {
             </Button>
           </Grid>
         </Grid>
+
+        <Typography
+          sx={{
+            color: "#000000",
+            display: {
+              xs: "block", // Hide on extra small screens
+              sm: "none",
+            },
+            fontWeight: "bold",
+            mt: 4,
+          }}
+        >
+          Swipe to See More
+        </Typography>
 
         {/* {days.map((item, index) => (
           <>hi</>
@@ -831,7 +871,11 @@ function MealPlanShopMealPlans() {
           mr: "4%",
           width: "92.5%",
           borderRadius: 3,
-          height: "500px",
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "500px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           px: "0",
@@ -844,7 +888,17 @@ function MealPlanShopMealPlans() {
 
       <Box>
         <Typography
-          sx={{ color: "#99756E", fontWeight: "bold", fontSize: "50px", p: 5 }}
+          sx={{
+            color: "#99756E",
+            fontWeight: "bold",
+            fontSize: {
+              xs: "1em", // For extra small screens
+              sm: "1.5em", // For small screens
+              md: "2.0em", // For medium screens
+              lg: "2.5em", // For large screens
+            },
+            p: 5,
+          }}
         >
           MEAL PLANS OFFERED
         </Typography>
@@ -920,12 +974,27 @@ function MealPlanShopMealPlans() {
                             sx={{
                               color: "#99756E",
                               fontWeight: "bold",
-                              fontSize: "1.5em",
+                              fontSize: {
+                                xs: "1em", // For extra small screens
+                                sm: "1.0em", // For small screens
+                                md: "1.0em", // For medium screens
+                                lg: "1.5em", // For large screens
+                              },
                             }}
                           >
                             {plan.name}
                           </Typography>
-                          <Typography sx={{ mx: "20%" }}>
+                          <Typography
+                            sx={{
+                              mx: "20%",
+                              fontSize: {
+                                xs: "0.8em", // For extra small screens
+                                sm: "1.0em", // For small screens
+                                md: "1.0em", // For medium screens
+                                lg: "1.0em", // For large screens
+                              },
+                            }}
+                          >
                             {plan.description}
                           </Typography>
                           <Typography variant="body1">
@@ -940,7 +1009,12 @@ function MealPlanShopMealPlans() {
 
                               px: 2,
                               py: 1,
-                              fontSize: "15px",
+                              fontSize: {
+                                xs: "0.5em", // For extra small screens
+                                sm: "0.5em", // For small screens
+                                md: "0.8em", // For medium screens
+                                lg: "0.8em", // For large screens
+                              },
                               "&:hover": {
                                 backgroundColor: "#ffffff",
                                 color: "#000000",
@@ -960,7 +1034,12 @@ function MealPlanShopMealPlans() {
 
                               px: 2,
                               py: 1,
-                              fontSize: "15px",
+                              fontSize: {
+                                xs: "0.5em", // For extra small screens
+                                sm: "0.5em", // For small screens
+                                md: "0.8em", // For medium screens
+                                lg: "0.8em", // For large screens
+                              },
                               "&:hover": {
                                 backgroundColor: "#ffffff",
                                 color: "#E66253",

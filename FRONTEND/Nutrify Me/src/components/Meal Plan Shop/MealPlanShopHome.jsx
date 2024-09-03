@@ -149,7 +149,11 @@ function MealPlanShopHome() {
           ml: "4%",
           mr: "4%",
           width: "92.5%",
-          height: "500px",
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "500px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           px: "0",
@@ -164,7 +168,12 @@ function MealPlanShopHome() {
         <Typography
           sx={{
             color: "#99756E",
-            fontSize: "40px",
+            fontSize: {
+              xs: "1em", // For extra small screens
+              sm: "1.5em", // For small screens
+              md: "2.0em", // For medium screens
+              lg: "2.5em", // For large screens
+            },
             fontWeight: "bold",
             mt: 2,
             mb: 0,
@@ -191,10 +200,31 @@ function MealPlanShopHome() {
                     sx={{ mt: 5, mb: 5 }}
                   >
                     <img src={plan.image} width="20%" height="50%" />
-                    <Typography sx={{ fontWeight: "bold", fontSize: "1.5em" }}>
+                    <Typography
+                      sx={{
+                        fontWeight: "bold",
+                        color: "#99756E",
+                        fontSize: {
+                          xs: "1em", // For extra small screens
+                          sm: "1.0em", // For small screens
+                          md: "1.0em", // For medium screens
+                          lg: "1.5em", // For large screens
+                        },
+                      }}
+                    >
                       {plan.name}
                     </Typography>
-                    <Typography sx={{ mx: "20%" }}>
+                    <Typography
+                      sx={{
+                        mx: "20%",
+                        fontSize: {
+                          xs: "0.8em", // For extra small screens
+                          sm: "1.0em", // For small screens
+                          md: "1.0em", // For medium screens
+                          lg: "1.0em", // For large screens
+                        },
+                      }}
+                    >
                       {plan.description}
                     </Typography>
                     <Link
@@ -212,6 +242,12 @@ function MealPlanShopHome() {
                           color: "#000000",
                           px: 4,
                           py: 1,
+                          fontSize: {
+                            xs: "0.5em", // For extra small screens
+                            sm: "0.5em", // For small screens
+                            md: "0.8em", // For medium screens
+                            lg: "0.8em", // For large screens
+                          },
                         }}
                       >
                         ORDER NOW
@@ -256,7 +292,12 @@ function MealPlanShopHome() {
         sx={{
           backgroundImage: "url('/images/shop home customize.png')",
           width: "100%",
-          height: "500px",
+
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "500px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           px: "5",
@@ -273,11 +314,11 @@ function MealPlanShopHome() {
 
               textAlign: "right",
               fontSize: {
-                xs: "1.5em", // For extra small screens
-                sm: "2.0em", // For small screens
+                xs: "0.5em", // For extra small screens
+                sm: "1.0em", // For small screens
                 md: "2.5em", // For medium screens
-                lg: "2.5em", // For large screens
-                xl: "3.0em", // For extra large screens
+                lg: "3.0em", // For large screens
+                xl: "3.5em", // For extra large screens
               },
               fontWeight: "bold",
             }}
@@ -295,11 +336,11 @@ function MealPlanShopHome() {
                 py: 1,
                 mt: "10px",
                 fontSize: {
-                  xs: "0.8em", // For extra small screens
+                  xs: "0.5em", // For extra small screens
                   sm: "0.8em", // For small screens
                   md: "1.0em", // For medium screens
-                  lg: "1.0em", // For large screens
-                  xl: "1.5em", // For extra large screens
+                  lg: "1.5em", // For large screens
+                  xl: "2.0em", // For extra large screens
                 },
                 ml: "40%",
                 "&:hover": {
@@ -323,7 +364,20 @@ function MealPlanShopHome() {
         </Typography>
         <Box sx={{ ml: 5, mr: 5 }}>
           <Grid container spacing={2}>
-            <Grid item xs={0.5}>
+            <Grid
+              item
+              xs={0}
+              sm={0.5}
+              md={0.5}
+              lg={0.5}
+              sx={{
+                display: {
+                  xs: "none", // Hide on extra small screens
+                  sm: "block",
+                  md: "block", // Display on small screens and up
+                },
+              }}
+            >
               <Button
                 onClick={handlePrevC}
                 style={{ marginTop: "100%", backgroundColor: "#ffffff" }}
@@ -380,7 +434,20 @@ function MealPlanShopHome() {
                 ))}
               </Slider>
             </Grid>
-            <Grid item xs={0.5}>
+            <Grid
+              item
+              xs={0}
+              sm={0.5}
+              md={0.5}
+              lg={0.5}
+              sx={{
+                display: {
+                  xs: "none", // Hide on extra small screens
+                  sm: "block",
+                  md: "block", // Display on small screens and up
+                },
+              }}
+            >
               {" "}
               {/* Button container (adjust width as needed) */}
               <Button
@@ -391,19 +458,36 @@ function MealPlanShopHome() {
               </Button>
             </Grid>
           </Grid>
+          <Typography
+            sx={{
+              color: "#99756E",
+              display: {
+                xs: "block", // Hide on extra small screens
+                sm: "none",
+              },
+              fontWeight: "bold",
+              mt: 4,
+            }}
+          >
+            Swipe to See More
+          </Typography>
         </Box>
 
-        <br />
-        <br />
-        <Box sx={{ background: "#898246", color: "#ffffff", py: 4 }}>
+        <Box
+          sx={{
+            background: "#898246",
+            color: "#ffffff",
+            py: 4,
+          }}
+        >
           <Typography
             sx={{
               fontSize: {
-                xs: "1.5em", // For extra small screens
-                sm: "2.0em", // For small screens
-                md: "2.0em", // For medium screens
-                lg: "2.5em", // For large screens
-                xl: "3.0em", // For extra large screens
+                xs: "0.5em", // For extra small screens
+                sm: "0.8em", // For small screens
+                md: "1.0em", // For medium screens
+                lg: "1.5em", // For large screens
+                xl: "2.0em", // For extra large screens
               },
             }}
           >
@@ -415,10 +499,21 @@ function MealPlanShopHome() {
             style={{
               color: "#ffffff",
               textDecoration: "underline",
-              fontSize: "20px",
             }}
           >
-            CLICK HERE
+            <Typography
+              sx={{
+                fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.5em", // For large screens
+                  xl: "2.0em", // For extra large screens
+                },
+              }}
+            >
+              CLICK HERE
+            </Typography>
           </Link>
         </Box>
       </Box>
@@ -434,7 +529,19 @@ function MealPlanShopHome() {
             <br />
             <Grid container spacing={2}>
               <Grid xs={6}>
-                <Typography sx={{ textDecoration: "bold", fontSize: "30px" }}>
+                <Typography
+                  sx={{
+                    textDecoration: "bold",
+                    fontWeight: "bold",
+                    fontSize: {
+                      xs: "1em", // For extra small screens
+                      sm: "1.5em", // For small screens
+                      md: "1.5em", // For medium screens
+                      lg: "2em", // For large screens
+                      xl: "2.0em", // For extra large screens
+                    },
+                  }}
+                >
                   {f.question}
                 </Typography>
               </Grid>
@@ -452,15 +559,21 @@ function MealPlanShopHome() {
             {/* 👇️ show elements on click */}
             {isShown[index] && (
               <Box sx={{ ml: "5%" }}>
-                <h3
-                  style={{
-                    marginLeft: "18%",
-                    marginRight: "25%",
+                <Typography
+                  sx={{
+                    marginLeft: "10%",
+                    marginRight: "15%",
                     textAlign: "left",
+                    fontSize: {
+                      xs: "1em", // For extra small screens
+                      sm: "1.0em", // For small screens
+                      md: "1.3em", // For medium screens
+                      lg: "1.3em", // For large screens
+                    },
                   }}
                 >
                   {f.answer}
-                </h3>
+                </Typography>
               </Box>
             )}
             {/* 👇️ show component on click */}
