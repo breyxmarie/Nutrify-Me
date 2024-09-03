@@ -279,7 +279,13 @@ function userNotLogInNavBar() {
                     sx={{
                       borderRadius: 4,
                       background: primaryColor,
-                      mr: "15px ",
+                      mr: "0px ",
+                      fontSize: {
+                        xs: "0.5em", // For extra small screens
+                        sm: "0.5em", // For small screens
+                        md: "0.8em", // For medium screens
+                        lg: "1em", // For large screens
+                      },
                     }}
                     onClick={openContact}
                   >
@@ -295,7 +301,18 @@ function userNotLogInNavBar() {
                     to={"/Log-In"}
                     style={{ color: "#898246", textDecoration: "underline" }}
                   >
+                    {/* <Typography
+                      sx={{
+                        fontSize: {
+                          xs: "0.5em", // For extra small screens
+                          sm: "0.5em", // For small screens
+                          md: "1em", // For medium screens
+                          lg: "1em", // For large screens
+                        },
+                      }}
+                    > */}
                     Log In
+                    {/* </Typography> */}
                   </Link>{" "}
                   &nbsp; &nbsp;
                   <Link
