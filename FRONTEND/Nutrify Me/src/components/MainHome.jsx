@@ -43,7 +43,12 @@ function MainHome() {
             display: "flex",
             alignItems: "center",
 
-            height: "700px" /* Adjust height as per your requirement */,
+            height: {
+              xs: "100px", // For extra small screens
+              sm: "200px", // For small screens
+              md: "450px", // For medium screens
+            },
+
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -70,8 +75,8 @@ function MainHome() {
                   fontWeight: "bold",
                   textAlign: "right",
                   fontSize: {
-                    xs: "1.5em", // For extra small screens
-                    sm: "2.0em", // For small screens
+                    xs: "0.5em", // For extra small screens
+                    sm: "1.0em", // For small screens
                     md: "2.5em", // For medium screens
                     lg: "3.0em", // For large screens
                     xl: "3.5em", // For extra large screens
@@ -93,7 +98,7 @@ function MainHome() {
                   display: "block",
                   background: "#E66253",
                   fontSize: {
-                    xs: "0.8em", // For extra small screens
+                    xs: "0.5em", // For extra small screens
                     sm: "0.8em", // For small screens
                     md: "1.0em", // For medium screens
                     lg: "1.5em", // For large screens
@@ -222,7 +227,11 @@ function MainHome() {
           justifyContent: "center",
           backgroundImage: "url('/images/HomeImage2.png')",
           width: "100%",
-          height: "400px" /* Adjust height as per your requirement */,
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "450px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -241,8 +250,8 @@ function MainHome() {
                 fontWeight: "bold",
                 textAlign: "left",
                 fontSize: {
-                  xs: "1.5em", // For extra small screens
-                  sm: "2.0em", // For small screens
+                  xs: "0.5em", // For extra small screens
+                  sm: "1.0em", // For small screens
                   md: "2.5em", // For medium screens
                   lg: "3.0em", // For large screens
                   xl: "3.5em", // For extra large screens
@@ -263,7 +272,7 @@ function MainHome() {
 
                 background: "#E66253",
                 fontSize: {
-                  xs: "0.8em", // For extra small screens
+                  xs: "0.5em", // For extra small screens
                   sm: "0.8em", // For small screens
                   md: "1.0em", // For medium screens
                   lg: "1.5em", // For large screens
@@ -280,9 +289,21 @@ function MainHome() {
       </Box>
 
       <Box sx={{ color: "#99756E", ml: "1%", mr: "15%" }}>
-        <h2 style={{ justifyContent: "center", fontSize: "2.2em" }}>
+        <Typography
+          sx={{
+            justifyContent: "center",
+            fontSize: {
+              xs: "1.5em", // For extra small screens
+              sm: "2em", // For small screens
+              md: "2.0em", // For medium screens
+              lg: "2.5em", // For large screens
+            },
+            mb: 3,
+            fontWeight: "bold",
+          }}
+        >
           Patients Testimonials
-        </h2>
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={8}>
             {/* <Item sx={{ border: 3, borderRadius: 4 }}> */}
@@ -300,7 +321,14 @@ function MainHome() {
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
                   width: "5%",
@@ -308,15 +336,34 @@ function MainHome() {
               >
                 <img src="/images/HomeImage.png" width="100%" height="80%" />
               </Grid>
-              <Grid xs={12} md={4} sx={{ m: "10%" }}>
+              <Grid
+                xs={12}
+                md={4}
+                sx={{
+                  m: {
+                    xs: "0%", // For extra small screens
+                    sm: "0%", // For small screens
+                    md: "10%", // For medium screens
+                  },
+                }}
+              >
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
@@ -333,15 +380,24 @@ function MainHome() {
                 mx: "50px",
                 border: 3,
                 borderRadius: 4,
+                mt: 1,
               }}
             >
               <Grid
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: "5%",
                 }}
               >
                 <img
@@ -352,13 +408,22 @@ function MainHome() {
               </Grid>
               <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
@@ -374,15 +439,24 @@ function MainHome() {
                 mx: "50px",
                 border: 3,
                 borderRadius: 4,
+                mt: 1,
               }}
             >
               <Grid
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: "5%",
                 }}
               >
                 <img
@@ -393,13 +467,22 @@ function MainHome() {
               </Grid>
               <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
@@ -416,15 +499,24 @@ function MainHome() {
                 mx: "50px",
                 border: 3,
                 borderRadius: 4,
+                mt: 1,
               }}
             >
               <Grid
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: "5%",
                 }}
               >
                 <img
@@ -435,13 +527,22 @@ function MainHome() {
               </Grid>
               <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}

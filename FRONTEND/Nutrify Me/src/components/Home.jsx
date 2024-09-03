@@ -64,23 +64,10 @@ function Home() {
   }, []);
   //!
   return (
-    <div
-      className="content"
-      style={{ paddingBottom: "40px", color: "#000000" }}
-    >
+    <div className="content" style={{ paddingBottom: "40px" }}>
       {/* <MainUserNavBar /> */}
 
       {/* Your navbar component sx={{ px: "200px", py: 4 }}*/}
-
-      {/* //! Try Muna database  */}
-      {/* <MaterialReactTable data={data} /> */}
-
-      {/* {data.map((item, index) => (
-        <h3>{item.privilege}</h3>
-      ))} */}
-
-      {/* // !  */}
-
       <Box sx={{ px: "0px", py: 0 }}>
         <Box
           component="section"
@@ -90,12 +77,18 @@ function Home() {
             borderRadius: 3,
             mx: "4%",
             mr: "6%",
+            width: "92.5%",
             justifyContent: "center",
             backgroundImage: "url('/images/HomeImage.png')",
             display: "flex",
             alignItems: "center",
-            width: "92%",
-            height: "700px" /* Adjust height as per your requirement */,
+
+            height: {
+              xs: "100px", // For extra small screens
+              sm: "200px", // For small screens
+              md: "450px", // For medium screens
+            },
+
             backgroundSize: "cover",
             backgroundPosition: "center",
           }}
@@ -122,8 +115,8 @@ function Home() {
                   fontWeight: "bold",
                   textAlign: "right",
                   fontSize: {
-                    xs: "1.5em", // For extra small screens
-                    sm: "2.0em", // For small screens
+                    xs: "0.5em", // For extra small screens
+                    sm: "1.0em", // For small screens
                     md: "2.5em", // For medium screens
                     lg: "3.0em", // For large screens
                     xl: "3.5em", // For extra large screens
@@ -145,7 +138,7 @@ function Home() {
                   display: "block",
                   background: "#E66253",
                   fontSize: {
-                    xs: "0.8em", // For extra small screens
+                    xs: "0.5em", // For extra small screens
                     sm: "0.8em", // For small screens
                     md: "1.0em", // For medium screens
                     lg: "1.5em", // For large screens
@@ -153,237 +146,117 @@ function Home() {
                   },
                   "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
                 }}
-                onClick={() => navigate("/Log-In")}
+                onClick={() => navigate("/log-in")}
               >
                 BOOK AN APPOINTMENT
               </Button>
             </Grid>
           </Grid>
         </Box>
-        {/* Centered button */}
-        <Typography
-          variant="h6"
-          component="div"
-          sx={{
-            color: "#99756E",
-            border: 1,
-            fontSize: {
-              xs: "2.0em", // For extra small screens
-              sm: "4.0em", // For small screens
-              md: "4.5em", // For medium screens
-              lg: "5.0em", // For large screens
-              xl: "3.5em", // For extra large screens
-            },
-            fontWeight: "bold",
-            mx: "30%",
-            my: "1%",
-            borderRadius: 8,
-          }}
-        >
-          The Process
-        </Typography>
 
-        <Box sx={{ mr: "2%", ml: "2%" }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={3}>
-              <img
-                src="/images/diagnostic 1.png"
-                width="170px"
-                height="170px"
-              />
-              <center>
-                <h2
-                  style={{
-                    background: "#99756E",
-                    borderRadius: 20,
-                    width: 30,
-                    fontWeight: "bold",
-                    color: "#ffffff",
-                  }}
-                >
-                  1
-                </h2>
-              </center>
-              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
-                Profiling
-              </h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-              </p>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <img
-                src="/images/diagnostic 2.png"
-                width="170px"
-                height="170px"
-              />
-              <center>
-                <h2
-                  style={{
-                    background: "#99756E",
-                    borderRadius: 20,
-                    width: 30,
-                    color: "#ffffff",
-                  }}
-                >
-                  2
-                </h2>
-              </center>
-              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
-                Appointment
-              </h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-              </p>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <img
-                src="/images/diagnostic 3.png"
-                width="170px"
-                height="170px"
-              />
-              <center>
-                <h2
-                  style={{
-                    background: "#99756E",
-                    borderRadius: 20,
-                    width: 30,
-                    color: "#ffffff",
-                  }}
-                >
-                  3
-                </h2>
-              </center>
-              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
-                Diet Recommendation
-              </h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-              </p>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <img
-                src="/images/diagnostic 4.png"
-                width="170px"
-                height="170px"
-              />
-              <center>
-                <h2
-                  style={{
-                    background: "#99756E",
-                    borderRadius: 20,
-                    width: 30,
-                    color: "#ffffff",
-                  }}
-                >
-                  4
-                </h2>
-              </center>
-              <h2 style={{ fontWeight: "bold", color: "#898246" }}>
-                Meal Plan Ordering
-              </h2>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-              </p>
-            </Grid>
-          </Grid>
-        </Box>
-        {/* <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 2,
-          }}
-        >
-         
-          <Item>
-            <img src="/images/diagnostic 1.png" width="170px" height="170px" />
-            <center>
-              <h2
-                style={{
-                  background: "#99756E",
-                  borderRadius: 20,
-                  width: 30,
-                  fontWeight: "bold",
-                  color: "#ffffff",
-                }}
-              >
-                1
-              </h2>
-            </center>
-            <h2 style={{ fontWeight: "bold" }}>Profiling</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-            </p>
-          </Item>
-          <Item>
-            <img src="/images/diagnostic 2.png" width="170px" height="170px" />
-            <center>
-              <h2
-                style={{
-                  background: "#99756E",
-                  borderRadius: 20,
-                  width: 30,
-                  color: "#ffffff",
-                }}
-              >
-                2
-              </h2>
-            </center>
-            <h2>Appointment</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-            </p>
-          </Item>
-          <Item>
-            {" "}
-            <img src="/images/diagnostic 3.png" width="170px" height="170px" />
-            <center>
-              <h2
-                style={{
-                  background: "#99756E",
-                  borderRadius: 20,
-                  width: 30,
-                  color: "#ffffff",
-                }}
-              >
-                3
-              </h2>
-            </center>
-            <h2>Diet Recommendation</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-            </p>
-          </Item>
-          <Item>
-           
-            <img src="/images/diagnostic 4.png" width="170px" height="170px" />
-            <center>
-              <h2
-                style={{
-                  background: "#99756E",
-                  borderRadius: 20,
-                  width: 30,
-                  color: "#ffffff",
-                }}
-              >
-                4
-              </h2>
-            </center>
-            <h2>Meal Plan Ordering</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-            </p>
-          </Item>
-        </Box> */}
+        {/* <Typography
+        variant="h6"
+        component="div"
+        sx={{
+          color: "#99756E",
+          border: 1,
+          fontSize: "70px",
+          fontWeight: "bold",
+          mx: "30%",
+          borderRadius: 8,
+        }}
+      >
+        The Process
+      </Typography>
+
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: 2,
+        }}
+      >
+      
+        <Item>
+          <img src="/images/diagnostic 1.png" width="50%" height="50%" />
+          <center>
+            <h2
+              style={{
+                background: "#99756E",
+                borderRadius: 20,
+                width: "20%",
+                fontWeight: "bold",
+              }}
+            >
+              1
+            </h2>
+          </center>
+          <h2 style={{ fontWeight: "bold" }}>Profiling</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+          </p>
+        </Item>
+        <Item>
+          <img src="/images/diagnostic 2.png" width="170px" height="170px" />
+          <center>
+            <h2
+              style={{
+                background: "#99756E",
+                borderRadius: 20,
+                width: 30,
+              }}
+            >
+              2
+            </h2>
+          </center>
+          <h2>Appointment</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+          </p>
+        </Item>
+        <Item>
+          {" "}
+          <img src="/images/diagnostic 3.png" width="170px" height="170px" />
+          <center>
+            <h2
+              style={{
+                background: "#99756E",
+                borderRadius: 20,
+                width: 30,
+              }}
+            >
+              3
+            </h2>
+          </center>
+          <h2>Diet Recommendation</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+          </p>
+        </Item>
+        <Item>
+          {" "}
+          <img src="/images/diagnostic 4.png" width="170px" height="170px" />
+          <center>
+            <h2
+              style={{
+                background: "#99756E",
+                borderRadius: 20,
+                width: 30,
+              }}
+            >
+              4
+            </h2>
+          </center>
+          <h2>Meal Plan Ordering</h2>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
+          </p>
+        </Item>
+      </Box> */}
       </Box>
 
       <Box
@@ -394,7 +267,11 @@ function Home() {
           justifyContent: "center",
           backgroundImage: "url('/images/HomeImage2.png')",
           width: "100%",
-          height: "400px" /* Adjust height as per your requirement */,
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "450px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -413,8 +290,8 @@ function Home() {
                 fontWeight: "bold",
                 textAlign: "left",
                 fontSize: {
-                  xs: "1.5em", // For extra small screens
-                  sm: "2.0em", // For small screens
+                  xs: "0.5em", // For extra small screens
+                  sm: "1.0em", // For small screens
                   md: "2.5em", // For medium screens
                   lg: "3.0em", // For large screens
                   xl: "3.5em", // For extra large screens
@@ -435,24 +312,38 @@ function Home() {
 
                 background: "#E66253",
                 fontSize: {
-                  xs: "0.8em", // For extra small screens
+                  xs: "0.5em", // For extra small screens
                   sm: "0.8em", // For small screens
                   md: "1.0em", // For medium screens
                   lg: "1.5em", // For large screens
                   xl: "2.0em", // For extra large screens
                 },
+                "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
               }}
-              onClick={() => navigate("/Log-In")}
+              onClick={() => navigate("/log-in")}
             >
               VIEW MEAL PLANS
             </Button>
           </Grid>
         </Grid>
       </Box>
+
       <Box sx={{ color: "#99756E", ml: "1%", mr: "15%" }}>
-        <h2 style={{ justifyContent: "center", fontSize: "2.2em" }}>
+        <Typography
+          sx={{
+            justifyContent: "center",
+            fontSize: {
+              xs: "1.5em", // For extra small screens
+              sm: "2em", // For small screens
+              md: "2.0em", // For medium screens
+              lg: "2.5em", // For large screens
+            },
+            mb: 3,
+            fontWeight: "bold",
+          }}
+        >
           Patients Testimonials
-        </h2>
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={8}>
             {/* <Item sx={{ border: 3, borderRadius: 4 }}> */}
@@ -470,7 +361,14 @@ function Home() {
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
                   width: "5%",
@@ -478,15 +376,34 @@ function Home() {
               >
                 <img src="/images/HomeImage.png" width="100%" height="80%" />
               </Grid>
-              <Grid xs={12} md={4} sx={{ m: "10%" }}>
+              <Grid
+                xs={12}
+                md={4}
+                sx={{
+                  m: {
+                    xs: "0%", // For extra small screens
+                    sm: "0%", // For small screens
+                    md: "10%", // For medium screens
+                  },
+                }}
+              >
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
@@ -503,15 +420,24 @@ function Home() {
                 mx: "50px",
                 border: 3,
                 borderRadius: 4,
+                mt: 1,
               }}
             >
               <Grid
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: "5%",
                 }}
               >
                 <img
@@ -522,13 +448,22 @@ function Home() {
               </Grid>
               <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
@@ -544,15 +479,24 @@ function Home() {
                 mx: "50px",
                 border: 3,
                 borderRadius: 4,
+                mt: 1,
               }}
             >
               <Grid
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: "5%",
                 }}
               >
                 <img
@@ -563,13 +507,22 @@ function Home() {
               </Grid>
               <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
@@ -586,15 +539,24 @@ function Home() {
                 mx: "50px",
                 border: 3,
                 borderRadius: 4,
+                mt: 1,
               }}
             >
               <Grid
                 xs={12}
                 md={4}
                 sx={{
-                  m: "5%",
+                  // m: {
+                  //   xs: "5%", // For extra small screens
+                  //   sm: "0%", // For small screens
+                  //   md: "5%", // For medium screens
+                  // },
+                  mt: "5%",
+                  mr: "5%",
+                  ml: "5%",
                   alignItems: "center",
                   justifyContent: "center",
+                  width: "5%",
                 }}
               >
                 <img
@@ -605,13 +567,22 @@ function Home() {
               </Grid>
               <Grid xs={12} md={4} sx={{ m: "10%" }}>
                 {" "}
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <img src="/images/star.png" width="30px" height="30px" />
-                <p>
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <img src="/images/star.png" width="15%" height="30%" />
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "0.5em", // For small screens
+                      md: "0.8em", // For medium screens
+                      lg: "1em", // For large screens
+                    },
+                  }}
+                >
                   Lorem ipsum dolor sit amet, con adipiscing elit, sed do
                   eiusmod tempor incididunt ut labore et dolore magna aliqua.{" "}
-                </p>
+                </Typography>
               </Grid>
             </Grid>
             {/* </Item> */}
