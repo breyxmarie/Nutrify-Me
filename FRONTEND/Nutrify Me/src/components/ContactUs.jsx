@@ -37,7 +37,9 @@ function ContactUs() {
   const onSubmitHandler = (data) => {};
   //! email stuff
   const form = useRef();
-
+  const [names, setNames] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
   const sendEmail = (e) => {
     //e.preventDefault();
     // const newLogo = "/images/snacks.png"; // Replace with actual new logo path
@@ -57,6 +59,11 @@ function ContactUs() {
         () => {
           console.log("SUCCESS!");
           toast.success("Message Sent!");
+          setNames("");
+          setEmail("");
+
+          setMessage("");
+          setPhone("");
         },
         (error) => {
           console.log("FAILED...", error.text);
@@ -144,6 +151,8 @@ function ContactUs() {
                 // variant="standard"
                 size="small"
                 id="outlined-basic"
+                value={names}
+                onChange={(e) => setNames(e.target.value)}
                 // label="Outlined"
                 variant="outlined"
                 name="from_name"
@@ -175,6 +184,8 @@ function ContactUs() {
               <TextField
                 sx={{ width: "100%", background: "#ffffff", borderRadius: 2 }}
                 id="outlined-basic"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 variant="outlined"
                 size="small"
                 name="from_email"
@@ -218,6 +229,8 @@ function ContactUs() {
             rows={4}
             placeholder="Type message here"
             name="message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
           {/* <MyTextField
                 label="Name"
