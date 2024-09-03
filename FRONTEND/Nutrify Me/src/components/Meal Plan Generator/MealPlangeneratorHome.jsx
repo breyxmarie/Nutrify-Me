@@ -71,7 +71,12 @@ function MealPlangeneratorHome() {
           mr: "6%",
           width: "90%",
           borderRadius: 3,
-          height: "500px",
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "450px", // For medium screens
+          },
+
           backgroundSize: "cover",
           backgroundPosition: "center",
           px: "0",
@@ -203,6 +208,8 @@ function MealPlangeneratorHome() {
       >
         VIEW MORE
       </Button>
+      <br />
+      <br />
       <Box
         component="section"
         sx={{
@@ -211,7 +218,12 @@ function MealPlangeneratorHome() {
           justifyContent: "center",
           backgroundImage: "url('/images/home gen.png')",
           width: "100%",
-          height: "400px" /* Adjust height as per your requirement */,
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "400px", // For medium screens
+          },
+
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -230,11 +242,10 @@ function MealPlangeneratorHome() {
                 fontWeight: "bold",
                 textAlign: "right",
                 fontSize: {
-                  xs: "1.0em", // For extra small screens
-                  sm: "2.0em", // For small screens
-                  md: "2.5em", // For medium screens
-                  lg: "3.0em", // For large screens
-                  xl: "3.5em", // For extra large screens
+                  xs: "0.5em", // For extra small screens
+                  sm: "1.0em", // For small screens
+                  md: "2.0em", // For medium screens
+                  lg: "2.5em", // For large screens
                 },
               }}
             >
@@ -252,11 +263,11 @@ function MealPlangeneratorHome() {
 
                 background: "#E66253",
                 fontSize: {
-                  xs: "0.8em", // For extra small screens
+                  xs: "0.5em", // For extra small screens
                   sm: "0.8em", // For small screens
                   md: "1.0em", // For medium screens
-                  lg: "1.0em", // For large screens
-                  xl: "1.0em", // For extra large screens
+                  lg: "1.5em", // For large screens
+                  xl: "2.0em", // For extra large screens
                 },
                 "&:hover": { backgroundColor: "#ffffff", color: "#E66253" },
               }}
@@ -301,7 +312,18 @@ function MealPlangeneratorHome() {
             <br />
             <Grid container spacing={2}>
               <Grid xs={6}>
-                <Typography sx={{ textDecoration: "bold", fontSize: "30px" }}>
+                <Typography
+                  sx={{
+                    fotnWeight: "bold",
+                    fontSize: {
+                      xs: "1.0em", // For extra small screens
+                      sm: "1.5em", // For small screens
+                      md: "2.0em", // For medium screens
+                      lg: "2.5em", // For large screens
+                      xl: "3.0em", // For extra large screens
+                    },
+                  }}
+                >
                   {f.question}
                 </Typography>
               </Grid>
@@ -319,15 +341,21 @@ function MealPlangeneratorHome() {
             {/* 👇️ show elements on click */}
             {isShown[index] && (
               <>
-                <h3
-                  style={{
-                    marginLeft: "18%",
-                    marginRight: "25%",
-                    textAlign: "left",
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: "0.5em", // For extra small screens
+                      sm: "1.0em", // For small screens
+                      md: "1.2em", // For medium screens
+
+                      marginLeft: "18%",
+                      marginRight: "25%",
+                      textAlign: "left",
+                    },
                   }}
                 >
                   {f.answer}
-                </h3>
+                </Typography>
                 <Box />{" "}
               </>
             )}
