@@ -200,8 +200,9 @@ function MealPlanTest() {
   };
 
   const calculateBMR = (weight, height, age, gender) => {
-    // For women, it's: BMR = 655.1 + (9.563 × weight in kg) + (1.850 × height in cm) - (4.676 × age).
     // For men, the formula is: BMR = 66.5 + (13.75 × weight in kg) + (5.003 × height in cm) - (6.75 × age).
+    // For women, it's: BMR = 66.5 + (9.563 × weight in kg) + (1.850 × height in cm) - (4.676 × age).
+
     // ! Harris-Benedict equation
     //Basal Metabolic Rate (BMR): This is the number of calories your body burns
     //at rest to maintain basic functions like breathing, circulation, and cell growth.
@@ -209,11 +210,11 @@ function MealPlanTest() {
     switch (gender) {
       case "Male":
         //  BMR = 655.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age);
-        BMR = 655.1 + 9.563(weight) + 1.85(height) - 4.676(age);
+        BMR = 66.5 + 13.75 * weight + 5.003 * height - 6.75 * age;
 
         break;
       case "Female":
-        BMR = 66.5 + 13.75 * weight + 1.85 * height - 6.75 * age;
+        BMR = 66.5 + 9.563 * weight + 1.85 * height - 4.676 * age;
         // BMR = 66.5 + 13.75(weight) + 1.85(height) - 6.75(age);
 
         break;
