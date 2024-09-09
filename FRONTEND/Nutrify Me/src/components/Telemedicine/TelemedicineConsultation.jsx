@@ -235,8 +235,8 @@ function TelemedicineConsultation() {
             //
             url={videoStream}
             //
-            height={"900px"}
-            width={"1000px"}
+            height={"100%"}
+            width={"100%"}
             onError={(err) => {
               console.log(err, "participant video error");
             }}
@@ -354,6 +354,177 @@ function TelemedicineConsultation() {
     );
   }
 
+  //! my view
+  function ParticipantView2(props) {
+    const micRef = useRef(null);
+    const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
+      useParticipant(props.participantId);
+
+    const videoStream = useMemo(() => {
+      if (webcamOn && webcamStream) {
+        const mediaStream = new MediaStream();
+        mediaStream.addTrack(webcamStream.track);
+        return mediaStream;
+      }
+    }, [webcamStream, webcamOn]);
+
+    useEffect(() => {
+      if (micRef.current) {
+        if (micOn && micStream) {
+          const mediaStream = new MediaStream();
+          mediaStream.addTrack(micStream.track);
+
+          micRef.current.srcObject = mediaStream;
+          micRef.current
+            .play()
+            .catch((error) =>
+              console.error("videoElem.current.play() failed", error)
+            );
+        } else {
+          micRef.current.srcObject = null;
+        }
+      }
+    }, [micStream, micOn]);
+
+    return (
+      <>
+        {/* <p>
+          Participant: {displayName} | Webcam: {webcamOn ? "ON" : "OFF"} | Mic:{" "}
+          {micOn ? "ON" : "OFF"}
+        </p> */}
+        <audio ref={micRef} autoPlay playsInline muted={isLocal} />
+        {webcamOn && (
+          <ReactPlayer
+            //
+            playsinline // extremely crucial prop
+            pip={false}
+            light={false}
+            controls={false}
+            muted={true}
+            playing={true}
+            //
+            url={videoStream}
+            //
+            height={"50%"}
+            width={"50%"}
+            onError={(err) => {
+              console.log(err, "participant video error");
+            }}
+          />
+        )}
+        {/* <Grid
+          container
+          spacing={2}
+          sx={{ textAlign: "none", pt: 1, border: 1 }}
+        >
+          <Grid xs={2}>
+            <img
+              src="/images/logoCircle.png"
+              width="60px"
+              height="60px"
+              style={{}}
+            />
+          </Grid>
+          <Grid xs={2} sx={{ textAlign: "left" }}>
+            Name: <br />
+            <Grid container spacing={2} sx={{ mt: "5px" }}>
+              <Grid xs={2}>
+                <CircleIcon sx={{ mt: 1, width: 10, color: "green" }} />
+              </Grid>
+              <Grid sx={{ mt: "9px" }}>Active Now</Grid>
+            </Grid>
+          </Grid>
+          <Grid xs={8}>
+            <Box sx={{ float: "right", mr: "150px" }}>
+              11:11
+            
+              <Leave />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} sx={{ mt: 0, border: 1 }}>
+          <Grid xs={8}>
+            <Box
+              sx={{
+                // backgroundImage: "url('/images/telemedPic.png')",
+                width: "100%",
+                height: "500px",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                px: "0",
+                justifyContent: "center",
+                objectFit: "cover",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <p>
+                Participant: {displayName} | Webcam: {webcamOn ? "ON" : "OFF"} |
+                Mic: {micOn ? "ON" : "OFF"}
+              </p>
+              <audio ref={micRef} autoPlay playsInline muted={isLocal} />
+              {webcamOn && (
+                <ReactPlayer
+                  //
+                  playsinline // extremely crucial prop
+                  pip={false}
+                  light={false}
+                  controls={false}
+                  muted={true}
+                  playing={true}
+                  //
+                  url={videoStream}
+                  //
+                  height={"300px"}
+                  width={"700px"}
+                  onError={(err) => {
+                    console.log(err, "participant video error");
+                  }}
+                />
+              )}
+              <Grid
+                container
+                spacing={2}
+                justify="center"
+                alignItems="center"
+                sx={{
+                  background: "#E66253",
+                  borderRadius: 5,
+                  mx: "35%",
+                  mt: "400px",
+                  alignItems: "center",
+                }}
+              >
+                <Grid xs={4}>
+      
+                  <Mute />
+                </Grid>
+
+                <Grid xs={4}>
+                  <Button sx={{ background: "#ffffff" }}>
+                    <img
+                      src="/images/comment.png"
+                      width="30px"
+                      height="30px"
+                      style={{ margin: 5 }}
+                    />
+                  </Button>
+                </Grid>
+
+                <Grid xs={4}>
+          
+                  <Webcam />
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+        </Grid> */}
+      </>
+    );
+  }
+  //?
+
   function Controls(props) {
     const { leave, toggleMic, toggleWebcam } = useMeeting();
     return (
@@ -392,11 +563,21 @@ function TelemedicineConsultation() {
         >
           <img
             src="/images/end-call.png"
-            width="30px"
-            height="30px"
+            width="20%"
+            height="20%"
             style={{ margin: 5 }}
           />
-          Leave
+          <Typography
+            sx={{
+              fontSize: {
+                xs: "1em", // For extra small screens
+                sm: "1em", // For small screens
+                md: "1.0em", // For medium screens
+              },
+            }}
+          >
+            Leave
+          </Typography>
         </Button>
       </div>
     );
@@ -436,7 +617,7 @@ function TelemedicineConsultation() {
     const handleClicks = () => {
       toggleWebcam();
       setIsOn(!isOn);
-      setWebIcon(isOn ? "/images/video.png" : "/images/+.png"); // Update icon based on muted state
+      setWebIcon(isOn ? "/images/video.png" : "/images/off.png"); // Update icon based on muted state
     };
 
     return (
@@ -461,7 +642,7 @@ function TelemedicineConsultation() {
         props.onMeetingLeave();
       },
     });
-    console.log(participants);
+    console.log([...participants.entries()].length);
     const joinMeeting = () => {
       setJoined("JOINING");
       join();
@@ -507,7 +688,7 @@ function TelemedicineConsultation() {
 
     return (
       <div className="container">
-        <h3>Meeting Id: {props.meetingId}</h3>
+        {/* <h3>Meeting Id: {props.meetingId}</h3> */}
         {joined && joined == "JOINED" ? (
           <div>
             {/* <Controls /> */}
@@ -519,32 +700,37 @@ function TelemedicineConsultation() {
               />
             ))} */}
 
-            <Box sx={{ mx: 10 }}>
+            <Box sx={{ mx: 5 }}>
               <Grid
                 container
                 spacing={2}
                 sx={{ textAlign: "none", pt: 1, border: 1 }}
               >
-                <Grid xs={2}>
+                <Grid xs={12} md={2}>
                   <img
-                    src="/images/logoCircle.png"
+                    src={location.state.tempN.image}
                     width="60px"
                     height="60px"
                     style={{}}
                   />
                 </Grid>
-                <Grid xs={2} sx={{ textAlign: "left" }}>
-                  Name: <br />
-                  <Grid container spacing={2} sx={{ mt: "5px" }}>
-                    <Grid xs={2}>
-                      <CircleIcon sx={{ mt: 1, width: 10, color: "green" }} />
+                <Grid xs={12} md={3} sx={{ textAlign: "left" }}>
+                  <Box sx={{ ml: 5, mr: 5 }}>
+                    {console.log(location)}
+                    Name: {location.state.tempN.first_name} {""}
+                    {location.state.tempN.last_name}
+                    <br />
+                    <Grid container spacing={2} sx={{ mt: "5px" }}>
+                      <Grid xs={2}>
+                        <CircleIcon sx={{ mt: 1, width: 10, color: "green" }} />
+                      </Grid>
+                      <Grid sx={{ mt: "9px" }}>Active Now</Grid>
                     </Grid>
-                    <Grid sx={{ mt: "9px" }}>Active Now</Grid>
-                  </Grid>
+                  </Box>
                 </Grid>
-                <Grid xs={8}>
-                  <Box sx={{ float: "right", mr: "150px" }}>
-                    11:11
+                <Grid xs={12} md={7}>
+                  <Box sx={{ float: "right", mr: "10%" }}>
+                    {/* 11:11 */}
                     {/* <Button
                       sx={{
                         background: "#E66253",
@@ -561,10 +747,10 @@ function TelemedicineConsultation() {
                       />
                       Leave
                     </Button> */}
+
                     <Leave />
                   </Box>
                 </Grid>
-                <br />
 
                 <hr />
               </Grid>
@@ -574,6 +760,7 @@ function TelemedicineConsultation() {
                   key={participantId}
                 />
               ))} */}
+              <br />
 
               {[...participants.entries()].length === 1 ? (
                 <>
@@ -584,18 +771,40 @@ function TelemedicineConsultation() {
                   />
                 </>
               ) : [...participants.entries()].length > 1 ? (
-                <>
+                <Box>
                   {" "}
-                  <ParticipantView
-                    participantId={[...participants.entries()][0][0]}
-                    key={[...participants.entries()][0][0]}
-                  />
+                  <Grid container spacing={2}>
+                    <Grid md={8}>
+                      {" "}
+                      <Box>
+                        <ParticipantView
+                          participantId={[...participants.entries()][1][0]}
+                          key={[...participants.entries()][1][0]}
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid xs={4} sx={{ mt: "25%" }}>
+                      {" "}
+                      <Box>
+                        <ParticipantView2
+                          height="300px"
+                          width="100px"
+                          participantId={[...participants.entries()][0][0]}
+                          key={[...participants.entries()][0][0]}
+                          style={{
+                            maxWidth: "300px",
+                            height: "10%",
+                            mr: "50%",
+                          }}
+                        />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  {console.log(participants, "hi23", [
+                    ...participants.entries(),
+                  ])}
                   <br />
-                  <ParticipantView
-                    participantId={[...participants.entries()][1][1]}
-                    key={[...participants.entries()][1][1]}
-                  />
-                </>
+                </Box>
               ) : (
                 <div>hi</div>
               )}
@@ -795,7 +1004,6 @@ function TelemedicineConsultation() {
     return <JoinScreen getMeetingAndToken={meetingId} />;
   }, [authToken, meetingId]);
 
-  //!
   return (
     <div
       className="content"
@@ -806,7 +1014,6 @@ function TelemedicineConsultation() {
       }}
     >
       {/* {meetingView} */}
-      //!
       {authToken && meetingId ? (
         <MeetingProvider
           config={{

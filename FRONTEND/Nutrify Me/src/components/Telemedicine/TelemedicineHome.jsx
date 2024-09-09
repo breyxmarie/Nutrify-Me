@@ -43,7 +43,7 @@ import duration from "dayjs/plugin/duration";
 import "./calendar.css";
 //import AssignmentIcon from "@material-ui/icons/Assignment";
 //import PhoneIcon from "@material-ui/icons/Phone";
-
+import { useNavigate } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Peer from "simple-peer";
 import io from "socket.io-client";
@@ -101,6 +101,7 @@ function ServerDay(props) {
 // *
 
 function TelemedicineHome() {
+  const navigate = useNavigate();
   //! initialize variables
   const [selectedDates, setSelectedDates] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
@@ -1268,6 +1269,11 @@ function TelemedicineHome() {
             Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
         );
 
+        const tempN = nutritionist.find(
+          (data) => data.nutritionist_id === temp.nutritionist_id
+        );
+
+        console.log(tempN, nutritionist);
         if (temp) {
           setTodayAppointment(
             <Box
@@ -1282,9 +1288,14 @@ function TelemedicineHome() {
             >
               {" "}
               {/* //! ayusin toh */}
-              <p>Aubrey</p>
-              <p>Time: {temp.time}</p>
-              <p>Dietitian: Bea</p>
+              <p>Date {dayjs(temp.date).format("MMMM DD, YYYY")}</p>
+              <p>
+                Time: {dayjs(temp.date + " " + temp.time).format("HH:MM A")}
+              </p>
+              <p>
+                Dietitian: {tempN.first_name} {"  "}
+                {tempN.last_name}
+              </p>
               {/* <center>
                 <Link
                   to={{
@@ -1301,16 +1312,23 @@ function TelemedicineHome() {
                   </Button>
                 </Link>
               </center> */}
-              <Link
+              {/* <Link
                 to="/telemedicine-consultation"
                 style={{
                   color: "#ffffff",
                 }}
+              > */}
+              <Button
+                sx={{ background: "#E66253", color: "#ffffff" }}
+                onClick={() =>
+                  navigate("/telemedicine-consultation", {
+                    state: { tempN },
+                  })
+                }
               >
-                <Button sx={{ background: "#E66253", color: "#ffffff" }}>
-                  Go to Consultation
-                </Button>
-              </Link>{" "}
+                Go to Consultation
+              </Button>
+              {/* </Link>{" "} */}
             </Box>
           );
         } else {
