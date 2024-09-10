@@ -150,12 +150,12 @@ function NutritionistAppointment() {
               </Grid>
             </Grid>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
-              Date:{" "}
-              {
+              Date:{"     "}
+              {dayjs(
                 filteredData.find(
                   (data) => data.date === dayjs().format("YYYY-MM-DD")
                 ).date
-              }
+              ).format("MMMM DD, YYYY")}
             </Typography>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
               Time:
@@ -167,7 +167,7 @@ function NutritionistAppointment() {
               {dayjs(formattedDay + formattedTime).format("h:mm A")}
             </Typography>
             <center>
-              <Link
+              {/* <Link
                 to={{
                   pathname: "/nutritionist-consultation",
                   //  state: { data: myStateData },
@@ -175,11 +175,27 @@ function NutritionistAppointment() {
                 style={{
                   color: "#ffffff",
                 }}
+              > */}
+
+              <Button
+                sx={{ background: "#E66253", color: "#ffffff" }}
+                onClick={() =>
+                  navigate("/nutritionist-consultation", {
+                    state: {
+                      tempN: user.data.find(
+                        (user) =>
+                          user.user_id ===
+                          filteredData.find(
+                            (data) => data.date === dayjs().format("YYYY-MM-DD")
+                          ).user_id
+                      ),
+                    },
+                  })
+                }
               >
-                <Button sx={{ background: "#E66253", color: "#ffffff" }}>
-                  Call
-                </Button>
-              </Link>
+                Call
+              </Button>
+              {/* </Link> */}
             </center>
             {/* <Link
               to="/nutritionist-consultation"
