@@ -486,7 +486,7 @@ function MealPlanShopCheckout() {
   } = useForm({
     resolver: yupResolver(secondschema),
   });
-  console.log(addressData[selectedAddress].address_id);
+  // console.log(addressData[selectedAddress].address_id);
   const onSubmitHandler1 = async (data) => {
     console.log(data);
     if (payment === "Paypal") {
