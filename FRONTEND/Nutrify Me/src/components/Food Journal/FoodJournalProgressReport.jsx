@@ -2979,7 +2979,7 @@ function FoodJournalProgressReport() {
           <Typography
             sx={{ color: "#99756E", fontWeight: "bold", fontSize: "30px" }}
           >
-            HIGH BLOOD PRESSURE REPORT
+            BLOOD PRESSURE REPORT
           </Typography>
         </Grid>
         <Grid xs={6}>
