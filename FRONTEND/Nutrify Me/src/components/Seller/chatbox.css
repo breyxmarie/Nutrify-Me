@@ -1,16 +1,18 @@
 #chatCon {
-  width: 20%;
+  z-index: 100;
+  width: 30%;
   position: fixed;
   bottom: 3%;
-  right: 13%;
+  right: 8%;
 }
 
 #chatCon .chat-box {
   /* display: none; */
-  width: 150%;
+  width: 110%;
   height: 500px;
   border-radius: 25px;
   background-color: #eee;
+  overflow-x: scroll;
 }
 
 #chatCon .chat-box .header {

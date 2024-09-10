@@ -22,6 +22,7 @@ import { NavLink, Link, useLocation, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { PhoneInput } from "react-international-phone";
 import TextField from "@mui/material/TextField";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
@@ -775,7 +776,7 @@ function MealPlanShopCheckout() {
               </Grid>
               <Grid xs={5} sx={{ ml: 4 }}>
                 Phone <br />
-                <TextField
+                {/* <TextField
                   id="phone"
                   name="phone"
                   label="Phone"
@@ -783,6 +784,13 @@ function MealPlanShopCheckout() {
                   margin="dense"
                   {...register("phone")}
                   error={errors.phone ? true : false}
+                /> */}
+                <PhoneInput
+                  // style={{ width: "80%" }}
+                  style={{ width: "1000px" }} // Adjust the width as needed
+                  //width="50%"
+                  defaultCountry="ph"
+                  {...register("phone")}
                 />
                 <Typography variant="inherit" color="textSecondary">
                   {errors.phone?.message}

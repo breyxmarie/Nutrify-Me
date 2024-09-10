@@ -576,7 +576,7 @@ function NutritionistHome() {
                         fontSize: "30px",
                       }}
                     >
-                      RECAP & EDIT YOUR PATIENT’S MEAL PLAN!
+                      {/* RECAP & EDIT YOUR PATIENT’S MEAL PLAN!
                       <br />
                       <Button
                         sx={{
@@ -598,7 +598,7 @@ function NutritionistHome() {
                         }}
                       >
                         EDIT MEAL PLAN
-                      </Button>
+                      </Button> */}
                     </Typography>
                     <br />
                   </Box>

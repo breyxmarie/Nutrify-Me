@@ -682,14 +682,14 @@ function NutritionistHome() {
                 </Grid>
 
                 <Grid xs={4}>
-                  <Button sx={{ background: "#ffffff" }}>
+                  {/* <Button sx={{ background: "#ffffff" }}>
                     <img
                       src="/images/comment.png"
                       width="30px"
                       height="30px"
                       style={{ margin: 5 }}
                     />
-                  </Button>
+                  </Button> */}
                 </Grid>
 
                 <Grid xs={4}>

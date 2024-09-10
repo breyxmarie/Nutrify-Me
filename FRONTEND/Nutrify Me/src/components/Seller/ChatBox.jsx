@@ -3,6 +3,7 @@ import "./chatbox.css";
 import Box from "@mui/material/Box";
 import AxiosInstance from "../forms/AxiosInstance";
 import Grid from "@mui/material/Grid";
+import { Typography } from "@mui/material";
 
 function ChatBox(props) {
   const [orders, setOrders] = useState([]);
@@ -44,26 +45,40 @@ function ChatBox(props) {
       <div class="chat-box" style={chatopen ? show : hide}>
         <div class="header">On Going Orders</div>
         <br />
-        {orders.map((item) => (
-          <Box sx={{ border: 1 }}>
-            Date: {item.date}
-            Time:
-            {item.time}
-            <br />
-            Customer:
-            <br />
-            <br />
-            Link:
-            <a href={item.order_details.data.data.shareLink}>
-              <Grid container spacing={2}>
-                {" "}
-                <Grid xs={6}>{item.order_details.data.data.shareLink}</Grid>
-                <Grid xs={6}> </Grid>
-              </Grid>
-            </a>
-            <a>fdf</a>
-          </Box>
-        ))}
+        <div class="chat-box">
+          {orders.map((item) => (
+            <Box
+              sx={{
+                border: 1,
+                textOverflow: "ellipsis",
+                // width: "100px",
+                overflow: "show",
+              }}
+            >
+              Date: {item.date} <br /> Time:
+              {item.time}
+              <br />
+              Customer:
+              <br />
+              <br />
+              Link:
+              <a href={item.order_details.data.data.shareLink} target="_blank">
+                <Typography
+                  sx={{
+                    ml: "0%",
+                    mr: "0%",
+                    textOverflow: "ellipsis",
+                    width: "100px",
+                    overflow: "show",
+                  }}
+                >
+                  {item.order_details.data.data.shareLink}
+                </Typography>
+              </a>
+              <a>fdf</a>
+            </Box>
+          ))}
+        </div>
         {/* <div class="header">Chat with me</div>
         <div class="msg-area">
           {messages.map((msg, i) =>
@@ -93,7 +108,19 @@ function ChatBox(props) {
             alt=""
           /> */}
 
-          <Box onClick={toggle}>Orders</Box>
+          <Box
+            onClick={toggle}
+            sx={{
+              backgroundColor: "#fff345",
+              ml: "70%",
+              mr: "5%",
+              py: 2,
+              px: 3,
+              borderRadius: 3,
+            }}
+          >
+            Orders
+          </Box>
         </p>
       </div>
     </div>

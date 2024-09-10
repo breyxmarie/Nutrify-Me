@@ -210,7 +210,7 @@ function SellerOrders() {
           console.log(quotationData.data.data.stops[0].stopId);
           const orderData = await LalamoveApi.createOrder(
             quotationData.data.data.quotationId,
-            foundAddress.phone,
+            foundAddress.phone.replace(/\s/g, ""),
             foundAddress.name,
             "none",
             quotationData.data.data.stops[0].stopId,
@@ -223,11 +223,11 @@ function SellerOrders() {
           const tempUser = userData.find((item) => item.user_id === user_id);
           console.log(tempUser, user_id);
 
-          const tempOrder = allOrder.find((item) => item.order_id === user_id);
+          const tempOrder = allOrder.find((item) => item.order_id === orderId);
           console.log(tempUser, orderId);
 
           const tempAddress = addressData.find(
-            (item) => item.address_id === user_id
+            (item) => item.user_id === user_id
           );
           console.log(tempUser, address_ids);
           // sendEmail();
@@ -240,7 +240,7 @@ function SellerOrders() {
             time: dayjs().format("HH:mm:ss"),
             status: "Deployed", // Deployed, Pick-Up, Delivering, Done
           };
-          console.log(tempOrder);
+          console.log(tempAddress);
           try {
             AxiosInstance.post(`deployedorder/`, {
               user: tempUser,
