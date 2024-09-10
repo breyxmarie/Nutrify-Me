@@ -562,7 +562,8 @@ function NutritionistProfile() {
               license_id: nutritionist.license_id,
               schedule_day: tempDay,
               schedule_time: tempTime,
-              image: nutritionist.image,
+              image:
+                "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
               license_pic: nutritionist.license_pic,
               user_id: 101,
             }).then((res) => {
