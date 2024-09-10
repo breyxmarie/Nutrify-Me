@@ -127,7 +127,7 @@ const LalamoveApi = {
 
         // `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/quotations`,
         // `https://thingproxy.freeboard.io/fetch/${this.baseUrl}/v3/quotations`,
-        ` https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${this.baseUrl}/v3/quotations`,
+        `https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${this.baseUrl}/v3/quotations`,
 
         //! watch out here for deployment baka mag kaerror
         body,
@@ -381,9 +381,10 @@ const LalamoveApi = {
 
     try {
       const response = await axios.post(
-        `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/orders`,
+        //  `https://cors-anywhere.herokuapp.com/${this.baseUrl}/v3/orders`,
+        `https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${this.baseUrl}/v3/orders`,
 
-        //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,
+        //  `https://test.cors.workers.dev/?${this.baseUrl}/v3/quotations`,   https://proxynutrifyme-4a3d23e2f725.herokuapp.com/
 
         //! watch out here for deployment baka mag kaerror
         body,
