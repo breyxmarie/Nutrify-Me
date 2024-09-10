@@ -5,7 +5,7 @@ const baseUrl = `https://nightxperson.pythonanywhere.com/`;
 
 const AxiosInstance = axios.create({
   baseURL: baseUrl,
-  timeout: 5000,
+  timeout: 20000,
   cache: "no-cache",
   headers: {
     "Content-Type": "application/json",
