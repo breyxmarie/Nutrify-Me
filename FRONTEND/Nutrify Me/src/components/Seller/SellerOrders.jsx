@@ -393,6 +393,9 @@ function SellerOrders() {
     >
       <ChatBox />
       New Orders <br />
+      <br />
+      <br />
+      <br />
       <Grid container spacing={2}>
         {orderedOrder.map((item, index) => (
           <Grid item xs={3} sm={4} md={6} key={index}>
@@ -767,7 +770,7 @@ function SellerOrders() {
                 </Button>
               </Box>
             </Modal>
-            <Button
+            {/* <Button
               sx={{
                 color: "#ffffff",
                 border: 0,
@@ -802,7 +805,7 @@ function SellerOrders() {
               }}
             >
               Order Done
-            </Button>
+            </Button> */}
           </Box>
         </Grid>
       ))}
