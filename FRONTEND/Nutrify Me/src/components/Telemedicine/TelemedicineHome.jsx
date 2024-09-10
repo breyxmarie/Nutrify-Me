@@ -1970,8 +1970,8 @@ function TelemedicineHome() {
                         <img
                           src={tempNut?.image || "/images/Rectangle 355.png"}
                           style={{ background: "#ffffff" }}
-                          width="30%"
-                          height="30%"
+                          width="50%"
+                          height="50%"
                         />{" "}
                         <br />
                         Name: {tempNut?.first_name} {tempNut?.last_name}
