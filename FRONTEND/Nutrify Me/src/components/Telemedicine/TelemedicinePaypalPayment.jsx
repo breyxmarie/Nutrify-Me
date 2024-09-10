@@ -35,7 +35,7 @@ function TelemedicinePaypalPayment() {
 
   const clientID =
     //  "AUcMPBLNq5ZPvQzgd-YTAwdx3xBdlt3HeoWHSSBkzmXpPD-SMWHxM6MYnXEFTyFmdwzLRB35Csq-rNua";
-    "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d";
+    "AUcMPBLNq5ZPvQzgd-YTAwdx3xBdlt3HeoWHSSBkzmXpPD-SMWHxM6MYnXEFTyFmdwzLRB35Csq-rNua";
 
   const clientSecret =
     // "ELKJGhT3-IhJlV61uzm2I0BfM2VSpKXt0sHmylv7Hg4VjOLk231k8JSGrv_--3iA0iFbYT3LD0HUFMo7";
