@@ -761,3 +761,151 @@ def ProfilingAPI(request, pk=0):
         profiling = Profiling.objects.get(profiling_id=pk)
         profiling.delete()
         return JsonResponse("Profiling was deleted Successfully", safe = False)
+    
+
+
+@csrf_exempt
+def PendingAppointmentAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            pendingAppointment = PendingAppointment.objects.all()
+            serializer = PendingAppointmentSerializer(pendingAppointment, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                pendingAppointment = PendingAppointment.objects.get(pk=pk)
+                serializer = PendingAppointmentSerializer(pendingAppointment)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'Pending Appointment not found'}, status=404)
+    elif request.method == 'POST':
+        pendingAppointment_data = JSONParser().parse(request)
+        pendingAppointment_serializer = PendingAppointmentSerializer(data = pendingAppointment_data)
+        if pendingAppointment_serializer.is_valid():
+            pendingAppointment_serializer.save()
+            return JsonResponse("Pending Appointment Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Pending Appointment",safe=False)
+    elif request.method == 'PUT':
+        pendingAppointment_data = JSONParser().parse(request)
+        pendingAppointments = PendingAppointment.objects.get(pending_id=pendingAppointment_data['pending_id'])
+        pendingAppointment_serializer = PendingAppointmentSerializer(pendingAppointments, data = pendingAppointment_data)
+        if pendingAppointment_serializer.is_valid():
+            pendingAppointment_serializer.save()
+            return JsonResponse("Update Pending Appointment Successfully",  safe=False)
+        return JsonResponse("Failed to Update Pending Appointment", safe=False)
+    elif request.method == 'DELETE':
+        pendingAppointment = PendingAppointment.objects.get(pending_id=pk)
+        pendingAppointment.delete()
+        return JsonResponse("PendingAppointment was deleted Successfully", safe = False)
+    
+
+
+@csrf_exempt
+def PatientNutritionistAgreementAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            patientNutritionistAgreement = PatientNutritionistAgreement.objects.all()
+            serializer = PatientNutritionistAgreementSerializer(patientNutritionistAgreement, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                patientNutritionistAgreement = PatientNutritionistAgreement.objects.get(pk=pk)
+                serializer = PatientNutritionistAgreementSerializer(patientNutritionistAgreement)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'PatientNutritionistAgreement not found'}, status=404)
+    elif request.method == 'POST':
+        patientNutritionistAgreement_data = JSONParser().parse(request)
+        patientNutritionistAgreement_serializer = PatientNutritionistAgreementSerializer(data = patientNutritionistAgreement_data)
+        if patientNutritionistAgreement_serializer.is_valid():
+            patientNutritionistAgreement_serializer.save()
+            return JsonResponse("PatientNutritionistAgreement Added Successfully", safe=False)
+        return JsonResponse("Failed to PatientNutritionistAgreement",safe=False)
+    elif request.method == 'PUT':
+        patientNutritionistAgreement_data = JSONParser().parse(request)
+        patientNutritionistAgreements = PatientNutritionistAgreement.objects.get(agree_id=patientNutritionistAgreement_data['agree_id'])
+        patientNutritionistAgreement_serializer = PatientNutritionistAgreementSerializer(patientNutritionistAgreements, data = patientNutritionistAgreement_data)
+        if patientNutritionistAgreement_serializer.is_valid():
+            patientNutritionistAgreement_serializer.save()
+            return JsonResponse("Update PatientNutritionistAgreement Successfully",  safe=False)
+        return JsonResponse("Failed to Update PatientNutritionistAgreement", safe=False)
+    elif request.method == 'DELETE':
+        patientNutritionistAgreement = PatientNutritionistAgreement.objects.get(agree_id=pk)
+        PatientNutritionistAgreement.delete()
+        return JsonResponse("PatientNutritionistAgreement was deleted Successfully", safe = False)
+  
+
+@csrf_exempt
+def RecommendMealPlanAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            recommendMealPlan = RecommendMealPlan.objects.all()
+            serializer = RecommendMealPlanSerializer(recommendMealPlan, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                recommendMealPlan = RecommendMealPlan.objects.get(pk=pk)
+                serializer = RecommendMealPlanSerializer(recommendMealPlan)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'RecommendMealPlan not found'}, status=404)
+    elif request.method == 'POST':
+        recommendMealPlan_data = JSONParser().parse(request)
+        recommendMealPlan_serializer = RecommendMealPlanSerializer(data = recommendMealPlan_data)
+        if recommendMealPlan_serializer.is_valid():
+            recommendMealPlan_serializer.save()
+            response_data = {"id": recommendMealPlan.pk, "message": "Recommend Meal Plan Added Successfully"}
+            return JsonResponse(response_data , safe=False)
+        return JsonResponse("Failed to Recommend Meal Plan",safe=False)
+    elif request.method == 'PUT':
+        recommendMealPlan_data = JSONParser().parse(request)
+        recommendMealPlans = RecommendMealPlan.objects.get(recommend_mealplan_id_id=recommendMealPlan_data['recommend_mealplan_id'])
+        recommendMealPlan_serializer = RecommendMealPlanSerializer(recommendMealPlans, data = recommendMealPlan_data)
+        if recommendMealPlan_serializer.is_valid():
+            recommendMealPlan_serializer.save()
+            return JsonResponse("Update Recommend Meal Plan Successfully",  safe=False)
+        return JsonResponse("Failed to Update Recommend Meal Plan", safe=False)
+    elif request.method == 'DELETE':
+        recommendMealPlan = RecommendMealPlan.objects.get(recommend_mealplan_id=pk)
+        RecommendMealPlan.delete()
+        return JsonResponse("Recommend Meal Plan was deleted Successfully", safe = False)
+    
+
+@csrf_exempt
+def RecommendMealAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            recommendMeal = RecommendMeal.objects.all()
+            serializer = RecommendMealSerializer(recommendMeal, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                recommendMeal = RecommendMealPlan.objects.get(pk=pk)
+                serializer = RecommendMealPlanSerializer(recommendMeal)
+                return JsonResponse(serializer.data, safe=False)
+            except Theme.DoesNotExist:
+                return JsonResponse({'error': 'Recommend Meal not found'}, status=404)
+    elif request.method == 'POST':
+        recommendMeal_data = JSONParser().parse(request)
+        recommendMeal_serializer = RecommendMealSerializer(data = recommendMeal_data)
+        if recommendMeal_serializer.is_valid():
+            recommendMeal_serializer.save()
+            return JsonResponse("Recommend Meal Added Successfully", safe=False)
+        return JsonResponse("Failed to Recommend Meal",safe=False)
+    elif request.method == 'PUT':
+        recommendMeal_data = JSONParser().parse(request)
+        recommendMeals = RecommendMeal.objects.get(recommend_meal_id=recommendMeal_data['recommend_meal_id'])
+        recommendMealPlan_serializer = RecommendMealPlanSerializer(recommendMeals, data = recommendMeal_data)
+        if recommendMeal_serializer.is_valid():
+            recommendMeal_serializer.save()
+            return JsonResponse("Update Recommend Meal Successfully",  safe=False)
+        return JsonResponse("Failed to Update Recommend Meal", safe=False)
+    elif request.method == 'DELETE':
+        recommendMealPlan = RecommendMeal.objects.get(recommend_meal_id=pk)
+        RecommendMealPlan.delete()
+        return JsonResponse("Recommend Meal was deleted Successfully", safe = False)
+      

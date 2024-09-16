@@ -48,6 +48,14 @@ urlpatterns = [
     path('deployedorder/<int:pk>', DeployedOrderAPI),
     path('profiling/', ProfilingAPI),
     path('profiling/<int:pk>', ProfilingAPI),
+    path('pendingappointment/', PendingAppointmentAPI),
+    path('pendingappointment/<int:pk>', PendingAppointmentAPI),
+    path('patientnutritionistagreement/', PatientNutritionistAgreementAPI),
+    path('patientnutritionistagreement/<int:pk>', PatientNutritionistAgreementAPI),
+    path('recommendmealplan/', RecommendMealPlanAPI),
+    path('recommendmealplan/<int:pk>', RecommendMealPlanAPI),
+    path('recommendmeal/', RecommendMealAPI),
+    path('recommendmeal/<int:pk>', RecommendMealAPI),
     path('savefilelicense', SaveFileLicense),
 
 

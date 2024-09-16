@@ -18,6 +18,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import Button from "@mui/material/Button";
@@ -26,6 +27,7 @@ import { useLoggedInUser } from "../LoggedInUserContext";
 import moment from "moment";
 
 function NutritionistHome() {
+  const navigate = useNavigate();
   const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
     useLoggedInUser();
   const [date, setDate] = useState();
@@ -393,6 +395,7 @@ function NutritionistHome() {
         color: "#000000",
       }}
     >
+    <Box sx = {{ml: 5, mr: 15}}>
       <Grid container spacing={2} sx={{ mx: 5 }}>
         <Grid
           xs={6}
@@ -418,7 +421,7 @@ function NutritionistHome() {
             />
           </Box>
         </Grid>
-        <Grid xs={6}>
+        <Grid xs={5.5} sx = {{ml:5}}>
           <h2>My Scheduled Appointments</h2>
 
           {/* //! Calendar */}
@@ -501,6 +504,7 @@ function NutritionistHome() {
           </LocalizationProvider>{" "} */}
         </Grid>
       </Grid>
+      </Box>
       <Box sx={{ mt: 5, mx: 5 }}>
         <Grid container spacing={2}>
           <Grid xs={5} sx={{ mx: 6 }}>
@@ -533,6 +537,9 @@ function NutritionistHome() {
                       READY TO TALK TO YOUR PATIENTS?
                       <br />
                       <Button
+                      onClick={() =>
+                        navigate("/nutritionist-appointment")
+                      }
                         sx={{
                           background: "#E66253",
                           borderRadius: 3,
@@ -575,8 +582,11 @@ function NutritionistHome() {
                         fontWeight: "bold",
                         fontSize: "30px",
                       }}
+                      onClick={() =>
+                        navigate("/nutritionist-patient")
+                      }
                     >
-                      {/* RECAP & EDIT YOUR PATIENT’S MEAL PLAN!
+                      RECAP & CREATE YOUR PATIENT’S MEAL PLAN!
                       <br />
                       <Button
                         sx={{
@@ -586,10 +596,13 @@ function NutritionistHome() {
                           px: 4,
                         }}
                       >
-                        VIEW HISTORY
+                        VIEW PATIENTS
                       </Button>
                       <br />
                       <Button
+                       onClick={() =>
+                        navigate("/nutritionist-patient")
+                      }
                         sx={{
                           background: "#E66253",
                           borderRadius: 3,
@@ -597,8 +610,8 @@ function NutritionistHome() {
                           px: 4,
                         }}
                       >
-                        EDIT MEAL PLAN
-                      </Button> */}
+                        CREATE MEAL PLAN
+                      </Button>
                     </Typography>
                     <br />
                   </Box>

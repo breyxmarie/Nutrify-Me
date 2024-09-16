@@ -17,7 +17,7 @@ import { NavLink, Link, useLocation } from "react-router-dom";
 const pages = [
   { names: "APPOINTMENTS", links: "/telemedicine-home" },
   { names: " MEET US", links: "/telemedicine-meet-us" },
-  // { names: "MESSAGES", links: "/telemedicine-messages" },
+  { names: "MEAL PLANS", links: "/telemedicine-meal-plans" },
 ];
 
 const StyledLink = `
@@ -166,7 +166,7 @@ function TeleMedNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: "7%",
-              mx: "30%",
+              mx: "25%",
             }}
           >
             {pages.map((page) => (

@@ -3,6 +3,7 @@ import * as React from "react";
 import MainUserNavbar from "../NavBars/MainUserNavbar";
 import TeleMedNavBar from "../NavBars/TeleMedNavBar";
 import Box from "@mui/material/Box";
+import { Tab, Tabs } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -101,6 +102,34 @@ function ServerDay(props) {
 // *
 
 function TelemedicineHome() {
+
+  //! tabs
+  const [appointmentList, setAppointmentList] = useState([])
+  const [activeTab, setActiveTab] = useState(0);
+  const handleTabChange = (event, newActiveTab) => {
+    console.log(newActiveTab);
+    setActiveTab(newActiveTab);
+  };
+
+  const tabContent = [
+    {
+      title: "Approved",
+      content: <Box></Box>,
+    },
+    {
+      title: "Pending",
+      content: <Box></Box>,
+    },
+    {
+      title: "Declined",
+      content: <Box></Box>,
+    },
+  ];
+
+
+
+  //!
+  const [designatedNutritionist, setDesignatedNutritionist] = useState();
   const navigate = useNavigate();
   //! initialize variables
   const [selectedDates, setSelectedDates] = useState(null);
@@ -557,6 +586,7 @@ function TelemedicineHome() {
   // ?
   function disableUnavailableDates(date) {
     // Get the day of the week (e.g., "Tuesday")
+    console.log(date);
     const year = date.$y;
     const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
     const day = date.$d.getDate();
@@ -1230,6 +1260,35 @@ function TelemedicineHome() {
     AxiosInstance.get(`nutritionist/`)
       .then((res) => {
         setNutritionist(res.data);
+        let tempNut = res.data;
+        AxiosInstance.get(`patientnutritionistagreement`)
+          .then((res) => {
+            console.log(
+              res.data.find((data) => data.user_id === loggedInUser.user_id)
+            );
+            console.log(
+              tempNut.find(
+                (data) =>
+                  data.nutritionist_id ===
+                  res.data.find((data) => data.user_id === loggedInUser.user_id)
+                    .nutritionist_id
+              )
+            );
+            setDesignatedNutritionist(
+              tempNut.find(
+                (data) =>
+                  data.nutritionist_id ===
+                  res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
+                    .nutritionist_id 
+              )
+            );
+          })
+          .catch((error) => {
+            console.error("Error fetching data:", error);
+            // Optionally display an error message to the user
+            //setNutritionist(options);
+            // console.log("test", nutritionist);
+          });
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
@@ -1255,6 +1314,25 @@ function TelemedicineHome() {
         //setNutritionist(options);
         // console.log("test", nutritionist);
       });
+
+
+      AxiosInstance.get(`pendingappointment`)
+      .then((res) => {
+        //  setNutritionist(res.data);
+
+      
+        setAppointmentList(
+          res.data.filter((data) => data.user_id === loggedInUser.user_id)
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+
+      
   };
   const [todayAppointment, setTodayAppointment] = useState();
   // <h2>No Scheduled Consultation </h2>
@@ -1268,13 +1346,12 @@ function TelemedicineHome() {
             loggedInUser.user_id === appoint.user_id &&
             Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
         );
+        console.log(res.data);
 
-        const tempN = nutritionist.find(
-          (data) => data.nutritionist_id === temp.nutritionist_id
-        );
-
-        console.log(tempN, nutritionist);
         if (temp) {
+          const tempN = nutritionist.find(
+            (data) => data.nutritionist_id === temp.nutritionist_id
+          );
           setTodayAppointment(
             <Box
               sx={{
@@ -1293,8 +1370,8 @@ function TelemedicineHome() {
                 Time: {dayjs(temp.date + " " + temp.time).format("HH:MM A")}
               </p>
               <p>
-                Dietitian: {tempN.first_name} {"  "}
-                {tempN.last_name}
+                Dietitian: {designatedNutritionist.first_name} {"  "}
+                {designatedNutritionist.last_name}
               </p>
               {/* <center>
                 <Link
@@ -1517,21 +1594,38 @@ function TelemedicineHome() {
       " ",
       loggedInUser.user_id
     );
-    try {
-      AxiosInstance.post(`appointment/`, {
-        date: selectedDates.format("YYYY-MM-DD"),
-        time: selectedTime,
-        user_id: loggedInUser.user_id,
-        nutritionist_id: selectedNutritionist,
-      }).then((res) => {
-        console.log(res.data);
-        GetData();
-        handleClose();
-        // navigate("/?success=registered");
-      });
-    } catch (error) {
-      console.log(error.response.data);
-    }
+
+    //   try {
+    //   AxiosInstance.post(`patientnutritionistagreement/`, {
+    //     status: ,
+    //     nutritionist_id: ,
+    //     user_id: 
+    //   }).then((res) => {
+    //     console.log(res.data);
+    //     GetData();
+    //     handleClose();
+    //     // navigate("/?success=registered");
+    //   });
+    // } catch (error) {
+    //   console.log(error.response.data);
+    // }
+
+
+    // try {
+    //   AxiosInstance.post(`appointment/`, {
+    //     date: selectedDates.format("YYYY-MM-DD"),
+    //     time: selectedTime,
+    //     user_id: loggedInUser.user_id,
+    //     nutritionist_id: selectedNutritionist,
+    //   }).then((res) => {
+    //     console.log(res.data);
+    //     GetData();
+    //     handleClose();
+    //     // navigate("/?success=registered");
+    //   });
+    // } catch (error) {
+    //   console.log(error.response.data);
+    // }
 
     try {
       AxiosInstance.post(`scheduledeck/`, {
@@ -1565,6 +1659,275 @@ function TelemedicineHome() {
 
     console.log(formattedTime);
     setSelectedTime(formattedTime);
+  };
+
+  const [openSched, setOpenSched] = useState(false);
+  const handleScheduleOpen = () => {
+    setOpenSched(true);
+  };
+  const handleScheduleClose = () => {
+    setOpenSched(false);
+  };
+  const schedule = () => {};
+
+  function disableUnavailableFinal(date) {
+    // Get the day of the week (e.g., "Tuesday")
+    // const year = date.$y;
+    // const month = date.$M - 1; // Months in JavaScript are zero-indexed (January is 0)
+    // const day = date.$d.getDate();
+
+    const convertedDate = new Date(date);
+    const selectedDay = convertedDate.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+
+    // Check if the selected day is in the unavailable list
+    // return !availableDays.includes(selectedDay);
+
+    return !designatedNutritionist.schedule_day.includes(selectedDay);
+  }
+
+  const getAvailableTimeSched = (startTimeString, endTimeString, date) => {
+    console.log(startTimeString, endTimeString);
+    // try {
+    //   const startTimeParsed = parseTimeString(startTimeString);
+    //   const endTimeParsed = parseTimeString(endTimeString);
+    //   const startTime = new Time(
+    //     startTimeParsed.hours === 12 && startTimeParsed.amPm === "AM"
+    //       ? 0 // Convert 12:00AM to 0 hours
+    //       : startTimeParsed.hours === 12 && startTimeParsed.amPm === "PM"
+    //       ? 12 // Keep 12:00PM as 12 hours
+    //       : startTimeParsed.amPm === "PM"
+    //       ? startTimeParsed.hours + 12 // Add 12 for PM hours
+    //       : startTimeParsed.hours, // Keep hours for AM
+    //     startTimeParsed.minutes
+    //   );
+    //   const endTime = new Time(
+    //     endTimeParsed.hours === 12 && endTimeParsed.amPm === "AM"
+    //       ? 0 // Convert 12:00AM to 0 hours
+    //       : endTimeParsed.hours === 12 && endTimeParsed.amPm === "PM"
+    //       ? 12 // Keep 12:00PM as 12 hours
+    //       : endTimeParsed.amPm === "PM"
+    //       ? endTimeParsed.hours + 12 // Add 12 for PM hours
+    //       : endTimeParsed.hours, // Keep hours for AM
+    //     endTimeParsed.minutes
+    //   );
+    //   console.log(startTimeParsed + " " + endTime);
+    //   totalHours = calculateTotalHours(startTime, endTime);
+    //   console.log("Total hours:", totalHours, startTimeString);
+    // } catch (error) {
+    //   console.error("Error parsing time:", error.message);
+    // }
+
+    // const startTimeString = "08:00AM"; // Replace with user-provided start time
+    // const endTimeString = "12:00PM";
+    // console.log(dayjs(selectedTheDay));
+    let totalHours = getTotalHours(startTimeString, endTimeString);
+    let availableTime = [];
+    // const s = dayjs("08:00 PM", "HH:mm A/P");
+    const s = dayjs(startTimeString, "HH:mm A/P");
+
+    try {
+      const timeIntervals = divideHoursIntoIntervals(s, totalHours);
+      console.log("Time intervals for", totalHours, "hours:");
+      console.log(timeIntervals.join(", ")); // Join intervals with commas and space
+
+      const filteredAvailableTime = divideHoursIntoIntervals(s, totalHours);
+      AxiosInstance.get(`scheduledeck`).then((res) => {
+        // setJournalEntry(
+        //   res.data.filter(
+        //     (item) => item.date == day && item.user_id == loggedInUser.user_id
+        //   )
+        //  );
+
+        console.log(filteredAvailableTime);
+        console.log(timeIntervals);
+        console.log(date.format("YYYY-MM-DD"));
+        let checkDate = date.format("YYYY-MM-DD");
+        //  availableTime.map((item) => console.log(item));
+        let tempTime;
+
+        let checkNut = res.data.filter(
+          (interval) =>
+            interval.nutritionist_id === designatedNutritionist.nutritionist_id
+        );
+
+        let schedules = checkNut.filter(
+          //  availableTime = availableTime.filter(
+          (interval) => interval.date === checkDate
+        );
+
+        console.log(filteredAvailableTime);
+        console.log(checkDate);
+        console.log(res.data);
+        filteredAvailableTime.map((filter) => {
+          // checkNut.forEach((item) => {
+          //   if (item.date === checkDate) {
+          //     if (filter !== formattedTime) {
+          //       availableTime.push(filter);
+          //     }
+          //   } else {
+          //     availableTime.push(filter);
+          //   }
+          // });
+          availableTime.push(filter);
+        });
+
+        console.log(schedules);
+        schedules.map((scheds) => {
+          let temp = convertTimeFormat(scheds.time);
+          availableTime = availableTime.filter((interval) => interval !== temp);
+        });
+
+        console.log(availableTime);
+        console.log(filteredAvailableTime);
+
+        console.log(availableTime.length);
+
+        if (availableTime.length === 0) {
+          setFreeTime(filteredAvailableTime);
+        } else {
+          setFreeTime(availableTime);
+        }
+        res.data.forEach((item) => {
+          // Format the time
+          const formattedTime = convertTimeFormat(item.time);
+          console.log(item);
+
+          // Assuming availableTime contains time intervals
+
+          // availableTime = filteredAvailableTime.filter(
+          //   //  availableTime = availableTime.filter(
+          //   (interval) => interval !== formattedTime
+          //   //&& item.date === checkDate
+          // );
+
+          // availableTime = filteredAvailableTime.filter(
+          //   //  availableTime = availableTime.filter(
+          //   (interval) => interval !== formattedTime
+          //   //&& item.date === checkDate
+          // );
+
+          // filteredAvailableTime.map((filter) => {
+          //   if (item.date === checkDate) {
+          //     if (filter !== formattedTime) {
+          //       availableTime.push(filter);
+          //     }
+          //   } else {
+          //     availableTime.push(filter);
+          //   }
+          // });
+
+          // availableTime = filteredAvailableTime;
+
+          // Use filteredAvailableTime for further processing
+
+          // if (availableTime)
+
+          //   setFreeTime(availableTime);
+        });
+        console.log(freeTime);
+        //  setSelectedDates(dayjs());
+        // setNutritionistInformation(
+        //   <Box>
+        //     <img src={tempNut.image} />
+        //     {tempNut.first_name} {tempNut.last_name}
+        //     <br />
+        //     {tempNut.schedule_day}
+        //     <br />
+        //     {tempNut.schedule_time}
+        //     <LocalizationProvider dateAdapter={AdapterDayjs}>
+        //       <DatePicker
+        //         label="Select a date"
+        //         defaultValue={dayjs()}
+        //         value={selectedDates}
+        //         onChange={handleDateChanges}
+        //         renderInput={(params) => <TextField {...params} />}
+        //         shouldDisableDate={disableUnavailableDates}
+        //         minDate={dayjs()}
+        //         //  open // Keep the calendar open
+        //       />
+        //     </LocalizationProvider>
+        //     Time:
+        //     <Select
+        //       labelId="demo-simple-select-filled-label"
+        //       id="demo-simple-select-filled"
+        //       // value={selectedNutritionist}
+        //       onChange={handleChangeTime}
+        //       name="type"
+        //       width="100%"
+        //       //  {...register("type")}
+        //       //  error={errors.type ? true : false}
+        //     >
+        //       {availableTime.map((option) => (
+        //         <MenuItem key={option} value={option}>
+        //           {option}
+        //         </MenuItem>
+        //       ))}
+        //     </Select>
+        //   </Box>
+        // );
+      });
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const [selectedDateSched, setSelectedDateSched] = useState();
+  const handleDateChangesSched = async (date) => {
+    const convertedDate = new Date(date);
+    console.log(convertedDate);
+    const selectedDay = convertedDate.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+
+    setSelectedDateSched(convertedDate);
+    let index = designatedNutritionist.schedule_day.findIndex(
+      (item) => item === selectedDay
+    );
+    let time = designatedNutritionist.schedule_time[index];
+
+    const timeParts = time.split("-");
+    console.log(timeParts);
+    const startTime = Math.floor(timeParts[0].substring(0, 2));
+    const endTime = Math.floor(timeParts[1].substring(3, 5));
+
+    console.log(timeParts[0], " ", timeParts[1]);
+    getAvailableTimeSched(timeParts[0], timeParts[1], date);
+  };
+
+  const scheduleAppointment = async () => {
+    try {
+      AxiosInstance.post(`pendingappointment/`, {
+        date: dayjs(selectedDateSched).format("YYYY-MM-DD"),
+        status: "pending",
+        kind: "Follow-Up",
+        nutritionist_id: designatedNutritionist.nutritionist_id,
+        user_id: loggedInUser.user_id,
+        time: selectedTime,
+      }).then((res) => {
+        console.log(res.data);
+        handleScheduleClose();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+
+    try {
+      AxiosInstance.post(`scheduledeck/`, {
+        nutritionist_id: designatedNutritionist.nutritionist_id,
+        time: selectedTime,
+        date: dayjs(selectedDateSched).format("YYYY-MM-DD"),
+        type: "follow up",
+      }).then((res) => {
+        console.log(res.data);
+        handleClose();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
   };
   return (
     <div
@@ -1995,6 +2358,8 @@ function TelemedicineHome() {
                       </Grid>
                       <br />
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      
+
                         {selectedDates ? (
                           <>
                             <Typography sx={{ mb: 1 }}>
@@ -2113,7 +2478,7 @@ function TelemedicineHome() {
             </center>
           </Grid>
         </Grid>
-        <Button
+        {/* <Button
           onClick={handleOpen}
           sx={{
             background: "#E66253",
@@ -2137,8 +2502,284 @@ function TelemedicineHome() {
           }}
         >
           Book a Consultation
-        </Button>
+        </Button> */}
       </Box>
+      {/* //! modal for sched */}
+      <Modal
+        open={openSched}
+        onClose={handleScheduleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+            sx={{ mt: 3 }}
+          >
+            Book a Consultation with a Nutritionist
+          </Typography>
+          {console.log(selectedDates)}
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Select a date"
+              defaultValues={null}
+              value={selectedDates}
+              onChange={handleDateChangesSched}
+              renderInput={(params) => <TextField {...params} />}
+              shouldDisableDate={disableUnavailableFinal}
+              minDate={dayjs().add(7, "day")}
+              //  open // Keep the calendar open
+            />
+          </LocalizationProvider>
+
+          <Typography sx={{ mb: 1 }}>Select Time</Typography>
+          <Select
+            labelId="demo-simple-select-filled-label"
+            id="demo-simple-select-filled"
+            // value={selectedNutritionist}
+            onChange={handleChangeTime}
+            name="type"
+            width="full"
+            //  {...register("type")}
+            //  error={errors.type ? true : false}
+          >
+            {freeTime?.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {selectedDates ? (
+              <>
+                <Typography sx={{ mb: 1 }}>Select a Date</Typography>
+                <DatePicker
+                  label="Select a date"
+                  defaultValues={null}
+                  value={selectedDates}
+                  onChange={handleDateChangesSched}
+                  renderInput={(params) => <TextField {...params} />}
+                  shouldDisableDate={disableUnavailableFinal}
+                  minDate={dayjs()}
+                  //  open // Keep the calendar open
+                />
+                {console.log(freeTime)}
+                <Typography sx={{ mb: 1 }}>Select Time</Typography>
+                <Select
+                  labelId="demo-simple-select-filled-label"
+                  id="demo-simple-select-filled"
+                  // value={selectedNutritionist}
+                  onChange={handleChangeTime}
+                  name="type"
+                  width="full"
+                  //  {...register("type")}
+                  //  error={errors.type ? true : false}
+                >
+                  {freeTime?.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </>
+            ) : (
+              <div></div>
+            )}
+          </LocalizationProvider>  */}
+          <Button onClick={scheduleAppointment}>Make Appointment</Button>
+        </Box>
+      </Modal>
+      {/* //! with designated nutritionist */}
+{ designatedNutritionist ? (<Box sx = {{border: 3,borderRadius: 3,  px: 3,pt: "50px", pb: "30px", ml: 10, mr: 10, borderColor: "#E66253"}}>
+       <Grid container spacing = {2} sx = {{mb: 3}}>
+       <Grid xs = {6}> 
+         <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "2em" }}>Your Nutritionist</Typography>
+        <img src={designatedNutritionist?.image} width="40%" height ="40%" />
+        <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1em" }}>Name: {designatedNutritionist?.first_name} {" "} {designatedNutritionist?.last_name}</Typography>
+    
+      
+        <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1em" }}>Schedule</Typography>
+        {/* {designatedNutritionist?.schedule_day} <br />
+        {designatedNutritionist?.schedule_time}
+        <br /> */}
+
+<center>
+        <Grid container spacing = {2} sx = {{ml: "180px", mt: 1}}>
+        <Grid xs = {3} sx = {{float: "right"}}>{designatedNutritionist?.schedule_day.map((item) => (
+          <>{item} <br/></>
+        ))}</Grid>
+        <Grid xs = {3}  sx = {{float: "left"}}>
+        {designatedNutritionist?.schedule_time.map((item) => (
+          <>{item} <br/></>
+        ))}
+        </Grid>
+        </Grid>
+        </center>
+<br/>
+        <center>
+        <Button onClick={setOpenSched}  sx={{
+                           
+                            background: "#E66253",
+                            color: "#ffffff",
+                            fontSize: "1em",
+                            borderRadius: 1,
+                            mt:0,
+                            "&:hover": {
+                              backgroundColor: "#ffffff",
+                              color: "#E66253",
+                              border: 1,
+                              borderColor: "#E66253",
+                            },
+                          }}>Schedule an Appointment?</Button>
+                          </center>
+        <Button sx ={{ textDecoration: "underline", color: "#898246" }}>Follow Up</Button>
+        <Button sx ={{ textDecoration: "underline", color: "#898246" }}>Transfer</Button></Grid>
+       <Grid xs={6}>
+       <Tabs
+                        value={activeTab}
+                        // sx={{
+                        //   color: "#f00", // Change text color to red
+                        //   fontSize: "18px", // Increase font size
+                        //   fontWeight: "bold", // Make text bold
+                        // }}
+                        aria-label="basic tabs example"
+                        onChange={handleTabChange}
+                       // indicatorColor="primary"
+                        centered
+                      >
+                        {tabContent.map((tab, index) => (
+                          <Tab
+                            key={index}
+                            label={tab.title}
+                            sx={{
+                              color: activeTab === index ? '#ffffff' : '#E66253', // Change text color to red
+                              backgroundColor: activeTab === index ? '#ffffff' : '#ffffff',
+                              fontSize: "14px", // Increase font size
+                              border: 3,
+                              fontWeight: "bold",
+                              borderColor: "#E66253", 
+                              borderRadius: 2, 
+                              mr:4,
+                              //fontWeight: "bold", // Make text bold
+                            }}
+                          />
+                        ))}
+                      </Tabs>
+                      {tabContent.map((tab, index) => (
+                        <Box key={index} hidden={activeTab !== index}>
+                          {tab.content}
+                        </Box>
+                      ))}
+
+{activeTab === 0 ? (<Box>
+  <Typography sx = {{ color: "#99756E", fontWeight: "bold", fontSize: "1.4em", mt: 1.5}}>Approve Appointments</Typography>
+  {appointmentList.filter((item) => (
+    item.status === "Approved"
+  )).length > 0 ? (<>{appointmentList.filter((item) => (
+    item.status === "Approved"
+  ))?.map((items) => (
+    <Box sx = {{justifyContent: 'flex-start', mb: 0.8}}>
+    <Typography sx = {{  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',  color: "#99756E", fontWeight: "bold", fontSize: "1em"}}>
+      {dayjs(items.date).format("MMMM DD, YYYY")}
+      </Typography>
+      <Typography sx = {{  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',  color: "#99756E", fontSize: "1em"}}>
+      {dayjs(items.date + " " + items.time).format("HH:mm A")}
+      </Typography>
+     
+      <hr/>
+      </Box>
+  ))} </>) : (
+    <><br/>No Appointments</>
+  )}
+</Box>) : activeTab === 1 ? (<Box>
+  <Typography sx = {{ color: "#99756E", fontWeight: "bold", fontSize: "1.4em", mt: 1.5}}>Pending Appointments</Typography>
+  {appointmentList.filter((item) => (
+    item.status === "pending"
+  )).length > 0 ? (<>{appointmentList.filter((item) => (
+    item.status === "pending"
+  ))?.map((items) => (
+    <Box sx = {{justifyContent: 'flex-start', mb: 0.8}}>
+    <Typography sx = {{  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',  color: "#99756E", fontWeight: "bold", fontSize: "1em"}}>
+      {dayjs(items.date).format("MMMM DD, YYYY")}
+      </Typography>
+      <Typography sx = {{  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',  color: "#99756E", fontSize: "1em"}}>
+      {dayjs(items.date + " " + items.time).format("HH:mm A")}
+      </Typography>
+     
+      <hr/>
+      </Box>
+  ))} </>) : (
+    <><br/>No Appointments</>
+  )}
+</Box>) : (<Box>
+  <Typography sx = {{ color: "#99756E", fontWeight: "bold", fontSize: "1.4em", mt: 1.5}}>Declined Appointments</Typography>
+  {appointmentList.filter((item) => (
+    item.status === "Declined"
+  )).length > 0 ? (<>{appointmentList.filter((item) => (
+    item.status === "Declined"
+  ))?.map((items) => (
+    <Box sx = {{justifyContent: 'flex-start', mb: 0.8}}>
+    <Typography sx = {{  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',  color: "#99756E", fontWeight: "bold", fontSize: "1em"}}>
+      {dayjs(items.date).format("MMMM DD, YYYY")}
+      </Typography>
+      <Typography sx = {{  display: 'flex',
+  justifyContent: 'flex-start',
+  alignItems: 'flex-start',  color: "#99756E", fontSize: "1em"}}>
+      {dayjs(items.date + " " + items.time).format("HH:mm A")}
+      </Typography>
+     
+      <hr/>
+      </Box>
+  ))} </>) : (
+    <><br/>No Appointments</>
+  )}
+</Box>) }
+
+       </Grid>
+       </Grid>
+
+      
+      </Box>) : (  <Box  sx = {{border: 3,borderRadius: 3,  px: 3,pt: "50px", pb: "30px", ml: 10, mr: 10, borderColor: "#E66253"}}>
+        <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "2em" }}>No Designated Nutritionist</Typography>
+        <Button onClick={handleOpen}  variant="contained"
+                          sx={{
+                       
+                            background: "#E66253",
+                            color: "#ffffff",
+                            fontSize: "1em",
+                          
+                            mt: 10,
+                            "&:hover": {
+                              backgroundColor: "#ffff",
+                              color: "#E66253",
+                              border: 1,
+                              borderColor: "#E66253",
+                            },
+                          }}>
+          Find the right Nutritionist for you!
+        </Button>
+      </Box>)}
+
+      
+      {/* //!  */}
+      <br />
+      {/* //? */}
+    
+      {/* //? */}
+      <Button>View History</Button>
     </div>
   );
 }

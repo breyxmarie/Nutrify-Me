@@ -1,14 +1,49 @@
 import { Typography } from "@mui/material";
 import { ParticipantDetails } from "@stream-io/video-react-sdk";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { useLoggedInUser } from "../LoggedInUserContext";
+import AxiosInstance from "../forms/AxiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function NutritionistPatient() {
+  const navigate = useNavigate();
   const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
     useLoggedInUser();
+  const [user, setUser] = useState();
+  const GetData = async () => {
+    AxiosInstance.get(`patientnutritionistagreement`).then((res) => {
+      let tempUsers = res.data.filter(
+        (item) => item.nutritionist_id === nutritionist.nutritionist_id
+      );
+      console.log(
+        res.data.filter(
+          (item) => item.nutritionist_id === nutritionist.nutritionist_id
+        )
+      );
+      let finalUsers = [];
+      AxiosInstance.get(`user`).then((resp) => {
+        tempUsers.map((item1) =>
+          finalUsers.push(
+            resp.data.find((items1) => items1.user_id === item1.user_id)
+          )
+        );
+        console.log(finalUsers);
+        setUser(resp.data);
+      });
+    });
+
+    AxiosInstance.get(`user`).then((res) => {
+      setUser(res.data);
+    });
+  };
+
+  useEffect(() => {
+    GetData();
+  }, []);
+
   const patient = [
     { patientID: "01", username: "Brey" },
     { patientID: "02", username: "Brey" },
@@ -41,18 +76,31 @@ function NutritionistPatient() {
 
         <hr />
         <br />
-        {patient.map((item, index) => (
+        {user?.map((item, index) => (
           <Grid container spacing={2} sx={{ my: 5 }}>
-            <Grid xs={3}>{item.patientID}</Grid>
-            <Grid xs={3}>{item.username}</Grid>
+            <Grid xs={3}>{item.user_id}</Grid>
             <Grid xs={3}>
-              <Button sx={{ background: "#E66253", color: "#ffffff" }}>
+              {item.first_name} {item.last_name}
+            </Grid>
+            <Grid xs={3}>
+              <Button
+                sx={{ background: "#E66253", color: "#ffffff" }} 
+                onClick={() =>
+                  navigate("/nutritionist-patient-records", {
+                    state: { item },
+                  })
+                }
+              >
                 VIEW RECORDS
               </Button>
             </Grid>
             <Grid xs={3}>
-              <Button sx={{ background: "#898246", color: "#ffffff" }}>
-                EDIT MEAL PLAN
+              <Button   onClick={() =>
+                  navigate("/nutritionist-patient-create-meal-plan", {
+                    state: { item },
+                  })
+                } sx={{ background: "#898246", color: "#ffffff" }}>
+                CREATE MEAL PLAN
               </Button>
             </Grid>
 

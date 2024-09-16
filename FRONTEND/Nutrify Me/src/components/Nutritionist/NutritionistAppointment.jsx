@@ -17,11 +17,97 @@ import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import dayjs from "dayjs";
 import Dayjs from "dayjs";
-
+import { Tab, Tabs } from "@mui/material";
 import moment from "moment";
+import { ToastContainer, toast } from "react-toastify";
 
 function NutritionistAppointment() {
   const [todayApp, setTodayApp] = useState();
+
+  //! tabs
+  const [appointmentList, setAppointmentList] = useState([]);
+  const [pendingAppointmentList, setPendingAppointmentList] = useState([]);
+  const [activeTab, setActiveTab] = useState(0);
+  const handleTabChange = (event, newActiveTab) => {
+    console.log(newActiveTab);
+    setActiveTab(newActiveTab);
+  };
+
+  const tabContent = [
+    {
+      title: "Approved",
+      content: <Box></Box>,
+    },
+    {
+      title: "Pending",
+      content: <Box></Box>,
+    },
+    {
+      title: "Declined",
+      content: <Box></Box>,
+    },
+  ];
+
+  //!
+
+  //! approve and declien appointment
+  const approveAppointment = (data) => {
+    console.log(data);
+    try {
+      AxiosInstance.put(`pendingappointment/`, {
+        pending_id: data.pending_id,
+        date: data.date,
+        status: "Approved",
+        kind: data.kind,
+        nutritionist_id: data.nutritionist_id,
+        user_id: data.user_id,
+        time: data.time,
+      }).then((res) => {
+        console.log(res.data);
+        toast.success("Appointment Approved");
+        GetData();
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      AxiosInstance.post(`appointment/`, {
+        date: data.date,
+        time: data.time,
+        user_id: data.user_id,
+        nutritionist_id: data.nutritionist_id,
+      }).then((res) => {
+        console.log(res);
+        // navigate(`/`);
+        //  handleClose();
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const declineAppointment = (data) => {
+    try {
+      AxiosInstance.put(`pendingappointment/`, {
+        pending_id: data.pending_id,
+        date: data.date,
+        status: "Declined",
+        kind: data.kind,
+        nutritionist_id: data.nutritionist_id,
+        user_id: data.user_id,
+        time: data.time,
+      }).then((res) => {
+        console.log(res.data);
+        toast.success("Appointment Declined");
+        GetData();
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  //!
   //! retrieving data.
 
   const [appointmentData, setAppointmentData] = useState([
@@ -63,8 +149,37 @@ function NutritionistAppointment() {
     return `${hours}:${minutes} ${period}`;
   }
   const [todayAppointment, setTodayAppointment] = useState();
+  const [user, setUser] = useState();
   const GetData = async () => {
     const user = await AxiosInstance.get(`user`);
+
+    AxiosInstance.get(`user`).then((res) => {
+      setUser(res.data);
+    });
+
+    AxiosInstance.get(`pendingappointment`).then((res) => {
+      setPendingAppointmentList(
+        res.data.filter(
+          (data) => data.nutritionist_id === nutritionist.nutritionist_id
+        )
+      );
+    });
+
+    AxiosInstance.get(`appointment`).then((res) => {
+      setAppointmentList(
+        res.data.filter(
+          (data) => data.nutritionist_id === nutritionist.nutritionist_id
+        )
+      );
+      console.log(
+        res.data,
+        nutritionist,
+        res.data.filter(
+          (data) => data.nutritionist_id === nutritionist.nutritionist_id
+        )
+      );
+    });
+
     AxiosInstance.get(`appointment`).then((res) => {
       {
         res.data.map((item, index) =>
@@ -101,18 +216,19 @@ function NutritionistAppointment() {
       setAppointmentData(filteredData);
 
       const te = filteredData.filter(
-        (item) => item.date === Dayjs(initialValue).format("YYYY-MM-DD")
+        (item) => item.date === dayjs().format("YYYY-MM-DD")
       );
+      console.log(te.length);
 
       const formattedTime = filteredData.find(
         (data) => data.date === dayjs().format("YYYY-MM-DD")
-      ).time;
+      )?.time;
 
       const formattedDay = filteredData.find(
         (data) => data.date === dayjs().format("YYYY-MM-DD")
-      ).date;
+      )?.date;
 
-      if (te) {
+      if (te.length > 0) {
         console.log("console console", te);
         setTodayAppointment(
           <Box sx={{ mx: 10 }}>
@@ -128,7 +244,7 @@ function NutritionistAppointment() {
                         user.user_id ===
                         filteredData.find(
                           (data) => data.date === dayjs().format("YYYY-MM-DD")
-                        ).user_id
+                        )?.user_id
                     )?.image
                   }
                 />
@@ -143,7 +259,7 @@ function NutritionistAppointment() {
                         user.user_id ===
                         filteredData.find(
                           (data) => data.date === dayjs().format("YYYY-MM-DD")
-                        ).user_id
+                        )?.user_id
                     )?.first_name
                   }
                 </p>
@@ -154,7 +270,7 @@ function NutritionistAppointment() {
               {dayjs(
                 filteredData.find(
                   (data) => data.date === dayjs().format("YYYY-MM-DD")
-                ).date
+                )?.date
               ).format("MMMM DD, YYYY")}
             </Typography>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
@@ -210,7 +326,13 @@ function NutritionistAppointment() {
           </Box>
         );
       } else {
-        setTodayAppointment(<h2>No Scheduled Consultation </h2>);
+        setTodayAppointment(
+          <>
+            <Typography sx={{ color: "#000000" }}>
+              No Scheduled Consultation{" "}
+            </Typography>
+          </>
+        );
       }
 
       setScheduledAppointments(
@@ -286,7 +408,7 @@ function NutritionistAppointment() {
   const initialValue = dayjs();
   const [scheduledAppointments, setScheduledAppointments] = useState(
     <Grid container spacing={2}>
-      {appointmentData.map((item, index) => (
+      {/* {appointmentData.map((item, index) => (
         <Grid
           item
           xs={3}
@@ -324,7 +446,7 @@ function NutritionistAppointment() {
             </Grid>
           </Grid>
         </Grid>
-      ))}{" "}
+      ))}{" "} */}
     </Grid>
   );
   const [dataNeeded, setDataNeeded] = useState([
@@ -632,6 +754,7 @@ function NutritionistAppointment() {
         marginRight: "160px",
       }}
     >
+      <ToastContainer />
       <Grid container spacing={2}>
         <Grid xs={6}>
           <Box sx={{ border: 1 }}>
@@ -676,18 +799,18 @@ function NutritionistAppointment() {
         </Grid>
       </Grid>
 
-      <Box sx={{ border: 1 }}>
+      <Box sx={{ border: 1, ml: "10px", mr: "10%" }}>
         <br />
         <br />
         {appointmentData.map(
           (item, index) => (console.log("hi"), console.log(item))
         )}
-        <Grid container spacing={2} sx={{ mx: "10px" }}>
+        <Grid container spacing={2} sx={{ ml: "10px", mr: "10%" }}>
           <Grid xs={7} sx={{ textAlign: "left" }}>
             Schedule of Appointments Log
           </Grid>
           <Grid xs={2}>
-            <Button
+            {/* <Button
               sx={{
                 background: "#E66253",
                 borderRadius: 5,
@@ -696,10 +819,10 @@ function NutritionistAppointment() {
               }}
             >
               EDIT
-            </Button>
+            </Button> */}
           </Grid>
           <Grid xs={2}>
-            <Button
+            {/* <Button
               sx={{
                 background: "#E66253",
                 borderRadius: 5,
@@ -708,7 +831,7 @@ function NutritionistAppointment() {
               }}
             >
               FILTER BY
-            </Button>
+            </Button> */}
 
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -758,7 +881,7 @@ function NutritionistAppointment() {
         <br />
         <br />
         {/* <Grid container spacing={2}> */}
-        {scheduledAppointments}
+        {/* {scheduledAppointments} */}
 
         {/* {appointmentData.map((item, index) => (
             <Grid
@@ -802,6 +925,347 @@ function NutritionistAppointment() {
             </Grid>
           ))} */}
         {/* </Grid> */}
+
+        <Tabs
+          value={activeTab}
+          // sx={{
+          //   color: "#f00", // Change text color to red
+          //   fontSize: "18px", // Increase font size
+          //   fontWeight: "bold", // Make text bold
+          // }}
+          aria-label="basic tabs example"
+          onChange={handleTabChange}
+          // indicatorColor="primary"
+          centered
+        >
+          {tabContent.map((tab, index) => (
+            <Tab
+              key={index}
+              label={tab.title}
+              sx={{
+                color: activeTab === index ? "#ffffff" : "#E66253", // Change text color to red
+                backgroundColor: activeTab === index ? "#ffffff" : "#ffffff",
+                fontSize: "14px", // Increase font size
+                border: 3,
+                fontWeight: "bold",
+                borderColor: "#E66253",
+                borderRadius: 2,
+                mr: 4,
+                //fontWeight: "bold", // Make text bold
+              }}
+            />
+          ))}
+        </Tabs>
+        {tabContent.map((tab, index) => (
+          <Box key={index} hidden={activeTab !== index}>
+            {tab.content}
+          </Box>
+        ))}
+
+        {activeTab === 0 ? (
+          <Box>
+            <Typography
+              sx={{
+                color: "#99756E",
+                fontWeight: "bold",
+                fontSize: "1.4em",
+                mt: 1.5,
+                mb: 3,
+              }}
+            >
+              Approve Appointments
+            </Typography>
+            {pendingAppointmentList.filter((item) => item.status === "Approved")
+              .length > 0 ? (
+              <>
+                {pendingAppointmentList
+                  .filter((item) => item.status === "Approved")
+                  ?.map((items) => (
+                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 }}>
+                      <Grid container spacing={2}>
+                        <Grid xs={3}>
+                          {" "}
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1em",
+                            }}
+                          >
+                            {dayjs(items.date).format("MMMM DD, YYYY")}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={4}>
+                          {" "}
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1em",
+                            }}
+                          >
+                            User:{" "}
+                            {
+                              user?.find(
+                                (item) => item.user_id === items.user_id
+                              ).first_name
+                            }{" "}
+                            {
+                              user?.find(
+                                (item) => item.user_id === items.user_id
+                              ).last_name
+                            }
+                          </Typography>
+                        </Grid>
+                      </Grid>
+
+                      <Typography></Typography>
+                      <Typography
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "flex-start",
+                          color: "#99756E",
+                          fontSize: "1em",
+                        }}
+                      >
+                        {dayjs(items.date + " " + items.time).format("HH:mm A")}
+                      </Typography>
+                      <hr />
+                    </Box>
+                  ))}{" "}
+              </>
+            ) : (
+              <>
+                <br />
+                No Appointments
+              </>
+            )}
+          </Box>
+        ) : activeTab === 1 ? (
+          <Box>
+            <Typography
+              sx={{
+                color: "#99756E",
+                fontWeight: "bold",
+                fontSize: "1.4em",
+                mt: 1.5,
+                mb: 3,
+              }}
+            >
+              Pending Appointments
+            </Typography>
+            {pendingAppointmentList.filter((item) => item.status === "pending")
+              .length > 0 ? (
+              <>
+                {pendingAppointmentList
+                  .filter((item) => item.status === "pending")
+                  ?.map((items) => (
+                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 }}>
+                      <Grid container spacing={2}>
+                        <Grid xs={3}>
+                          {" "}
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1em",
+                            }}
+                          >
+                            {dayjs(items.date).format("MMMM DD, YYYY")}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={4}>
+                          {" "}
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1em",
+                            }}
+                          >
+                            User:{" "}
+                            {
+                              user.find(
+                                (item) => item.user_id === items.user_id
+                              ).first_name
+                            }{" "}
+                            {
+                              user.find(
+                                (item) => item.user_id === items.user_id
+                              ).last_name
+                            }
+                          </Typography>
+                        </Grid>
+                      </Grid>
+
+                      <Typography></Typography>
+                      <Typography
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "flex-start",
+                          color: "#99756E",
+                          fontSize: "1em",
+                        }}
+                      >
+                        {dayjs(items.date + " " + items.time).format("HH:mm A")}
+                      </Typography>
+                      {console.log(items)}
+                      <Button
+                        Button
+                        sx={{
+                          background: "#E66253",
+                          color: "#ffffff",
+                          my: 5,
+                          px: 5,
+                          py: 1,
+                          fontSize: "0.9em",
+                          "&:hover": {
+                            backgroundColor: "#ffffff",
+                            color: "#E66253",
+                            border: 1,
+                            borderColor: "#E66253",
+                          },
+                        }}
+                        onClick={() => approveAppointment(items)}
+                      >
+                        Approve
+                      </Button>
+                      {"  "}
+
+                      <Button
+                        sx={{
+                          background: "#898246",
+                          color: "#ffffff",
+                          my: 5,
+                          mx: 3,
+                          px: 5,
+                          py: 1,
+                          fontSize: "0.9em",
+                          "&:hover": {
+                            backgroundColor: "#ffffff",
+                            color: "#898246",
+                            border: 1,
+                            borderColor: "#898246",
+                          },
+                        }}
+                        onClick={() => declineAppointment(items)}
+                      >
+                        {" "}
+                        Decline
+                      </Button>
+                      <hr />
+                    </Box>
+                  ))}{" "}
+              </>
+            ) : (
+              <>
+                <br />
+                No Appointments
+              </>
+            )}
+          </Box>
+        ) : (
+          <Box>
+            <Typography
+              sx={{
+                color: "#99756E",
+                fontWeight: "bold",
+                fontSize: "1.4em",
+                mt: 1.5,
+                mb: 3,
+              }}
+            >
+              Declined Appointments
+            </Typography>
+            {pendingAppointmentList.filter((item) => item.status === "Declined")
+              .length > 0 ? (
+              <>
+                {pendingAppointmentList
+                  .filter((item) => item.status === "Declined")
+                  ?.map((items) => (
+                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 }}>
+                      <Grid container spacing={2}>
+                        <Grid xs={3}>
+                          {" "}
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1em",
+                            }}
+                          >
+                            {dayjs(items.date).format("MMMM DD, YYYY")}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={4}>
+                          {" "}
+                          <Typography
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1em",
+                            }}
+                          >
+                            User:{" "}
+                            {
+                              user.find(
+                                (item) => item.user_id === items.user_id
+                              ).first_name
+                            }{" "}
+                            {
+                              user.find(
+                                (item) => item.user_id === items.user_id
+                              ).last_name
+                            }
+                          </Typography>
+                        </Grid>
+                      </Grid>
+
+                      <Typography></Typography>
+                      <Typography
+                        sx={{
+                          display: "flex",
+                          justifyContent: "flex-start",
+                          alignItems: "flex-start",
+                          color: "#99756E",
+                          fontSize: "1em",
+                        }}
+                      >
+                        {dayjs(items.date + " " + items.time).format("HH:mm A")}
+                      </Typography>
+
+                      <hr />
+                    </Box>
+                  ))}{" "}
+              </>
+            ) : (
+              <>
+                <br />
+                No Appointments
+              </>
+            )}
+          </Box>
+        )}
       </Box>
     </div>
   );

@@ -17,11 +17,12 @@ import { useLoggedInUser } from "../LoggedInUserContext";
 import ColorContext from "../ColorContext"; // Import the context
 import ImageContext from "../ImageContext";
 import { useState, useRef, useContext } from "react";
+import AxiosInstance from "../forms/AxiosInstance";
 
 const pages = [
   { names: "HOME", links: "/nutritionist-home" },
   { names: "APPOINTMENTS", links: "/nutritionist-appointment" },
-  { names: "PATIENTS", links: "/meal-plan-shop-home" },
+  { names: "PATIENTS", links: "/nutritionist-patient" },
 ];
 
 const StyledLink = `

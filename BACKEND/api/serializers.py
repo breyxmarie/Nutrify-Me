@@ -33,7 +33,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
                   'date',
                   'time',
                   'user_id',
-                  'nutritionist_id')
+                  'nutritionist_id', 'kind')
 
 # class VideoCallsSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -85,7 +85,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class JournalEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = JournalEntry
-        fields = ('journal_id','date','title','entry','systolic','diastolic', 'user_id')
+        fields = ('journal_id','date','title','entry','systolic','diastolic', 'user_id', 'meal_plan')
 
 
 class FoodEntrySerializer(serializers.ModelSerializer):
@@ -150,3 +150,23 @@ class ProfilingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profiling
         fields = ('profiling_id', 'user_id', 'age', 'gender', 'targetCalories', 'common_sys', 'common_dia', 'hypertension', 'dateofBP', 'takingMeds', 'targetCalories')
+
+class PendingAppointmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PendingAppointment
+        fields = ('date', 'time', 'user_id', 'nutritionist_id', 'status', 'kind', 'pending_id')
+
+class PatientNutritionistAgreementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientNutritionistAgreement
+        fields = ('agree_id', 'status', 'user_id', 'nutritionist_id')
+
+class RecommendMealPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecommendMealPlan
+        fields = ('recommend_mealplan_id', 'name','image','description' ,'nutritionist_id','user_id')
+
+class RecommendMealSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecommendMeal
+        fields = ('recommend_meal_id','recommend_mealplan_id','type','calories','fat','protein','carbs','food','image','day')

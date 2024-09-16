@@ -32,10 +32,14 @@ import TelemedicineMeetUs from "./components/Telemedicine/TelemedicineMeetUs";
 import TelemedicineMessages from "./components/Telemedicine/TelemedicineMessages";
 import TelemedicineConsultation from "./components/Telemedicine/TelemedicineConsultation";
 import TelemedicinePaypalPayment from "./components/Telemedicine/TelemedicinePaypalPayment";
+import TelemedicineMealPlans from "./components/Telemedicine/TelemedicineMealPlans";
 import NutritionistConsultation from "./components/Nutritionist/NutritionistConsultation";
-import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment";
+import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment"; 
 import NutritionistHome from "./components/Nutritionist/NutritionistHome";
+import NutritionistCreateMealPlan from "./components/Nutritionist/NutritionistCreateMealPlan";
 import NutritionistPatient from "./components/Nutritionist/NutritionistPatient";
+import NutritionistPatientRecords from "./components/Nutritionist/NutritionistPatientRecords";
+import NutritionistProgress from "./components/Nutritionist/NutritionistProgress";
 import NutritionistMealPlanHistory from "./components/Nutritionist/NutritionistMealPlanHistory";
 import "./App.css";
 import { Router, Routes, Route, BrowserRouter } from "react-router-dom";
@@ -212,7 +216,18 @@ function App() {
                     </>
                   }
                 />
-                {/* meal plan shop*/}
+                <Route
+                  path="/telemedicine-meal-plans"
+                  element={
+                    <>
+                      <MainUserNavBar />
+                      <TeleMedNavBar />
+                      <TelemedicineMealPlans />
+                      <UserFooter />
+                    </>
+                  }
+                />
+                {/* meal plan shop    */}
                 <Route
                   path="/meal-plan-shop-home"
                   element={
@@ -480,6 +495,37 @@ function App() {
                     <>
                       <NutritionistNavBar />
                       <NutritionistPatient />
+                      <Footer />
+                    </>
+                  }
+                />
+                <Route
+                  path="/nutritionist-patient-records"
+                  element={
+                    <>
+                      <NutritionistNavBar />
+                      <NutritionistPatientRecords />
+                      <Footer />
+                    </>
+                  }
+                />
+                <Route
+                  path="/nutritionist-patient-reports"
+                  element={
+                    <>
+                      <NutritionistNavBar />
+                      <NutritionistProgress />
+                      <Footer />
+                    </>
+                  }
+                /> 
+
+<Route
+                  path="/nutritionist-patient-create-meal-plan"
+                  element={
+                    <>
+                      <NutritionistNavBar />
+                      <NutritionistCreateMealPlan />
                       <Footer />
                     </>
                   }

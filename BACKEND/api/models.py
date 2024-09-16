@@ -61,7 +61,7 @@ class Appointment(models.Model):
     time = models.TimeField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     nutritionist_id = models.ForeignKey(Nutritionist, on_delete=models.CASCADE, related_name="listings") 
-
+    kind = models.CharField(max_length=150)
     class Meta:
         db_table = "appointment"
 
@@ -158,6 +158,7 @@ class JournalEntry(models.Model):
     systolic = models.IntegerField()
     diastolic  = models.IntegerField()
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss4")
+    meal_plan = models.CharField(max_length=500)
 
     class Meta:
         db_table = "journal_entry"
@@ -266,3 +267,52 @@ class Profiling(models.Model):
 
     class Meta:
         db_table = "profiling"
+
+class PendingAppointment(models.Model):
+    pending_id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    user_id =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings8")
+    nutritionist_id =  models.ForeignKey(Nutritionist, on_delete=models.CASCADE, related_name="listings8")
+    status = models.CharField(max_length=100)
+    kind = models.CharField(max_length=100)
+    time = models.TimeField()
+
+    class Meta:
+        db_table = "pending_appointment"
+
+class PatientNutritionistAgreement(models.Model):
+    agree_id = models.AutoField(primary_key=True)
+    status = models.CharField(max_length=100)
+    user_id =  models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings15")
+    nutritionist_id =  models.ForeignKey(Nutritionist, on_delete=models.CASCADE, related_name="listings15")
+    class Meta:
+        db_table = "patient_nutritionist_agreement"
+
+
+class RecommendMealPlan(models.Model):
+    recommend_mealplan_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=1000)
+    image = models.CharField(max_length=3000)
+    # image = models.ImageField(blank=True, null=True, upload_to='Photos/meal_plan')
+    description= models.CharField(max_length=2000)
+    nutritionist_id = models.ForeignKey(Nutritionist, on_delete=models.CASCADE, related_name="listingsss123")
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss123")
+    
+    class Meta:
+        db_table = "recommend_meal_plan"
+
+
+class RecommendMeal(models.Model):
+    recommend_meal_id = models.AutoField(primary_key=True)
+    recommend_mealplan_id  = models.ForeignKey(RecommendMealPlan, on_delete=models.CASCADE, related_name="listings56")
+    type = models.CharField(max_length=30)
+    calories = models.IntegerField() 
+    fat= models.IntegerField()
+    protein= models.IntegerField()
+    carbs = models.IntegerField()
+    food = models.CharField(max_length=1000)
+    image = models.CharField(max_length=3000)
+    day = models.CharField(max_length=15)
+    class Meta:
+        db_table = "recommend_meal"
+
