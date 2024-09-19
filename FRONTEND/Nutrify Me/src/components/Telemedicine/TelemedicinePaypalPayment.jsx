@@ -26,7 +26,7 @@ function TelemedicinePaypalPayment() {
         {
           amount: {
             currency_code: "PHP",
-            value: "0.01",
+            value: 500,
           },
         },
       ],

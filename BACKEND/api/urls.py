@@ -56,6 +56,8 @@ urlpatterns = [
     path('recommendmealplan/<int:pk>', RecommendMealPlanAPI),
     path('recommendmeal/', RecommendMealAPI),
     path('recommendmeal/<int:pk>', RecommendMealAPI),
+    path('requestedrecommendmeals/', RequestRecommendMealsAPI),
+    path('requestedrecommendmeals/<int:pk>', RequestRecommendMealsAPI),
     path('savefilelicense', SaveFileLicense),
 
 

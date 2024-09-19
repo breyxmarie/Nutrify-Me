@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef} from "react";
 import * as React from "react";
 import { Line } from "react-chartjs-2";
 import Tooltip from "@mui/material/Tooltip";
@@ -23,6 +23,13 @@ import ColorContext from "../ColorContext"; // Import the context
 import ImageContext from "../ImageContext";
 import { useNavigate } from "react-router-dom";
 import { NavLink, Link, useLocation, useParams } from "react-router-dom";
+import {Page, Text, Image, Document, StyleSheet, PDFDownloadLink, View} from '@react-pdf/renderer'
+import html2canvas from 'html2canvas';
+// import jsdom from 'jsdom';
+// import { convertFromHTML } from 'html-to-pdf';
+// //import { saveAs } from 'file-saver'; 
+import jsPDF from 'jspdf';
+
 
 function NutritionistProgress() {
   const navigate = useNavigate();
@@ -286,9 +293,15 @@ function NutritionistProgress() {
   // ! fresh start
   const [overallJournal, setOverallJournal] = useState([]);
   const [overallFood, setOverallFood] = useState([]);
+  const [profiling, setProfiling] = useState([])
   const getJournal = async () => {
     const res = await AxiosInstance.get(`journalentry`);
     setOverallJournal(res.data);
+
+
+    const respo = await AxiosInstance.get(`profiling`);
+ 
+    setProfiling(respo.data.find((item) => item.user_id === location.state.item.user_id));
   };
 
   const getMeal = async () => {
@@ -2857,8 +2870,78 @@ function NutritionistProgress() {
   );
 
   //?
+
+
+  //! pdf
+
+  // const styles = StyleSheet.create({
+  //   page: {
+  //     flexDirection: 'row',
+  //     backgroundColor: '#E4E4E4',
+  //   },
+  //   section: {
+  //     margin: 10,
+  //     padding: 10,
+  //     flexGrow: 1,
+  //   },
+  // });
+
+  const componentRef = useRef();
+
+  const downloadPDF = async () => {
+    try {
+      const element = componentRef.current;
+      if (!element) {
+        throw new Error('Component element not found');
+      }
+
+      const sections = element.querySelectorAll('.section');
+      const pdf = new jsPDF();
+
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        const canvas = await html2canvas(section, {
+          scale: 1, // Adjust scale as needed
+          logging: false,
+        });
+
+
+        if (i === 0) {
+          const data = canvas.toDataURL('image/png');
+          const imgProperties = pdf.getImageProperties(data);
+
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+  
+          pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        }
+        else {
+          const data = canvas.toDataURL('image/png');
+
+          // Add a new page before adding the section
+         pdf.addPage();
+  
+          const imgProperties = pdf.getImageProperties(data);
+  
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
+  
+          pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        }
+
+        
+      }
+
+      pdf.save(`${location.state.item.first_name}${location.state.item.last_name}ProgressReport.pdf`);
+
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+    }
+  };
+ // !
   return (
     <div
+    ref={componentRef}
       className="content"
       style={{
         paddingBottom: "40px",
@@ -2867,6 +2950,9 @@ function NutritionistProgress() {
         color: "#000000",
       }}
     >
+    
+      <button onClick={downloadPDF}>Download PDF</button>
+      <div className="section">
       <br />
       <br />
       <Box sx = {{ml: "20%"}}>
@@ -2881,16 +2967,21 @@ function NutritionistProgress() {
         <Typography display="flex"
                         justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
             Hypertension:  
+
+            { profiling?.hypertension ? (<>Yes</>)
+            : (<>No</>) }
         </Typography>
+        {console.log(profiling)}
 
         <Typography display="flex"
                         justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
             Medication:
+
+            
+            { profiling?.takingMeds ? (<>Yes</>)
+            : (<>N/A</>) }
         </Typography>
-        <Typography display="flex"
-                        justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
-            Hypertension Diagnosis Date:
-        </Typography>
+      
         
         </Grid>
         <Grid xs = {6}>
@@ -2947,6 +3038,7 @@ function NutritionistProgress() {
         </Grid>
       </Grid>
       {barGraph}
+    
       <Grid container spacing={2}>
         <Grid xs={6}>
           {" "}
@@ -3009,7 +3101,15 @@ function NutritionistProgress() {
       <br />
       <br />
       <br />
-      <Grid container spacing={2}>
+      </div>
+
+      <div className="section" style = {{marginTop: 0}}>
+
+      <br />
+      <br />
+      <br />
+
+      <Grid container spacing={2} sx = {{mt: 5}}>
         <Grid xs={6}>
           <Typography
             sx={{ color: "#99756E", fontWeight: "bold", fontSize: "30px" }}
@@ -3065,6 +3165,7 @@ function NutritionistProgress() {
         <Line data={data} options={options} />
         <CustomLegend datasets={data.datasets} />
       </Box> */}
+    </div>
     </div>
   );
 }

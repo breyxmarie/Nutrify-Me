@@ -167,7 +167,7 @@ class FoodEntry(models.Model):
     foodentry_id = models.AutoField(primary_key=True)
     journal_id = models.ForeignKey(JournalEntry, on_delete=models.CASCADE, related_name="listingsss2")
     type = models.CharField(max_length=25)
-    food = models.CharField(max_length=100)
+    food = models.CharField(max_length=5000)
     calories = models.IntegerField()
     fat = models.IntegerField()
     protein = models.IntegerField()
@@ -227,6 +227,8 @@ class RequestMeals(models.Model):
     date = models.DateField()
     status = models.CharField(max_length=200)
     price = models.IntegerField()
+    start_week = models.DateField()
+    end_week = models.DateField()
 
     class Meta:
         db_table = "request_meals"
@@ -316,3 +318,16 @@ class RecommendMeal(models.Model):
     class Meta:
         db_table = "recommend_meal"
 
+class RequestRecommendMeals(models.Model):
+    request_id =models.AutoField(primary_key=True)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listingsss1001")
+    recommend_mealplan_id =  models.ForeignKey(RecommendMealPlan, on_delete=models.CASCADE, related_name="listingsss1001")
+    meal = JSONField()
+    date = models.DateField()
+    status = models.CharField(max_length=200)
+    price = models.IntegerField()
+    start_week = models.DateField()
+    end_week = models.DateField()
+
+    class Meta:
+        db_table = "requestRecommends_meals"

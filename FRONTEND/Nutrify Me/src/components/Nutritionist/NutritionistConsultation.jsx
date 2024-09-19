@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import { NavLink, Link, useLocation, useParams } from "react-router-dom";
 import { VideoPlayer } from "./VideoPlayer";
 import { useLoggedInUser } from "../LoggedInUserContext";
-//
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CircleIcon from "@mui/icons-material/Circle";
 import Box from "@mui/material/Box";
@@ -17,8 +17,10 @@ import { authToken, createMeeting } from "../api";
 import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
+
 function NutritionistHome() {
   const location = useLocation();
+  const navigate = useNavigate();
   console.log(location);
   const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
     useLoggedInUser();
@@ -250,6 +252,7 @@ function NutritionistHome() {
     return (
       <div>
         Meeting Ended
+        {navigate("/nutritionist-appointment")}
         {/* <input
           type="text"
           placeholder="Enter Meeting Id"
@@ -534,6 +537,19 @@ function NutritionistHome() {
       join();
     }, []);
 
+
+    //? 
+    
+    const handleButtonClick = () => {
+     // const newTab = window.open();
+  
+      //setSharedState(location.state.tempN);
+      localStorage.setItem('state', JSON.stringify(location.state.tempN));
+      // navigate('/nutritionist-patient-records', {
+      //   state: location.state,
+      // }, newTab);
+    };
+    //?
     return (
       <div className="container">
         {/* <h3>Meeting Id: {props.meetingId}</h3> */}
@@ -568,6 +584,23 @@ function NutritionistHome() {
                     Name: {location.state.tempN.first_name} {""}
                     {location.state.tempN.last_name}
                     <br />
+                    <Link
+     to="/nutritionist-patient-records"
+    // state={sharedState}
+     target="_blank"
+    >
+                    <Button
+                sx={{ background: "#E66253", color: "#ffffff" }} 
+                onClick={handleButtonClick}
+                // onClick={() =>
+                //   navigate("/nutritionist-patient-records", {
+                //     state: { item:location.state.tempN },
+                //   }) 
+                // }
+              >
+                VIEW RECORDS
+              </Button>
+              </Link>
                     <Grid container spacing={2} sx={{ mt: "5px" }}>
                       <Grid xs={2}>
                         <CircleIcon sx={{ mt: 1, width: 10, color: "green" }} />

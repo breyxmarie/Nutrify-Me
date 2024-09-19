@@ -14,6 +14,7 @@ function Paypal() {
   const navigate = useNavigate();
   const location = useLocation();
   const receivedData = location.state;
+  console.log(location.state)
   const [paid, setPaid] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
 
@@ -24,7 +25,7 @@ function Paypal() {
         {
           amount: {
             currency_code: "PHP",
-            value: "0.01",
+            value: location.state.totalprice,
           },
         },
       ],

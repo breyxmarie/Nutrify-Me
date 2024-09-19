@@ -17,9 +17,124 @@ import styled from "styled-components";
 import dayjs from "dayjs";
 import { ToastContainer, toast } from "react-toastify";
 import { NavLink, Link, useLocation } from "react-router-dom";
+import Modal from "@mui/material/Modal";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import isBetweenPlugin from "dayjs/plugin/isBetween";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 
 function MealPlanHistory() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+
+
+  // ! weekly calendar
+  dayjs.extend(isBetweenPlugin);
+
+  const CustomPickersDay = styled(PickersDay, {
+    shouldForwardProp: (prop) => prop !== "isSelected" && prop !== "isHovered",
+  })(({ theme, isSelected, isHovered, day }) => ({
+    borderRadius: 0,
+    ...(isSelected && {
+      backgroundColor:   "#ffffff",
+      color: "#000000",
+      "&:hover, &:focus": {
+        backgroundColor: "#ffffff",
+      },
+    }),
+    ...(isHovered && {
+      backgroundColor: "#ffffff",
+      "&:hover, &:focus": {
+        backgroundColor: "#ffffff",
+      },
+    }),
+    ...(day.day() === 0 && {
+      borderTopLeftRadius: "50%",
+      borderBottomLeftRadius: "50%",
+    }),
+    ...(day.day() === 6 && {
+      borderTopRightRadius: "50%",
+      borderBottomRightRadius: "50%",
+    }),
+  }));
+
+  const isInSameWeek = (dayA, dayB) => {
+    if (dayB == null) {
+      return false;
+    }
+
+    return dayA.isSame(dayB, "week");
+  };
+
+  function Day(props) {
+    const { day, selectedDay, hoveredDay, ...other } = props;
+
+    return (
+      <CustomPickersDay
+        {...other}
+        day={day}
+        sx={{ px: 2.5 }}
+        disableMargin
+        selected={false}
+        isSelected={isInSameWeek(day, selectedDay)}
+        isHovered={isInSameWeek(day, hoveredDay)}
+      />
+    );
+  }
+
+  const [hoveredDay, setHoveredDay] = useState(null);
+  const [value, setValue] = useState(dayjs());
+
+  //! modal
+  
+
+  const [chosen, setChosen] = useState()
+  const [open, setOpen] = useState(false);
+  const handleOpen = (data) => {
+    console.log(data, "hi")
+    setChosen(data)
+    
+    setOpen(true)};
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 3,
+    color: "#ffffff",
+  };
+
+
+  function Day(props) {
+    const { day, selectedDay, hoveredDay, ...other } = props;
+
+    return (
+      <CustomPickersDay
+        {...other}
+        day={day}
+        sx={{ px: 2.5 }}
+        disableMargin
+        selected={false}
+        isSelected={isInSameWeek(day, selectedDay)}
+        isHovered={isInSameWeek(day, hoveredDay)}
+      />
+    );
+  }
+
+  
+  //!
+
+
   // ? get Data
   const [mealData, setMealData] = useState([]);
 
@@ -142,22 +257,29 @@ function MealPlanHistory() {
   ];
 
   //?
-  const requestOrder = (id) => {
+  const requestOrder = () => {
     //Requested
     //Pending
     //Approved
     //Disapproved
+    const currentWeekStart = dayjs(value).startOf("week").format("YYYY-MM-DD");
+    const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
+  
+    console.log(currentWeekStart, currentWeekEnd)
 
     try {
       AxiosInstance.post(`requestedmeals/`, {
         user_id: loggedInUser.user_id,
-        generatedMeal_id: id,
+        generatedMeal_id: chosen,
+        start_week: currentWeekStart,
+        end_week: currentWeekEnd,
         date: dayjs().format("YYYY-MM-DD"),
         status: "Pending",
         price: 0,
       }).then((res) => {
-        //  console.log(res, res.data);
+         console.log(res, res.data);
         toast.success("Request Sent");
+        handleClose()
       });
     } catch (error) {
       console.log(error);
@@ -564,6 +686,48 @@ function MealPlanHistory() {
             </Grid>
             <Grid xs={12} md={1.5}>
               {" "}
+              <Modal
+                open={open} 
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box sx={style}>
+                  Choose your preferred week:
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateCalendar
+                  minDate={dayjs().startOf('week').endOf('week').add(1, 'day')}
+                   value={value}
+                   onChange={(newValue) => setValue(newValue)}
+                    showDaysOutsideCurrentMonth
+                    displayWeekNumber
+                   slots={{ day: Day }}
+                    slotProps={{
+                      day: (ownerState) => ({
+                        selectedDay: value,
+                        hoveredDay,
+                        onPointerEnter: () => setHoveredDay(null),
+                        onPointerLeave: () => setHoveredDay(null),
+                      }),
+                    }}
+                  />
+                </LocalizationProvider>
+                  <Button onClick={requestOrder}      sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    my: 5,
+                    px: 5,
+                    py: 1,
+                    fontSize: "0.9em",
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 1,
+                      borderColor: "#ffffff",
+                    },
+                  }}>Request Meal Plan</Button>
+                </Box>
+              </Modal>
               <Button
                 sx={{
                   mx: {
@@ -585,7 +749,7 @@ function MealPlanHistory() {
                     color: "#E66253",
                   },
                 }}
-                onClick={() => requestOrder(item.generatedMeal_id)}
+                onClick={() => handleOpen(item.generatedMeal_id)}   
               >
                 Request To Order
               </Button>

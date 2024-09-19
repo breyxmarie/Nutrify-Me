@@ -24,7 +24,7 @@ function PayPalRequest() {
         {
           amount: {
             currency_code: "PHP",
-            value: "0.01",
+            value: location.state.datas.totalprice,
           },
         },
       ],

@@ -15,11 +15,128 @@ import { useLoggedInUser } from "../LoggedInUserContext";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Modal from "@mui/material/Modal";
+import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
+import isBetweenPlugin from "dayjs/plugin/isBetween";
+import { styled } from "@mui/material/styles";
+import { PickersDay } from "@mui/x-date-pickers/PickersDay";
+
+
 
 function TelemedicineMealPlans() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const navigate = useNavigate();
 
+
+  // ! weekly calendar
+  dayjs.extend(isBetweenPlugin);
+
+  const CustomPickersDay = styled(PickersDay, {
+    shouldForwardProp: (prop) => prop !== "isSelected" && prop !== "isHovered",
+  })(({ theme, isSelected, isHovered, day }) => ({
+    borderRadius: 0,
+    ...(isSelected && {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      "&:hover, &:focus": {
+        backgroundColor: theme.palette.primary.main,
+      },
+    }),
+    ...(isHovered && {
+      backgroundColor: theme.palette.primary[theme.palette.mode],
+      "&:hover, &:focus": {
+        backgroundColor: theme.palette.primary[theme.palette.mode],
+      },
+    }),
+    ...(day.day() === 0 && {
+      borderTopLeftRadius: "50%",
+      borderBottomLeftRadius: "50%",
+    }),
+    ...(day.day() === 6 && {
+      borderTopRightRadius: "50%",
+      borderBottomRightRadius: "50%",
+    }),
+  }));
+
+  const isInSameWeek = (dayA, dayB) => {
+    if (dayB == null) {
+      return false;
+    }
+
+    return dayA.isSame(dayB, "week");
+  };
+
+  function Day(props) {
+    const { day, selectedDay, hoveredDay, ...other } = props;
+
+    return (
+      <CustomPickersDay
+        {...other}
+        day={day}
+        sx={{ px: 2.5 }}
+        disableMargin
+        selected={false}
+        isSelected={isInSameWeek(day, selectedDay)}
+        isHovered={isInSameWeek(day, hoveredDay)}
+      />
+    );
+  }
+
+  const [hoveredDay, setHoveredDay] = useState(null);
+  const [value, setValue] = useState(dayjs());
+
+  //! modal
+  
+
+  const [chosen, setChosen] = useState()
+  const [open, setOpen] = useState(false);
+  const handleOpen = (data) => {
+    console.log(data, "hi")
+    setChosen(data)
+    
+    setOpen(true)};
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 3,
+    color: "#ffffff",
+  };
+
+
+  function Day(props) {
+    const { day, selectedDay, hoveredDay, ...other } = props;
+
+    return (
+      <CustomPickersDay
+        {...other}
+        day={day}
+        sx={{ px: 2.5 }}
+        disableMargin
+        selected={false}
+        isSelected={isInSameWeek(day, selectedDay)}
+        isHovered={isInSameWeek(day, hoveredDay)}
+      />
+    );
+  }
+
+  
+  //!
   //? slider
 
   const sliderRefs = useRef([]);
@@ -107,7 +224,7 @@ function TelemedicineMealPlans() {
         );
 
         for (let i = 1; i < 6; i++) {
-          let tempRes = respo.data
+          let tempRes = data
             .filter((items) => parseInt(items.day) === i)
             .sort((a, b) => {
               const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
@@ -118,8 +235,9 @@ function TelemedicineMealPlans() {
             meals: tempRes,
           });
         }
-        console.log(tempMealDay);
+        console.log(tempMealDay, item);
         tempMealstalaga.push({
+          recommend_mealplan_id: item.recommend_mealplan_id,
           MealName: item.name,
           meals: tempMealDay,
           nutritionist: item.nutritionist_id,
@@ -136,6 +254,34 @@ function TelemedicineMealPlans() {
     getMealData();
   }, []);
   //?
+
+  //! order
+const requestOrder = () => {
+  const currentWeekStart = dayjs(value).startOf("week").format("YYYY-MM-DD");
+  const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
+
+  console.log(currentWeekStart, currentWeekEnd)
+  try {
+    AxiosInstance.post(`requestedrecommendmeals/`, {
+    meal: chosen.meals,
+    date:dayjs().format("YYYY-MM-DD"),
+    status: "Pending",
+    start_week: currentWeekStart,
+    end_week: currentWeekEnd,
+    recommend_mealplan_id: chosen.recommend_mealplan_id,
+    user_id: loggedInUser.user_id,
+    price: 0,
+    }).then((res) => {
+       console.log(res, res.data);
+      toast.success("Request Sent");
+      handleClose()
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+  //!
   return (
     <div
       className="content"
@@ -147,14 +293,16 @@ function TelemedicineMealPlans() {
       }}
     >
       <Typography>Generated Meal Plans by your Nutritionist</Typography>
-
+{console.log(mealData)}
       <br />
       {mealData.map((item, index) => (
-        <Box sx={{ ml: "5%" }}>
+        <Box sx={{ ml: "5%",mr: "5%", mt: 3, border: 1, pt: 2 }}>
           <Grid container spacing={2}>
             <Grid xs={10}>
-              <Accordion>
-                <AccordionSummary>
+              <Accordion sx={{  border: 1 }}>
+                <AccordionSummary   expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header">
                   Meal Name: {item.MealName} <br />
                   By: Nutritionist{" "}
                   {console.log(
@@ -217,8 +365,8 @@ function TelemedicineMealPlans() {
                                 pb: 10,
                               }}
                             >
-                              <Typography sx={{ fontWeight: "bold" }}>
-                                {item.day}
+                              <Typography sx={{ fontWeight: "bold", color: "#99756E" }}>
+                                Day {items.day}
                               </Typography>
 
                               <Grid container spacing={2} sx={{ mx: "0%" }}>
@@ -382,9 +530,51 @@ function TelemedicineMealPlans() {
                     ))}
                   </Grid> */}
                 </AccordionDetails>
-              </Accordion>
+              </Accordion>   
             </Grid>
             <Grid xs={2}>
+            <Modal
+                open={open} 
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box sx={style}>
+                  Choose your preferred week:
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateCalendar
+                  minDate={dayjs().startOf('week').endOf('week').add(1, 'day')}
+                   value={value}
+                   onChange={(newValue) => setValue(newValue)}
+                    showDaysOutsideCurrentMonth
+                    displayWeekNumber
+                   slots={{ day: Day }}
+                    slotProps={{
+                      day: (ownerState) => ({
+                        selectedDay: value,
+                        hoveredDay,
+                        onPointerEnter: () => setHoveredDay(null),
+                        onPointerLeave: () => setHoveredDay(null),
+                      }),
+                    }}
+                  />
+                </LocalizationProvider>
+                  <Button onClick={requestOrder}      sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    my: 5,
+                    px: 5,
+                    py: 1,
+                    fontSize: "0.9em",
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 1,
+                      borderColor: "#ffffff",
+                    },
+                  }}>Request Meal Plan</Button>
+                </Box>
+              </Modal>
               <Button
                 sx={{
                   mx: {
@@ -398,7 +588,7 @@ function TelemedicineMealPlans() {
 
                   mt: {
                     xs: "5%",
-                    md: "0%",
+                    md: "8%",
                   },
                   color: "#ffffff",
                   "&:hover": {
@@ -406,7 +596,7 @@ function TelemedicineMealPlans() {
                     color: "#E66253",
                   },
                 }}
-                // onClick={() => requestOrder(item.generatedMeal_id)}
+                onClick={() => handleOpen(item)}
               >
                 Request To Order
               </Button>

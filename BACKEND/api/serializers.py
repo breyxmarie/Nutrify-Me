@@ -133,7 +133,7 @@ class GeneratedMealSerializer(serializers.ModelSerializer):
 class RequestMealsSerializer(serializers.ModelSerializer):
     class Meta:
         model = RequestMeals
-        fields = ('request_id', 'user_id','generatedMeal_id', 'date', 'status', 'price' )
+        fields = ('request_id', 'user_id','generatedMeal_id', 'date', 'status', 'price', 'start_week', 'end_week' )
 
 class ThemeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -170,3 +170,8 @@ class RecommendMealSerializer(serializers.ModelSerializer):
     class Meta:
         model = RecommendMeal
         fields = ('recommend_meal_id','recommend_mealplan_id','type','calories','fat','protein','carbs','food','image','day')
+
+class RequestRecommendMealsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequestRecommendMeals
+        fields = ('request_id', 'user_id','recommend_mealplan_id', 'date', 'status', 'price', 'meal', 'start_week', 'end_week' )

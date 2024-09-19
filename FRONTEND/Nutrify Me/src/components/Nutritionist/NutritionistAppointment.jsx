@@ -981,7 +981,7 @@ function NutritionistAppointment() {
                 {pendingAppointmentList
                   .filter((item) => item.status === "Approved")
                   ?.map((items) => (
-                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 }}>
+                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 , mt: 3}}>
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           {" "}
@@ -1067,7 +1067,7 @@ function NutritionistAppointment() {
                 {pendingAppointmentList
                   .filter((item) => item.status === "pending")
                   ?.map((items) => (
-                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 }}>
+                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10, mt: 3 }}>
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           {" "}
@@ -1197,7 +1197,7 @@ function NutritionistAppointment() {
                 {pendingAppointmentList
                   .filter((item) => item.status === "Declined")
                   ?.map((items) => (
-                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 }}>
+                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10, mt: 3}}>
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           {" "}

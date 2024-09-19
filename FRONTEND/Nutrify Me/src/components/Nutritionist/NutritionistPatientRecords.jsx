@@ -50,10 +50,29 @@ import ImageContext from "../ImageContext";
 import { useNavigate } from "react-router-dom";
 import { NavLink, Link, useLocation, useParams } from "react-router-dom";
 
+
 function NutritionistPatientRecords() {
+  const [state, setState] = useState(() => {
+    const storedState = localStorage.getItem('state');
+    return storedState ? JSON.parse(storedState) : null;
+  });
+//  const location = useLocation();
+  let location;
+
+  console.log(state)
+
+  if (state) {
+location ={ state: { item: state}}
+  }
+
+  else {
+    location = useLocation();
+  }
+
+
   const navigate = useNavigate();
-  const location = useLocation();
-  console.log(location.state.item);
+ 
+  console.log(location);
   //! tabs
   const [selectedMealPlan, setSelectedMealPlan] = useState();
   const [finalMealPlan, setFinalMealPlan] = useState(); //!
@@ -158,8 +177,15 @@ function NutritionistPatientRecords() {
     });
   };
   console.log(shopMeal);
+  const [profiling, setProfiling] = useState([])
+
 
   const getJournalData = async (day) => {
+    const respo = await AxiosInstance.get(`profiling`);
+    console.log(respo)
+    setProfiling(respo.data.find((item) => item.user_id === location.state.item.user_id));
+ 
+
     await AxiosInstance.get(`journalentry`).then((res) => {
       setJournalEntry(
         res.data.filter(
@@ -168,6 +194,7 @@ function NutritionistPatientRecords() {
         )
       );
 
+   
       // console.log(
       //   res.data.filter(
       //     (items) => items.date == day && items.user_id == loggedInUser.user_id
@@ -222,7 +249,7 @@ function NutritionistPatientRecords() {
   useEffect(() => {
     getJournalData(dayjs().format("YYYY-MM-DD"));
     //  console.log(journalEntry);
-    getData();
+   // getData();
   }, []);
 
   useEffect(() => {
@@ -2152,6 +2179,27 @@ function NutritionistPatientRecords() {
       console.log(error.response);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      localStorage.setItem('state', null);
+    };
+  }, []);
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      // Set the state to null in localStorage 
+      localStorage.setItem('state', null);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);   
+
+    };
+  }, []);
   //?
 
   return (
@@ -2185,16 +2233,18 @@ function NutritionistPatientRecords() {
         <Typography display="flex"
                         justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
             Hypertension:  
+            { profiling?.hypertension ? (<>Yes</>)
+            : (<>No</>) }
         </Typography>
 
         <Typography display="flex"
                         justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
             Medication:
+               
+            { profiling?.takingMeds ? (<>Yes</>)
+            : (<>N/A</>) }
         </Typography>
-        <Typography display="flex"
-                        justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
-            Hypertension Diagnosis Date:
-        </Typography>
+  
         <Button 
         onClick={() =>
             navigate("/nutritionist-patient-reports", {

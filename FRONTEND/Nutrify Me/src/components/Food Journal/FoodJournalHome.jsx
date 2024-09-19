@@ -85,6 +85,7 @@ function FoodJournalHome() {
   const [generatedMealPlans, setGeneratedMealPlans] = useState([]);
   const [orderedMealPlans, setOrderedMealPlans] = useState([]);
   const [shopMeal, setShopMeal] = useState([]);
+  const [recommendMeal, setRecommendMeal] = useState([]);
   const [recommendedMealPlans, setRecommendedMealPlans] = useState([]);
   const [carbs, setCarbs] = useState(0);
   const [protein, setProtein] = useState(0);
@@ -127,7 +128,7 @@ function FoodJournalHome() {
           try {
             AxiosInstance.get(`shopmeal`).then((respo) => {
               let tempMealstalaga = [];
-console.log(respo)
+              console.log(respo)
               tempOrder.map((item) =>
                 (console.log(respo.data.filter(
                   (items) => items.mealplan_id === item
@@ -140,15 +141,39 @@ console.log(respo)
               console.log(tempMealstalaga)
               setShopMeal(tempMealstalaga);
             });
-          } catch (error) {}
+          } catch (error) {
+            console.log(error)
+          }
         });
-      } catch (error) {}
+      } catch (error) {console.log(error)}
     });
 
     await AxiosInstance.get(`recommendmealplan`).then((res) => {
       setRecommendedMealPlans(
         res.data.filter((item) => item.user_id == loggedInUser.user_id)
       );
+
+
+      try {
+        AxiosInstance.get(`recommendmeal`).then((respo) => {
+          let tempMealstalaga = [];
+          console.log(res.data)
+          res.data.map((item1) =>
+            (console.log(respo.data.filter(
+              (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
+            )),
+            tempMealstalaga.push(
+              respo.data.filter(
+                (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
+              )
+            ))
+          );
+          console.log(tempMealstalaga)
+          setRecommendMeal(tempMealstalaga);
+        });
+      } catch (error) {
+        console.log(error)
+      }
     });
   };
   console.log(shopMeal)
@@ -1506,7 +1531,7 @@ console.log(respo)
     if (activeTab === 1)
     {
       console.log("try1", selectedMealPlan)
-      try {
+     // try {
         // AxiosInstance.post(`journalentry/`, {
         //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
         //   title: data.title,
@@ -1519,76 +1544,513 @@ console.log(respo)
         //   console.log(res.data.id);
 
           if(selectedMealPlan === "Meal Plans by Nutritionist" ){
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Breakfast",
-                food: data.breakfast_food,
-                calories: data.breakfast_calories,
-                fat: data.breakfast_fat,
-                protein: data.breakfast_protein,
-                carbs: data.breakfast_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-              });
-            } catch (error) {
-              console.log(error.response, error);
-            }
-    
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Lunch",
-                food: data.lunch_food,
-                calories: data.lunch_calories,
-                fat: data.lunch_fat,
-                protein: data.lunch_protein,
-                carbs: data.lunch_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-              });
-            } catch (error) {
-              console.log(error.response);
-            }
-    
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Snack",
-                food: data.snack_food,
-                calories: data.snack_calories,
-                fat: data.snack_fat,
-                protein: data.snack_protein,
-                carbs: data.snack_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-              });
-            } catch (error) {
-              console.log(error.response);
-            }
-    
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Dinner",
-                food: data.dinner_food,
-                calories: data.dinner_calories,
-                fat: data.dinner_fat,
-                protein: data.dinner_protein,
-                carbs: data.dinner_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-                getJournalData(dayjs().format("YYYY-MM-DD"));
+            let dayNum = dayjs(selectedDate).day();
+            console.log(dayNum, "try")
+            console.log(finalMealPlan)
+            // let tempList = shopMeal[0].filter((item) => (
+            //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+            // ))
+            
+            console.log(shopMeal[0].filter((item) => (
+                 item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
+               )))
+                        for (let i = 1; i < 6; i++) {
+            
+                          const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
+            const endWeek = startWeek.add(5, 'day') ;
+            console.log(startWeek, endWeek  , "hi")
+            
+            
+                          const meals = [];
+                          const tempU = recommendMeal[0].filter((item) => (
+                            item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
+                          ))
+                          console.log(tempU.filter((item) => (
+                            parseInt(item.day) === i
+                          )), i)
+            
+            
+                         const sortedTemp = tempU.filter((item) => (
+                            parseInt(item.day) === i
+                          )).sort((a, b) => {
+                            const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+                            return order.indexOf(a.type) - order.indexOf(b.type);
+                          })
+                          .map((item, index) => meals.push(item));
+            
+                          console.log(meals)
+                          if (i === dayNum){
+                            try {
+                              AxiosInstance.post(`journalentry/`, {
+                                date: dayjs(selectedDate).format("YYYY-MM-DD"),
+                                title: data.title,
+                                entry: data.journal_entry,
+                                systolic: data.systolic,
+                                diastolic: data.diastolic,
+                                user_id: loggedInUser.user_id,
+                                meal_plan: finalMealPlan.name, 
+                              }).then((res) => {
+                                  try {
+                                AxiosInstance.post(`foodentry/`, {
+                                  type: "Breakfast",
+                                  food: meals[0].food,
+                                  calories: meals[0].calories,
+                                  fat: meals[0].fat,
+                                  protein: meals[0].protein,
+                                  carbs: meals[0].carbs,
+                                  journal_id: res.data.id,
+                                }).then((res) => {
+                                  console.log(res, res.data);
+                                });
+                              } catch (error) {
+                                console.log(error.response, error);
+                              }
+            
+                              try {
+                                AxiosInstance.post(`foodentry/`, {
+                                  type: "Lunch",
+                                  food: meals[1].food,
+                                  calories: meals[1].calories,
+                                  fat: meals[1].fat,
+                                  protein: meals[1].protein,
+                                  carbs: meals[1].carbs,
+                                  journal_id: res.data.id,
+                                }).then((res) => {
+                                  console.log(res, res.data);
+                                });
+                              } catch (error) {
+                                console.log(error.response, error);
+                              }
+            
+                              try {
+                                AxiosInstance.post(`foodentry/`, {
+                                  type: "Snack",
+                                  food: meals[2].food,
+                                  calories: meals[2].calories,
+                                  fat: meals[2].fat,
+                                  protein: meals[2].protein,
+                                  carbs: meals[2].carbs,
+                                  journal_id: res.data.id,
+                                }).then((res) => {
+                                  console.log(res, res.data);
+                                });
+                              } catch (error) {
+                                console.log(error.response, error);
+                              }
+            
+            
+                              try {
+                                AxiosInstance.post(`foodentry/`, {
+                                  type: "Dinner",
+                                  food: meals[3].food,
+                                  calories: meals[3].calories,
+                                  fat: meals[3].fat,
+                                  protein: meals[3].protein,
+                                  carbs: meals[3].carbs,
+                                  journal_id: res.data.id,
+                                }).then((res) => {
+                                  console.log(res, res.data);
+                                });
+                              } catch (error) {
+                                console.log(error.response, error);
+                              }
+                              })
+                            }
+                            catch (error){
+                                console.log(error)
+                            }
+                          }
+                            else {
+            
+            
+            
+                              try {
+                                AxiosInstance.post(`journalentry/`, {
+                                  date: startWeek.format("YYYY-MM-DD"),//! 
+                                  title: "meal plan",
+                                  entry: "have meal plan",
+                                  systolic: 0,
+                                  diastolic: 0,
+                                  user_id: loggedInUser.user_id,
+                                  meal_plan: finalMealPlan.name, 
+                                }).then((res) => {
+                                    try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Breakfast",
+                                    food: meals[0].food,
+                                    calories: meals[0].calories,
+                                    fat: meals[0].fat,
+                                    protein: meals[0].protein,
+                                    carbs: meals[0].carbs,
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+              
+                                try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Lunch",
+                                    food: meals[1].food,
+                                    calories: meals[1].calories,
+                                    fat: meals[1].fat,
+                                    protein: meals[1].protein,
+                                    carbs: meals[1].carbs,
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+              
+                                try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Snack",
+                                    food: meals[2].food,
+                                    calories: meals[2].calories,
+                                    fat: meals[2].fat,
+                                    protein: meals[2].protein,
+                                    carbs: meals[2].carbs,
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+              
+              
+                                try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Dinner",
+                                    food: meals[3].food,
+                                    calories: meals[3].calories,
+                                    fat: meals[3].fat,
+                                    protein: meals[3].protein,
+                                    carbs: meals[3].carbs,
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+                                })
+                              }
+                              catch (error){
+                                  console.log(error)
+                              }
+                            }
+                        }
+            
+            
+            
+                        // AxiosInstance.post(`journalentry/`, {
+                        //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
+                        //   title: data.title,
+                        //   entry: data.journal_entry,
+                        //   systolic: data.systolic,
+                        //   diastolic: data.diastolic,
+                        //   user_id: loggedInUser.user_id,
+                        //   meal_plan: finalMealPlan.name, 
+                        // }).then((res) => {})
+            
+            
+            
+            
+            
+                        // dayjs(selectedDate).format("YYYY-MM-DD")
+                        // shopMeal[0].filter((item) => (
+                        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+                        // ))
+                        // // .sort((a, b) => {
+                        // //   if (a.day !== b.day) {
+                        // //     return a.day - b.day;
+                        // //   } else {
+                        // //     return a.type.localeCompare(b.type);
+                        // //   }
+                        // // })
+                        // .map((meal) => (
+                        // console.log(meal)
+                        // ))
+                        // try {
+                        //   AxiosInstance.post(`foodentry/`, {
+                        //     type: "Breakfast",
+                        //     food: data.breakfast_food,
+                        //     calories: data.breakfast_calories,
+                        //     fat: data.breakfast_fat,
+                        //     protein: data.breakfast_protein,
+                        //     carbs: data.breakfast_carbs,
+                        //     journal_id: res.data.id,
+                        //   }).then((res) => {
+                        //     console.log(res, res.data);
+                        //   });
+                        // } catch (error) {
+                        //   console.log(error.response, error);
+                        // }
+                
+                        // try {
+                        //   AxiosInstance.post(`foodentry/`, {
+                        //     type: "Lunch",
+                        //     food: data.lunch_food,
+                        //     calories: data.lunch_calories,
+                        //     fat: data.lunch_fat,
+                        //     protein: data.lunch_protein,
+                        //     carbs: data.lunch_carbs,
+                        //     journal_id: res.data.id,
+                        //   }).then((res) => {
+                        //     console.log(res, res.data);
+                        //   });
+                        // } catch (error) {
+                        //   console.log(error.response);
+                        // }
+                
+                        // try {
+                        //   AxiosInstance.post(`foodentry/`, {
+                        //     type: "Snack",
+                        //     food: data.snack_food,
+                        //     calories: data.snack_calories,
+                        //     fat: data.snack_fat,
+                        //     protein: data.snack_protein,
+                        //     carbs: data.snack_carbs,
+                        //     journal_id: res.data.id,
+                        //   }).then((res) => {
+                        //     console.log(res, res.data);
+                        //   });
+                        // } catch (error) {
+                        //   console.log(error.response);
+                        // }
+                
+                        // try {
+                        //   AxiosInstance.post(`foodentry/`, {
+                        //     type: "Dinner",
+                        //     food: data.dinner_food,
+                        //     calories: data.dinner_calories,
+                        //     fat: data.dinner_fat,
+                        //     protein: data.dinner_protein,
+                        //     carbs: data.dinner_carbs,
+                        //     journal_id: res.data.id,
+                        //   }).then((res) => {
+                        //     console.log(res, res.data);
+                        //     getJournalData(dayjs().format("YYYY-MM-DD"));
+                      
+                        //     reset();
+                        //     handleClose();
+                        //   });
+                        // } catch (error) {
+                        //   console.log(error.response);
+                        // }
+                      }
           
-                reset();
-                handleClose();
-              });
-            } catch (error) {
-              console.log(error.response);
-            }
-          }
-          else if(selectedMealPlan === "Generated Meal Plans" ){
+          else if(selectedMealPlan === "Generated Meal Plans" )
+            {
 
+              console.log(finalMealPlan)
+              let dayNum = dayjs(selectedDate).day();
+              console.log(dayNum, "try")
+              // let tempList = shopMeal[0].filter((item) => (
+              //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+              // ))
+              
+              // console.log(shopMeal[0].filter((item) => (
+              //      item.mealplan_id === finalMealPlan.shop_mealplan_id
+              //    )))
+                          for (let i = 1; i < 6; i++) {
+              
+                            const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
+              const endWeek = startWeek.add(5, 'day') ;
+              console.log(startWeek, endWeek  , "hi")
+              
+              
+                          //   const meals = [];
+                          //   const tempU = shopMeal[0].filter((item) => (
+                          //     item.mealplan_id === finalMealPlan.shop_mealplan_id
+                          //   ))
+                          //   console.log(tempU.filter((item) => (
+                          //     parseInt(item.day) === i
+                          //   )), i)
+              
+              
+                          //  const sortedTemp = tempU.filter((item) => (
+                          //     parseInt(item.day) === i
+                          //   )).sort((a, b) => {
+                          //     const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+                          //     return order.indexOf(a.type) - order.indexOf(b.type);
+                          //   })
+                          //   .map((item, index) => meals.push(item));
+              
+                          //   console.log(meals)
+                            if (i === dayNum){
+                              try {
+                                AxiosInstance.post(`journalentry/`, {
+                                  date: dayjs(selectedDate).format("YYYY-MM-DD"),
+                                  title: data.title,
+                                  entry: data.journal_entry,
+                                  systolic: data.systolic,
+                                  diastolic: data.diastolic,
+                                  user_id: loggedInUser.user_id,
+                                  meal_plan: finalMealPlan.name, 
+                                }).then((res) => {
+                               
+                                    try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Breakfast",
+                                    food: finalMealPlan.meal[i - 1].meals[0].details.recipe.label,
+                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.calories / finalMealPlan.meal[i - 1].meals[0].details.recipe.yield),
+                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[0].total),
+                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[2].total),
+                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[1].total),
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+              
+                                try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Lunch",
+                                    food: finalMealPlan.meal[i - 1].meals[1].details.recipe.label,
+                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.calories / finalMealPlan.meal[i - 1].meals[1].details.recipe.yield),
+                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[0].total),
+                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[2].total),
+                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[1].total),
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+              
+                                try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Snack",
+                                    food: finalMealPlan.meal[i - 1].meals[2].details.recipe.label,
+                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.calories / finalMealPlan.meal[i - 1].meals[2].details.recipe.yield),
+                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[0].total),
+                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[2].total),
+                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[1].total),
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+              
+              
+                                try {
+                                  AxiosInstance.post(`foodentry/`, {
+                                    type: "Dinner",
+                                    food: finalMealPlan.meal[i - 1].meals[3].details.recipe.label,
+                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.calories / finalMealPlan.meal[i - 1].meals[3].details.recipe.yield),
+                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[0].total),
+                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[2].total),
+                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[1].total),
+                                    journal_id: res.data.id,
+                                  }).then((res) => {
+                                    console.log(res, res.data);
+                                  });
+                                } catch (error) {
+                                  console.log(error.response, error);
+                                }
+                                })
+                              }
+                              catch (error){
+                                  console.log(error)
+                              }
+                            }
+                              else {
+              
+              
+              
+                                try {
+                                  AxiosInstance.post(`journalentry/`, {
+                                    date: startWeek.format("YYYY-MM-DD"),//! 
+                                    title: "meal plan",
+                                    entry: "have meal plan",
+                                    systolic: 0,
+                                    diastolic: 0,
+                                    user_id: loggedInUser.user_id,
+                                    meal_plan: finalMealPlan.name, 
+                                  }).then((res) => {
+                                      try {
+                                    AxiosInstance.post(`foodentry/`, {
+                                      type: "Breakfast",
+                                      food: finalMealPlan.meal[i - 1].meals[0].details.recipe.label,
+                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.calories / finalMealPlan.meal[i - 1].meals[0].details.recipe.yield),
+                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[0].total),
+                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[2].total),
+                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[1].total),
+                                      journal_id: res.data.id,
+                                    }).then((res) => {
+                                      console.log(res, res.data);
+                                    });
+                                  } catch (error) {
+                                    console.log(error.response, error);
+                                  }
+                
+                                  try {
+                                    AxiosInstance.post(`foodentry/`, {
+                                      type: "Lunch",
+                                      food: finalMealPlan.meal[i - 1].meals[3].details.recipe.label,
+                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.calories / finalMealPlan.meal[i - 1].meals[1].details.recipe.yield),
+                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[0].total),
+                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[2].total),
+                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[1].total),
+                                      journal_id: res.data.id,
+                                    }).then((res) => {
+                                      console.log(res, res.data);
+                                    });
+                                  } catch (error) {
+                                    console.log(error.response, error);
+                                  }
+                
+                                  try {
+                                    AxiosInstance.post(`foodentry/`, {
+                                      type: "Snack",
+                                      food: meals[2].food,
+                                
+                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.calories / finalMealPlan.meal[i - 1].meals[2].details.recipe.yield),
+                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[0].total),
+                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[2].total),
+                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[1].total),
+                                      journal_id: res.data.id,
+                                    }).then((res) => {
+                                      console.log(res, res.data);
+                                    });
+                                  } catch (error) {
+                                    console.log(error.response, error);
+                                  }
+                
+                
+                                  try {
+                                    AxiosInstance.post(`foodentry/`, {
+                                      type: "Dinner",
+                                      food: finalMealPlan.meal[i - 1].meals[3].details.recipe.label,
+                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.calories / finalMealPlan.meal[i - 1].meals[3].details.recipe.yield),
+                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[0].total),
+                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[2].total),
+                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[1].total),
+                                      journal_id: res.data.id,
+                                    }).then((res) => {
+                                      console.log(res, res.data);
+                                    });
+                                  } catch (error) {
+                                    console.log(error.response, error);
+                                  }
+                                  })
+                                }
+                                catch (error){   
+                                    console.log(error)
+                                }
+                              }
+                          }
           }
           else if (selectedMealPlan === "Meal Plan Ordered"){    //! ordered meal plan so from shopmealplan table and shop meal
 
@@ -1787,7 +2249,7 @@ console.log(startWeek, endWeek  , "hi")
                     }
                     })
                   }
-                  catch (error){
+                  catch (error){   
                       console.log(error)
                   }
                 }
@@ -1809,95 +2271,97 @@ console.log(startWeek, endWeek  , "hi")
 
 
 
-            dayjs(selectedDate).format("YYYY-MM-DD")
-            shopMeal[0].filter((item) => (
-              item.mealplan_id === finalMealPlan.shop_mealplan_id
-            ))
+            // dayjs(selectedDate).format("YYYY-MM-DD")
+            // shopMeal[0].filter((item) => (
+            //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+            // ))
             // .sort((a, b) => {
             //   if (a.day !== b.day) {
-            //     return a.day - b.day;
+            //     return a.day - b.day;  
             //   } else {
             //     return a.type.localeCompare(b.type);
             //   }
             // })
-            .map((meal) => (
-            console.log(meal)
-            ))
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Breakfast",
-                food: data.breakfast_food,
-                calories: data.breakfast_calories,
-                fat: data.breakfast_fat,
-                protein: data.breakfast_protein,
-                carbs: data.breakfast_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-              });
-            } catch (error) {
-              console.log(error.response, error);
-            }
+            // .map((meal) => (
+            // console.log(meal)
+            // ))
+            // try {
+            //   AxiosInstance.post(`foodentry/`, {
+            //     type: "Breakfast",
+            //     food: data.breakfast_food,
+            //     calories: data.breakfast_calories,
+            //     fat: data.breakfast_fat,
+            //     protein: data.breakfast_protein,
+            //     carbs: data.breakfast_carbs,
+            //     journal_id: res.data.id,
+            //   }).then((res) => {
+            //     console.log(res, res.data);
+            //   });
+            // } catch (error) {
+            //   console.log(error.response, error);
+            // }
     
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Lunch",
-                food: data.lunch_food,
-                calories: data.lunch_calories,
-                fat: data.lunch_fat,
-                protein: data.lunch_protein,
-                carbs: data.lunch_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-              });
-            } catch (error) {
-              console.log(error.response);
-            }
+            // try {
+            //   AxiosInstance.post(`foodentry/`, {
+            //     type: "Lunch",
+            //     food: data.lunch_food,
+            //     calories: data.lunch_calories,
+            //     fat: data.lunch_fat,
+            //     protein: data.lunch_protein,
+            //     carbs: data.lunch_carbs,
+            //     journal_id: res.data.id,
+            //   }).then((res) => {
+            //     console.log(res, res.data);
+            //   });
+            // } catch (error) {
+            //   console.log(error.response);
+            // }
     
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Snack",
-                food: data.snack_food,
-                calories: data.snack_calories,
-                fat: data.snack_fat,
-                protein: data.snack_protein,
-                carbs: data.snack_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-              });
-            } catch (error) {
-              console.log(error.response);
-            }
+            // try {
+            //   AxiosInstance.post(`foodentry/`, {
+            //     type: "Snack",
+            //     food: data.snack_food,
+            //     calories: data.snack_calories,
+            //     fat: data.snack_fat,
+            //     protein: data.snack_protein,
+            //     carbs: data.snack_carbs,
+            //     journal_id: res.data.id,
+            //   }).then((res) => {
+            //     console.log(res, res.data);
+            //   });
+            // } catch (error) {
+            //   console.log(error.response);
+            // }
     
-            try {
-              AxiosInstance.post(`foodentry/`, {
-                type: "Dinner",
-                food: data.dinner_food,
-                calories: data.dinner_calories,
-                fat: data.dinner_fat,
-                protein: data.dinner_protein,
-                carbs: data.dinner_carbs,
-                journal_id: res.data.id,
-              }).then((res) => {
-                console.log(res, res.data);
-                getJournalData(dayjs().format("YYYY-MM-DD"));
+            // try {
+            //   AxiosInstance.post(`foodentry/`, {
+            //     type: "Dinner",
+            //     food: data.dinner_food,
+            //     calories: data.dinner_calories,
+            //     fat: data.dinner_fat,
+            //     protein: data.dinner_protein,
+            //     carbs: data.dinner_carbs,
+            //     journal_id: res.data.id,
+            //   }).then((res) => {
+            //     console.log(res, res.data);
+            //     getJournalData(dayjs().format("YYYY-MM-DD"));
           
-                reset();
-                handleClose();
-              });
-            } catch (error) {
-              console.log(error.response);
-            }
-          }
+            //     reset();
+            //     handleClose();
+            //   });
+            // } catch (error) {
+            //   console.log(error.response);
+            // }
+        // }
   
          
         // });
-      } catch (error) {
-        console.log(error.response);
-      }
+    //  }
+      //  catch (error) {
+      //   console.log(error.response);
+      // }
     }
+  }
     else {
       try {
       AxiosInstance.post(`journalentry/`, {
@@ -5025,34 +5489,29 @@ console.log(startWeek, endWeek  , "hi")
                                 //  {...register("type")}
                                 //  error={errors.type ? true : false}
                               >
-                                {orderedMealPlans?.map((option) => (
+                                {recommendedMealPlans?.map((option) => (
                                   <MenuItem key={option} value={option}>
                                     {option.name}
                                   </MenuItem>
                                 ))}
                               </Select>
 
-                              {finalMealPlan ? (
+                              {console.log(finalMealPlan)}
+                              {recommendedMealPlans ? (
                                 <Box>
                                   {console.log(finalMealPlan)}
-                                  <Typography>{finalMealPlan.name}</Typography>
+                                  <Typography>{finalMealPlan?.name}</Typography>
                                   {
                                     shopMeal[0].filter((item) => (
-                                      item.mealplan_id === finalMealPlan.shop_mealplan_id
+                                      finalMealPlan?.recommend_meal_id === finalMealPlan?.recommend_meal_id
                                     ))
-                                    // .sort((a, b) => {
-                                    //   if (a.day !== b.day) {
-                                    //     return a.day - b.day;
-                                    //   } else {
-                                    //     return a.type.localeCompare(b.type);
-                                    //   }
-                                    // })
+                             
                                     .map((meal) => (
-                                      <tr key={meal.shop_meal_id}>
-                                         <td>{meal.type}</td>
-                                        <td>{meal.food}</td>
+                                      <tr key={meal?.shop_meal_id}>
+                                         <td>{meal?.type}</td>
+                                        <td>{meal?.food}</td>
                                        
-                                        {/* ... other table cells ... */}
+                                      
                                       </tr>
                                     ))
                                   }
@@ -5062,7 +5521,49 @@ console.log(startWeek, endWeek  , "hi")
                             }
                             </Box>
                           ) : selectedMealPlan === "Generated Meal Plans" ? (
-                            <Box></Box>
+                            <Box>
+                              {" "}
+                              <Select
+                                labelId="demo-simple-select-filled-label"
+                                id="demo-simple-select-filled"
+                                // value={selectedNutritionist}
+                                onChange={(e) =>
+                                  setFinalMealPlan(e.target.value)
+                                }
+                                name="type"
+                                width="full"
+                                size="small"
+                                //  {...register("type")}
+                                //  error={errors.type ? true : false}
+                              >
+                                {generatedMealPlans?.map((option) => (
+                                  <MenuItem key={option} value={option}>
+                                    {option.name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+
+                              {finalMealPlan ? (
+                                <Box>
+                                  {console.log(finalMealPlan)}
+                                  <Typography>{finalMealPlan?.name}</Typography>
+                                <Box>
+                                  {finalMealPlan?.meal?.map((item) => (
+                                    <Box>
+                                    {item?.Day}
+                                    {item?.meals.map((items) => (
+                                      <Box>
+                                        {items?.Meal} : {items?.details.recipe.label}
+                                      </Box>
+                                    ))}
+                                    </Box>
+                                  ))}
+                                </Box>
+                                  </Box>
+                              )
+                            : (<>{console.log(finalMealPlan)}</>)  
+                            }
+                            </Box>
                           ) : selectedMealPlan === "Meal Plan Ordered" ? (
                             <Box>
                               {" "}
@@ -5089,10 +5590,10 @@ console.log(startWeek, endWeek  , "hi")
                               {finalMealPlan ? (
                                 <Box>
                                   {console.log(finalMealPlan)}
-                                  <Typography>{finalMealPlan.name}</Typography>
+                                  <Typography>{finalMealPlan?.name}</Typography>
                                   {
-                                    shopMeal[0].filter((item) => (
-                                      item.mealplan_id === finalMealPlan.shop_mealplan_id
+                                    shopMeal[0]?.filter((item) => (
+                                      item?.mealplan_id === finalMealPlan?.shop_mealplan_id
                                     ))
                                     // .sort((a, b) => {
                                     //   if (a.day !== b.day) {
@@ -5102,9 +5603,9 @@ console.log(startWeek, endWeek  , "hi")
                                     //   }
                                     // })
                                     .map((meal) => (
-                                      <tr key={meal.shop_meal_id}>
-                                         <td>{meal.type}</td>
-                                        <td>{meal.food}</td>
+                                      <tr key={meal?.shop_meal_id}>
+                                         <td>{meal?.type}</td>
+                                        <td>{meal?.food}</td>
                                        
                                         {/* ... other table cells ... */}
                                       </tr>

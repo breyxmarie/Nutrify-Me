@@ -856,6 +856,7 @@ def RecommendMealPlanAPI(request, pk=0):
         recommendMealPlan_data = JSONParser().parse(request)
         recommendMealPlan_serializer = RecommendMealPlanSerializer(data = recommendMealPlan_data)
         if recommendMealPlan_serializer.is_valid():
+            recommendMealPlan = recommendMealPlan_serializer.save()
             recommendMealPlan_serializer.save()
             response_data = {"id": recommendMealPlan.pk, "message": "Recommend Meal Plan Added Successfully"}
             return JsonResponse(response_data , safe=False)
@@ -908,4 +909,40 @@ def RecommendMealAPI(request, pk=0):
         recommendMealPlan = RecommendMeal.objects.get(recommend_meal_id=pk)
         RecommendMealPlan.delete()
         return JsonResponse("Recommend Meal was deleted Successfully", safe = False)
-      
+    
+
+
+@csrf_exempt
+def RequestRecommendMealsAPI(request, pk=0):
+    if request.method == 'GET':
+        if pk == 0:  # Check if pk is not specified (meaning get all users)
+            requestRecommendMeals = RequestRecommendMeals.objects.all()
+            serializer = RequestRecommendMealsSerializer(requestRecommendMeals, many=True)  # Set many=True for multiple users
+            return JsonResponse(serializer.data, safe=False)
+        else:
+            # Existing logic for fetching a single user using pk
+            try:
+                requestRecommendMeals = RequestRecommendMeals.objects.get(pk=pk)
+                serializer = RequestRecommendMealsSerializer(requestRecommendMeals)
+                return JsonResponse(serializer.data, safe=False)
+            except RequestRecommendMeals.DoesNotExist:
+                return JsonResponse({'error': 'Requested Recommend Meals not found'}, status=404)
+    elif request.method == 'POST':
+        requestRecommendMeals_data = JSONParser().parse(request)
+        requestRecommendMeals_serializer = RequestRecommendMealsSerializer(data = requestRecommendMeals_data)
+        if requestRecommendMeals_serializer.is_valid():
+            requestRecommendMeals_serializer.save()
+            return JsonResponse("Requested Recommend Meals Added Successfully", safe=False)
+        return JsonResponse("Failed to Add Request Recommend Meals", safe=False)
+    elif request.method == 'PUT':
+        requestRecommendMeals_data = JSONParser().parse(request)
+        requestRecommendMealss = RequestRecommendMeals.objects.get(request_id=requestRecommendMeals_data['request_id'])
+        requestRecommendMeals_serializer = RequestRecommendMealsSerializer(requestRecommendMealss, data = requestRecommendMeals_data)
+        if requestRecommendMeals_serializer.is_valid():
+            requestRecommendMeals_serializer.save()
+            return JsonResponse("Update Successfully", safe=False)
+        return JsonResponse("Failed to Update", safe=False)
+    elif request.method == 'DELETE':
+        requestRecommendMeals = RequestRecommendMeals.objects.get(request_id=pk)
+        requestRecommendMeals.delete()
+        return JsonResponse("Requested Recommend Meals was deleted Successfully", safe = False)

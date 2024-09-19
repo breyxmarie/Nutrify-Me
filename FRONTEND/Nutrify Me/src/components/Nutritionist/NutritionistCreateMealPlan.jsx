@@ -345,74 +345,74 @@ function NutritionistCreateMealPlan() {
     // ).value;
     // axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
 
+    // try {
+    //   const response = await AxiosInstance.post(
+    //     "shopmealplan/savefile",
+    //     formData,
+    //     {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     }
+    //   );
+    //   console.log(response.data); // Handle successful response
+
     try {
-      const response = await AxiosInstance.post(
-        "shopmealplan/savefile",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log(response.data); // Handle successful response
+      const currentWeekStart = dayjs(value)
+        .startOf("week")
+        .format("YYYY-MM-DD");
+      const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
+      // console.log(value, currentWeekStart, currentWeekEnd);
+      AxiosInstance.post(`recommendmealplan/`, {
+        name: data.mealname,
+        image: "dsfsdf",
+        description: data.description,
+        nutritionist_id: nutritionist.user_id,
+        user_id: location.state.item.user_id,
+        //  price: ,
+      }).then((res) => {
+        toast.success("Meal Plan Created");
+        console.log(res.data.id);
+        tempMeal.forEach((dayObject) => {
+          console.log("Day:", dayObject.day);
 
-      try {
-        const currentWeekStart = dayjs(value)
-          .startOf("week")
-          .format("YYYY-MM-DD");
-        const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
-        // console.log(value, currentWeekStart, currentWeekEnd);
-        AxiosInstance.post(`recommendmealplan/`, {
-          name: data.mealname,
-          image: "dsfsdf",
-          description: data.description,
-          nutritionist_id: nutritionist.user_id,
-          user_id: location.state.item.user_id,
-          //  price: ,
-        }).then((res) => {
-          toast.success("Meal Plan Created");
-          console.log(res.data.id);
-          tempMeal.forEach((dayObject) => {
-            console.log("Day:", dayObject.day);
+          // dayObject.meals.forEach((meal) => {
+          //   // Access both day and meal data within the loop
+          //   console.log("Meal details:", { day: dayObject.day, ...meal });
+          // });
 
-            // dayObject.meals.forEach((meal) => {
-            //   // Access both day and meal data within the loop
-            //   console.log("Meal details:", { day: dayObject.day, ...meal });
-            // });
-
-            Object.keys(dayObject.meals).forEach((mealName) => {
-              const mealDetails = dayObject.meals[mealName];
-              console.log("Day (Meal Name):", mealName);
-              console.log("Meal details:", mealDetails);
-              const data = dayObject.day;
-              const extractedNumber = data.match(/\d+/)[0];
-              try {
-                AxiosInstance.post(`recommendmeal/`, {
-                  recommend_mealplan_id: res.data.id,
-                  type: mealName,
-                  calories: mealDetails.calories,
-                  fat: mealDetails.fat,
-                  protein: mealDetails.protein,
-                  carbs: mealDetails.carbs,
-                  food: mealDetails.food,
-                  image: "mealDetails.image",
-                  day: extractedNumber,
-                }).then((res) => {
-                  console.log(res, res.data);
-                });
-              } catch (error) {
-                console.log(error.response);
-              }
-            });
+          Object.keys(dayObject.meals).forEach((mealName) => {
+            const mealDetails = dayObject.meals[mealName];
+            console.log("Day (Meal Name):", mealName);
+            console.log("Meal details:", mealDetails);
+            const data = dayObject.day;
+            const extractedNumber = data.match(/\d+/)[0];
+            try {
+              AxiosInstance.post(`recommendmeal/`, {
+                recommend_mealplan_id: res.data.id,
+                type: mealName,
+                calories: mealDetails.calories,
+                fat: mealDetails.fat,
+                protein: mealDetails.protein,
+                carbs: mealDetails.carbs,
+                food: mealDetails.food,
+                image: "mealDetails.image",
+                day: extractedNumber,
+              }).then((res) => {
+                console.log(res, res.data);
+              });
+            } catch (error) {
+              console.log(error.response);
+            }
           });
         });
-      } catch (error) {
-        console.log(error.response.data);
-      }
+      });
     } catch (error) {
-      console.error("Error uploading file:", error); // Handle errors
+      console.log(error.response.data);
     }
+    // } catch (error) {
+    //   console.error("Error uploading file:", error); // Handle errors
+    // }
     // }
   };
   //!
@@ -532,29 +532,28 @@ function NutritionistCreateMealPlan() {
     //   return alert("Please select an image");
     // } else {
     console.log({ data }, data.name);
-    console.log(file.name);
-    const formData = new FormData();
-    formData.append("file", file);
+    // console.log(file.name);
+    // const formData = new FormData();
+    // formData.append("file", file);
 
     try {
-      const response = await AxiosInstance.post(
-        "shopmealplan/savefile",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log(response);
+      // const response = await AxiosInstance.post(
+      //   "shopmealplan/savefile",
+      //   formData,
+      //   {
+      //     headers: {
+      //       "Content-Type": "multipart/form-data",
+      //     },
+      //   }
+      // );
+      // console.log(response);
       const updatedMealInfo = {
         calories: data.calories,
         fat: data.fat,
         protein: data.protein,
         carbs: data.carbs,
         food: data.name,
-        image:
-          "https://nightxperson.pythonanywhere.com/Photos/" + response.data,
+        image: "/images/food.png",
       };
 
       setTempMeal(updateMeal(day, tempTypeForMeal, updatedMealInfo));
