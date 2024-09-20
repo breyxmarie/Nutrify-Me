@@ -1320,8 +1320,8 @@ function TelemedicineHome() {
       AxiosInstance.get(`pendingappointment`)
       .then((res) => {
         //  setNutritionist(res.data);
-
-      
+console.log(res)
+      console
         setAppointmentList(
           res.data.filter((data) => data.user_id === loggedInUser.user_id)
         );
@@ -1606,27 +1606,27 @@ function TelemedicineHome() {
         user_id: loggedInUser.user_id,
         time: selectedTime,
       }).then((res) => {
-        console.log(res.data);
+        console.log(res);
        // handleScheduleClose();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error);
+    }
+      try {
+      AxiosInstance.post(`patientnutritionistagreement/`, {
+        status: "Agree",
+        nutritionist_id: selectedNutritionist,
+        user_id: loggedInUser.user_id,
+      }).then((res) => {
+        console.log(res.data);
+        GetData();
+        handleClose();
         // navigate("/?success=registered");
       });
     } catch (error) {
       console.log(error.response.data);
     }
-    //   try {
-    //   AxiosInstance.post(`patientnutritionistagreement/`, {
-    //     status: ,
-    //     nutritionist_id: ,
-    //     user_id: 
-    //   }).then((res) => {
-    //     console.log(res.data);
-    //     GetData();
-    //     handleClose();
-    //     // navigate("/?success=registered");
-    //   });
-    // } catch (error) {
-    //   console.log(error.response.data);
-    // }
 
 
     // try {
@@ -2610,7 +2610,22 @@ function TelemedicineHome() {
               <div></div>
             )}
           </LocalizationProvider>  */}
-          <Button onClick={scheduleAppointment}>Make Appointment</Button>
+          <Button onClick={scheduleAppointment}    sx={{
+                          
+                            mx: "auto",
+                            display: "block",
+                            background: "#ffffff",
+                            color: "#E66253",
+                            fontSize: "20px",
+                            borderRadius: 0,
+                            mt: 0,
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 1,
+                              borderColor: "#ffffff",
+                            },
+                          }}>Make Appointment</Button>
         </Box>
       </Modal>
       {/* //! with designated nutritionist */}
