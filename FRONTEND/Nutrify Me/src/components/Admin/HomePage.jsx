@@ -48,7 +48,7 @@ function HomePage() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "50%",
+    width: "30%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -369,6 +369,7 @@ function HomePage() {
                     </Button>
                   </Grid>
                 </Grid>
+            
                 <img src={selectedUser?.image} width="300" height="150" />
                 <Grid container spacing={2} sx={{ mt: 2 }}>
                   <Grid>

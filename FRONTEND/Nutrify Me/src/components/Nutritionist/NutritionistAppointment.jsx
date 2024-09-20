@@ -77,6 +77,7 @@ function NutritionistAppointment() {
         time: data.time,
         user_id: data.user_id,
         nutritionist_id: data.nutritionist_id,
+        kind: "Follow-Up"
       }).then((res) => {
         console.log(res);
         // navigate(`/`);

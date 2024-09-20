@@ -367,6 +367,7 @@ function SellerCreateMealPlan() {
             start_week: currentWeekStart,
             end_week: currentWeekEnd,
             price: data.price,
+            active: false,
             //  price: ,
           }).then((res) => {
             toast.success("Meal Plan Created");

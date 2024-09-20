@@ -79,38 +79,50 @@ function LogIn() {
       (item) =>
         item.username === data.username && item.password === data.password
     );
-
+console.log(userfound)
     if (userfound) {
       const loggedInUser = userData.find(
         (user) =>
           user.username === data.username && user.password === data.password
       );
+      if(loggedInUser.active) {
+        setLoggedInUser(loggedInUser);
+
+        switch (loggedInUser.privilege) {
+          case "Nutritionist":
+            setnNutritionist(
+              nutritionistData.find(
+                (data) => data.user_id === loggedInUser.user_id
+              )
+            );
+            break;
+        }
+        navigate(
+          loggedInUser.privilege === "User"
+            ? "/user-home"
+            : loggedInUser.privilege === "Admin"
+            ? "/admin-home"
+            : loggedInUser.privilege === "Nutritionist"
+            ? "/nutritionist-home"
+            : "/seller-home"
+        );
+      } 
+        else {
+          toast.success("Yoru account has been deactivated please contact support");
+
+      }
+   
 
       // Import useHistory from react-router-dom
       //navigate("/user-home");
-      setLoggedInUser(loggedInUser);
-
-      switch (loggedInUser.privilege) {
-        case "Nutritionist":
-          setnNutritionist(
-            nutritionistData.find(
-              (data) => data.user_id === loggedInUser.user_id
-            )
-          );
-          break;
-      }
-      navigate(
-        loggedInUser.privilege === "User"
-          ? "/user-home"
-          : loggedInUser.privilege === "Admin"
-          ? "/admin-home"
-          : loggedInUser.privilege === "Nutritionist"
-          ? "/nutritionist-home"
-          : "/seller-home"
-      );
+    
 
       // logIn = true;
-    } else {
+    } else if (userfound && userfound.active === false) {
+      toast.success("Yoru account has been deactivated please contact support");
+    }
+    
+    else {
       console.log("Username or Password Incorrect");
       toast.success("Username or Password Incorrect");
     }

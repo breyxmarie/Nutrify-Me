@@ -1209,6 +1209,7 @@ function TelemedicineHome() {
         time: time,
         user_id: loggedInUser.user_id,
         nutritionist_id: selectedNutritionist,
+          kind: "Follow-Up",
       }).then((res) => {
         // navigate(`/`);
         handleClose();
@@ -1632,7 +1633,7 @@ function TelemedicineHome() {
         nutritionist_id: selectedNutritionist,
         time: selectedTime,
         date: selectedDates.format("YYYY-MM-DD"),
-        type: "follow up",
+        type: "Follow-Up",
       }).then((res) => {
         console.log(res.data);
         handleClose();
@@ -1919,7 +1920,7 @@ function TelemedicineHome() {
         nutritionist_id: designatedNutritionist.nutritionist_id,
         time: selectedTime,
         date: dayjs(selectedDateSched).format("YYYY-MM-DD"),
-        type: "follow up",
+        type: "Follow-Up",
       }).then((res) => {
         console.log(res.data);
         handleClose();
@@ -2375,7 +2376,7 @@ function TelemedicineHome() {
                               )}
                               shouldDisableDate={disableUnavailableDates}
                           
-                              minDate={dayjs().add(7, "day")}
+                            //  minDate={dayjs().add(7, "day")}
                               //  open // Keep the calendar open
                             />
                             {console.log(freeTime)}
@@ -2530,7 +2531,7 @@ function TelemedicineHome() {
               onChange={handleDateChangesSched}
               renderInput={(params) => <TextField {...params} />}
               shouldDisableDate={disableUnavailableFinal}
-              minDate={dayjs().add(7, "day")}
+          //    minDate={dayjs().add(7, "day")}
               //  open // Keep the calendar open
             />
           </LocalizationProvider>
