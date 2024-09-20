@@ -2375,7 +2375,7 @@ function TelemedicineHome() {
                                 <TextField {...params} />
                               )}
                               shouldDisableDate={disableUnavailableDates}
-                          
+                              minDate={dayjs()}
                             //  minDate={dayjs().add(7, "day")}
                               //  open // Keep the calendar open
                             />
@@ -2532,6 +2532,8 @@ function TelemedicineHome() {
               renderInput={(params) => <TextField {...params} />}
               shouldDisableDate={disableUnavailableFinal}
           //    minDate={dayjs().add(7, "day")}
+            minDate={dayjs()}
+
               //  open // Keep the calendar open
             />
           </LocalizationProvider>
