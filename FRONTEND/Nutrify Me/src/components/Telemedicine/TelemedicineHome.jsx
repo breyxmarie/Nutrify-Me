@@ -1596,6 +1596,23 @@ function TelemedicineHome() {
       loggedInUser.user_id
     );
 
+    try {
+      AxiosInstance.post(`pendingappointment/`, {
+
+    date: selectedDates.format("YYYY-MM-DD"),
+        status: "pending",
+        kind: "New",
+      nutritionist_id: selectedNutritionist,
+        user_id: loggedInUser.user_id,
+        time: selectedTime,
+      }).then((res) => {
+        console.log(res.data);
+       // handleScheduleClose();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
     //   try {
     //   AxiosInstance.post(`patientnutritionistagreement/`, {
     //     status: ,
