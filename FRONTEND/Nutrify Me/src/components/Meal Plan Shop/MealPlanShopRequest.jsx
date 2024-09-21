@@ -383,6 +383,25 @@ setApprovedOrderRecommend(approveDataRecommend)
               >
                 View Details
               </Button>
+              {console.log(item)}
+              <Button
+                onClick={() => pay(item)}
+                sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 3,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }}
+              >
+                Pay
+              </Button>
               {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}

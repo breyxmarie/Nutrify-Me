@@ -72,7 +72,7 @@ import {
   barangays,
 } from "select-philippines-address";
 
-function MealPlanShopRequestCheckout() {
+function MealPlanShopRecommendRequestCheckout() {
   const { cartId } = useParams();
   const navigate = useNavigate();
 
@@ -1829,4 +1829,4 @@ function MealPlanShopRequestCheckout() {
   );
 }
 
-export default MealPlanShopRequestCheckout;
+export default MealPlanShopRecommendRequestCheckout;

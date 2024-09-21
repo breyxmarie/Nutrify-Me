@@ -14,7 +14,7 @@ function Paypal() {
   const navigate = useNavigate();
   const location = useLocation();
   const receivedData = location.state;
-  console.log(location.state)
+  console.log(location.state.state.request.start_week)
   const [paid, setPaid] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
 

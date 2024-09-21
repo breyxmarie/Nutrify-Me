@@ -148,7 +148,7 @@ function MealPlanShopCheckout() {
     try {
       AxiosInstance.post(`address/`, {
         user_id: loggedInUser.user_id,
-        phone: "012345678901",
+        phone: "+639345678901",
         address: "asdfasfdsfd random lorem ipsum",
         name: "random namessssssss",
         default: false,
@@ -1430,7 +1430,7 @@ function MealPlanShopCheckout() {
                     fontWeight: "bold",
                   }}
                 >
-                  Delivery Address
+                    
                   {addressData.length === 0 ? (
                     <Typography sx={{ color: "#000000" }}>
                       Loading...

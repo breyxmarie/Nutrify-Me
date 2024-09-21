@@ -4,6 +4,7 @@ import AxiosInstance from "../forms/AxiosInstance";
 import Button from "@mui/material/Button";
 import { Modal, Tab, Tabs } from "@mui/material";
 import TextField from "@mui/material/TextField";
+import { Typography } from "@mui/material";
 
 function SellerRequestOrders() {
   const [requestData, setRequestData] = useState([]);
@@ -39,6 +40,7 @@ function SellerRequestOrders() {
 
   const handleOpen = (data) => {
     setSelectedOrder(data);
+    console.log(data)
     setIsOpen(true);
   };
 
@@ -56,11 +58,15 @@ function SellerRequestOrders() {
     setIsOpenPrice(false);
   };
 
+  const [userData, setUserData] = useState([])
   const refreshData = () => {};
   const getData = async () => {
     const tempResponse = await AxiosInstance.get(`requestedmeals`);
     const mealData = await AxiosInstance.get(`generatedmeal`);
-
+    const useData = await AxiosInstance.get(`user`);
+    console.log(useData.data)
+    setUserData(useData.data)
+console.log(tempResponse)
     const reverseResponse = tempResponse.data.reverse();
 
     const pendingData = reverseResponse.filter(
@@ -147,6 +153,8 @@ function SellerRequestOrders() {
         date: tempData.date,
         status: "Approved",
         price: price,
+        start_week: tempData.start_week ,
+        end_week: tempData.end_week ,
       }).then((res) => {
         console.log(res);
         getData();
@@ -176,6 +184,8 @@ function SellerRequestOrders() {
         generatedMeal_id: tempData.generatedMeal_id,
         date: tempData.date,
         status: "Disapproved",
+        start_week: tempData.start_week ,
+        end_week: tempData.end_week ,
       }).then((res) => {
         getData();
         // try {
@@ -200,21 +210,73 @@ function SellerRequestOrders() {
         fontFamily: "Poppins",
       }}
     >
-      Pending Requests
+         <Typography
+        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
+      >
+      Pending Requests</Typography> 
+      {console.log(pendingRequests)}
       {pendingRequests.map((item) => (
         // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
-        <Box>
+        <Box     sx={{
+          background: "#898246",
+          borderRadius: 4,
+          mx: "10%",
+          color: "#ffffff",
+          py: 2,
+        }}> 
           {" "}
           {/* {console.log(item)} */}
           {item.request.date}
-          <Button onClick={() => handleOpen(item.meal)}>View Details</Button>
-          <Button onClick={() => handleOpenPrice(item.request.request_id)}>
+          <br/>
+          By: {" "} 
+          {userData.find((items) => items.user_id === item.request.user_id).first_name}
+         {" "}
+          {userData.find((items) => items.user_id === item.request.user_id).last_name}
+         <br/>
+          <Button      sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 0,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => handleOpen(item.meal)}>View Details</Button>
+          <Button     sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 3,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => handleOpenPrice(item.request.request_id)}>
             Approve
           </Button>
-          <Button onClick={() => disapproveOrder(item.request.request_id)}>
+          <Button     sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 3,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => disapproveOrder(item.request.request_id)}>
             Disapprove
           </Button>
-          {item.meal.meal.map((items) => (
+          {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -222,16 +284,43 @@ function SellerRequestOrders() {
                 <>{item1.Meal}</>
               ))}
             </Box>
-          ))}
+          ))} */}
         </Box>
       ))}
-      Appproved Request
+         <Typography
+        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
+      >
+      Approved Request </Typography>
       {approveRequests.map((item) => (
         // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
-        <Box>
+        <Box  sx={{
+          background: "#898246",
+          borderRadius: 4,
+          mx: "10%",
+          color: "#ffffff",
+          py: 2,
+        }}>
           {" "}
           {item.request.date}
-          <Button onClick={() => handleOpen(item.meal)}>View Details</Button>
+          <br/>
+          By: {" "} 
+          {userData.find((items) => items.user_id === item.request.user_id).first_name}
+         {" "}
+          {userData.find((items) => items.user_id === item.request.user_id).last_name}
+          <br/>
+          <Button sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 0,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => handleOpen(item.meal)}>View Details</Button>
           {/* <Button onClick={() => approveOrder(item.request.request_id)}> */}
           {/* <Button onClick={() => handleOpenPrice(item.request.request_id)}>
             Approve
@@ -239,7 +328,7 @@ function SellerRequestOrders() {
           <Button onClick={() => disapproveOrder(item.request.request_id)}>
             Disapprove
           </Button> */}
-          {item.meal.meal.map((items) => (
+          {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -247,7 +336,7 @@ function SellerRequestOrders() {
                 <>{item1.Meal}</>
               ))}
             </Box>
-          ))}
+          ))} */}
         </Box>
       ))}
       {/* setIsOpenPrice */}
@@ -275,16 +364,16 @@ function SellerRequestOrders() {
           {selectedOrder?.name}
           {selectedOrder?.meal?.map((item) => (
             <Box>
-              {item.Day}
+              {item?.Day}
               {console.log(item.meals)}
-              {item.meals.map((items) => (
-                <Box>
-                  {items.Meal}
-                  {items?.details.map((item1) => (
-                    <Box>{item1.recipe.label}</Box>
-                  ))}
-
+              {item?.meals?.map((items) => (
+                <Box >
+                  {items?.Meal}: {" "}
                   {items?.details.recipe.label}
+                  {/* {items?.details.map((item1) => (
+                    <Box>{item1?.recipe.label}</Box>
+                  ))} */}
+
                 </Box>
               ))}
             </Box>
