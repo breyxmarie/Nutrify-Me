@@ -8,6 +8,7 @@ import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
+import { ToastContainer, toast } from "react-toastify";
 import dayjs from "dayjs";
 import Badge from "@mui/material/Badge";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -191,6 +192,40 @@ function TelemedicineHome() {
       );
     }
   };
+
+  //! Transfer 
+  const [openTransfer, setOpenTransfer] = useState(false); // Modal open state
+  const handleOpenTransfer = (selectedDate) => {
+    // Optional: Do something with the selected date before opening the modal
+    setOpenTransfer(true);
+  };
+
+  const handleCloseTransfer = () => {
+    setOpenTransfer(false);
+  };
+
+const transferNutritionist = () => {
+  try {
+    AxiosInstance.put(`patientnutritionistagreement/`, {
+      agree_id: agreeDetails.agree_id ,
+      status: "Disagree",
+      nutritionist_id: designatedNutritionist.nutritionist_id,
+      user_id: loggedInUser.user_id,
+    }).then((res) => {
+      console.log(res.data);
+      toast.success("Nutritionist Removed");
+      GetData();
+      setDesignatedNutritionist(null)
+      handleCloseTransfer();
+      // navigate("/?success=registered");
+    });
+  } catch (error) {
+    console.log(error.response.data);
+  }
+}
+
+  //!
+
 
   //!
   //codes for consultation pop up in selecting nutritionist
@@ -1212,6 +1247,7 @@ function TelemedicineHome() {
           kind: "Follow-Up",
       }).then((res) => {
         // navigate(`/`);
+        toast.success("Appointment Sent, Please wait for confirmation");
         handleClose();
       });
     } catch (error) {
@@ -1257,6 +1293,7 @@ function TelemedicineHome() {
     setTime(formattedTime);
   };
 
+  const [agreeDetails, setAgreeDetails] = useState()
   const GetData = () => {
     AxiosInstance.get(`nutritionist/`)
       .then((res) => {
@@ -1264,17 +1301,21 @@ function TelemedicineHome() {
         let tempNut = res.data;
         AxiosInstance.get(`patientnutritionistagreement`)
           .then((res) => {
+
+            setAgreeDetails(res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree"))
             console.log(
-              res.data.find((data) => data.user_id === loggedInUser.user_id)
+              res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
             );
             console.log(
               tempNut.find(
                 (data) =>
                   data.nutritionist_id ===
-                  res.data.find((data) => data.user_id === loggedInUser.user_id)
+                  res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
                     .nutritionist_id
               )
             );
+
+      
             setDesignatedNutritionist(
               tempNut.find(
                 (data) =>
@@ -1283,6 +1324,8 @@ function TelemedicineHome() {
                     .nutritionist_id 
               )
             );
+
+          
           })
           .catch((error) => {
             console.error("Error fetching data:", error);
@@ -1323,7 +1366,7 @@ function TelemedicineHome() {
 console.log(res)
       console
         setAppointmentList(
-          res.data.filter((data) => data.user_id === loggedInUser.user_id)
+          res.data.filter((data) => data.user_id === loggedInUser.user_id && data.nutritionist_id === designatedNutritionist.nutritionist_id)
         );
       })
       .catch((error) => {
@@ -1607,6 +1650,7 @@ console.log(res)
         time: selectedTime,
       }).then((res) => {
         console.log(res);
+        toast.success("Appointment Sent, Please wait for confirmation");
        // handleScheduleClose();
         // navigate("/?success=registered");
       });
@@ -2672,7 +2716,57 @@ console.log(res)
                           }}>Schedule an Appointment?</Button>
                           </center>
         <Button sx ={{ textDecoration: "underline", color: "#898246" }}>Follow Up</Button>
-        <Button sx ={{ textDecoration: "underline", color: "#898246" }}>Transfer</Button></Grid>
+        <Button onClick = {handleOpenTransfer} sx ={{ textDecoration: "underline", color: "#898246" }}>Transfer</Button></Grid>
+       
+        <Modal
+        open={openTransfer}
+        onClose={handleCloseTransfer}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={style}>
+          <center>
+          Transfer to a New Nutritionist?
+<br/>
+<br/>
+
+          <Button onClick = {transferNutritionist}     sx={{
+                        
+                       mr: 2, 
+                            background: "#ffffff",
+                            color: "#E66253",
+                            fontSize: "1em",
+                            borderRadius: 0,
+                            mt: 0,
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 1,
+                              borderColor: "#ffffff",
+                            },
+                          }}>Yes</Button>
+          <Button sx={{
+                        
+                       
+                        background: "#ffffff",
+                        color: "#E66253",
+                        fontSize: "1em",
+                        borderRadius: 0,
+                        mt: 0,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 1,
+                          borderColor: "#ffffff",
+                        },
+                      }} onClick = {handleCloseTransfer}>No</Button>
+                      </center>
+          </Box>
+          </Modal>
+       
+       
+       
+       
        <Grid xs={6}>
        <Tabs
                         value={activeTab}
