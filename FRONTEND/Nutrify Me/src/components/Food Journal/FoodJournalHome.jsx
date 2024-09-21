@@ -28,6 +28,7 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Dayjs from "dayjs";
+import { ToastContainer, toast } from "react-toastify";
 import {
   format,
   subMonths,
@@ -97,12 +98,12 @@ function FoodJournalHome() {
   const getData = async () => {
     await AxiosInstance.get(`generatedmeal`).then((res) => {
       setGeneratedMealPlans(
-        res.data.filter((item) => item.user_id == loggedInUser.user_id)
+        res.data?.filter((item) => item.user_id == loggedInUser.user_id)
       );
     });
 
     await AxiosInstance.get(`order`).then((res) => {
-      let temp = res.data.filter(
+      let temp = res.data?.filter(
         (item) => item.user_id == loggedInUser.user_id
       );
 
@@ -130,10 +131,10 @@ function FoodJournalHome() {
               let tempMealstalaga = [];
               console.log(respo)
               tempOrder.map((item) =>
-                (console.log(respo.data.filter(
+                (console.log(respo.data?.filter(
                   (items) => items.mealplan_id === item
                 )),tempMealstalaga.push(
-                  respo.data.filter(
+                  respo.data?.filter(
                     (items) => items.mealplan_id === item
                   )
                 ))
@@ -150,7 +151,7 @@ function FoodJournalHome() {
 
     await AxiosInstance.get(`recommendmealplan`).then((res) => {
       setRecommendedMealPlans(
-        res.data.filter((item) => item.user_id == loggedInUser.user_id)
+        res.data?.filter((item) => item.user_id == loggedInUser.user_id)
       );
 
 
@@ -159,11 +160,11 @@ function FoodJournalHome() {
           let tempMealstalaga = [];
           console.log(res.data)
           res.data.map((item1) =>
-            (console.log(respo.data.filter(
+            (console.log(respo.data?.filter(
               (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
             )),
             tempMealstalaga.push(
-              respo.data.filter(
+              respo.data?.filter(
                 (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
               )
             ))
@@ -181,7 +182,7 @@ function FoodJournalHome() {
   const getJournalData = async (day) => {
     await AxiosInstance.get(`journalentry`).then((res) => {
       setJournalEntry(
-        res.data.filter(
+        res.data?.filter(
           (item) => item.date == day && item.user_id == loggedInUser.user_id
         )
       );
@@ -200,7 +201,7 @@ function FoodJournalHome() {
 
       try {
         getfoodEntryData(
-          res.data.filter(
+          res.data?.filter(
             (item) => item.date == day && item.user_id == loggedInUser.user_id
           )[0].journal_id
         );
@@ -212,7 +213,7 @@ function FoodJournalHome() {
 
   const getfoodEntryData = (id) => {
     AxiosInstance.get(`foodentry`).then((res) => {
-      setFoodEntry(res.data.filter((item) => item.journal_id == id));
+      setFoodEntry(res.data?.filter((item) => item.journal_id == id));
       setCarbs(
         res.data
           .filter((item) => item.journal_id == id)
@@ -1551,7 +1552,7 @@ function FoodJournalHome() {
             //   item.mealplan_id === finalMealPlan.shop_mealplan_id
             // ))
             
-            console.log(shopMeal[0].filter((item) => (
+            console.log(shopMeal[0]?.filter((item) => (
                  item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
                )))
                         for (let i = 1; i < 6; i++) {
@@ -1562,7 +1563,7 @@ function FoodJournalHome() {
             
             
                           const meals = [];
-                          const tempU = recommendMeal[0].filter((item) => (
+                          const tempU = recommendMeal[0]?.filter((item) => (
                             item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
                           ))
                           console.log(tempU.filter((item) => (
@@ -1570,7 +1571,7 @@ function FoodJournalHome() {
                           )), i)
             
             
-                         const sortedTemp = tempU.filter((item) => (
+                         const sortedTemp = tempU?.filter((item) => (
                             parseInt(item.day) === i
                           )).sort((a, b) => {
                             const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
@@ -1955,6 +1956,11 @@ function FoodJournalHome() {
                                     journal_id: res.data.id,
                                   }).then((res) => {
                                     console.log(res, res.data);
+                                    if(i === 5) {
+                                      handleClose();
+                                      toast.success("Entry Added");
+                                      reset();
+                                    }
                                   });
                                 } catch (error) {
                                   console.log(error.response, error);
@@ -1998,7 +2004,7 @@ function FoodJournalHome() {
                                   try {
                                     AxiosInstance.post(`foodentry/`, {
                                       type: "Lunch",
-                                      food: finalMealPlan.meal[i - 1].meals[3].details.recipe.label,
+                                      food: finalMealPlan.meal[i - 1].meals[1].details.recipe.label,
                                       calories: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.calories / finalMealPlan.meal[i - 1].meals[1].details.recipe.yield),
                                       fat: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[0].total),
                                       protein: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[2].total),
@@ -2014,7 +2020,7 @@ function FoodJournalHome() {
                                   try {
                                     AxiosInstance.post(`foodentry/`, {
                                       type: "Snack",
-                                      food: meals[2].food,
+                                      food: finalMealPlan.meal[i - 1].meals[2].details.recipe.label,
                                 
                                       calories: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.calories / finalMealPlan.meal[i - 1].meals[2].details.recipe.yield),
                                       fat: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[0].total),
@@ -2040,6 +2046,12 @@ function FoodJournalHome() {
                                       journal_id: res.data.id,
                                     }).then((res) => {
                                       console.log(res, res.data);
+
+                                      if(i === 5) {
+                                        handleClose();
+                                        toast.success("Entry Added");
+                                        reset();
+                                      }
                                     });
                                   } catch (error) {
                                     console.log(error.response, error);
@@ -2051,6 +2063,8 @@ function FoodJournalHome() {
                                 }
                               }
                           }
+
+                       
           }
           else if (selectedMealPlan === "Meal Plan Ordered"){    //! ordered meal plan so from shopmealplan table and shop meal
 
@@ -2060,7 +2074,7 @@ console.log(dayNum, "try")
 //   item.mealplan_id === finalMealPlan.shop_mealplan_id
 // ))
 
-console.log(shopMeal[0].filter((item) => (
+console.log(shopMeal[0]?.filter((item) => (
      item.mealplan_id === finalMealPlan.shop_mealplan_id
    )))
             for (let i = 1; i < 6; i++) {
@@ -2071,7 +2085,7 @@ console.log(startWeek, endWeek  , "hi")
 
 
               const meals = [];
-              const tempU = shopMeal[0].filter((item) => (
+              const tempU = shopMeal[0]?.filter((item) => (
                 item.mealplan_id === finalMealPlan.shop_mealplan_id
               ))
               console.log(tempU.filter((item) => (
@@ -2079,7 +2093,7 @@ console.log(startWeek, endWeek  , "hi")
               )), i)
 
 
-             const sortedTemp = tempU.filter((item) => (
+             const sortedTemp = tempU?.filter((item) => (
                 parseInt(item.day) === i
               )).sort((a, b) => {
                 const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
@@ -2243,6 +2257,10 @@ console.log(startWeek, endWeek  , "hi")
                         journal_id: res.data.id,
                       }).then((res) => {
                         console.log(res, res.data);
+                        if (i === 5) {
+                          handleClose();
+                          toast.success("Entry Added");
+                        }
                       });
                     } catch (error) {
                       console.log(error.response, error);
@@ -2253,6 +2271,8 @@ console.log(startWeek, endWeek  , "hi")
                       console.log(error)
                   }
                 }
+
+
             }
 
 
@@ -2877,6 +2897,7 @@ console.log(startWeek, endWeek  , "hi")
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             />
+                             
                           </Grid>
                         </Grid>
                       </Grid>
@@ -4211,6 +4232,9 @@ console.log(startWeek, endWeek  , "hi")
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             />
+                             <Typography variant="inherit" color="textSecondary">
+                {errors.title?.message}
+              </Typography>
                           </Grid>
                         </Grid>
                       </Grid>
@@ -4275,6 +4299,9 @@ console.log(startWeek, endWeek  , "hi")
                           // value={idToCall}
                           // onChange={(e) => setIdToCall(e.target.value)}
                         />
+                         <Typography variant="inherit" color="textSecondary">
+                {errors.systolic?.message}
+              </Typography>
                       </Grid>
                       <Grid xs={4}>
                         {" "}
@@ -4297,6 +4324,9 @@ console.log(startWeek, endWeek  , "hi")
                           // value={idToCall}
                           // onChange={(e) => setIdToCall(e.target.value)}
                         />
+                         <Typography variant="inherit" color="textSecondary">
+                {errors.diastolic?.message}
+              </Typography>
                       </Grid>
                     </Grid>
                   </center>
@@ -4329,6 +4359,9 @@ console.log(startWeek, endWeek  , "hi")
                           // value={idToCall}
                           // onChange={(e) => setIdToCall(e.target.value)}
                         />
+                         <Typography variant="inherit" color="textSecondary">
+                {errors.journal_entry?.message}
+              </Typography>
                         <br />
                         <center>
                           <Button
@@ -5502,7 +5535,7 @@ console.log(startWeek, endWeek  , "hi")
                                   {console.log(finalMealPlan)}
                                   <Typography>{finalMealPlan?.name}</Typography>
                                   {
-                                    shopMeal[0].filter((item) => (
+                                    shopMeal[0]?.filter((item) => (
                                       finalMealPlan?.recommend_meal_id === finalMealPlan?.recommend_meal_id
                                     ))
                              
