@@ -1325,6 +1325,33 @@ const transferNutritionist = () => {
               )
             );
 
+
+            try {
+              AxiosInstance.get(`pendingappointment`)
+              .then((respo) => {
+                //  setNutritionist(res.data);
+        console.log(respo)
+             
+                setAppointmentList(
+                  respo.data.filter((data) => data.user_id === loggedInUser.user_id && data.nutritionist_id === tempNut.find(
+                    (data) =>
+                      data.nutritionist_id ===
+                      res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
+                        .nutritionist_id 
+                  ).nutritionist_id)
+                );
+              })
+              .catch((error) => {
+                console.error("Error fetching data:", error);
+                // Optionally display an error message to the user
+                //setNutritionist(options);
+                // console.log("test", nutritionist);
+              });
+            }
+            catch(error) {
+              console.log(error)
+            }
+
           
           })
           .catch((error) => {
@@ -1360,28 +1387,18 @@ const transferNutritionist = () => {
       });
 
 
-      AxiosInstance.get(`pendingappointment`)
-      .then((res) => {
-        //  setNutritionist(res.data);
-console.log(res)
-      console
-        setAppointmentList(
-          res.data.filter((data) => data.user_id === loggedInUser.user_id && data.nutritionist_id === designatedNutritionist.nutritionist_id)
-        );
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-        // Optionally display an error message to the user
-        //setNutritionist(options);
-        // console.log("test", nutritionist);
-      });
+  
 
       
   };
+
+  const getPendingList = () => {
+    
+  }
   const [todayAppointment, setTodayAppointment] = useState();
   // <h2>No Scheduled Consultation </h2>
-  const GetAppointmentData = () => {
-    AxiosInstance.get(`appointment`)
+  const GetAppointmentData = async () => {
+   await  AxiosInstance.get(`appointment`)
       .then((res) => {
         // setAppointment(res.data);
 
@@ -1414,8 +1431,8 @@ console.log(res)
                 Time: {dayjs(temp.date + " " + temp.time).format("HH:MM A")}
               </p>
               <p>
-                Dietitian: {designatedNutritionist.first_name} {"  "}
-                {designatedNutritionist.last_name}
+                Dietitian: {designatedNutritionist?.first_name} {"  "}
+                {designatedNutritionist?.last_name}
               </p>
               {/* <center>
                 <Link
@@ -1534,9 +1551,10 @@ console.log(res)
   //   }
   // };
   useEffect(() => {
-    GetAppointmentData();
+   
 
     GetData();
+    GetAppointmentData();
   }, []);
   //!
 
