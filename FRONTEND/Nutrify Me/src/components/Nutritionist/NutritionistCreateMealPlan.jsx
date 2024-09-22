@@ -361,17 +361,20 @@ function NutritionistCreateMealPlan() {
       const currentWeekStart = dayjs(value)
         .startOf("week")
         .format("YYYY-MM-DD");
+        console.log(nutritionist)
       const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
       // console.log(value, currentWeekStart, currentWeekEnd);
       AxiosInstance.post(`recommendmealplan/`, {
         name: data.mealname,
         image: "dsfsdf",
         description: data.description,
-        nutritionist_id: nutritionist.user_id,
+        nutritionist_id: nutritionist.nutritionist_id,
         user_id: location.state.item.user_id,
         //  price: ,
       }).then((res) => {
         toast.success("Meal Plan Created");
+        console.log(res);
+
         console.log(res.data.id);
         tempMeal.forEach((dayObject) => {
           console.log("Day:", dayObject.day);

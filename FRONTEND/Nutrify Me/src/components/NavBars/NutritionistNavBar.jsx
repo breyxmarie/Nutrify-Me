@@ -23,6 +23,8 @@ const pages = [
   { names: "HOME", links: "/nutritionist-home" },
   { names: "APPOINTMENTS", links: "/nutritionist-appointment" },
   { names: "PATIENTS", links: "/nutritionist-patient" },
+  { names: "APPROVE MEAL PLAN", links: "/nutritionist-approve-meal-plan" },
+
 ];
 
 const StyledLink = `

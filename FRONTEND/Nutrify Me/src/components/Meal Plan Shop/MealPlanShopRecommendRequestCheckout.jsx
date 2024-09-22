@@ -80,7 +80,7 @@ function MealPlanShopRecommendRequestCheckout() {
   const { datas } = location.state || {};
   const { cartItems } = location.state || {};
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
-  const [selectedAddress, setSelectedAddress] = useState(1);
+  const [selectedAddress, setSelectedAddress] = useState(0);
   const [notes, setNotes] = useState("n/a");
   const [payment, setPayment] = useState("");
   const [shipping, setShipping] = useState("");
@@ -130,9 +130,9 @@ function MealPlanShopRecommendRequestCheckout() {
           //     )
           // );
 
-          setSubTotalPrices(location.state.request.price);
+          setSubTotalPrices(location.state.price);
           setTotalOrderPrice(
-            parseInt(location.state.request.price) +
+            parseInt(location.state.price) +
               parseInt(
                 quotationData?.data?.data?.priceBreakdown
                   ?.totalExcludePriorityFee
@@ -338,15 +338,22 @@ function MealPlanShopRecommendRequestCheckout() {
   const [shopMeal, setShopMeal] = useState([]);
   const [cartMeal, setCartMeal] = useState([]);
 
+
+  const [recommendMeals, setRecommendMeals] = useState([])
+  const getData = async () => {
+    const mealData = await AxiosInstance.get(`recommendmealplan`);
+
+    setRecommendMeals(mealData.data)
+  }
   const getCartData = async () => {
     const temp = location.state;
     setSubTotalPrices(location.state.request.price);
     setTotalOrderPrice(
-      parseInt(location.state.request.price) + parseInt(shippingPrice)
+      parseInt(location.state.price) + parseInt(shippingPrice)
     );
 
     console.log(
-      parseInt(location.state.request.price) + parseInt(shippingPrice)
+      parseInt(location.state.price) + parseInt(shippingPrice)
     );
     // try {
     //   const response = await AxiosInstance.get(`cart`);
@@ -505,19 +512,20 @@ function MealPlanShopRecommendRequestCheckout() {
         // orders: cartData[0].orders,
         date: dayjs().format("YYYY-MM-DD"),
         status: "Ordered",
-        address_id: selectedAddress,
+        address_id: addressData[selectedAddress].address_id,
         payment: payment,
         shipping: "Lalamove",
         notes: notes,
         totalprice: parseInt(totalOrderPrice),
         shipping_price: shippingPrice,
+        name: recommendMeals.find((item) => item.recommend_mealplan_id === location.state.recommend_mealplan_id ).name
       };
 
       try {
         //  const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
 
         const state = location.state;
-        navigate("/paypal-payment-request", {
+        navigate("/paypal-payment-recommend-request", {
           state: { state, datas },
         });
       } catch (error) {
@@ -701,7 +709,7 @@ function MealPlanShopRecommendRequestCheckout() {
 
   useEffect(() => {
     // addNewObject();
-
+    getData()
     getCartData();
     //getAddressData();
     const tempPrice = calculateSubTotalPrice();
@@ -1556,20 +1564,23 @@ function MealPlanShopRecommendRequestCheckout() {
           </Grid>
         </Box>
         <br />
+        {console.log(location.state)}
         <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
           {console.log(location.state)}
           <Grid container spacing={2} sx={{ mt: "20px" }}>
         <Grid xs={12} md={4}>
                     {" "}
-                    <img src = {location.state.meal.meal[0].meals[0].image} width="50%" height="80%" />
+                    <img src = "/images/food.png" width="50%" height="80%" />
                   </Grid>
                   <Grid xs={12} md={4} sx={{ textAlign: "center" }}>
                     <Typography sx={{ color: "#99756E", mt: 3 }}>
                     {location.state.meal.name}
+                    {console.log(location.state)}
+                  {recommendMeals.find((item) => item.recommend_mealplan_id === location.state.recommend_mealplan_id )?.name} 
                     </Typography>
                     <Typography sx={{ color: "#E66253", mt: "2%" }}>
                       {" "}
-                      Php  {location.state.request.price}
+                      Php  {location.state.price}
                     </Typography>
                   </Grid>
                   <Grid xs={12} md={4} sx={{ mt: "5%" }}>

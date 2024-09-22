@@ -248,7 +248,7 @@ def ShopMealPlanAPI(request, pk=0):
     elif request.method == 'PUT':
         shopMealPlan_data = JSONParser().parse(request)
         shopMealPlans = ShopMealPlan.objects.get(shop_mealplan_id=shopMealPlan_data['shop_mealplan_id'])
-        shopMealPlan_serializer = AppointmentSerializer(shopMealPlans, data = shopMealPlan_data)
+        shopMealPlan_serializer = ShopMealPlan(shopMealPlans, data = shopMealPlan_data)
         if shopMealPlan_serializer.is_valid():
             shopMealPlan_serializer.save()
             return JsonResponse("Update Successfully", safe=False)

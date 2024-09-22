@@ -10,7 +10,7 @@ import { useLocation } from "react-router-dom";
 import AxiosInstance from "../forms/AxiosInstance";
 import dayjs from "dayjs";
 
-function PayPalRequest() {
+function PayPalRecommend() {
   const navigate = useNavigate();
   const location = useLocation();
   console.log(location.state.datas.totalprice)
@@ -25,8 +25,8 @@ function PayPalRequest() {
         {
           amount: {
             currency_code: "PHP",
-         //   value: location.state.datas.totalprice,
-          value: 0.01,
+          value: location.state.datas.totalprice,
+          //  value: 0.01,
 
           },
         },
@@ -43,13 +43,13 @@ function PayPalRequest() {
     try {
       console.log(location.state.state.meal.meal);
       AxiosInstance.post(`shopmealplan/`, {
-        name: location.state.state.meal.name,
         approve: true,
-        image: location.state.state.meal.meal[0].meals[0].details.recipe.image,
-        description: "Generated Meal",
+        name: location.state.datas.name,
+        image: "/images/food.png",
+        description: "Recommend Meal",
         start_week: dayjs("2019-10-25").format("YYYY-MM-DD"),
         end_week: dayjs("2019-10-31").format("YYYY-MM-DD"),
-        price: location.state.state.request.price,
+        price: location.state.state.price,
         // shippingPrice
       }).then((res) => {
         console.log(res);
@@ -67,8 +67,8 @@ function PayPalRequest() {
             shipping_price: location.state.datas.shipping_price,
             payment_details: order,
             schedule_date: [
-              dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-              dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+                location.state.state.start_week,
+                location.state.state.end_week,
             ],
             // shippingPrice
           }).then((res) => {
@@ -87,20 +87,20 @@ function PayPalRequest() {
             //   // setActiveTab(0);
           });
 
-          location.state.state.meal.meal.map((item) =>
+          location.state.state.meal.map((item) =>
             item.meals.map((items) =>
               //console.log(item.Day.substring(4))
 
               AxiosInstance.post(`shopmeal/`, {
                 mealplan_id: res.data.id,
-                type: items.Meal,
-                calories: Math.floor(items.details.recipe.calories),
-                fat: Math.floor(items.details.recipe.digest[0].daily),
-                protein: Math.floor(items.details.recipe.digest[2].daily),
-                carbs: Math.floor(items.details.recipe.digest[1].daily),
-                food: items.details.recipe.label,
-                image: items.details.recipe.image,
-                day: item.Day.substring(4),
+                type: items.type,
+                calories: items.calories,
+                fat: items.fat,
+                protein: items.protein,
+                carbs: items.carbs,
+                food: items.food,
+                image: "/images/food.png",
+                day: item.day,
                 // shippingPrice
               }).then((res) => {
                 console.log(res);
@@ -108,11 +108,15 @@ function PayPalRequest() {
             )
           );
 
-          AxiosInstance.delete(
-            `requestedmeals/${location.state.state.request.request_id}`
+          try
+         { AxiosInstance.delete(
+            `requestedrecommendmeals/${location.state.state.request_id}`
           ).then((res) => {
             console.log(res);
-          });
+          })}
+          catch (error) {
+            console.log(error);
+          }
           //   navigate("/meal-plan-shop-home");
         } catch (error) {
           console.log(error);
@@ -121,6 +125,7 @@ function PayPalRequest() {
     } catch (error) {
       console.log(error);
     }
+   
     // try {
     //   AxiosInstance.post(`order/`, {
     //     user_id: location.state.user_id,
@@ -146,7 +151,7 @@ function PayPalRequest() {
     //   console.log(error);
     // }
   };
-
+ 
   const initialOptions = {
     //   clientId:
     //     "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
@@ -211,4 +216,4 @@ function PayPalRequest() {
   );
 }
 
-export default PayPalRequest;
+export default PayPalRecommend;

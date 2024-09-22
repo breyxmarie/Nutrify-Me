@@ -360,6 +360,7 @@ function SellerCreateMealPlan() {
             .format("YYYY-MM-DD");
           // console.log(value, currentWeekStart, currentWeekEnd);
           AxiosInstance.post(`shopmealplan/`, {
+            approve: 0,
             name: data.mealtype,
             image:
               "https://nightxperson.pythonanywhere.com/Photos/" + response.data,

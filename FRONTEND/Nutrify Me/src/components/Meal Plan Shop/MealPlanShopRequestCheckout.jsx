@@ -80,7 +80,7 @@ function MealPlanShopRequestCheckout() {
   const { datas } = location.state || {};
   const { cartItems } = location.state || {};
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
-  const [selectedAddress, setSelectedAddress] = useState(1);
+  const [selectedAddress, setSelectedAddress] = useState(0);
   const [notes, setNotes] = useState("n/a");
   const [payment, setPayment] = useState("");
   const [shipping, setShipping] = useState("");
@@ -1471,8 +1471,8 @@ function MealPlanShopRequestCheckout() {
                         center={{
                           // lat: addressData[selectedAddress].lang,
                           // lng: addressData[selectedAddress].longi,
-                          lng: addressData[selectedAddress].lang,
-                          lat: addressData[selectedAddress].longi,
+                          lng: addressData[selectedAddress]?.lang,
+                          lat: addressData[selectedAddress]?.longi,
                         }}
 
                         // onCameraChanged={(ev: MapCameraChangedEvent) =>
@@ -1486,8 +1486,8 @@ function MealPlanShopRequestCheckout() {
                       >
                           <Marker
                               position={{
-                                lng: addressData[selectedAddress].lang,
-                                lat: addressData[selectedAddress].longi,
+                                lng: addressData[selectedAddress]?.lang,
+                                lat: addressData[selectedAddress]?.longi,
                               }}
                             />
                       </Map>

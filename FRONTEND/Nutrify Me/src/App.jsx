@@ -27,6 +27,8 @@ import MealPlanShopCheckout from "./components/Meal Plan Shop/MealPlanShopChecko
 import MealPlanShopCart from "./components/Meal Plan Shop/MealPlanShopCart";
 import MealPlanShopCustomizeMeal from "./components/Meal Plan Shop/MealPlanShopCustomizeMeal";
 import MealPlanShopOrders from "./components/Meal Plan Shop/MealPlanShopOrders";
+import MealPlanShopRecommendRequestCheckout from "./components/Meal Plan Shop/MealPlanShopRecommendRequestCheckout";
+import PayPalRecommend from "./components/Meal Plan Shop/PayPalRecommend";
 import TelemedicineHome from "./components/Telemedicine/TelemedicineHome";
 import TelemedicineMeetUs from "./components/Telemedicine/TelemedicineMeetUs";
 import TelemedicineMessages from "./components/Telemedicine/TelemedicineMessages";
@@ -35,6 +37,7 @@ import TelemedicinePaypalPayment from "./components/Telemedicine/TelemedicinePay
 import TelemedicineMealPlans from "./components/Telemedicine/TelemedicineMealPlans";
 import NutritionistConsultation from "./components/Nutritionist/NutritionistConsultation";
 import NutritionistAppointment from "./components/Nutritionist/NutritionistAppointment"; 
+import NutritionistApproveMealPlan from "./components/Nutritionist/NutritionistApproveMealPlan"; 
 import NutritionistHome from "./components/Nutritionist/NutritionistHome";
 import NutritionistCreateMealPlan from "./components/Nutritionist/NutritionistCreateMealPlan";
 import NutritionistPatient from "./components/Nutritionist/NutritionistPatient";
@@ -319,6 +322,16 @@ function App() {
                     </>
                   }
                 />
+                   <Route
+                  path="/meal-plan-shop-recommend-request-checkout"
+                  element={
+                    <>
+                      <MainUserNavBar />
+                      <MealPlanShopNavBar />
+                      <MealPlanShopRecommendRequestCheckout /> <UserFooter />
+                    </>
+                  }
+                />
                 <Route
                   path="/meal-plan-shop-order/:orderId?"
                   element={
@@ -330,7 +343,7 @@ function App() {
                     </>
                   }
                 />
-                {/* meal plan generator  Paypal MealPlanHistory  */}
+               
                 <Route
                   path="/paypal-payment"
                   element={
@@ -347,6 +360,15 @@ function App() {
                     </>
                   }
                 />
+                    <Route
+                  path="/paypal-payment-recommend-request"
+                  element={
+                    <>
+                      <PayPalRecommend />
+                    </>
+                  }
+                />
+                 {/* meal plan generator  Paypal MealPlanHistory  */}
                 <Route
                   path="/meal-plan-generator-home"
                   element={
@@ -526,6 +548,16 @@ function App() {
                     <>
                       <NutritionistNavBar />
                       <NutritionistCreateMealPlan />
+                      <Footer />
+                    </>
+                  }
+                />
+<Route
+                  path="/nutritionist-approve-meal-plan"
+                  element={
+                    <>
+                      <NutritionistNavBar />
+                      <NutritionistApproveMealPlan />
                       <Footer />
                     </>
                   }

@@ -16,7 +16,9 @@ function MealPlanShopRequest() {
   const [disapprovedOrder, setDisapprovedOrder] = useState([]);
   const [pendingOrderRecommend, setPendingOrderRecommend] = useState([]);
   const [approvedOrderRecommend, setApprovedOrderRecommend] = useState([]);
-  const [disapprovedOrderRecommend, setDisapprovedOrderRecommend] = useState([]);
+  const [disapprovedOrderRecommend, setDisapprovedOrderRecommend] = useState(
+    []
+  );
 
   const [selectedOrder, setSelectedOrder] = useState([]);
   const [selectedOrderRecommend, setSelectedOrderRecommend] = useState([]);
@@ -75,16 +77,24 @@ function MealPlanShopRequest() {
 
     const pendingData = reverse.filter((item) => item.status === "Pending");
     const approveData = reverse.filter((item) => item.status === "Approved");
-    const disapproveData = reverse.filter((item) => item.status === "Dispproved");
-   
+    const disapproveData = reverse.filter(
+      (item) => item.status === "Dispproved"
+    );
+
     const reverseRecommend = recommendData.data.reverse();
-    const pendingDataRecommend = reverseRecommend.filter((item) => item.status === "Pending");
-    const approveDataRecommend = reverseRecommend.filter((item) => item.status === "Approved");
-    const disapproveDataRecommend = reverseRecommend.filter((item) => item.status === "Dispproved");
-   
-    setPendingOrderRecommend(pendingDataRecommend)
-setApprovedOrderRecommend(approveDataRecommend)
-    setDisapprovedOrderRecommend(disapproveDataRecommend)
+    const pendingDataRecommend = reverseRecommend.filter(
+      (item) => item.status === "Pending"
+    );
+    const approveDataRecommend = reverseRecommend.filter(
+      (item) => item.status === "Approved"
+    );
+    const disapproveDataRecommend = reverseRecommend.filter(
+      (item) => item.status === "Dispproved"
+    );
+
+    setPendingOrderRecommend(pendingDataRecommend);
+    setApprovedOrderRecommend(approveDataRecommend);
+    setDisapprovedOrderRecommend(disapproveDataRecommend);
     //setPendingOrder(reverse.filter((item) => item.status === "Pending"));
 
     //setApprovedOrder(reverse.filter((item) => item.user_id === "Approved"));
@@ -129,20 +139,16 @@ setApprovedOrderRecommend(approveDataRecommend)
         (items) => items.generatedMeal_id === item.generatedMeal_id
       );
       console.log(meals);
-  
+
       const newData = {
         request: item,
         meal: meals,
       };
-  
+
       tempDataDisapprove.push(newData);
     });
-  
+
     setDisapprovedOrder(tempDataDisapprove);
-
-
-
-
 
     //? recommend
 
@@ -161,7 +167,7 @@ setApprovedOrderRecommend(approveDataRecommend)
       tempDataRecommend.push(newData);
     });
 
-   // setPendingOrderRecommend(tempDataRecommend);
+    // setPendingOrderRecommend(tempDataRecommend);
 
     const tempDataApproveRecommend = [];
     approveDataRecommend.forEach((item) => {
@@ -178,7 +184,7 @@ setApprovedOrderRecommend(approveDataRecommend)
       tempDataApproveRecommend.push(newData);
     });
 
-   // setApprovedOrder(tempDataApproveRecommend);
+    // setApprovedOrder(tempDataApproveRecommend);
 
     const tempDataDisapproveRecommend = [];
     disapproveDataRecommend.forEach((item) => {
@@ -186,26 +192,28 @@ setApprovedOrderRecommend(approveDataRecommend)
         (items) => items.generatedMeal_id === item.generatedMeal_id
       );
       console.log(meals);
-  
+
       const newData = {
         request: item,
         meal: meals,
       };
-  
+
       tempDataDisapproveRecommend.push(newData);
     });
-  
-   // setDisapprovedOrder(tempDataDisapproveRecommend);
+
+    // setDisapprovedOrder(tempDataDisapproveRecommend);
   };
 
-
-  
   useEffect(() => {
     getRequestData();
   }, []);
 
   const pay = (datas) => {
     navigate("/meal-plan-shop-request-checkout", { state: datas });
+  };
+
+  const payRecommend = (datas) => {
+    navigate("/meal-plan-shop-recommend-request-checkout", { state: datas });
   };
 
   return (
@@ -218,52 +226,66 @@ setApprovedOrderRecommend(approveDataRecommend)
       }}
     >
       <Typography
-        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
+        sx={{
+          color: "#99756E",
+          fontWeight: "bold",
+          fontSize: "1.6em",
+          mt: 5,
+          mb: 3,
+        }}
       >
         {" "}
         Pending Orders
       </Typography>
 
-      <Grid container spacing = {2}>
-      <Grid xs = {6}>
-        <Typography  sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em", mb: 1 }}>
-          Generated Meal Plans
-        </Typography>
-       {pendingOrder.length > 0 ?( <Grid container spacing={2}>
-        {pendingOrder.map((item, index) => (
-          <Grid item xs={12} sm={6} md={6} key={index}>
-            <Box
-              sx={{
-                background: "#898246",
-                borderRadius: 4,
-                mx: "10%",
-                color: "#ffffff",
-                py: 2,
-              }}
-            >
-              Date: {item.request.date}
-              <br />
-              Status: {item.request.status}
-              <br />
-              <Button
-                onClick={() => handleOpen(item.meal)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                View Details
-              </Button>
-              {/* {item.meal.meal.map((items) => (
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.5em",
+              mb: 1,
+            }}
+          >
+            Generated Meal Plans
+          </Typography>
+          {pendingOrder.length > 0 ? (
+            <Grid container spacing={2}>
+              {pendingOrder.map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      background: "#898246",
+                      borderRadius: 4,
+                      mx: "10%",
+                      color: "#ffffff",
+                      py: 2,
+                    }}
+                  >
+                    Date: {item.request.date}
+                    <br />
+                    Status: {item.request.status}
+                    <br />
+                    <Button
+                      onClick={() => handleOpen(item.meal)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 0,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -272,54 +294,63 @@ setApprovedOrderRecommend(approveDataRecommend)
               ))}
             </Box>
           ))} */}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>) : (<>No Orders</>)}
-      </Grid>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>No Orders</>
+          )}
+        </Grid>
 
+        <Grid xs={6}>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.5em",
+              mb: 1,
+            }}
+          >
+            Recommended Meal Plans
+          </Typography>
 
-
-      <Grid xs = {6}>
-      <Typography sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em", mb: 1 }}>
-          Recommended Meal Plans
-        </Typography>
-
-      {pendingOrderRecommend.length > 0 ? (  <Grid container spacing={2}>
-        {pendingOrderRecommend.map((item, index) => (
-          <Grid item xs={12} sm={6} md={6} key={index}>
-            <Box
-              sx={{
-                background: "#898246",
-                borderRadius: 4,
-                mx: "10%",
-                color: "#ffffff",
-                py: 2,
-              }}
-            >
-              Date: {item.date}
-              <br />
-              Status: {item.status}
-              <br />
-              <Button
-                onClick={() => handleOpenRecommend(item.meal)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                View Details
-              </Button>
-              {/* {item.meal.meal.map((items) => (
+          {pendingOrderRecommend.length > 0 ? (
+            <Grid container spacing={2}>
+              {pendingOrderRecommend.map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      background: "#898246",
+                      borderRadius: 4,
+                      mx: "10%",
+                      color: "#ffffff",
+                      py: 2,
+                    }}
+                  >
+                    Date: {item.date}
+                    <br />
+                    Status: {item.status}
+                    <br />
+                    <Button
+                      onClick={() => handleOpenRecommend(item.meal)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 0,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -328,81 +359,96 @@ setApprovedOrderRecommend(approveDataRecommend)
               ))}
             </Box>
           ))} */}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>) : (<>No Orders</>)}
-      </Grid>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>No Orders</>
+          )}
+        </Grid>
       </Grid>
 
-       
-      
       <Typography
-        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 3, mb: 3 }}
+        sx={{
+          color: "#99756E",
+          fontWeight: "bold",
+          fontSize: "1.6em",
+          mt: 3,
+          mb: 3,
+        }}
       >
         {" "}
         Approved Orders
       </Typography>
 
-      <Grid container spacing = {2}>
-      <Grid xs = {6}>
-        <Typography  sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em", mb: 1 }}>
-          Generated Meal Plans
-        </Typography>
-     { approvedOrder.length > 0 ? (   <Grid container spacing={2}>
-        {approvedOrder.map((item, index) => (
-          <Grid item xs={12} sm={6} md={6} key={index}>
-            <Box
-              sx={{
-                background: "#898246",
-                borderRadius: 4,
-                mx: "10%",
-                color: "#ffffff",
-                py: 2,
-              }}
-            >
-              Date: {item.request.date}
-              <br />
-              Status: {item.request.status}
-              <br />
-              <Button
-                onClick={() => handleOpen(item.meal)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                View Details
-              </Button>
-              {console.log(item)}
-              <Button
-                onClick={() => pay(item)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 3,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                Pay
-              </Button>
-              {/* {item.meal.meal.map((items) => (
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.5em",
+              mb: 1,
+            }}
+          >
+            Generated Meal Plans
+          </Typography>
+          {approvedOrder.length > 0 ? (
+            <Grid container spacing={2}>
+              {approvedOrder.map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      background: "#898246",
+                      borderRadius: 4,
+                      mx: "10%",
+                      color: "#ffffff",
+                      py: 2,
+                    }}
+                  >
+                    Date: {item.request.date}
+                    <br />
+                    Status: {item.request.status}
+                    <br />
+                    <Button
+                      onClick={() => handleOpen(item.meal)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 0,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    {console.log(item)}
+                    <Button
+                      onClick={() => pay(item)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 3,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      Pay
+                    </Button>
+                    {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -411,51 +457,80 @@ setApprovedOrderRecommend(approveDataRecommend)
               ))}
             </Box>
           ))} */}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>) : (<>No Orders</>)}
-      </Grid>
-      <Grid xs = {6}>
-      <Typography sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em", mb: 1 }}>
-          Recommended Meal Plans
-        </Typography>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>No Orders</>
+          )}
+        </Grid>
+        <Grid xs={6}>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.5em",
+              mb: 1,
+            }}
+          >
+            Recommended Meal Plans
+          </Typography>
 
-        {approvedOrderRecommend.length > 0 ? (<Grid container spacing={2}>
-        {approvedOrderRecommend.map((item, index) => (
-          <Grid item xs={12} sm={6} md={6} key={index}>
-            <Box
-              sx={{
-                background: "#898246",
-                borderRadius: 4,
-                mx: "10%",
-                color: "#ffffff",
-                py: 2,
-              }}
-            >
-              Date: {item.date}
-              <br />
-              Status: {item.status}
-              <br />
-              <Button
-                onClick={() => handleOpenRecommend(item.meal)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                View Details
-              </Button>
-              {/* {item.meal.meal.map((items) => (
+          {approvedOrderRecommend.length > 0 ? (
+            <Grid container spacing={2}>
+              {approvedOrderRecommend.map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      background: "#898246",
+                      borderRadius: 4,
+                      mx: "10%",
+                      color: "#ffffff",
+                      py: 2,
+                    }}
+                  >
+                    Date: {item.date}
+                    <br />
+                    Status: {item.status}
+                    <br />
+                    <Button
+                      onClick={() => handleOpenRecommend(item.meal)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 0,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    <Button
+                      onClick={() => payRecommend(item)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 3,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      Pay
+                    </Button>
+                    {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -464,69 +539,80 @@ setApprovedOrderRecommend(approveDataRecommend)
               ))}
             </Box>
           ))} */}
-            </Box>
-          </Grid>
-        ))}
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>No Orders</>
+          )}
+        </Grid>
       </Grid>
-      ) : (<>No Orders</>)}
-      </Grid>
-      </Grid>
-
-
-
-
 
       {/* //! */}
 
-
-{/* //! disapprove  */}
-<Typography
-        sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 5 }}
+      {/* //! disapprove  */}
+      <Typography
+        sx={{
+          color: "#99756E",
+          fontWeight: "bold",
+          fontSize: "1.6em",
+          mt: 5,
+          mb: 5,
+        }}
       >
         {" "}
         Disapproved Orders
       </Typography>
 
-      <Grid container spacing = {2}>
-      <Grid xs = {6}>
-        <Typography  sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em", mb: 1 }}>
-          Generated Meal Plans
-        </Typography>
-      {disapprovedOrder.length > 0 ? (  <Grid container spacing={2}>
-        {disapprovedOrder.map((item, index) => (
-          <Grid item xs={12} sm={6} md={6} key={index}>
-            <Box
-              sx={{
-                background: "#898246",
-                borderRadius: 4,
-                mx: "10%",
-                color: "#ffffff",
-                py: 2,
-              }}
-            >
-              Date: {item.request.date}
-              <br />
-              Status: {item.request.status}
-              <br />
-              <Button
-                onClick={() => handleOpen(item.meal)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                View Details
-              </Button>
-              {/* {item.meal.meal.map((items) => (
+      <Grid container spacing={2}>
+        <Grid xs={6}>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.5em",
+              mb: 1,
+            }}
+          >
+            Generated Meal Plans
+          </Typography>
+          {disapprovedOrder.length > 0 ? (
+            <Grid container spacing={2}>
+              {disapprovedOrder.map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      background: "#898246",
+                      borderRadius: 4,
+                      mx: "10%",
+                      color: "#ffffff",
+                      py: 2,
+                    }}
+                  >
+                    Date: {item.request.date}
+                    <br />
+                    Status: {item.request.status}
+                    <br />
+                    <Button
+                      onClick={() => handleOpen(item.meal)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 0,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -535,51 +621,62 @@ setApprovedOrderRecommend(approveDataRecommend)
               ))}
             </Box>
           ))} */}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>) : (<>No Orders</>)}
-      </Grid>
-      <Grid xs = {6}>
-      <Typography sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.5em", mb: 1 }}>
-          Recommended Meal Plans
-        </Typography>
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>No Orders</>
+          )}
+        </Grid>
+        <Grid xs={6}>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.5em",
+              mb: 1,
+            }}
+          >
+            Recommended Meal Plans
+          </Typography>
 
-        {disapprovedOrderRecommend.length > 0 ?(<Grid container spacing={2}>
-        {disapprovedOrderRecommend.map((item, index) => (
-          <Grid item xs={12} sm={6} md={6} key={index}>
-            <Box
-              sx={{
-                background: "#898246",
-                borderRadius: 4,
-                mx: "10%",
-                color: "#ffffff",
-                py: 2,
-              }}
-            >
-              Date: {item.date}
-              <br />
-              Status: {item.status}
-              <br />
-              <Button
-                onClick={() => handleOpenRecommend(item.meal)}
-                sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }}
-              >
-                View Details
-              </Button>
-              {/* {item.meal.meal.map((items) => (
+          {disapprovedOrderRecommend.length > 0 ? (
+            <Grid container spacing={2}>
+              {disapprovedOrderRecommend.map((item, index) => (
+                <Grid item xs={12} sm={6} md={6} key={index}>
+                  <Box
+                    sx={{
+                      background: "#898246",
+                      borderRadius: 4,
+                      mx: "10%",
+                      color: "#ffffff",
+                      py: 2,
+                    }}
+                  >
+                    Date: {item.date}
+                    <br />
+                    Status: {item.status}
+                    <br />
+                    <Button
+                      onClick={() => handleOpenRecommend(item.meal)}
+                      sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        ml: 0,
+                        mt: 1,
+                        fontWeight: "bold",
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    {/* {item.meal.meal.map((items) => (
             <Box>
               {" "}
               {items.Day}
@@ -588,23 +685,17 @@ setApprovedOrderRecommend(approveDataRecommend)
               ))}
             </Box>
           ))} */}
-            </Box>
-          </Grid>
-        ))}
-      </Grid>) : (<>No Orders</>)}
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <>No Orders</>
+          )}
+        </Grid>
       </Grid>
-      </Grid>
 
-
-
-
-
-
-
-
-
-
-{/* //!  */}
+      {/* //!  */}
       <Modal
         open={isOpen}
         onClose={handleClose}
@@ -643,7 +734,6 @@ setApprovedOrderRecommend(approveDataRecommend)
         </Box>
       </Modal>
 
-
       {/* //! recommend Modal */}
       <Modal
         open={isOpenRecommend}
@@ -658,7 +748,7 @@ setApprovedOrderRecommend(approveDataRecommend)
             <Box>
               <center>
                 <Typography sx={{ fontWeight: "bold", fontSize: "1.3em" }}>
-                  Day {" "}{item.day}{" "}
+                  Day {item.day}{" "}
                 </Typography>
               </center>
               {console.log(item.meals)}
@@ -667,7 +757,7 @@ setApprovedOrderRecommend(approveDataRecommend)
                   <Grid item xs={3} sm={4} md={6} key={index}>
                     <center>
                       <Box>
-                      {items?.type} <br/>
+                        {items?.type} <br />
                         {items?.food}
                       </Box>
                     </center>
@@ -678,7 +768,6 @@ setApprovedOrderRecommend(approveDataRecommend)
           ))}
         </Box>
       </Modal>
-
 
       {/* //? */}
     </div>

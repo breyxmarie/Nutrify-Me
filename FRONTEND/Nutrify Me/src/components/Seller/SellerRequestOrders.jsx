@@ -5,6 +5,9 @@ import Button from "@mui/material/Button";
 import { Modal, Tab, Tabs } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import { Typography } from "@mui/material";
+import dayjs from "dayjs";
+import { ToastContainer, toast } from "react-toastify";
+
 
 function SellerRequestOrders() {
   const [requestData, setRequestData] = useState([]);
@@ -12,6 +15,8 @@ function SellerRequestOrders() {
   const [selectedOrder, setSelectedOrder] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenPrice, setIsOpenPrice] = useState(false);
+  const [isOpenPriceRecommend, setIsOpenPriceRecommend] = useState(false);
+  const [isOpenRecommend, setIsOpenRecommend] = useState(false);
   const [pendingRequests, setPendingRequests] = useState([]);
   const [approveRequests, setApproveRequests] = useState([]);
   const [disapproveRequests, setDisapproveRequests] = useState([]);
@@ -38,6 +43,7 @@ function SellerRequestOrders() {
     color: "#ffffff",
   };
 
+
   const handleOpen = (data) => {
     setSelectedOrder(data);
     console.log(data)
@@ -46,6 +52,16 @@ function SellerRequestOrders() {
 
   const handleClose = () => {
     setIsOpen(false);
+  };
+
+  const handleOpenRecommend = (data) => {
+    setSelectedOrder(data);
+    console.log(data)
+   setIsOpenRecommend(true);
+  };
+
+  const handleCloseRecommend = () => {
+    setIsOpenRecommend(false);
   };
 
   const handleOpenPrice = (data) => {
@@ -58,16 +74,31 @@ function SellerRequestOrders() {
     setIsOpenPrice(false);
   };
 
+  const handleOpenPriceRecommend = (data) => {
+    console.log("hi");
+    setSelectedOrder(data);
+    setIsOpenPriceRecommend(true);
+  };
+
+  const handleClosePriceRecommend = () => {
+    setIsOpenPriceRecommend(false);
+  };
+
   const [userData, setUserData] = useState([])
   const refreshData = () => {};
+  const [recommendData, setRecommendData] = useState([])
   const getData = async () => {
     const tempResponse = await AxiosInstance.get(`requestedmeals`);
+    const tempRecommendResponse = await AxiosInstance.get(`requestedrecommendmeals/`);
+    
     const mealData = await AxiosInstance.get(`generatedmeal`);
     const useData = await AxiosInstance.get(`user`);
     console.log(useData.data)
     setUserData(useData.data)
 console.log(tempResponse)
     const reverseResponse = tempResponse.data.reverse();
+    const reverseRecommendResponse = tempRecommendResponse.data.reverse();
+    setRecommendData(reverseRecommendResponse)
 
     const pendingData = reverseResponse.filter(
       (item) => item.status === "Pending"
@@ -138,6 +169,82 @@ console.log(tempResponse)
     getData();
   }, []);
 
+
+
+  const approveOrderRecommend = async () => {
+    const response = await AxiosInstance.get(`requestedrecommendmeals`);
+
+    const tempData = response.data.find(
+      (item) => item.request_id === selectedOrder
+    );
+    console.log(price);
+    try {
+      AxiosInstance.put(`requestedrecommendmeals/`, {
+        request_id: tempData.request_id,
+        user_id: tempData.user_id,
+        date: tempData.date,
+        status: "Approved",
+        price: price,
+        start_week: tempData.start_week ,
+        end_week: tempData.end_week ,
+        meal: tempData.meal,
+        recommend_mealplan_id: tempData.recommend_mealplan_id,
+      }).then((res) => {
+        console.log(res);
+        getData();
+        handleClosePriceRecommend();
+        toast.success("Request Approved!");
+        // try {
+        //   AxiosInstance.delete(`requestedmeals/${id}`).then((res) => {
+        //     getData();
+        //   });
+        //   console.log(response);
+        // } catch (error) {
+        //   console.log(error);
+        // }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const disapproveOrderRecommend = async (id) => {
+    const response = await AxiosInstance.get(`requestedrecommendmeals`);
+
+    const tempData = response.data.find(
+      (item) => item.request_id === id
+    );
+    console.log(response.data);
+    try {
+      AxiosInstance.put(`requestedrecommendmeals/`, {
+        request_id: tempData.request_id,
+        user_id: tempData.user_id,
+        date: tempData.date,
+        status: "Disapproved",
+        price: price,
+        start_week: tempData.start_week ,
+        end_week: tempData.end_week ,
+        meal: tempData.meal,
+        recommend_mealplan_id: tempData.recommend_mealplan_id,
+      }).then((res) => {
+        console.log(res);
+        getData();
+        toast.success("Request Disapprove");
+        // try {
+        //   AxiosInstance.delete(`requestedmeals/${id}`).then((res) => {
+        //     getData();
+        //   });
+        //   console.log(response);
+        // } catch (error) {
+        //   console.log(error);
+        // }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const approveOrder = async () => {
     const response = await AxiosInstance.get(`requestedmeals`);
 
@@ -159,6 +266,7 @@ console.log(tempResponse)
         console.log(res);
         getData();
         handleClosePrice();
+        toast.success("Request Approved!");
         // try {
         //   AxiosInstance.delete(`requestedmeals/${id}`).then((res) => {
         //     getData();
@@ -188,6 +296,7 @@ console.log(tempResponse)
         end_week: tempData.end_week ,
       }).then((res) => {
         getData();
+        toast.success("Request Dispproved!");
         // try {
         //   AxiosInstance.delete(`requestedmeals/${id}`).then((res) => {
         //     getData();
@@ -223,6 +332,7 @@ console.log(tempResponse)
           mx: "10%",
           color: "#ffffff",
           py: 2,
+          mt: 2
         }}> 
           {" "}
           {/* {console.log(item)} */}
@@ -274,6 +384,85 @@ console.log(tempResponse)
                     borderColor: "#ffffff",
                   },
                 }} onClick={() => disapproveOrder(item.request.request_id)}>
+            Disapprove
+          </Button>
+          {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+        </Box>
+      ))}
+
+
+
+{console.log(recommendData)}
+{recommendData.filter(
+      (item) => item.status === "Pending"
+    ).map((item) => (
+        // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
+        <Box     sx={{
+          background: "#898246",
+          borderRadius: 4,
+          mx: "10%",
+          color: "#ffffff",
+          py: 2,
+          mt: 2, 
+        }}> 
+          {" "}
+          {/* {console.log(item)} */}
+          {item?.date}
+          <br/>
+          By: {" "} 
+         {userData.find((items) => items.user_id === item.user_id).first_name}
+         {" "}
+          {userData.find((items) => items.user_id === item.user_id).last_name}
+         <br/>  
+          <Button      sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 0,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => handleOpenRecommend(item)}>View Details</Button>
+          <Button     sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 3,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => handleOpenPriceRecommend(item.request_id)}>
+            Approve
+          </Button>
+          <Button     sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 3,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => disapproveOrderRecommend(item.request_id)}>
             Disapprove
           </Button>
           {/* {item.meal.meal.map((items) => (
@@ -339,6 +528,84 @@ console.log(tempResponse)
           ))} */}
         </Box>
       ))}
+
+
+
+{recommendData.filter(
+      (item) => item.status === "Approved"
+    ).map((item) => (
+        // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
+        <Box     sx={{
+          background: "#898246",
+          borderRadius: 4,
+          mx: "10%",
+          color: "#ffffff",
+          py: 2,
+          mt: 2, 
+        }}> 
+          {" "}
+          {/* {console.log(item)} */}
+          {item?.date}
+          <br/>
+          By: {" "} 
+         {userData.find((items) => items.user_id === item.user_id).first_name}
+         {" "}
+          {userData.find((items) => items.user_id === item.user_id).last_name}
+         <br/>  
+          <Button      sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 0,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => handleOpenRecommend(item)}>View Details</Button>
+        
+          {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+        </Box>
+      ))}
+       
+
+<Modal
+        open={isOpenRecommend}
+        onClose={handleCloseRecommend}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={style}>
+          {selectedOrder?.name}
+          <br/> 
+        
+          Date: {dayjs(selectedOrder?.start_week).format("MMMM DD,YYYY")} -  {" "}
+          {dayjs(selectedOrder?.last_week).format("MMMM DD,YYYY")}
+          {selectedOrder?.meal?.map((item) => (
+            <Box>
+              {item?.day}
+              {console.log(item.meals)}
+              {item?.meals?.map((items) => (
+                <Box >
+                  {items?.type}: {" "}
+                  {items?.food}
+              
+                </Box>
+              ))}
+            </Box>
+          ))}
+        </Box>
+      </Modal>
       {/* setIsOpenPrice */}
       <Modal
         open={isOpenPrice}
@@ -347,13 +614,56 @@ console.log(tempResponse)
         aria-describedby="modal-description"
       >
         <Box sx={style}>
-          Input Price: onChange={(event) => setPrice(event.target.value)}
+          Input Price:
           <TextField
             onChange={(event) => setPrice(event.target.value)}
           ></TextField>
-          <Button onClick={() => approveOrder()}>Approve</Button>
+          <Button  sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 0,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => approveOrder()}>Approve</Button>
         </Box>
       </Modal>
+
+      <Modal
+        open={isOpenPriceRecommend}
+        onClose={handleClosePriceRecommend}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={style}>
+          Input Price:
+       
+          <TextField
+            onChange={(event) => setPrice(event.target.value)}
+          ></TextField>
+          <Button    sx={{
+                  background: "#ffffff",
+                  color: "#E66253",
+                  ml: 0,
+                  mt: 1,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    backgroundColor: "#E66253",
+                    color: "#ffffff",
+                    border: 0.5,
+                    borderColor: "#ffffff",
+                  },
+                }} onClick={() => approveOrderRecommend()}>Approve</Button>
+        </Box>
+      </Modal>
+
+
+
       <Modal
         open={isOpen}
         onClose={handleClose}
@@ -362,6 +672,9 @@ console.log(tempResponse)
       >
         <Box sx={style}>
           {selectedOrder?.name}
+          <br/>
+          Date: {dayjs(selectedOrder?.start_week).format("MMMM DD,YYYY")} -  {" "}
+          {dayjs(selectedOrder?.last_week).format("MMMM DD,YYYY")}
           {selectedOrder?.meal?.map((item) => (
             <Box>
               {item?.Day}
@@ -369,10 +682,8 @@ console.log(tempResponse)
               {item?.meals?.map((items) => (
                 <Box >
                   {items?.Meal}: {" "}
-                  {items?.details.recipe.label}
-                  {/* {items?.details.map((item1) => (
-                    <Box>{item1?.recipe.label}</Box>
-                  ))} */}
+                  {items?.details?.recipe?.label}
+             
 
                 </Box>
               ))}
@@ -380,6 +691,10 @@ console.log(tempResponse)
           ))}
         </Box>
       </Modal>
+
+
+    
+
     </div>
   );
 }

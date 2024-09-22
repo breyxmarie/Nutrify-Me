@@ -236,7 +236,7 @@ function MealPlanShopMealPlans() {
 
   const getMealPlanData = () => {
     AxiosInstance.get(`shopmealplan`).then((res) => {
-      setShopMealPlan(res.data);
+      setShopMealPlan(res.data.filter((item) => item.approve === true));
     });
 
     // setMealPlanDiv(

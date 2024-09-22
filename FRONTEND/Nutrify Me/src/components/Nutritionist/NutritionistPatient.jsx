@@ -16,7 +16,7 @@ function NutritionistPatient() {
   const GetData = async () => {
     AxiosInstance.get(`patientnutritionistagreement`).then((res) => {
       let tempUsers = res.data.filter(
-        (item) => item.nutritionist_id === nutritionist.nutritionist_id
+        (item) => item.nutritionist_id === nutritionist.nutritionist_id && item.status === "Agree"
       );
       console.log(
         res.data.filter(
@@ -30,14 +30,14 @@ function NutritionistPatient() {
             resp.data.find((items1) => items1.user_id === item1.user_id)
           )
         );
-        console.log(finalUsers);
-        setUser(resp.data);
+        console.log(tempUsers);
+        setUser(finalUsers);
       });
     });
 
-    AxiosInstance.get(`user`).then((res) => {
-      setUser(res.data);
-    });
+    // AxiosInstance.get(`user`).then((res) => {
+    //   setUser(res.data);
+    // });
   };
 
   useEffect(() => {
