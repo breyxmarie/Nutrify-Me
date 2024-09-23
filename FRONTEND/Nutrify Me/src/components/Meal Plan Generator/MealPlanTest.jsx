@@ -945,7 +945,7 @@ function MealPlanTest() {
             `q=snack&mealType=snack&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=dinnert&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
@@ -1185,7 +1185,7 @@ function MealPlanTest() {
             `q=snack&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=dinnert&diet=low-sodium&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&diet=low-sodium&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {

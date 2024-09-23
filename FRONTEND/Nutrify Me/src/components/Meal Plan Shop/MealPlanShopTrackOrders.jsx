@@ -287,6 +287,7 @@ function MealPlanShopTrackOrders() {
                     mt: "40%",
                     px: 2,
                     py: 1,
+                    color: "#000000",
                   }}
                 >
                   {item.status}

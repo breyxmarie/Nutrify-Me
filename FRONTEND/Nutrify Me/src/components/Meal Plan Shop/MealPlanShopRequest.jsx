@@ -20,6 +20,14 @@ function MealPlanShopRequest() {
     []
   );
 
+  const [loading1, setLoading1] = useState();
+
+  const [loading2, setLoading2] = useState();
+  const [loading3, setLoading3] = useState();
+  const [loading4, setLoading4] = useState();
+  const [loading5, setLoading5] = useState();
+  const [loading6, setLoading6] = useState();
+
   const [selectedOrder, setSelectedOrder] = useState([]);
   const [selectedOrderRecommend, setSelectedOrderRecommend] = useState([]);
 
@@ -92,8 +100,23 @@ function MealPlanShopRequest() {
       (item) => item.status === "Dispproved"
     );
 
+    if (pendingDataRecommend.length > 0) {
+      setLoading2(true);
+    } else {
+      setLoading2(false);
+    }
     setPendingOrderRecommend(pendingDataRecommend);
+    if (approveDataRecommend.length > 0) {
+      setLoading4(true);
+    } else {
+      setLoading4(false);
+    }
     setApprovedOrderRecommend(approveDataRecommend);
+    if (disapproveDataRecommend.length > 0) {
+      setLoading6(true);
+    } else {
+      setLoading6(false);
+    }
     setDisapprovedOrderRecommend(disapproveDataRecommend);
     //setPendingOrder(reverse.filter((item) => item.status === "Pending"));
 
@@ -114,6 +137,11 @@ function MealPlanShopRequest() {
       tempData.push(newData);
     });
 
+    if (tempData.length > 0) {
+      setLoading1(true);
+    } else {
+      setLoading1(false);
+    }
     setPendingOrder(tempData);
 
     const tempDataApprove = [];
@@ -131,6 +159,11 @@ function MealPlanShopRequest() {
       tempDataApprove.push(newData);
     });
 
+    if (tempDataApprove.length > 0) {
+      setLoading3(true);
+    } else {
+      setLoading3(false);
+    }
     setApprovedOrder(tempDataApprove);
 
     const tempDataDisapprove = [];
@@ -148,6 +181,11 @@ function MealPlanShopRequest() {
       tempDataDisapprove.push(newData);
     });
 
+    if (tempDataDisapprove.length > 0) {
+      setLoading5(true);
+    } else {
+      setLoading5(false);
+    }
     setDisapprovedOrder(tempDataDisapprove);
 
     //? recommend
@@ -251,7 +289,9 @@ function MealPlanShopRequest() {
           >
             Generated Meal Plans
           </Typography>
-          {pendingOrder.length > 0 ? (
+          {/* {loading1 ? (<>loading.....</>)
+          : ()} */}
+          {pendingOrder.length > 0 && loading1 === true ? (
             <Grid container spacing={2}>
               {pendingOrder.map((item, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
@@ -299,8 +339,10 @@ function MealPlanShopRequest() {
                 </Grid>
               ))}
             </Grid>
-          ) : (
+          ) : pendingOrder.length === 0 && loading1 === false ? (
             <>No Orders</>
+          ) : (
+            <>Loading...</>
           )}
         </Grid>
 
@@ -316,7 +358,7 @@ function MealPlanShopRequest() {
             Recommended Meal Plans
           </Typography>
 
-          {pendingOrderRecommend.length > 0 ? (
+          {pendingOrderRecommend.length > 0 && loading2 === true ? (
             <Grid container spacing={2}>
               {pendingOrderRecommend.map((item, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
@@ -364,8 +406,10 @@ function MealPlanShopRequest() {
                 </Grid>
               ))}
             </Grid>
-          ) : (
+          ) : pendingOrderRecommend.length === 0 && loading2 === false ? (
             <>No Orders</>
+          ) : (
+            <>Loading...</>
           )}
         </Grid>
       </Grid>
@@ -395,7 +439,7 @@ function MealPlanShopRequest() {
           >
             Generated Meal Plans
           </Typography>
-          {approvedOrder.length > 0 ? (
+          {approvedOrder.length > 0 && loading3 === true ? (
             <Grid container spacing={2}>
               {approvedOrder.map((item, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
@@ -462,8 +506,10 @@ function MealPlanShopRequest() {
                 </Grid>
               ))}
             </Grid>
-          ) : (
+          ) : approvedOrder.length === 0 && loading3 === false ? (
             <>No Orders</>
+          ) : (
+            <>Loading...</>
           )}
         </Grid>
         <Grid xs={6}>
@@ -478,7 +524,8 @@ function MealPlanShopRequest() {
             Recommended Meal Plans
           </Typography>
 
-          {approvedOrderRecommend.length > 0 ? (
+          {}
+          {approvedOrderRecommend.length > 0 && loading4 === true ? (
             <Grid container spacing={2}>
               {approvedOrderRecommend.map((item, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
@@ -532,7 +579,7 @@ function MealPlanShopRequest() {
                       Pay
                     </Button>
                     {/* {item.meal.meal.map((items) => (
-            <Box>
+            <Box> ?
               {" "}
               {items.Day}
               {items.meals.map((item1) => (
@@ -544,8 +591,10 @@ function MealPlanShopRequest() {
                 </Grid>
               ))}
             </Grid>
-          ) : (
+          ) : approvedOrderRecommend.length === 0 && loading4 === false ? (
             <>No Orders</>
+          ) : (
+            <>Loading...</>
           )}
         </Grid>
       </Grid>
@@ -578,7 +627,7 @@ function MealPlanShopRequest() {
           >
             Generated Meal Plans
           </Typography>
-          {disapprovedOrder.length > 0 ? (
+          {disapprovedOrder.length > 0 && loading5 === true ? (
             <Grid container spacing={2}>
               {disapprovedOrder.map((item, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
@@ -626,8 +675,10 @@ function MealPlanShopRequest() {
                 </Grid>
               ))}
             </Grid>
-          ) : (
+          ) : disapprovedOrder.length === 0 && loading5 === false ? (
             <>No Orders</>
+          ) : (
+            <>Loading...</>
           )}
         </Grid>
         <Grid xs={6}>
@@ -642,7 +693,7 @@ function MealPlanShopRequest() {
             Recommended Meal Plans
           </Typography>
 
-          {disapprovedOrderRecommend.length > 0 ? (
+          {disapprovedOrderRecommend.length > 0 && loading6 === true ? (
             <Grid container spacing={2}>
               {disapprovedOrderRecommend.map((item, index) => (
                 <Grid item xs={12} sm={6} md={6} key={index}>
@@ -690,8 +741,10 @@ function MealPlanShopRequest() {
                 </Grid>
               ))}
             </Grid>
-          ) : (
+          ) : disapprovedOrderRecommend.length === 0 && loading6 === false ? (
             <>No Orders</>
+          ) : (
+            <>Loading...</>
           )}
         </Grid>
       </Grid>

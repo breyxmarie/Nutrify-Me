@@ -140,6 +140,7 @@ function MealPlanShopOrders() {
         fontFamily: "Poppins",
         marginLeft: "10px",
         marginRight: "10px",
+        color: "#000000",
       }}
     >
       {" "}

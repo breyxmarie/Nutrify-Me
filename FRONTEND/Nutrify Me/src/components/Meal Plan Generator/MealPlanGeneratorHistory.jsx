@@ -57,6 +57,7 @@ function MealPlanGeneratorHistory() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000",
       }}
     >
       {" "}
