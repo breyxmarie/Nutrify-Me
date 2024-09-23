@@ -88,7 +88,7 @@ function MealPlanTest() {
   const URL = `https://api.edamam.com/search?app_id=${API_ID}&app_key=${API_KEY}&from=1&to=100&`; //! to get meals
   //?
 
-const [saving, setSaving] = useState(false)
+  const [saving, setSaving] = useState(false);
   const [activity, setActivity] = useState();
   const [selectedDiet, setSelectedDiet] = useState();
   const [selectedAllergen, setSelectedAllergen] = useState(null);
@@ -1903,7 +1903,7 @@ const [saving, setSaving] = useState(false)
   };
 
   const saveMeal = async () => {
-    setSaving(true)
+    setSaving(true);
     for (let i = 0; i < 5; i++) {
       for (let j = 0; j < generatedMeal[i].meals.length; j++) {
         const meal = generatedMeal[i].meals[j];
@@ -1944,7 +1944,7 @@ const [saving, setSaving] = useState(false)
         // navigate(`/`);
         handleClose();
         toast.success("Meal Plan Saved!");
-        setSaving(false)
+        setSaving(false);
         // console.log(res);
       });
     } catch (error) {
@@ -2604,34 +2604,43 @@ const [saving, setSaving] = useState(false)
                 aria-describedby="modal-description"
               >
                 <Box sx={style}>
-               {saving ? (<>Saving.... Please Wait</>) : (   <center>
-                  Save
-                  <br/>
-                  <TextField
-                    name="mealname"
-                    label="mealname"
-                    variant="outlined"
-                    value={mealName}
-                    onChange={handleChange}
-                    required={true}
-                  />
-                  <Button onClick={saveMeal}     sx={{
-                      mx: 5, 
-                      mt: 3,
-                            display: "block",
-                            background: "#ffffff",
-                            color: "#E66253",
-                            fontSize: "20px",
-                            borderRadius: 5,
-                           
-                            "&:hover": {
-                              backgroundColor: "#E66253",
-                              color: "#ffffff",
-                              border: 1,
-                              borderColor: "#ffffff",
-                            },
-                          }}>Save Meal Plan</Button>
-                          </center>)}
+                  {saving ? (
+                    <>Saving.... Please Wait</>
+                  ) : (
+                    <center>
+                      Save
+                      <br />
+                      <TextField
+                        name="mealname"
+                        label="mealname"
+                        variant="outlined"
+                        value={mealName}
+                        onChange={handleChange}
+                        required={true}
+                      />
+                      <Button
+                        onClick={saveMeal}
+                        sx={{
+                          mx: 5,
+                          mt: 3,
+                          display: "block",
+                          background: "#ffffff",
+                          color: "#E66253",
+                          fontSize: "20px",
+                          borderRadius: 5,
+
+                          "&:hover": {
+                            backgroundColor: "#E66253",
+                            color: "#ffffff",
+                            border: 1,
+                            borderColor: "#ffffff",
+                          },
+                        }}
+                      >
+                        Save Meal Plan
+                      </Button>
+                    </center>
+                  )}
                 </Box>
               </Modal>
             </Box>
