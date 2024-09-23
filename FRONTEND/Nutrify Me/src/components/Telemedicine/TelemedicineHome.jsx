@@ -103,9 +103,8 @@ function ServerDay(props) {
 // *
 
 function TelemedicineHome() {
-
   //! tabs
-  const [appointmentList, setAppointmentList] = useState([])
+  const [appointmentList, setAppointmentList] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
   const handleTabChange = (event, newActiveTab) => {
     console.log(newActiveTab);
@@ -126,8 +125,6 @@ function TelemedicineHome() {
       content: <Box></Box>,
     },
   ];
-
-
 
   //!
   const [designatedNutritionist, setDesignatedNutritionist] = useState();
@@ -193,7 +190,7 @@ function TelemedicineHome() {
     }
   };
 
-  //! Transfer 
+  //! Transfer
   const [openTransfer, setOpenTransfer] = useState(false); // Modal open state
   const handleOpenTransfer = (selectedDate) => {
     // Optional: Do something with the selected date before opening the modal
@@ -204,28 +201,27 @@ function TelemedicineHome() {
     setOpenTransfer(false);
   };
 
-const transferNutritionist = () => {
-  try {
-    AxiosInstance.put(`patientnutritionistagreement/`, {
-      agree_id: agreeDetails.agree_id ,
-      status: "Disagree",
-      nutritionist_id: designatedNutritionist.nutritionist_id,
-      user_id: loggedInUser.user_id,
-    }).then((res) => {
-      console.log(res.data);
-      toast.success("Nutritionist Removed");
-      GetData();
-      setDesignatedNutritionist(null)
-      handleCloseTransfer();
-      // navigate("/?success=registered");
-    });
-  } catch (error) {
-    console.log(error.response.data);
-  }
-}
+  const transferNutritionist = () => {
+    try {
+      AxiosInstance.put(`patientnutritionistagreement/`, {
+        agree_id: agreeDetails.agree_id,
+        status: "Disagree",
+        nutritionist_id: designatedNutritionist.nutritionist_id,
+        user_id: loggedInUser.user_id,
+      }).then((res) => {
+        console.log(res.data);
+        toast.success("Nutritionist Removed");
+        GetData();
+        setDesignatedNutritionist(null);
+        handleCloseTransfer();
+        // navigate("/?success=registered");
+      });
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   //!
-
 
   //!
   //codes for consultation pop up in selecting nutritionist
@@ -1244,7 +1240,7 @@ const transferNutritionist = () => {
         time: time,
         user_id: loggedInUser.user_id,
         nutritionist_id: selectedNutritionist,
-          kind: "Follow-Up",
+        kind: "Follow-Up",
       }).then((res) => {
         // navigate(`/`);
         toast.success("Appointment Sent, Please wait for confirmation");
@@ -1293,7 +1289,7 @@ const transferNutritionist = () => {
     setTime(formattedTime);
   };
 
-  const [agreeDetails, setAgreeDetails] = useState()
+  const [agreeDetails, setAgreeDetails] = useState();
   const GetData = () => {
     AxiosInstance.get(`nutritionist/`)
       .then((res) => {
@@ -1301,58 +1297,76 @@ const transferNutritionist = () => {
         let tempNut = res.data;
         AxiosInstance.get(`patientnutritionistagreement`)
           .then((res) => {
-
-            setAgreeDetails(res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree"))
+            setAgreeDetails(
+              res.data.find(
+                (data) =>
+                  data.user_id === loggedInUser.user_id &&
+                  data.status === "Agree"
+              )
+            );
             console.log(
-              res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
+              res.data.find(
+                (data) =>
+                  data.user_id === loggedInUser.user_id &&
+                  data.status === "Agree"
+              )
             );
             console.log(
               tempNut.find(
                 (data) =>
                   data.nutritionist_id ===
-                  res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
-                    .nutritionist_id
+                  res.data.find(
+                    (data) =>
+                      data.user_id === loggedInUser.user_id &&
+                      data.status === "Agree"
+                  ).nutritionist_id
               )
             );
 
-      
             setDesignatedNutritionist(
               tempNut.find(
                 (data) =>
                   data.nutritionist_id ===
-                  res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
-                    .nutritionist_id 
+                  res.data.find(
+                    (data) =>
+                      data.user_id === loggedInUser.user_id &&
+                      data.status === "Agree"
+                  ).nutritionist_id
               )
             );
 
-
             try {
               AxiosInstance.get(`pendingappointment`)
-              .then((respo) => {
-                //  setNutritionist(res.data);
-        console.log(respo)
-             
-                setAppointmentList(
-                  respo.data.filter((data) => data.user_id === loggedInUser.user_id && data.nutritionist_id === tempNut.find(
-                    (data) =>
-                      data.nutritionist_id ===
-                      res.data.find((data) => data.user_id === loggedInUser.user_id && data.status === "Agree")
-                        .nutritionist_id 
-                  ).nutritionist_id)
-                );
-              })
-              .catch((error) => {
-                console.error("Error fetching data:", error);
-                // Optionally display an error message to the user
-                //setNutritionist(options);
-                // console.log("test", nutritionist);
-              });
-            }
-            catch(error) {
-              console.log(error)
-            }
+                .then((respo) => {
+                  //  setNutritionist(res.data);
+                  console.log(respo);
 
-          
+                  setAppointmentList(
+                    respo.data.filter(
+                      (data) =>
+                        data.user_id === loggedInUser.user_id &&
+                        data.nutritionist_id ===
+                          tempNut.find(
+                            (data) =>
+                              data.nutritionist_id ===
+                              res.data.find(
+                                (data) =>
+                                  data.user_id === loggedInUser.user_id &&
+                                  data.status === "Agree"
+                              ).nutritionist_id
+                          ).nutritionist_id
+                    )
+                  );
+                })
+                .catch((error) => {
+                  console.error("Error fetching data:", error);
+                  // Optionally display an error message to the user
+                  //setNutritionist(options);
+                  // console.log("test", nutritionist);
+                });
+            } catch (error) {
+              console.log(error);
+            }
           })
           .catch((error) => {
             console.error("Error fetching data:", error);
@@ -1385,20 +1399,13 @@ const transferNutritionist = () => {
         //setNutritionist(options);
         // console.log("test", nutritionist);
       });
-
-
-  
-
-      
   };
 
-  const getPendingList = () => {
-    
-  }
+  const getPendingList = () => {};
   const [todayAppointment, setTodayAppointment] = useState();
   // <h2>No Scheduled Consultation </h2>
   const GetAppointmentData = async () => {
-   await  AxiosInstance.get(`appointment`)
+    await AxiosInstance.get(`appointment`)
       .then((res) => {
         // setAppointment(res.data);
 
@@ -1551,8 +1558,6 @@ const transferNutritionist = () => {
   //   }
   // };
   useEffect(() => {
-   
-
     GetData();
     GetAppointmentData();
   }, []);
@@ -1659,23 +1664,22 @@ const transferNutritionist = () => {
 
     try {
       AxiosInstance.post(`pendingappointment/`, {
-
-    date: selectedDates.format("YYYY-MM-DD"),
+        date: selectedDates.format("YYYY-MM-DD"),
         status: "pending",
         kind: "New",
-      nutritionist_id: selectedNutritionist,
+        nutritionist_id: selectedNutritionist,
         user_id: loggedInUser.user_id,
         time: selectedTime,
       }).then((res) => {
         console.log(res);
         toast.success("Appointment Sent, Please wait for confirmation");
-       // handleScheduleClose();
+        // handleScheduleClose();
         // navigate("/?success=registered");
       });
     } catch (error) {
       console.log(error);
     }
-      try {
+    try {
       AxiosInstance.post(`patientnutritionistagreement/`, {
         status: "Agree",
         nutritionist_id: selectedNutritionist,
@@ -1689,7 +1693,6 @@ const transferNutritionist = () => {
     } catch (error) {
       console.log(error.response.data);
     }
-
 
     // try {
     //   AxiosInstance.post(`appointment/`, {
@@ -2438,8 +2441,6 @@ const transferNutritionist = () => {
                       </Grid>
                       <br />
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      
-
                         {selectedDates ? (
                           <>
                             <Typography sx={{ mb: 1 }}>
@@ -2455,7 +2456,7 @@ const transferNutritionist = () => {
                               )}
                               shouldDisableDate={disableUnavailableDates}
                               minDate={dayjs()}
-                            //  minDate={dayjs().add(7, "day")}
+                              //  minDate={dayjs().add(7, "day")}
                               //  open // Keep the calendar open
                             />
                             {console.log(freeTime)}
@@ -2610,8 +2611,8 @@ const transferNutritionist = () => {
               onChange={handleDateChangesSched}
               renderInput={(params) => <TextField {...params} />}
               shouldDisableDate={disableUnavailableFinal}
-          //    minDate={dayjs().add(7, "day")}
-            minDate={dayjs()}
+              //    minDate={dayjs().add(7, "day")}
+              minDate={dayjs()}
 
               //  open // Keep the calendar open
             />
@@ -2672,262 +2673,428 @@ const transferNutritionist = () => {
               <div></div>
             )}
           </LocalizationProvider>  */}
-          <Button onClick={scheduleAppointment}    sx={{
-                          
-                            mx: "auto",
-                            display: "block",
-                            background: "#ffffff",
-                            color: "#E66253",
-                            fontSize: "20px",
-                            borderRadius: 0,
-                            mt: 0,
-                            "&:hover": {
-                              backgroundColor: "#E66253",
-                              color: "#ffffff",
-                              border: 1,
-                              borderColor: "#ffffff",
-                            },
-                          }}>Make Appointment</Button>
+          <Button
+            onClick={scheduleAppointment}
+            sx={{
+              mx: "auto",
+              display: "block",
+              background: "#ffffff",
+              color: "#E66253",
+              fontSize: "20px",
+              borderRadius: 0,
+              mt: 0,
+              "&:hover": {
+                backgroundColor: "#E66253",
+                color: "#ffffff",
+                border: 1,
+                borderColor: "#ffffff",
+              },
+            }}
+          >
+            Make Appointment
+          </Button>
         </Box>
       </Modal>
       {/* //! with designated nutritionist */}
-{ designatedNutritionist ? (<Box sx = {{border: 3,borderRadius: 3,  px: 3,pt: "50px", pb: "30px", ml: 10, mr: 10, borderColor: "#E66253"}}>
-       <Grid container spacing = {2} sx = {{mb: 3}}>
-       <Grid xs = {6}> 
-         <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "2em" }}>Your Nutritionist</Typography>
-        <img src={designatedNutritionist?.image} width="40%" height ="40%" />
-        <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1em" }}>Name: {designatedNutritionist?.first_name} {" "} {designatedNutritionist?.last_name}</Typography>
-    
-      
-        <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1em" }}>Schedule</Typography>
-        {/* {designatedNutritionist?.schedule_day} <br />
+      {designatedNutritionist ? (
+        <Box
+          sx={{
+            border: 3,
+            borderRadius: 3,
+            px: 3,
+            pt: "50px",
+            pb: "30px",
+            ml: 10,
+            mr: 10,
+            borderColor: "#E66253",
+          }}
+        >
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid xs={6}>
+              <Typography
+                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2em" }}
+              >
+                Your Nutritionist
+              </Typography>
+              <img
+                src={designatedNutritionist?.image}
+                width="40%"
+                height="40%"
+              />
+              <Typography
+                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1em" }}
+              >
+                Name: {designatedNutritionist?.first_name}{" "}
+                {designatedNutritionist?.last_name}
+              </Typography>
+
+              <Typography
+                sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1em" }}
+              >
+                Schedule
+              </Typography>
+              {/* {designatedNutritionist?.schedule_day} <br />
         {designatedNutritionist?.schedule_time}
         <br /> */}
 
-<center>
-        <Grid container spacing = {2} sx = {{ml: "180px", mt: 1}}>
-        <Grid xs = {3} sx = {{float: "right"}}>{designatedNutritionist?.schedule_day.map((item) => (
-          <>{item} <br/></>
-        ))}</Grid>
-        <Grid xs = {3}  sx = {{float: "left"}}>
-        {designatedNutritionist?.schedule_time.map((item) => (
-          <>{item} <br/></>
-        ))}
-        </Grid>
-        </Grid>
-        </center>
-<br/>
-        <center>
-        <Button onClick={setOpenSched}  sx={{
-                           
-                            background: "#E66253",
-                            color: "#ffffff",
-                            fontSize: "1em",
-                            borderRadius: 1,
-                            mt:0,
-                            "&:hover": {
-                              backgroundColor: "#ffffff",
-                              color: "#E66253",
-                              border: 1,
-                              borderColor: "#E66253",
-                            },
-                          }}>Schedule an Appointment?</Button>
-                          </center>
-        <Button sx ={{ textDecoration: "underline", color: "#898246" }}>Follow Up</Button>
-        <Button onClick = {handleOpenTransfer} sx ={{ textDecoration: "underline", color: "#898246" }}>Transfer</Button></Grid>
-       
-        <Modal
-        open={openTransfer}
-        onClose={handleCloseTransfer}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <Box sx={style}>
-          <center>
-          Transfer to a New Nutritionist?
-<br/>
-<br/>
+              <center>
+                <Grid container spacing={2} sx={{ ml: "180px", mt: 1 }}>
+                  <Grid xs={3} sx={{ float: "right" }}>
+                    {designatedNutritionist?.schedule_day.map((item) => (
+                      <>
+                        {item} <br />
+                      </>
+                    ))}
+                  </Grid>
+                  <Grid xs={3} sx={{ float: "left" }}>
+                    {designatedNutritionist?.schedule_time.map((item) => (
+                      <>
+                        {item} <br />
+                      </>
+                    ))}
+                  </Grid>
+                </Grid>
+              </center>
+              <br />
+              <center>
+                <Button
+                  onClick={setOpenSched}
+                  sx={{
+                    background: "#E66253",
+                    color: "#ffffff",
+                    fontSize: "1em",
+                    borderRadius: 1,
+                    mt: 0,
+                    "&:hover": {
+                      backgroundColor: "#ffffff",
+                      color: "#E66253",
+                      border: 1,
+                      borderColor: "#E66253",
+                    },
+                  }}
+                >
+                  Schedule an Appointment?
+                </Button>
+              </center>
+              <Button sx={{ textDecoration: "underline", color: "#898246" }}>
+                Follow Up
+              </Button>
+              <Button
+                onClick={handleOpenTransfer}
+                sx={{ textDecoration: "underline", color: "#898246" }}
+              >
+                Transfer
+              </Button>
+            </Grid>
 
-          <Button onClick = {transferNutritionist}     sx={{
-                        
-                       mr: 2, 
-                            background: "#ffffff",
-                            color: "#E66253",
-                            fontSize: "1em",
-                            borderRadius: 0,
-                            mt: 0,
-                            "&:hover": {
-                              backgroundColor: "#E66253",
-                              color: "#ffffff",
-                              border: 1,
-                              borderColor: "#ffffff",
-                            },
-                          }}>Yes</Button>
-          <Button sx={{
-                        
-                       
-                        background: "#ffffff",
-                        color: "#E66253",
-                        fontSize: "1em",
-                        borderRadius: 0,
-                        mt: 0,
-                        "&:hover": {
-                          backgroundColor: "#E66253",
-                          color: "#ffffff",
-                          border: 1,
-                          borderColor: "#ffffff",
-                        },
-                      }} onClick = {handleCloseTransfer}>No</Button>
-                      </center>
-          </Box>
-          </Modal>
-       
-       
-       
-       
-       <Grid xs={6}>
-       <Tabs
-                        value={activeTab}
-                        // sx={{
-                        //   color: "#f00", // Change text color to red
-                        //   fontSize: "18px", // Increase font size
-                        //   fontWeight: "bold", // Make text bold
-                        // }}
-                        aria-label="basic tabs example"
-                        onChange={handleTabChange}
-                       // indicatorColor="primary"
-                        centered
-                      >
-                        {tabContent.map((tab, index) => (
-                          <Tab
-                            key={index}
-                            label={tab.title}
-                            sx={{
-                              color: activeTab === index ? '#ffffff' : '#E66253', // Change text color to red
-                              backgroundColor: activeTab === index ? '#ffffff' : '#ffffff',
-                              fontSize: "14px", // Increase font size
-                              border: 3,
-                              fontWeight: "bold",
-                              borderColor: "#E66253", 
-                              borderRadius: 2, 
-                              mr:4,
-                              //fontWeight: "bold", // Make text bold
-                            }}
-                          />
-                        ))}
-                      </Tabs>
-                      {tabContent.map((tab, index) => (
-                        <Box key={index} hidden={activeTab !== index}>
-                          {tab.content}
-                        </Box>
-                      ))}
+            <Modal
+              open={openTransfer}
+              onClose={handleCloseTransfer}
+              aria-labelledby="modal-title"
+              aria-describedby="modal-description"
+            >
+              <Box sx={style}>
+                <center>
+                  Transfer to a New Nutritionist?
+                  <br />
+                  <br />
+                  <Button
+                    onClick={transferNutritionist}
+                    sx={{
+                      mr: 2,
+                      background: "#ffffff",
+                      color: "#E66253",
+                      fontSize: "1em",
+                      borderRadius: 0,
+                      mt: 0,
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 1,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    sx={{
+                      background: "#ffffff",
+                      color: "#E66253",
+                      fontSize: "1em",
+                      borderRadius: 0,
+                      mt: 0,
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 1,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                    onClick={handleCloseTransfer}
+                  >
+                    No
+                  </Button>
+                </center>
+              </Box>
+            </Modal>
 
-{activeTab === 0 ? (<Box>
-  <Typography sx = {{ color: "#99756E", fontWeight: "bold", fontSize: "1.4em", mt: 1.5}}>Approve Appointments</Typography>
-  {appointmentList.filter((item) => (
-    item.status === "Approved"
-  )).length > 0 ? (<>{appointmentList.filter((item) => (
-    item.status === "Approved"
-  ))?.map((items) => (
-    <Box sx = {{justifyContent: 'flex-start', mb: 0.8}}>
-    <Typography sx = {{  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',  color: "#99756E", fontWeight: "bold", fontSize: "1em"}}>
-      {dayjs(items.date).format("MMMM DD, YYYY")}
-      </Typography>
-      <Typography sx = {{  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',  color: "#99756E", fontSize: "1em"}}>
-      {dayjs(items.date + " " + items.time).format("HH:mm A")}
-      </Typography>
-     
-      <hr/>
-      </Box>
-  ))} </>) : (
-    <><br/>No Appointments</>
-  )}
-</Box>) : activeTab === 1 ? (<Box>
-  <Typography sx = {{ color: "#99756E", fontWeight: "bold", fontSize: "1.4em", mt: 1.5}}>Pending Appointments</Typography>
-  {appointmentList.filter((item) => (
-    item.status === "pending"
-  )).length > 0 ? (<>{appointmentList.filter((item) => (
-    item.status === "pending"
-  ))?.map((items) => (
-    <Box sx = {{justifyContent: 'flex-start', mb: 0.8}}>
-    <Typography sx = {{  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',  color: "#99756E", fontWeight: "bold", fontSize: "1em"}}>
-      {dayjs(items.date).format("MMMM DD, YYYY")}
-      </Typography>
-      <Typography sx = {{  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',  color: "#99756E", fontSize: "1em"}}>
-      {dayjs(items.date + " " + items.time).format("HH:mm A")}
-      </Typography>
-     
-      <hr/>
-      </Box>
-  ))} </>) : (
-    <><br/>No Appointments</>
-  )}
-</Box>) : (<Box>
-  <Typography sx = {{ color: "#99756E", fontWeight: "bold", fontSize: "1.4em", mt: 1.5}}>Declined Appointments</Typography>
-  {appointmentList.filter((item) => (
-    item.status === "Declined"
-  )).length > 0 ? (<>{appointmentList.filter((item) => (
-    item.status === "Declined"
-  ))?.map((items) => (
-    <Box sx = {{justifyContent: 'flex-start', mb: 0.8}}>
-    <Typography sx = {{  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',  color: "#99756E", fontWeight: "bold", fontSize: "1em"}}>
-      {dayjs(items.date).format("MMMM DD, YYYY")}
-      </Typography>
-      <Typography sx = {{  display: 'flex',
-  justifyContent: 'flex-start',
-  alignItems: 'flex-start',  color: "#99756E", fontSize: "1em"}}>
-      {dayjs(items.date + " " + items.time).format("HH:mm A")}
-      </Typography>
-     
-      <hr/>
-      </Box>
-  ))} </>) : (
-    <><br/>No Appointments</>
-  )}
-</Box>) }
+            <Grid xs={6}>
+              <Tabs
+                value={activeTab}
+                // sx={{
+                //   color: "#f00", // Change text color to red
+                //   fontSize: "18px", // Increase font size
+                //   fontWeight: "bold", // Make text bold
+                // }}
+                aria-label="basic tabs example"
+                onChange={handleTabChange}
+                // indicatorColor="primary"
+                centered
+              >
+                {tabContent.map((tab, index) => (
+                  <Tab
+                    key={index}
+                    label={tab.title}
+                    sx={{
+                      color: activeTab === index ? "#ffffff" : "#E66253", // Change text color to red
+                      backgroundColor:
+                        activeTab === index ? "#ffffff" : "#ffffff",
+                      fontSize: "14px", // Increase font size
+                      border: 3,
+                      fontWeight: "bold",
+                      borderColor: "#E66253",
+                      borderRadius: 2,
+                      mr: 4,
+                      //fontWeight: "bold", // Make text bold
+                    }}
+                  />
+                ))}
+              </Tabs>
+              {tabContent.map((tab, index) => (
+                <Box key={index} hidden={activeTab !== index}>
+                  {tab.content}
+                </Box>
+              ))}
 
-       </Grid>
-       </Grid>
+              {activeTab === 0 ? (
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#99756E",
+                      fontWeight: "bold",
+                      fontSize: "1.4em",
+                      mt: 1.5,
+                    }}
+                  >
+                    Approve Appointments
+                  </Typography>
+                  {appointmentList.filter((item) => item.status === "Approved")
+                    .length > 0 ? (
+                    <>
+                      {appointmentList
+                        .filter((item) => item.status === "Approved")
+                        ?.map((items) => (
+                          <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                color: "#99756E",
+                                fontWeight: "bold",
+                                fontSize: "1em",
+                              }}
+                            >
+                              {dayjs(items.date).format("MMMM DD, YYYY")}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                color: "#99756E",
+                                fontSize: "1em",
+                              }}
+                            >
+                              {dayjs(items.date + " " + items.time).format(
+                                "HH:mm A"
+                              )}
+                            </Typography>
 
-      
-      </Box>) : (  <Box  sx = {{border: 3,borderRadius: 3,  px: 3,pt: "50px", pb: "30px", ml: 10, mr: 10, borderColor: "#E66253"}}>
-        <Typography sx = {{color: "#99756E", fontWeight:"bold", fontSize: "2em" }}>No Designated Nutritionist</Typography>
-        <Button onClick={handleOpen}  variant="contained"
-                          sx={{
-                       
-                            background: "#E66253",
-                            color: "#ffffff",
-                            fontSize: "1em",
-                          
-                            mt: 10,
-                            "&:hover": {
-                              backgroundColor: "#ffff",
-                              color: "#E66253",
-                              border: 1,
-                              borderColor: "#E66253",
-                            },
-                          }}>
-          Find the right Nutritionist for you!
-        </Button>
-      </Box>)}
+                            <hr />
+                          </Box>
+                        ))}{" "}
+                    </>
+                  ) : (
+                    <>
+                      <br />
+                      No Appointments
+                    </>
+                  )}
+                </Box>
+              ) : activeTab === 1 ? (
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#99756E",
+                      fontWeight: "bold",
+                      fontSize: "1.4em",
+                      mt: 1.5,
+                    }}
+                  >
+                    Pending Appointments
+                  </Typography>
+                  {appointmentList.filter((item) => item.status === "pending")
+                    .length > 0 ? (
+                    <>
+                      {appointmentList
+                        .filter((item) => item.status === "pending")
+                        ?.map((items) => (
+                          <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                color: "#99756E",
+                                fontWeight: "bold",
+                                fontSize: "1em",
+                              }}
+                            >
+                              {dayjs(items.date).format("MMMM DD, YYYY")}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                color: "#99756E",
+                                fontSize: "1em",
+                              }}
+                            >
+                              {dayjs(items.date + " " + items.time).format(
+                                "HH:mm A"
+                              )}
+                            </Typography>
 
-      
+                            <hr />
+                          </Box>
+                        ))}{" "}
+                    </>
+                  ) : (
+                    <>
+                      <br />
+                      No Appointments
+                    </>
+                  )}
+                </Box>
+              ) : (
+                <Box>
+                  <Typography
+                    sx={{
+                      color: "#99756E",
+                      fontWeight: "bold",
+                      fontSize: "1.4em",
+                      mt: 1.5,
+                    }}
+                  >
+                    Declined Appointments
+                  </Typography>
+                  {appointmentList.filter((item) => item.status === "Declined")
+                    .length > 0 ? (
+                    <>
+                      {appointmentList
+                        .filter((item) => item.status === "Declined")
+                        ?.map((items) => (
+                          <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                color: "#99756E",
+                                fontWeight: "bold",
+                                fontSize: "1em",
+                              }}
+                            >
+                              {dayjs(items.date).format("MMMM DD, YYYY")}
+                            </Typography>
+                            <Typography
+                              sx={{
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start",
+                                color: "#99756E",
+                                fontSize: "1em",
+                              }}
+                            >
+                              {dayjs(items.date + " " + items.time).format(
+                                "HH:mm A"
+                              )}
+                            </Typography>
+
+                            <hr />
+                          </Box>
+                        ))}{" "}
+                    </>
+                  ) : (
+                    <>
+                      <br />
+                      No Appointments
+                    </>
+                  )}
+                </Box>
+              )}
+            </Grid>
+          </Grid>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            border: 3,
+            borderRadius: 3,
+            px: 3,
+            pt: "50px",
+            pb: "30px",
+            ml: 10,
+            mr: 10,
+            borderColor: "#E66253",
+          }}
+        >
+          <Typography
+            sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2em" }}
+          >
+            No Designated Nutritionist
+          </Typography>
+          <Button
+            onClick={handleOpen}
+            variant="contained"
+            sx={{
+              background: "#E66253",
+              color: "#ffffff",
+              fontSize: "1em",
+
+              mt: 10,
+              "&:hover": {
+                backgroundColor: "#ffff",
+                color: "#E66253",
+                border: 1,
+                borderColor: "#E66253",
+              },
+            }}
+          >
+            Find the right Nutritionist for you!
+          </Button>
+        </Box>
+      )}
+
       {/* //!  */}
       <br />
       {/* //? */}
-    
+
       {/* //? */}
-      <Button>View History</Button>
+      {/* <Button>View History</Button> */}
     </div>
   );
 }

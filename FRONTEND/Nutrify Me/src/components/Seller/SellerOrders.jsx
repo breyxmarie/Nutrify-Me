@@ -188,7 +188,10 @@ function SellerOrders() {
       );
   };
 
+  const [loading, setLoading] = useState(false);
+
   const createOrder = async (address_ids, user_id, orderId) => {
+    setLoading(true);
     console.log(address_ids, addressData);
     const foundAddress = addressData.find(
       (item) => item.address_id === address_ids
@@ -257,12 +260,12 @@ function SellerOrders() {
                 orderData.data.data.shareLink,
                 tempAddress.name
               );
+              setLoading(false);
+              handleClose();
             });
           } catch (error) {
             console.log(error.response);
           }
-
-          handleClose();
         } catch (error) {
           console.error("Error creating quotation:", error.message);
         }
@@ -720,54 +723,67 @@ function SellerOrders() {
               aria-describedby="modal-description"
             >
               <Box sx={style}>
-                {" "}
-                {item.date}
-                <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
-                  <Grid xs={2}>
-                    {" "}
-                    <img src="/images/food journal icon.png" />
-                  </Grid>
-                  <Grid xs={8}>Edit Food Information</Grid>
-                  <Grid xs={2}>
-                    <Button sx={{ float: "right" }} onClick={handleClose}>
-                      <img src="/images/close.png" height="10" weight="10" />
+                {loading ? (
+                  <>Loading Please Wait...</>
+                ) : (
+                  <>
+                    {item.date}
+                    <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
+                      <Grid xs={2}>
+                        {" "}
+                        <img src="/images/food journal icon.png" />
+                      </Grid>
+                      <Grid xs={8}>Edit Food Information</Grid>
+                      <Grid xs={2}>
+                        <Button sx={{ float: "right" }} onClick={handleClose}>
+                          <img
+                            src="/images/close.png"
+                            height="10"
+                            weight="10"
+                          />
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    Name:
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "70%",
+                        background: "#ffffff",
+                        borderRadius: 0,
+                      }}
+                      // value={param.meals.Breakfast.food}
+                      name="name"
+                      value={name}
+                      onChange={(event) => setName(event.target.value)}
+                    />
+                    Phone Number:
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      sx={{
+                        width: "70%",
+                        background: "#ffffff",
+                        borderRadius: 0,
+                      }}
+                      value={phone}
+                      onChange={(event) => setPhone(event.target.value)}
+                      // value={param.meals.Breakfast.food}
+                      name="name"
+                    />
+                    {selectedAddress}
+                    <Button
+                      onClick={() =>
+                        createOrder(
+                          selectedAddress,
+                          selectedUser,
+                          selectedOrder
+                        )
+                      }
+                    >
+                      Create Order
                     </Button>
-                  </Grid>
-                </Grid>
-                Name:
-                <TextField
-                  id="outlined-multiline-flexible"
-                  sx={{
-                    width: "70%",
-                    background: "#ffffff",
-                    borderRadius: 0,
-                  }}
-                  // value={param.meals.Breakfast.food}
-                  name="name"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                />
-                Phone Number:
-                <TextField
-                  id="outlined-multiline-flexible"
-                  sx={{
-                    width: "70%",
-                    background: "#ffffff",
-                    borderRadius: 0,
-                  }}
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  // value={param.meals.Breakfast.food}
-                  name="name"
-                />
-                {selectedAddress}
-                <Button
-                  onClick={() =>
-                    createOrder(selectedAddress, selectedUser, selectedOrder)
-                  }
-                >
-                  Create Order
-                </Button>
+                  </>
+                )}
               </Box>
             </Modal>
             {/* <Button
