@@ -59,6 +59,9 @@ function FoodJournalHome() {
     setActiveTab(newActiveTab);
   };
 
+  //! loading
+  const [loading1, setLoading1] = useState(false)
+  //!
   const tabContent = [
     {
       title: "No Meal Plan",
@@ -131,13 +134,15 @@ function FoodJournalHome() {
               let tempMealstalaga = [];
               console.log(respo)
               tempOrder.map((item) =>
-                (console.log(respo.data?.filter(
-                  (items) => items.mealplan_id === item
-                )),tempMealstalaga.push(
+                (
+                 // tempMealstalaga.push(
                   respo.data?.filter(
                     (items) => items.mealplan_id === item
-                  )
-                ))
+                  ).map((item1) => (
+                    tempMealstalaga.push(item1)
+                  ))
+                //)
+              )
               );
               console.log(tempMealstalaga)
               setShopMeal(tempMealstalaga);
@@ -163,14 +168,19 @@ function FoodJournalHome() {
             (console.log(respo.data?.filter(
               (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
             )),
-            tempMealstalaga.push(
+         //   tempMealstalaga.push(
               respo.data?.filter(
                 (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
-              )
-            ))
+              ).map((item1) => (
+                tempMealstalaga.push(item1)
+              ))
+           // )
+          )
           );
           console.log(tempMealstalaga)
+          //setRecommendMeal(tempMealstalaga);
           setRecommendMeal(tempMealstalaga);
+
         });
       } catch (error) {
         console.log(error)
@@ -1156,6 +1166,21 @@ function FoodJournalHome() {
     );
   };
 
+  const groupByDay = (data) => {
+    const groupedData = {};
+    for (const item of data) {
+      const day = item.day; // Assuming you have a "day" property in each item
+      if (!groupedData[day]) {
+        groupedData[day] = [];
+      }
+      groupedData[day].push(item);
+    }
+
+    console.log(data);
+
+    return groupedData;
+  };
+
   // TODO slider
 
   const [dinnerFood, setDinnerFood] = useState(null);
@@ -1528,6 +1553,7 @@ function FoodJournalHome() {
     console.log(dates);
     console.log(activeTab, selectedMealPlan)
 
+    setLoading1(true)
 
     if (activeTab === 1)
     {
@@ -1552,9 +1578,7 @@ function FoodJournalHome() {
             //   item.mealplan_id === finalMealPlan.shop_mealplan_id
             // ))
             
-            console.log(shopMeal[0]?.filter((item) => (
-                 item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
-               )))
+          
                         for (let i = 1; i < 6; i++) {
             
                           const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
@@ -1563,7 +1587,7 @@ function FoodJournalHome() {
             
             
                           const meals = [];
-                          const tempU = recommendMeal[0]?.filter((item) => (
+                          const tempU = recommendMeal?.filter((item) => (
                             item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
                           ))
                           console.log(tempU.filter((item) => (
@@ -1957,8 +1981,12 @@ function FoodJournalHome() {
                                   }).then((res) => {
                                     console.log(res, res.data);
                                     if(i === 5) {
+                                      getJournalData()
+
                                       handleClose();
                                       toast.success("Entry Added");
+                                      setLoading1(false)
+                                      setActiveTab(0)
                                       reset();
                                     }
                                   });
@@ -2048,8 +2076,12 @@ function FoodJournalHome() {
                                       console.log(res, res.data);
 
                                       if(i === 5) {
+                                        getJournalData()
                                         handleClose();
+
                                         toast.success("Entry Added");
+                                        setLoading1(false)
+                                        setActiveTab(0)
                                         reset();
                                       }
                                     });
@@ -2074,9 +2106,7 @@ console.log(dayNum, "try")
 //   item.mealplan_id === finalMealPlan.shop_mealplan_id
 // ))
 
-console.log(shopMeal[0]?.filter((item) => (
-     item.mealplan_id === finalMealPlan.shop_mealplan_id
-   )))
+
             for (let i = 1; i < 6; i++) {
 
               const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
@@ -2085,7 +2115,7 @@ console.log(startWeek, endWeek  , "hi")
 
 
               const meals = [];
-              const tempU = shopMeal[0]?.filter((item) => (
+              const tempU = shopMeal?.filter((item) => (
                 item.mealplan_id === finalMealPlan.shop_mealplan_id
               ))
               console.log(tempU.filter((item) => (
@@ -2258,8 +2288,11 @@ console.log(startWeek, endWeek  , "hi")
                       }).then((res) => {
                         console.log(res, res.data);
                         if (i === 5) {
+                          getJournalData()
                           handleClose();
                           toast.success("Entry Added");
+                          setActiveTab(0)
+                          setLoading1(false)
                         }
                       });
                     } catch (error) {
@@ -2648,6 +2681,13 @@ console.log(startWeek, endWeek  , "hi")
   };
   //?
 
+  //! set choices
+const setChoice = (e) => {
+  console.log(e)
+  setSelectedMealPlan(e.target.value) 
+  setFinalMealPlan()
+}
+  //?
   return (
     <div
       className="content"
@@ -2674,7 +2714,7 @@ console.log(startWeek, endWeek  , "hi")
       {renderFooter()}
 
       {/* //! //! */}
-      <Modal
+      {/* <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -2686,7 +2726,7 @@ console.log(startWeek, endWeek  , "hi")
               {" "}
               <img src="/images/food journal icon.png" />
             </Grid>
-            <Grid xs={8}>New Food Journal Entry</Grid>
+            <Grid xs={8}>New Food Journal Entry try</Grid>
             <Grid xs={2}>
               <Button sx={{ float: "right" }} onClick={handleClose}>
                 <img src="/images/close.png" height="10" weight="10" />
@@ -2755,7 +2795,7 @@ console.log(startWeek, endWeek  , "hi")
             SUBMIT
           </Button>
         </Box>
-      </Modal>
+      </Modal> */}
       {/* //! modal for details */}
       {/* <Modal
         open={opens}
@@ -4187,8 +4227,9 @@ console.log(startWeek, endWeek  , "hi")
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                {" "}
-                <form onSubmit={handleSubmit(onSubmitHandler)}>
+                
+               {loading1 ? (<><center>  <img src="/images/pacman.gif" width="13%" />
+                <Typography>Saving your entry please wait...</Typography></center></>) : (<form onSubmit={handleSubmit(onSubmitHandler)}>
                   <Grid container spacing={2}>
                     <Grid xs={2}>
                       {" "}
@@ -5491,7 +5532,7 @@ console.log(startWeek, endWeek  , "hi")
                             id="demo-simple-select-filled"
                             // value={selectedNutritionist}
                             onChange={(e) =>
-                              setSelectedMealPlan(e.target.value)
+                              setChoice(e)
                             }
                             name="type"
                             width="full"
@@ -5529,16 +5570,29 @@ console.log(startWeek, endWeek  , "hi")
                                 ))}
                               </Select>
 
-                              {console.log(finalMealPlan)}
-                              {recommendedMealPlans ? (
+                              {console.log(finalMealPlan, recommendMeal?.filter((item) => (
+                                      item?.recommend_mealplan_id_id === finalMealPlan?.recommend_mealplan_id
+                                    )))}
+                                    {console.log(recommendMeal)}
+                              {recommendedMealPlans && finalMealPlan ? (
                                 <Box>
-                                  {console.log(finalMealPlan)}
+                                  {console.log(finalMealPlan, recommendMeal?.filter((item) => (
+                                      item?.recommend_mealplan_id === finalMealPlan?.recommend_mealplan_id
+                                    )))}
                                   <Typography>{finalMealPlan?.name}</Typography>
                                   {
-                                    shopMeal[0]?.filter((item) => (
-                                      finalMealPlan?.recommend_meal_id === finalMealPlan?.recommend_meal_id
+                                    recommendMeal?.filter((item) => (
+                                      item?.recommend_mealplan_id === finalMealPlan?.recommend_mealplan_id
                                     ))
-                             
+                                    .sort((a, b) => {
+                                      const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+                                      return order.indexOf(a.type) - order.indexOf(b.type);
+                                    })
+                                    .sort((a, b) => {
+                                      const order = ['1','2','3','4','5'];
+                                      return order.indexOf(a.day) - order.indexOf(b.day);
+                                    })
+                                  
                                     .map((meal) => (
                                       <tr key={meal?.shop_meal_id}>
                                          <td>{meal?.type}</td>
@@ -5548,6 +5602,8 @@ console.log(startWeek, endWeek  , "hi")
                                       </tr>
                                     ))
                                   }
+
+                               
                                   </Box>
                               )
                             : (<>{console.log(finalMealPlan)}</>)  
@@ -5625,7 +5681,7 @@ console.log(startWeek, endWeek  , "hi")
                                   {console.log(finalMealPlan)}
                                   <Typography>{finalMealPlan?.name}</Typography>
                                   {
-                                    shopMeal[0]?.filter((item) => (
+                                    shopMeal?.filter((item) => (
                                       item?.mealplan_id === finalMealPlan?.shop_mealplan_id
                                     ))
                                     // .sort((a, b) => {
@@ -5635,6 +5691,14 @@ console.log(startWeek, endWeek  , "hi")
                                     //     return a.type.localeCompare(b.type);
                                     //   }
                                     // })
+                                    .sort((a, b) => {
+                                      const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+                                      return order.indexOf(a.type) - order.indexOf(b.type);
+                                    })
+                                    .sort((a, b) => {
+                                      const order = ['1','2','3','4','5'];
+                                      return order.indexOf(a.day) - order.indexOf(b.day);
+                                    })
                                     .map((meal) => (
                                       <tr key={meal?.shop_meal_id}>
                                          <td>{meal?.type}</td>
@@ -5666,7 +5730,7 @@ console.log(startWeek, endWeek  , "hi")
                   >
                     SUBMIT
                   </button> */}
-                </form>
+                </form>) }
               </Box>
             </Modal>
           </Grid>

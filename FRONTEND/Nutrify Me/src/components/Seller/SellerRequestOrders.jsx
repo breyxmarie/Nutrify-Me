@@ -23,6 +23,11 @@ function SellerRequestOrders() {
   const [price, setPrice] = useState(0);
   // request:
   //  meal
+  const [loading1, setLoading1] = useState();
+
+  const [loading2, setLoading2] = useState();
+  const [loading3, setLoading3] = useState();
+  const [loading4, setLoading4] = useState();
 
   const style = {
     maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
@@ -100,6 +105,26 @@ console.log(tempResponse)
     const reverseRecommendResponse = tempRecommendResponse.data.reverse();
     setRecommendData(reverseRecommendResponse)
 
+    
+    if (recommendData.filter(
+      (item) => item.status === "Pending"
+    ).length > 0) {
+      setLoading2(true);
+    } else {
+      setLoading2(false);
+    }
+
+    console.log(recommendData.filter(
+      (item) => item.status === "Approved"
+    ).length)
+    if (recommendData.filter(
+      (item) => item.status === "Approved"
+    ).length > 0) {
+      setLoading4(true);
+    } else {
+      setLoading4(false);
+    }
+    
     const pendingData = reverseResponse.filter(
       (item) => item.status === "Pending"
     );
@@ -160,7 +185,18 @@ console.log(tempResponse)
 
     // console.log(tempData);
     setRequestData(tempData);
+
+    if (tempData.length > 0) {
+      setLoading1(true);
+    } else {
+      setLoading1(false);
+    }
     setPendingRequests(tempData);
+    if (tempDataApprove.length > 0) {
+      setLoading3(true);
+    } else {
+      setLoading3(false);
+    }
     setApproveRequests(tempDataApprove);
     setDisapproveRequests(tempDataDisapprove);
   };
@@ -323,8 +359,10 @@ console.log(tempResponse)
         sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
       >
       Pending Requests</Typography> 
+      Generated Meal Plans<br/>
       {console.log(pendingRequests)}
-      {pendingRequests.map((item) => (
+      {pendingRequests.length > 0 && loading1 === true ? 
+      (<> {pendingRequests.map((item) => (
         // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
         <Box     sx={{
           background: "#898246",
@@ -396,11 +434,23 @@ console.log(tempResponse)
             </Box>
           ))} */}
         </Box>
-      ))}
+      ))}</>) : pendingRequests.length === 0 && loading1 === false ? (
+            <>No Orders</>
+          ) : (
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
+          ) }
 
-
-
+<br/>
+<Typography>Recommended Meal Plans</Typography>
 {console.log(recommendData)}
+{recommendData.filter(
+      (item) => item.status === "Pending"
+    ).length > 0 ? 
+      (<>
 {recommendData.filter(
       (item) => item.status === "Pending"
     ).map((item) => (
@@ -475,11 +525,29 @@ console.log(tempResponse)
             </Box>
           ))} */}
         </Box>
-      ))}
+       ))}</>) : recommendData.filter(
+        (item) => item.status === "Pending"
+      ).length === 0 && loading2 === false ? (
+        <>No Orders</>
+      ) : (
+        <>
+          {/* {" "}
+          <img src="/images/magnify.gif" width="13%" />
+          <Typography>Loading...</Typography> */}
+        </>
+      ) }
+
+
+
+
+
          <Typography
         sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
       >
       Approved Request </Typography>
+      Generated Meal Plans <br/>
+      {approveRequests.length > 0 && loading3 === true ? 
+      (<>
       {approveRequests.map((item) => (
         // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
         <Box  sx={{
@@ -527,10 +595,22 @@ console.log(tempResponse)
             </Box>
           ))} */}
         </Box>
-      ))}
+      ))}</>) : approveRequests.length === 0 && loading3 === false ? (
+        <Typography>No Orders</Typography>
+      ) : (
+        <>
+          {" "}
+          <img src="/images/magnify.gif" width="13%" />
+          <Typography>Loading...</Typography>
+        </>
+      ) }
 
-
-
+<br/>
+<Typography>Recommended Meal Plans</Typography>
+{recommendData.filter(
+      (item) => item.status === "Approved"
+    ).length > 0  ? 
+      (<>
 {recommendData.filter(
       (item) => item.status === "Approved"
     ).map((item) => (
@@ -576,7 +656,17 @@ console.log(tempResponse)
             </Box>
           ))} */}
         </Box>
-      ))}
+      ))}</>) : recommendData.filter(
+        (item) => item.status === "Approved"
+      ).length === 0 && loading4 === false ? (
+        <>No Orders</>
+      ) : (
+        <>
+          {/* {" "}
+          <img src="/images/magnify.gif" width="13%" />
+          <Typography>Loading...</Typography> */}
+        </>
+      ) }
        
 
 <Modal

@@ -35,7 +35,9 @@ function SellerOrders() {
   const [allOrder, setAllOrder] = useState([]);
   const [userDetails, setUserDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
+  const [loading1, setLoading1] = useState();
 
+  const [loading2, setLoading2] = useState();
   const style = {
     maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
     display: "flex",
@@ -296,20 +298,28 @@ function SellerOrders() {
       const filteredOrderedData = response.filter(
         (item) => item.status === "Ordered"
       );
-
+      if (filteredOrderedData.length > 0) {
+        setLoading1(true);
+      } else {
+        setLoading1(false);
+      }
       setOrderedOrder(filteredOrderedData);
       // console.log(response);
       const filteredOnGoingData = response.filter((item) => {
         item.status === "On-Going";
       });
-
+      
       setOnGoingOrder(filteredOnGoingData);
 
       const filteredDoneData = response.filter(
         (item) => item.status === "Delivered"
       );
 
-      console.log(response.filter((item) => item.status === "Delivered"));
+      if (filteredDoneData.length > 0) {
+        setLoading2(true);
+      } else {
+        setLoading2(false);
+      }
       setDoneOrder(filteredDoneData);
 
       const userDeets = await AxiosInstance.get(`user`);
@@ -384,6 +394,8 @@ function SellerOrders() {
     return groupedData;
   };
 
+
+
   return (
     <div
       className="content"
@@ -395,11 +407,15 @@ function SellerOrders() {
       }}
     >
       <ChatBox />
-      New Orders <br />
+       
+      <Typography   sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 0, mb: 1 }}>New Orders</Typography>
       <br />
-      <br />
-      <br />
+     
+
+      {orderedOrder.length > 0 && loading1 === true ? 
+      (<> 
       <Grid container spacing={2}>
+        
         {orderedOrder.map((item, index) => (
           <Grid item xs={3} sm={4} md={6} key={index}>
             <Box
@@ -570,7 +586,7 @@ function SellerOrders() {
                 sx={{
                   color: "#ffffff",
                   border: 0,
-                  // fontWeight: "bold",
+                  // fontWeight: "bold", 
                   backgroundColor: "#539801",
                   "&:hover": {
                     backgroundColor: "#ffffff",
@@ -606,7 +622,22 @@ function SellerOrders() {
           </Grid>
         ))}
       </Grid>
-      Past Orders
+      </>) : orderedOrder.length === 0 && loading1 === false ? (
+            <>No Orders</>
+          ) : (
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
+          ) }
+
+
+     
+
+      <Typography   sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 1 }}>Past Orders</Typography>
+      {doneOrder.length > 0 && loading2 === true ? 
+      (<>
       {doneOrder.map((item, index) => (
         <Grid item xs={3} sm={4} md={6} key={index}>
           <Box
@@ -824,7 +855,18 @@ function SellerOrders() {
             </Button> */}
           </Box>
         </Grid>
-      ))}
+ ))}</>) : doneOrder.length === 0 && loading2 === false ? (
+  <>No Orders</>
+) : (
+  <>
+    {" "}
+    <img src="/images/magnify.gif" width="13%" />
+    <Typography>Loading...</Typography>
+  </>
+) }
+
+
+
     </div>
   );
 }

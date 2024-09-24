@@ -27,7 +27,6 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 function MealPlanHistory() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
 
-
   // ! weekly calendar
   dayjs.extend(isBetweenPlugin);
 
@@ -36,7 +35,7 @@ function MealPlanHistory() {
   })(({ theme, isSelected, isHovered, day }) => ({
     borderRadius: 0,
     ...(isSelected && {
-      backgroundColor:   "#ffffff",
+      backgroundColor: "#ffffff",
       color: "#000000",
       "&:hover, &:focus": {
         backgroundColor: "#ffffff",
@@ -86,15 +85,15 @@ function MealPlanHistory() {
   const [value, setValue] = useState(dayjs());
 
   //! modal
-  
 
-  const [chosen, setChosen] = useState()
+  const [chosen, setChosen] = useState();
   const [open, setOpen] = useState(false);
   const handleOpen = (data) => {
-    console.log(data, "hi")
-    setChosen(data)
-    
-    setOpen(true)};
+    console.log(data, "hi");
+    setChosen(data);
+
+    setOpen(true);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -114,7 +113,6 @@ function MealPlanHistory() {
     color: "#ffffff",
   };
 
-
   function Day(props) {
     const { day, selectedDay, hoveredDay, ...other } = props;
 
@@ -131,15 +129,21 @@ function MealPlanHistory() {
     );
   }
 
-  
   //!
-
 
   // ? get Data
   const [mealData, setMealData] = useState([]);
 
   const getMealData = () => {
     AxiosInstance.get(`generatedmeal`).then((res) => {
+      if (
+        res.data.filter((items) => items.user_id == loggedInUser.user_id)
+          .length > 0
+      ) {
+        setLoading1(true);
+      } else {
+        setLoading1(false);
+      }
       setMealData(
         res.data.filter((items) => items.user_id == loggedInUser.user_id)
       );
@@ -264,8 +268,8 @@ function MealPlanHistory() {
     //Disapproved
     const currentWeekStart = dayjs(value).startOf("week").format("YYYY-MM-DD");
     const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
-  
-    console.log(currentWeekStart, currentWeekEnd)
+
+    console.log(currentWeekStart, currentWeekEnd);
 
     try {
       AxiosInstance.post(`requestedmeals/`, {
@@ -277,9 +281,9 @@ function MealPlanHistory() {
         status: "Pending",
         price: 0,
       }).then((res) => {
-         console.log(res, res.data);
+        console.log(res, res.data);
         toast.success("Request Sent");
-        handleClose()
+        handleClose();
       });
     } catch (error) {
       console.log(error);
@@ -290,6 +294,10 @@ function MealPlanHistory() {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  //! loading
+  const [loading1, setLoading1] = useState();
+  //!
+
   return (
     <div
       className="content"
@@ -299,84 +307,94 @@ function MealPlanHistory() {
         fontFamily: "Poppins",
       }}
     >
-      <Typography>Generated Meal Plan History</Typography>
-      {mealData.map(
-        (item, index) => (
-          //  item.meal.map((items) => (
-          <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid xs={12} md={10}>
-              <Box>
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1-content"
-                    id="panel1-header"
-                  >
-                    <Grid container spacing={2} sx={{ mx: "10%", mt: 5 }}>
-                      <Grid sx={12} md={4}>
-                        {" "}
-                        <Grid container spacing={2} sx={{ mx: 0 }}>
-                          <Grid xs={6}>
-                            {/* {console.log(item.meal)} */}
-                            <img
-                              src={
-                                item.meal[getRandomInRange(0, 4)].meals[
-                                  getRandomInRange(0, 3)
-                                ].image
-                              }
-                              width="100"
-                              height="100"
-                            />{" "}
-                            {console.log(
-                              item.meal[getRandomInRange(0, 4)].meals[
-                                getRandomInRange(0, 3)
-                              ].image
-                            )}
-                            <br />
-                            <img
-                              src={
-                                item.meal[getRandomInRange(0, 4)].meals[
-                                  getRandomInRange(0, 3)
-                                ].image
-                              }
-                              width="100"
-                              height="100"
-                            />
-                          </Grid>
-                          <Grid xs={1}>
+      <Typography
+        sx={{ color: "#99756E", fontSize: "1.5em", fontWeight: "bold", m: 5 }}
+      >
+        Generated Meal Plan History
+      </Typography>
+      {mealData.length === 0 && loading1 === false ? (
+        <>No Orders</>
+      ) : mealData.length > 0 && loading1 === true ? (
+        <>
+          {mealData.map(
+            (
+              item,
+              index // item.meal.map((items) => (
+            ) => (
+              <Grid container spacing={2} sx={{ mt: 2 }}>
+                <Grid xs={12} md={10}>
+                  <Box>
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1-content"
+                        id="panel1-header"
+                      >
+                        <Grid container spacing={2} sx={{ mx: "10%", mt: 5 }}>
+                          <Grid sx={12} md={4}>
                             {" "}
-                            <img
-                              src={
-                                item.meal[getRandomInRange(0, 4)].meals[
-                                  getRandomInRange(0, 3)
-                                ].image
-                              }
-                              width="100"
-                              height="100"
-                            />
-                            <br />
-                            <img
-                              src={
-                                item.meal[getRandomInRange(0, 4)].meals[
-                                  getRandomInRange(0, 3)
-                                ].image
-                              }
-                              width="100"
-                              height="100"
-                            />
+                            <Grid container spacing={2} sx={{ mx: 0 }}>
+                              <Grid xs={6}>
+                                {/* {console.log(item.meal)} */}
+                                <img
+                                  src={
+                                    item.meal[getRandomInRange(0, 4)].meals[
+                                      getRandomInRange(0, 3)
+                                    ].image
+                                  }
+                                  width="100"
+                                  height="100"
+                                />{" "}
+                                {console.log(
+                                  item.meal[getRandomInRange(0, 4)].meals[
+                                    getRandomInRange(0, 3)
+                                  ].image
+                                )}
+                                <br />
+                                <img
+                                  src={
+                                    item.meal[getRandomInRange(0, 4)].meals[
+                                      getRandomInRange(0, 3)
+                                    ].image
+                                  }
+                                  width="100"
+                                  height="100"
+                                />
+                              </Grid>
+                              <Grid xs={1}>
+                                {" "}
+                                <img
+                                  src={
+                                    item.meal[getRandomInRange(0, 4)].meals[
+                                      getRandomInRange(0, 3)
+                                    ].image
+                                  }
+                                  width="100"
+                                  height="100"
+                                />
+                                <br />
+                                <img
+                                  src={
+                                    item.meal[getRandomInRange(0, 4)].meals[
+                                      getRandomInRange(0, 3)
+                                    ].image
+                                  }
+                                  width="100"
+                                  height="100"
+                                />
+                              </Grid>
+                            </Grid>
                           </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid sx={6} md={4}>
-                        {" "}
-                        <Typography>{item.name}</Typography>
-                        <Typography>
-                          {dayjs(item.date).format("MMMM DD, YYYY")}
-                        </Typography>
-                        <br />
-                        <br />
-                        <br />
-                        {/* <Button
+                          <Grid sx={6} md={4}>
+                            {" "}
+                            <Typography>{item.name}</Typography>
+                            <Typography>
+                              {dayjs(item.date).format("MMMM DD, YYYY")}
+                            </Typography>
+                            <br />
+                            <br />
+                            <br />
+                            {/* <Button
                           sx={{
                             mx: "auto",
                             display: "block",
@@ -393,370 +411,401 @@ function MealPlanHistory() {
                         >
                           Request To Order
                         </Button> */}
-                      </Grid>
-                      <Grid sx={6} md={4} alignItems="center">
-                        <Typography
-                          display="flex"
-                          justifyContent="flex-start"
-                          alignItems="center"
-                        >
-                          Age: {item.age} <br />
-                          Weight: {item.weight} <br />
-                          Height: {item.height} <br />
-                          Activity: {item.activity} <br />
-                          Goal: {item.goal}
-                          <br />
-                          Allergen: {item.allergen} <br />
-                          Diet: {item.diet} <br />
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </AccordionSummary>
-
-                  <AccordionDetails>
-                    <Typography>{item.name}</Typography>
-                    <Typography>
-                      {" "}
-                      {dayjs(item.date).format("MMMM DD, YYYY")}
-                    </Typography>
-
-                    <Grid container spacing={2}>
-                      <Grid
-                        item
-                        xs={0}
-                        sm={0}
-                        md={1}
-                        lg={1}
-                        sx={{
-                          display: {
-                            xs: "none", // Hide on extra small screens
-                            sm: "none",
-                            md: "block", // Display on small screens and up
-                          },
-                        }}
-                      >
-                        <Button
-                          onClick={() => handlePrevC(index)}
-                          sx={{ mt: "235%", background: "#ffffff" }}
-                        >
-                          <img
-                            src="/images/left arrow.png"
-                            width="30px"
-                            height="30px"
-                          />
-                        </Button>
-                      </Grid>
-                      <Grid item xs={12} md={10}>
-                        <Slider
-                          {...settings}
-                          ref={(ref) => {
-                            if (ref) {
-                              sliderRefs.current[index] = ref;
-                            }
-                          }}
-                          sx={{
-                            color: "#000000",
-                            border: 1,
-                            borderColor: "#000000",
-                            ml: "30px",
-                            mr: "30px",
-                          }}
-                        >
-                          {item.meal.map((items, index) => (
-                            <Box
-                              key={index}
-                              onClick={() => handleSlideClick(item)}
+                          </Grid>
+                          <Grid sx={6} md={4} alignItems="center">
+                            <Typography
+                              display="flex"
+                              justifyContent="flex-start"
+                              alignItems="center"
                             >
-                              <Box
-                                sx={{
-                                  color: "#000000",
-                                  border: 3,
-                                  borderColor: "#898246",
-                                  borderRadius: 3,
-                                  ml: "0px",
-                                  mr: "0px",
-                                  pt: 1,
-                                  pb: 10,
-                                }}
-                              >
-                                <Typography sx={{ fontWeight: "bold" }}>
-                                  {items.Day}
-                                </Typography>
+                              Age: {item.age} <br />
+                              Weight: {item.weight} <br />
+                              Height: {item.height} <br />
+                              Activity: {item.activity} <br />
+                              Goal: {item.goal}
+                              <br />
+                              Allergen: {item.allergen} <br />
+                              Diet: {item.diet} <br />
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                      </AccordionSummary>
 
-                                <Grid container spacing={2} sx={{ mx: "0%" }}>
-                                  {items.meals.map((items1) => (
-                                    <Grid item xs={6} sm={3} md={3} key={index}>
-                                      <div className="parent-div">
-                                        <PopupTrigger>
-                                          <Typography>{items1.Meal}</Typography>
-                                          <center>
-                                            <img
-                                              src={items1.image}
-                                              width="100"
-                                              height="100"
-                                            />
-                                          </center>
-                                          <Typography sx={{ mx: "5%" }}>
-                                            {items1.details.recipe.label}
-                                          </Typography>
+                      <AccordionDetails>
+                        <Typography>{item.name}</Typography>
+                        <Typography>
+                          {" "}
+                          {dayjs(item.date).format("MMMM DD, YYYY")}
+                        </Typography>
 
-                                          <Grid
-                                            container
-                                            spacing={2}
-                                            sx={{ mt: 1 }}
-                                          >
-                                            <Grid xs={2}>
-                                              {" "}
-                                              <img src="/images/calories.png" />
-                                            </Grid>
-                                            <Grid
-                                              xs={8}
-                                              display="flex"
-                                              justifyContent="flex-start"
-                                            >
-                                              {" "}
-                                              {Math.floor(
-                                                items1.details.recipe.calories /
-                                                  items1.details.recipe.yield
-                                              )}{" "}
-                                              calories
-                                            </Grid>
-                                          </Grid>
+                        <Grid container spacing={2}>
+                          <Grid
+                            item
+                            xs={0}
+                            sm={0}
+                            md={1}
+                            lg={1}
+                            sx={{
+                              display: {
+                                xs: "none", // Hide on extra small screens
+                                sm: "none",
+                                md: "block", // Display on small screens and up
+                              },
+                            }}
+                          >
+                            <Button
+                              onClick={() => handlePrevC(index)}
+                              sx={{ mt: "235%", background: "#ffffff" }}
+                            >
+                              <img
+                                src="/images/left arrow.png"
+                                width="30px"
+                                height="30px"
+                              />
+                            </Button>
+                          </Grid>
+                          <Grid item xs={12} md={10}>
+                            <Slider
+                              {...settings}
+                              ref={(ref) => {
+                                if (ref) {
+                                  sliderRefs.current[index] = ref;
+                                }
+                              }}
+                              sx={{
+                                color: "#000000",
+                                border: 1,
+                                borderColor: "#000000",
+                                ml: "30px",
+                                mr: "30px",
+                              }}
+                            >
+                              {item.meal.map((items, index) => (
+                                <Box
+                                  key={index}
+                                  onClick={() => handleSlideClick(item)}
+                                >
+                                  <Box
+                                    sx={{
+                                      color: "#000000",
+                                      border: 3,
+                                      borderColor: "#898246",
+                                      borderRadius: 3,
+                                      ml: "0px",
+                                      mr: "0px",
+                                      pt: 1,
+                                      pb: 10,
+                                    }}
+                                  >
+                                    <Typography sx={{ fontWeight: "bold" }}>
+                                      {items.Day}
+                                    </Typography>
 
-                                          <Grid
-                                            container
-                                            spacing={2}
-                                            sx={{ mt: 1 }}
-                                          >
-                                            <Grid xs={2}>
-                                              {" "}
-                                              <img src="/images/carbs.png" />
-                                            </Grid>
-                                            <Grid
-                                              xs={8}
-                                              display="flex"
-                                              justifyContent="flex-start"
-                                            >
-                                              {Math.floor(
-                                                items1.details.recipe.digest[1]
-                                                  .total
-                                              )}{" "}
-                                              carbs
-                                            </Grid>
-                                          </Grid>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      sx={{ mx: "0%" }}
+                                    >
+                                      {items.meals.map((items1) => (
+                                        <Grid
+                                          item
+                                          xs={6}
+                                          sm={3}
+                                          md={3}
+                                          key={index}
+                                        >
+                                          <div className="parent-div">
+                                            <PopupTrigger>
+                                              <Typography>
+                                                {items1.Meal}
+                                              </Typography>
+                                              <center>
+                                                <img
+                                                  src={items1.image}
+                                                  width="100"
+                                                  height="100"
+                                                />
+                                              </center>
+                                              <Typography sx={{ mx: "5%" }}>
+                                                {items1.details.recipe.label}
+                                              </Typography>
 
-                                          <Grid
-                                            container
-                                            spacing={2}
-                                            sx={{ mt: 1 }}
-                                          >
-                                            <Grid xs={2}>
-                                              {" "}
-                                              <img src="/images/fat.png" />
-                                            </Grid>
-                                            <Grid
-                                              xs={8}
-                                              display="flex"
-                                              justifyContent="flex-start"
-                                            >
-                                              {Math.floor(
-                                                items1.details.recipe.digest[0]
-                                                  .total
-                                              )}{" "}
-                                              fats
-                                            </Grid>
-                                          </Grid>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                sx={{ mt: 1 }}
+                                              >
+                                                <Grid xs={2}>
+                                                  {" "}
+                                                  <img src="/images/calories.png" />
+                                                </Grid>
+                                                <Grid
+                                                  xs={8}
+                                                  display="flex"
+                                                  justifyContent="flex-start"
+                                                >
+                                                  {" "}
+                                                  {Math.floor(
+                                                    items1.details.recipe
+                                                      .calories /
+                                                      items1.details.recipe
+                                                        .yield
+                                                  )}{" "}
+                                                  calories
+                                                </Grid>
+                                              </Grid>
 
-                                          <Grid
-                                            container
-                                            spacing={2}
-                                            sx={{ mt: 1 }}
-                                          >
-                                            <Grid xs={2}>
-                                              {" "}
-                                              <img src="/images/protein.png" />
-                                            </Grid>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                sx={{ mt: 1 }}
+                                              >
+                                                <Grid xs={2}>
+                                                  {" "}
+                                                  <img src="/images/carbs.png" />
+                                                </Grid>
+                                                <Grid
+                                                  xs={8}
+                                                  display="flex"
+                                                  justifyContent="flex-start"
+                                                >
+                                                  {Math.floor(
+                                                    items1.details.recipe
+                                                      .digest[1].total
+                                                  )}{" "}
+                                                  carbs
+                                                </Grid>
+                                              </Grid>
 
-                                            <Grid
-                                              xs={8}
-                                              display="flex"
-                                              justifyContent="flex-start"
-                                            >
-                                              {Math.floor(
-                                                items1.details.recipe.digest[2]
-                                                  .total
-                                              )}{" "}
-                                              protein
-                                            </Grid>
-                                          </Grid>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                sx={{ mt: 1 }}
+                                              >
+                                                <Grid xs={2}>
+                                                  {" "}
+                                                  <img src="/images/fat.png" />
+                                                </Grid>
+                                                <Grid
+                                                  xs={8}
+                                                  display="flex"
+                                                  justifyContent="flex-start"
+                                                >
+                                                  {Math.floor(
+                                                    items1.details.recipe
+                                                      .digest[0].total
+                                                  )}{" "}
+                                                  fats
+                                                </Grid>
+                                              </Grid>
 
-                                          <Link
-                                            to={items1.details.recipe.url}
-                                            target="_blank"
-                                          >
-                                            <Button
-                                              sx={{
-                                                background: "#E66253",
-                                                color: "#ffffff",
-                                                fontSize: {
-                                                  xs: "0.6em", // For extra small screens
-                                                  sm: "0.8em", // For small screens
-                                                  md: "1.0em", // For medium screens
-                                                  lg: "1.0em", // For large screens
-                                                },
-                                                mt: 3,
-                                                borderRadius: 3,
-                                                px: 5,
-                                                "&:hover": {
-                                                  backgroundColor: "#ffffff",
-                                                  color: "#E66253",
-                                                  border: 1,
-                                                  borderColor: "#E66253",
-                                                },
-                                              }}
-                                            >
-                                              Recipe
-                                            </Button>
-                                          </Link>
-                                        </PopupTrigger>
-                                        <Popup>
-                                          Ingredients
-                                          <img
-                                            src={items1.image}
-                                            width="100"
-                                            height="100"
-                                          />
-                                        </Popup>
-                                      </div>
+                                              <Grid
+                                                container
+                                                spacing={2}
+                                                sx={{ mt: 1 }}
+                                              >
+                                                <Grid xs={2}>
+                                                  {" "}
+                                                  <img src="/images/protein.png" />
+                                                </Grid>
+
+                                                <Grid
+                                                  xs={8}
+                                                  display="flex"
+                                                  justifyContent="flex-start"
+                                                >
+                                                  {Math.floor(
+                                                    items1.details.recipe
+                                                      .digest[2].total
+                                                  )}{" "}
+                                                  protein
+                                                </Grid>
+                                              </Grid>
+
+                                              <Link
+                                                to={items1.details.recipe.url}
+                                                target="_blank"
+                                              >
+                                                <Button
+                                                  sx={{
+                                                    background: "#E66253",
+                                                    color: "#ffffff",
+                                                    fontSize: {
+                                                      xs: "0.6em", // For extra small screens
+                                                      sm: "0.8em", // For small screens
+                                                      md: "1.0em", // For medium screens
+                                                      lg: "1.0em", // For large screens
+                                                    },
+                                                    mt: 3,
+                                                    borderRadius: 3,
+                                                    px: 5,
+                                                    "&:hover": {
+                                                      backgroundColor:
+                                                        "#ffffff",
+                                                      color: "#E66253",
+                                                      border: 1,
+                                                      borderColor: "#E66253",
+                                                    },
+                                                  }}
+                                                >
+                                                  Recipe
+                                                </Button>
+                                              </Link>
+                                            </PopupTrigger>
+                                            <Popup>
+                                              Ingredients
+                                              <img
+                                                src={items1.image}
+                                                width="100"
+                                                height="100"
+                                              />
+                                            </Popup>
+                                          </div>
+                                        </Grid>
+                                      ))}
                                     </Grid>
-                                  ))}
-                                </Grid>
-                              </Box>
-                            </Box>
-                          ))}
-                        </Slider>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={0}
-                        sm={0}
-                        md={1}
-                        lg={1}
-                        sx={{
-                          display: {
-                            xs: "none", // Hide on extra small screens
-                            sm: "none",
-                            md: "block", // Display on small screens and up
-                          },
-                        }}
-                      >
-                        {" "}
-                        {/* Button container (adjust width as needed) */}
-                        <Button
-                          onClick={() => handleNextC(index)}
-                          sx={{ mt: "235%", background: "#ffffff" }}
-                        >
-                          <img
-                            src="/images/right arrow.png"
-                            width="30px"
-                            height="30px"
-                          />
-                        </Button>
-                      </Grid>
+                                  </Box>
+                                </Box>
+                              ))}
+                            </Slider>
+                          </Grid>
+                          <Grid
+                            item
+                            xs={0}
+                            sm={0}
+                            md={1}
+                            lg={1}
+                            sx={{
+                              display: {
+                                xs: "none", // Hide on extra small screens
+                                sm: "none",
+                                md: "block", // Display on small screens and up
+                              },
+                            }}
+                          >
+                            {" "}
+                            {/* Button container (adjust width as needed) */}
+                            <Button
+                              onClick={() => handleNextC(index)}
+                              sx={{ mt: "235%", background: "#ffffff" }}
+                            >
+                              <img
+                                src="/images/right arrow.png"
+                                width="30px"
+                                height="30px"
+                              />
+                            </Button>
+                          </Grid>
 
-                      <Typography
+                          <Typography
+                            sx={{
+                              color: "#000000",
+                              display: {
+                                xs: "block", // Hide on extra small screens
+                                sm: "block",
+                                md: "none",
+                              },
+                              fontWeight: "bold",
+                              mt: 4,
+                              mx: "auto",
+                            }}
+                          >
+                            Swipe to See More
+                          </Typography>
+                        </Grid>
+                      </AccordionDetails>
+                    </Accordion>
+                  </Box>
+                </Grid>
+                <Grid xs={12} md={1.5}>
+                  {" "}
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-title"
+                    aria-describedby="modal-description"
+                  >
+                    <Box sx={style}>
+                      Choose your preferred week:
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DateCalendar
+                          minDate={dayjs()
+                            .startOf("week")
+                            .endOf("week")
+                            .add(1, "day")}
+                          value={value}
+                          onChange={(newValue) => setValue(newValue)}
+                          showDaysOutsideCurrentMonth
+                          displayWeekNumber
+                          slots={{ day: Day }}
+                          slotProps={{
+                            day: (ownerState) => ({
+                              selectedDay: value,
+                              hoveredDay,
+                              onPointerEnter: () => setHoveredDay(null),
+                              onPointerLeave: () => setHoveredDay(null),
+                            }),
+                          }}
+                        />
+                      </LocalizationProvider>
+                      <Button
+                        onClick={requestOrder}
                         sx={{
-                          color: "#000000",
-                          display: {
-                            xs: "block", // Hide on extra small screens
-                            sm: "block",
-                            md: "none",
+                          background: "#ffffff",
+                          color: "#E66253",
+                          my: 5,
+                          px: 5,
+                          py: 1,
+                          fontSize: "0.9em",
+                          "&:hover": {
+                            backgroundColor: "#E66253",
+                            color: "#ffffff",
+                            border: 1,
+                            borderColor: "#ffffff",
                           },
-                          fontWeight: "bold",
-                          mt: 4,
-                          mx: "auto",
                         }}
                       >
-                        Swipe to See More
-                      </Typography>
-                    </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              </Box>
-            </Grid>
-            <Grid xs={12} md={1.5}>
-              {" "}
-              <Modal
-                open={open} 
-                onClose={handleClose}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
-              >
-                <Box sx={style}>
-                  Choose your preferred week:
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateCalendar
-                  minDate={dayjs().startOf('week').endOf('week').add(1, 'day')}
-                   value={value}
-                   onChange={(newValue) => setValue(newValue)}
-                    showDaysOutsideCurrentMonth
-                    displayWeekNumber
-                   slots={{ day: Day }}
-                    slotProps={{
-                      day: (ownerState) => ({
-                        selectedDay: value,
-                        hoveredDay,
-                        onPointerEnter: () => setHoveredDay(null),
-                        onPointerLeave: () => setHoveredDay(null),
-                      }),
-                    }}
-                  />
-                </LocalizationProvider>
-                  <Button onClick={requestOrder}      sx={{
-                    background: "#ffffff",
-                    color: "#E66253",
-                    my: 5,
-                    px: 5,
-                    py: 1,
-                    fontSize: "0.9em",
-                    "&:hover": {
-                      backgroundColor: "#E66253",
+                        Request Meal Plan
+                      </Button>
+                    </Box>
+                  </Modal>
+                  <Button
+                    sx={{
+                      mx: {
+                        xs: "auto",
+                        md: "auto",
+                      },
+                      display: "block",
+                      // float: "right",
+                      background: "#E66253",
+                      fontSize: "13px",
+
+                      mt: {
+                        xs: "5%",
+                        md: "60%",
+                      },
                       color: "#ffffff",
-                      border: 1,
-                      borderColor: "#ffffff",
-                    },
-                  }}>Request Meal Plan</Button>
-                </Box>
-              </Modal>
-              <Button
-                sx={{
-                  mx: {
-                    xs: "auto",
-                    md: "auto",
-                  },
-                  display: "block",
-                  // float: "right",
-                  background: "#E66253",
-                  fontSize: "13px",
-
-                  mt: {
-                    xs: "5%",
-                    md: "60%",
-                  },
-                  color: "#ffffff",
-                  "&:hover": {
-                    backgroundColor: "#ffffff",
-                    color: "#E66253",
-                  },
-                }}
-                onClick={() => handleOpen(item.generatedMeal_id)}   
-              >
-                Request To Order
-              </Button>
-            </Grid>
-          </Grid>
-        )
-        //  ))
+                      "&:hover": {
+                        backgroundColor: "#ffffff",
+                        color: "#E66253",
+                      },
+                    }}
+                    onClick={() => handleOpen(item.generatedMeal_id)}
+                  >
+                    Request To Order
+                  </Button>
+                </Grid>
+              </Grid>
+            )
+          )}{" "}
+          // )) )
+        </>
+      ) : (
+        <>
+          {" "}
+          <img src="/images/magnify.gif" width="6%" height="15%" />
+          <Typography>Loading...</Typography>
+        </>
       )}
     </div>
   );

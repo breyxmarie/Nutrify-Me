@@ -342,7 +342,11 @@ function MealPlanShopRequest() {
           ) : pendingOrder.length === 0 && loading1 === false ? (
             <>No Orders</>
           ) : (
-            <>Loading...</>
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
           )}
         </Grid>
 
@@ -409,7 +413,11 @@ function MealPlanShopRequest() {
           ) : pendingOrderRecommend.length === 0 && loading2 === false ? (
             <>No Orders</>
           ) : (
-            <>Loading...</>
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
           )}
         </Grid>
       </Grid>
@@ -509,7 +517,11 @@ function MealPlanShopRequest() {
           ) : approvedOrder.length === 0 && loading3 === false ? (
             <>No Orders</>
           ) : (
-            <>Loading...</>
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
           )}
         </Grid>
         <Grid xs={6}>
@@ -594,7 +606,11 @@ function MealPlanShopRequest() {
           ) : approvedOrderRecommend.length === 0 && loading4 === false ? (
             <>No Orders</>
           ) : (
-            <>Loading...</>
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
           )}
         </Grid>
       </Grid>
@@ -678,7 +694,11 @@ function MealPlanShopRequest() {
           ) : disapprovedOrder.length === 0 && loading5 === false ? (
             <>No Orders</>
           ) : (
-            <>Loading...</>
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
           )}
         </Grid>
         <Grid xs={6}>
@@ -744,7 +764,11 @@ function MealPlanShopRequest() {
           ) : disapprovedOrderRecommend.length === 0 && loading6 === false ? (
             <>No Orders</>
           ) : (
-            <>Loading...</>
+            <>
+              {" "}
+              <img src="/images/magnify.gif" width="13%" />
+              <Typography>Loading...</Typography>
+            </>
           )}
         </Grid>
       </Grid>

@@ -28,7 +28,7 @@ function MealPlanTest() {
   const [foodChoices, setFoodChoices] = useState();
   const [mealName, setMealName] = useState();
   const [divPhase, setDivPhase] = useState("calculator"); // calculator, choices, loading, meals
-
+  const [loading1, setLoading1] = useState(false)
   //? Modal
   const [opens, setOpens] = React.useState(false);
   const handleOpens = () => setOpens(true);
@@ -816,16 +816,16 @@ function MealPlanTest() {
           //  console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=low-sodium&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            `q=&dishType=main&mealType=breakfast&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
           const tempL = await getRecipesApi(
-            `q=&dishType=main&mealType=lunch&diet=low-sodium&calories=${cal.minlunch}-${cal.maxlunch}`
+            `q=&dishType=main&mealType=lunch&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
-            `q=snack&mealType=snack&diet=low-sodium&calories=${cal.minsnack}-${cal.maxsnack}`
+            `q=snack&mealType=snack&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=dinner&diet=low-sodium&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
@@ -1176,16 +1176,16 @@ function MealPlanTest() {
           // console.log(cuisineFood);
 
           const tempB = await getRecipesApi(
-            `q=&dishType=main&mealType=breakfast&diet=low-sodium&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
+            `q=&dishType=main&mealType=breakfast&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
           );
           const tempL = await getRecipesApi(
-            `q=&dishType=main&mealType=lunch&diet=low-sodium&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
+            `q=&dishType=main&mealType=lunch&health=${allergen}&calories=${cal.minlunch}-${cal.maxlunch}`
           );
           const tempS = await getRecipesApi(
             `q=snack&health=${allergen}&calories=${cal.minsnack}-${cal.maxsnack}`
           );
           const tempD = await getRecipesApi(
-            `q=&dishType=main&mealType=dinner&diet=low-sodium&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
+            `q=&dishType=main&mealType=dinner&health=${allergen}&calories=${cal.mindinner}-${cal.maxdinner}`
           );
 
           {
@@ -1295,7 +1295,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-          //  console.log(cuisineFood);
+            console.log(cuisineFood);
 
           let tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&health=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -1942,9 +1942,11 @@ function MealPlanTest() {
         allergen: selectedAllergen,
       }).then((res) => {
         // navigate(`/`);
+       
         handleClose();
-        toast.success("Meal Plan Saved!");
+        
         setSaving(false);
+        toast.success("Meal Plan Saved!");
         // console.log(res);
       });
     } catch (error) {
@@ -2605,7 +2607,8 @@ function MealPlanTest() {
               >
                 <Box sx={style}>
                   {saving ? (
-                    <>Saving.... Please Wait</>
+                    <><center>  <img src="/images/pacman.gif" width="43%" />
+                <Typography>Saving please wait...</Typography></center></>
                   ) : (
                     <center>
                       Save
@@ -2705,12 +2708,24 @@ function MealPlanTest() {
             </Grid>
           </Grid>
 
-          <Typography display="flex" justifyContent="center">
-            Cuisine: {selectedCuisine}
-            <br />
-            Diet Info: {selectedDiet} <br />
-            Allergen: {selectedAllergen}
-          </Typography>
+          {/* <Typography display="flex" justifyContent="center"> */}
+          <Typography display="flex" justifyContent="center" sx={{ fontWeight:"bold", color: "#99756E", fontSize: "1.45em" }}> 
+            Cuisine:  {selectedCuisine.map((item, index) => (
+              <>{item} 
+           
+              {index + 1 != selectedCuisine.length ? 
+                   ( <>{","}</>) : (<></>)
+              }
+              </>
+            ))} </Typography>
+
+           
+           
+            <Typography display="flex" justifyContent="center" sx={{ fontWeight:"bold", color: "#99756E", fontSize: "1.45em" }}> 
+               Diet Info: {selectedDiet} <br /> </Typography>
+               <Typography display="flex" justifyContent="center" sx={{ fontWeight:"bold", color: "#99756E", fontSize: "1.45em" }}> 
+            Allergen: {selectedAllergen}</Typography>
+          {/* </Typography> */}
 
           <Grid container spacing={2}>
             <Grid

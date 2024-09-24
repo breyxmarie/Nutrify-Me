@@ -29,8 +29,8 @@ function SellerNavBar() {
 
   const pages = [
     { names: "HOME", links: "/seller-home" },
-    { names: "EDIT MEAL PLAN", links: "/seller-createMealPlan" },
-    { names: "MENU ITEMS", links: "/seller-menu-items" },
+    { names: "CREATE MEAL PLAN", links: "/seller-createMealPlan" },
+    // { names: "MENU ITEMS", links: "/seller-menu-items" },
     { names: "ORDERS", links: "/seller-orders" },
     { names: "REQUEST ORDERS", links: "/seller-request-meals" },
   ];

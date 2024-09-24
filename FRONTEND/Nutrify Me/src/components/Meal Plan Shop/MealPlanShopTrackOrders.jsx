@@ -23,6 +23,11 @@ function MealPlanShopTrackOrders() {
   const [planData, setPlanData] = useState([]);
   const location = useLocation();
 
+  const [loading1, setLoading1] = useState();
+
+  const [loading2, setLoading2] = useState();
+  const [loading3, setLoading3] = useState();
+
   const getOrderData = async () => {
     console.log(dayjs().startOf("week").format("YYYY-MM-DD"));
 
@@ -47,11 +52,20 @@ function MealPlanShopTrackOrders() {
         (item) => item.status === "Ordered"
       );
 
+      if (filteredOrderedData.length > 0) {
+        setLoading1(true);
+      } else {
+        setLoading1(false);
+      }
       setOrderData(filteredOrderedData);
       const filteredOnGoingData = filteredData.filter(
         (item) => item.status === "On-Going"
       );
-
+      if (filteredOnGoingData.length > 0) {
+        setLoading2(true);
+      } else {
+        setLoading2(false);
+      }
       setOnGoingOrder(filteredOnGoingData);
 
       const filteredPastOrderData = filteredData.filter(
@@ -60,6 +74,11 @@ function MealPlanShopTrackOrders() {
       //  setPastOrder(filteredPastOrderData);
       // console.log(filteredPastOrderData);
 
+      if (filteredPastOrderData.length > 0) {
+        setLoading3(true);
+      } else {
+        setLoading3(false);
+      }
       setPastOrder(filteredPastOrderData);
       //  console.log(reverse);
       // setOrderData(reverse);
@@ -205,7 +224,7 @@ function MealPlanShopTrackOrders() {
         sx={{ color: "#99756E", fontSize: "20px", fontWeight: "bold", m: 5 }}
       >
         MY ORDERS
-      </Typography>
+            </Typography>
       {/* {planData.length > 0 ? (
         <>
           {" "}
@@ -224,9 +243,9 @@ function MealPlanShopTrackOrders() {
         {" "}
         Ordered
       </Typography>
-      {orderData.length === 0 ? (
+      {orderData.length === 0 && loading1 === false ? (
         <>No Orders</>
-      ) : (
+      ) : orderData.length > 0 && loading1 === true ? (
         orderData.reverse().map((item, index) => (
           <Box
             sx={{
@@ -296,6 +315,12 @@ function MealPlanShopTrackOrders() {
             </Grid>
           </Box>
         ))
+      ) : (
+        <>
+          {" "}
+          <img src="/images/magnify.gif" width="6%" height="15%" />
+          <Typography>Loading...</Typography>
+        </>
       )}
       <br />
       <Typography
@@ -304,9 +329,9 @@ function MealPlanShopTrackOrders() {
         {" "}
         On Going
       </Typography>
-      {onGoingOrder.length === 0 ? (
+      {onGoingOrder.length === 0 && loading2 === false ? (
         <>No Orders</>
-      ) : (
+      ) : onGoingOrder.length > 0 && loading2 === true ? (
         onGoingOrder.reverse().map((item, index) => (
           <Box
             sx={{
@@ -375,6 +400,12 @@ function MealPlanShopTrackOrders() {
             </Grid>
           </Box>
         ))
+      ) : (
+        <>
+          {" "}
+          <img src="/images/magnify.gif" width="6%" height="15%" />
+          <Typography>Loading...</Typography>
+        </>
       )}
       <br />
       {/* {order.map((item, index) => ( */}
@@ -385,9 +416,9 @@ function MealPlanShopTrackOrders() {
         {" "}
         Past Orders
       </Typography>
-      {orderData.length === 0 ? (
+      {pastOrder.length === 0 && loading3 === false ? (
         <>No Orders</>
-      ) : (
+      ) : pastOrder.length > 0 && loading3 === true ? (
         pastOrder.reverse().map((item, index) => (
           <Box
             sx={{
@@ -475,6 +506,12 @@ function MealPlanShopTrackOrders() {
             </Grid>
           </Box>
         ))
+      ) : (
+        <>
+          {" "}
+          <img src="/images/magnify.gif" width="6%" height="15%" />
+          <Typography>Loading...</Typography>
+        </>
       )}
     </div>
   );

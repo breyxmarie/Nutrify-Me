@@ -89,6 +89,7 @@ function TelemedicineMealPlans() {
   const [hoveredDay, setHoveredDay] = useState(null);
   const [value, setValue] = useState(dayjs());
 
+  const [loading1, setLoading1] = useState()
   //! modal
   
 
@@ -201,53 +202,63 @@ function TelemedicineMealPlans() {
     });
 
     AxiosInstance.get(`recommendmealplan`).then((res) => {
+   
       setMealPlanData(
         res.data.filter((items) => items.user_id == loggedInUser.user_id)
       );
 
       temp = res.data.filter((items) => items.user_id == loggedInUser.user_id);
-    });
 
-    AxiosInstance.get(`recommendmeal`).then((respo) => {
-      let tempMealstalaga = [];
-      console.log(respo);
-      temp.forEach((item) => {
-        let tempMealDay = [];
-        //   tempMealstalaga.push(
-        //   respo.data.filter(
-        //     (items) => items.recommend_mealplan_id === item.recommend_mealplan_id
-        //   )
-        // )
-
-        let data = respo.data.filter(
-          (items) => items.recommend_mealplan_id === item.recommend_mealplan_id
-        );
-
-        for (let i = 1; i < 6; i++) {
-          let tempRes = data
-            .filter((items) => parseInt(items.day) === i)
-            .sort((a, b) => {
-              const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-              return order.indexOf(a.type) - order.indexOf(b.type);
+      AxiosInstance.get(`recommendmeal`).then((respo) => {
+        let tempMealstalaga = [];
+        console.log(respo);
+        res.data.filter((items) => items.user_id == loggedInUser.user_id).forEach((item) => {
+          let tempMealDay = [];
+          //   tempMealstalaga.push(
+          //   respo.data.filter(
+          //     (items) => items.recommend_mealplan_id === item.recommend_mealplan_id
+          //   )
+          // )
+  
+          let data = respo.data.filter(
+            (items) => items.recommend_mealplan_id === item.recommend_mealplan_id
+          );
+  
+          for (let i = 1; i < 6; i++) {
+            let tempRes = data
+              .filter((items) => parseInt(items.day) === i)
+              .sort((a, b) => {
+                const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+                return order.indexOf(a.type) - order.indexOf(b.type);
+              });
+            tempMealDay.push({
+              day: i,
+              meals: tempRes,
             });
-          tempMealDay.push({
-            day: i,
-            meals: tempRes,
+          }
+          console.log(tempMealDay, item);
+          tempMealstalaga.push({
+            recommend_mealplan_id: item.recommend_mealplan_id,
+            MealName: item.name,
+            meals: tempMealDay,
+            nutritionist: item.nutritionist_id,
           });
-        }
-        console.log(tempMealDay, item);
-        tempMealstalaga.push({
-          recommend_mealplan_id: item.recommend_mealplan_id,
-          MealName: item.name,
-          meals: tempMealDay,
-          nutritionist: item.nutritionist_id,
         });
+        console.log(tempMealstalaga);
+        if (
+          tempMealstalaga
+            .length > 0
+        ) {
+          setLoading1(true);
+        } else {
+          setLoading1(false);
+        }
+        setMealData(tempMealstalaga);
+        console.log(tempMealstalaga);
       });
-      console.log(tempMealstalaga);
-
-      setMealData(tempMealstalaga);
-      console.log(tempMealstalaga);
     });
+
+   
   };
 
   useEffect(() => {
@@ -292,9 +303,12 @@ const requestOrder = () => {
         color: "#000000",
       }}
     >
-      <Typography>Generated Meal Plans by your Nutritionist</Typography>
+      <Typography  sx={{ color: "#99756E", fontSize: "1.5em", fontWeight: "bold", m: 5 }}
+      >Meal Plans by your Nutritionist</Typography>
 {console.log(mealData)}
       <br />
+      {mealData.length > 0 && loading1 === true ?(<> 
+      
       {mealData.map((item, index) => (
         <Box sx={{ ml: "5%",mr: "5%", mt: 3, border: 1, pt: 2 }}>
           <Grid container spacing={2}>
@@ -603,7 +617,13 @@ const requestOrder = () => {
             </Grid>
           </Grid>
         </Box>
-      ))}
+      ))} </>) : mealData.length === 0 && loading1 === false ? (  <Typography  sx={{ color: "#99756E", fontSize: "1.5em", fontWeight: "bold", m: 5 }}
+        >No Meal Plans Yet</Typography>) 
+    : ( <>
+      {" "}
+      <img src="/images/magnify.gif" width="6%" height="15%" />
+      <Typography>Loading...</Typography>
+    </>)}
     </div>
   );
 }

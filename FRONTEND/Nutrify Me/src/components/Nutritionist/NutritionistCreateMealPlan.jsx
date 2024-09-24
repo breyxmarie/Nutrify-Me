@@ -28,6 +28,7 @@ function NutritionistCreateMealPlan() {
   const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
     useLoggedInUser();
   console.log(nutritionist.user_id);
+  const [loading1, setLoading1] = useState(false)
   const [indexmeal, setIndexmeal] = useState();
   const [tempMeal, setTempMeal] = useState([
     {
@@ -297,7 +298,7 @@ function NutritionistCreateMealPlan() {
 
   const saveMealPlan = async (data) => {
     //! dito na to upload tempMealPlan
-
+    handleOpenLoading()
     tempMeal.forEach((dayObject) => {
       console.log("Day:", dayObject.day);
 
@@ -376,7 +377,7 @@ function NutritionistCreateMealPlan() {
         console.log(res);
 
         console.log(res.data.id);
-        tempMeal.forEach((dayObject) => {
+        tempMeal.forEach((dayObject, index) => {
           console.log("Day:", dayObject.day);
 
           // dayObject.meals.forEach((meal) => {
@@ -408,6 +409,10 @@ function NutritionistCreateMealPlan() {
               console.log(error.response);
             }
           });
+
+          if (index + 1  === tempMeal.length) {
+            handleCloseLoading()
+          }
         });
       });
     } catch (error) {
@@ -427,7 +432,15 @@ function NutritionistCreateMealPlan() {
   ];
   // * modal content.
   const [tempTypeForMeal, setTempTypeForMeal] = useState();
+  const [openLoading, setOpenLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const handleOpenLoading = () => {
+    setOpenLoading(true),  
+    console.log("open")}
+  const handleCloseLoading = () => {setOpenLoading(false)}
+
+
+
   const handleOpen = (type) => {
     console.log(type);
 
@@ -530,6 +543,7 @@ function NutritionistCreateMealPlan() {
 
   const [updatedMealInfo, setUpdatedMealInfo] = useState([]);
   const onSubmitHandler = async (data) => {
+    setLoading1(true)
     // event.preventDefault(); // Prevent default form submission behavior
     // if (!file) {
     //   return alert("Please select an image");
@@ -561,87 +575,89 @@ function NutritionistCreateMealPlan() {
 
       setTempMeal(updateMeal(day, tempTypeForMeal, updatedMealInfo));
       handleReset();
-      setDivContent(
-        <Box sx={{ mx: 7 }}>
-          {Object.keys(tempMeal[indexmeal].meals).map((mealName) => (
-            <Box>
-              {" "}
-              <Typography
-                sx={{
-                  color: "#E66253",
-                  fontWeight: "bold",
-                  fontSize: "200%",
-                  textAlign: "left",
-                  ml: 5,
-                  mt: 3,
-                }}
-              >
-                {mealName}
-              </Typography>
-              <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
-                <Grid container spacing={2} sx={{ my: 2 }}>
-                  <Grid xs={4}>
-                    <img
-                      src={tempMeal[indexmeal].meals[mealName].image}
-                      height="150px"
-                    />{" "}
-                  </Grid>
-                  <Grid xs={6} sx={{ mx: 4, mt: 5 }}>
-                    <Typography
-                      sx={{
-                        color: "#99756E",
-                        fontWeight: "bold",
-                        fontSize: "25px",
-                        float: "left",
-                      }}
-                    >
-                      {tempMeal[indexmeal].meals[mealName].food}
-                    </Typography>
+      // setDivContent(
+      //   <Box sx={{ mx: 7 }}>
+      //     {Object.keys(tempMeal[indexmeal].meals).map((mealName) => (
+      //       <Box>
+      //         {" "}
+      //         <Typography
+      //           sx={{
+      //             color: "#E66253",
+      //             fontWeight: "bold",
+      //             fontSize: "200%",
+      //             textAlign: "left",
+      //             ml: 5,
+      //             mt: 3,
+      //           }}
+      //         >
+      //           {mealName}
+      //         </Typography>
+      //         <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
+      //           <Grid container spacing={2} sx={{ my: 2 }}>
+      //             <Grid xs={4}>
+      //               <img
+      //                 src={tempMeal[indexmeal].meals[mealName].image}
+      //                 height="150px"
+      //               />{" "}
+      //             </Grid>
+      //             <Grid xs={6} sx={{ mx: 4, mt: 5 }}>
+      //               <Typography
+      //                 sx={{
+      //                   color: "#99756E",
+      //                   fontWeight: "bold",
+      //                   fontSize: "25px",
+      //                   float: "left",
+      //                 }}
+      //               >
+      //                 {tempMeal[indexmeal].meals[mealName].food}
+      //               </Typography>
 
-                    <Grid container spacing={2}>
-                      <Grid xs={3}>
-                        <img src="/images/calories.png" />
-                        {tempMeal[indexmeal].meals[mealName].calories} calories
-                        |
-                      </Grid>
-                      <Grid xs={3}>
-                        <img src="/images/fat.png" />
-                        {tempMeal[indexmeal].meals[mealName].fat}g fat |
-                      </Grid>
-                      <Grid xs={3}>
-                        <img src="/images/carbs.png" />
-                        {tempMeal[indexmeal].meals[mealName].carbs}g carbs |
-                      </Grid>
-                      <Grid xs={3}>
-                        <img src="/images/protein.png" />
-                        {tempMeal[indexmeal].meals[mealName].protein}g protein
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid xs={1}>
-                    <Button
-                      sx={{
-                        background: "#E66253",
-                        color: "#ffffff",
-                        mt: 8,
-                        "&:hover": {
-                          backgroundColor: "#ffffff",
-                          color: "#E66253",
-                          border: 0.5,
-                          borderColor: "#E66253",
-                        },
-                      }}
-                      onClick={() => handleOpen(mealName)}
-                    >
-                      ADD
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      );
+      //               <Grid container spacing={2}>
+      //                 <Grid xs={3}>
+      //                   <img src="/images/calories.png" />
+      //                   {tempMeal[indexmeal].meals[mealName].calories} calories
+      //                   |
+      //                 </Grid>
+      //                 <Grid xs={3}>
+      //                   <img src="/images/fat.png" />
+      //                   {tempMeal[indexmeal].meals[mealName].fat}g fat |
+      //                 </Grid>
+      //                 <Grid xs={3}>
+      //                   <img src="/images/carbs.png" />
+      //                   {tempMeal[indexmeal].meals[mealName].carbs}g carbs |
+      //                 </Grid>
+      //                 <Grid xs={3}>
+      //                   <img src="/images/protein.png" />
+      //                   {tempMeal[indexmeal].meals[mealName].protein}g protein
+      //                 </Grid>
+      //               </Grid>
+      //             </Grid>
+      //             <Grid xs={1}>
+      //               <Button
+      //                 sx={{
+      //                   background: "#E66253",
+      //                   color: "#ffffff",
+      //                   mt: 8,
+      //                   "&:hover": {
+      //                     backgroundColor: "#ffffff",
+      //                     color: "#E66253",
+      //                     border: 0.5,
+      //                     borderColor: "#E66253",
+      //                   },
+      //                 }}
+      //                 onClick={() => handleOpen(mealName)}
+      //               >
+      //                 ADD
+      //               </Button>
+      //             </Grid>
+      //           </Grid>
+      //         </Box>
+      //       </Box>
+      //     ))}
+      //   </Box>
+      // );
+      //changeDiv(activeButtonIndex, buttons[activeButtonIndex])
+      setLoading1(true)
       handleClose();
       return;
     } catch (error) {
@@ -854,6 +870,7 @@ function NutritionistCreateMealPlan() {
   };
 
   const changeDiv = (index, day) => {
+    console.log(day, "hi")
     switch (day) {
       case "Day 1":
         setDay("Day 1");
@@ -1081,12 +1098,27 @@ function NutritionistCreateMealPlan() {
     >
       <ToastContainer />
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={openLoading}
+        onClose={handleCloseLoading} 
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+        <center>  <img src="/images/pacman.gif" width="13%" />
+        <Typography>Saving your meal plan please wait...</Typography></center>
+          </Box>
+
+          </Modal>
+      <Modal
+        open={open}
+        onClose={handleClose} 
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+        {loading1 ? (<><center>  <img src="/images/pacman.gif" width="13%" />
+          <Typography>Saving your meal please wait...</Typography></center></>)
+: ( <>
           <Grid container spacing={2}>
             <Grid xs={2}>
               {" "}
@@ -1388,6 +1420,7 @@ function NutritionistCreateMealPlan() {
               </Button>
             </center>
           </form>
+           </> )}
         </Box>
       </Modal>
       <Typography sx={{ my: 7, fontSize: "200%", fontWeight: "bold" }}>
@@ -1690,22 +1723,39 @@ function NutritionistCreateMealPlan() {
             >
               <Typography sx={{ my: 1 }}>
                 <img src="/images/calories.png" />
-                240 calories
+                {tempMeal[activeButtonIndex].meals.Breakfast.calories +
+                tempMeal[activeButtonIndex].meals.Lunch.calories + 
+                tempMeal[activeButtonIndex].meals.Snack.calories  +
+                tempMeal[activeButtonIndex].meals.Dinner.calories
+                } {" "} calories
               </Typography>
 
               <Typography sx={{ my: 1 }}>
                 <img src="/images/fat.png" />
-                240 fat
+                {tempMeal[activeButtonIndex].meals.Breakfast.fat +
+                tempMeal[activeButtonIndex].meals.Lunch.fat + 
+                tempMeal[activeButtonIndex].meals.Snack.fat  +
+                tempMeal[activeButtonIndex].meals.Dinner.fat
+                } {" "} fat
               </Typography>
 
               <Typography sx={{ my: 1 }}>
                 <img src="/images/carbs.png" />
-                240 carbs
+             
+                {tempMeal[activeButtonIndex].meals.Breakfast.carbs +
+                tempMeal[activeButtonIndex].meals.Lunch.carbs + 
+                tempMeal[activeButtonIndex].meals.Snack.carbs  +
+                tempMeal[activeButtonIndex].meals.Dinner.carbs
+                } {" "} carbs
               </Typography>
 
               <Typography sx={{ my: 1 }}>
                 <img src="/images/protein.png" />
-                240 protein
+                {tempMeal[activeButtonIndex].meals.Breakfast.protein +
+                tempMeal[activeButtonIndex].meals.Lunch.protein + 
+                tempMeal[activeButtonIndex].meals.Snack.protein  +
+                tempMeal[activeButtonIndex].meals.Dinner.protein
+                } {" "}protein
               </Typography>
             </Box>
 
@@ -1727,6 +1777,7 @@ function NutritionistCreateMealPlan() {
                   borderColor: "#ffffff",
                 },
               }}
+              onClick = {() => setOpenLoading(true)}
             >
               START OVER
             </Button>

@@ -1709,17 +1709,22 @@ function MealPlanShopCheckout() {
                   Courier: Lalamove
                 </Grid>
                 <Grid xs={6}>
-                  Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
-                  <br />
-                  Extra Mileage:{" "}
-                  {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
-                  <br />
-                  Total:{" "}
-                  {
-                    shippingDetails?.data?.data?.priceBreakdown
-                      ?.totalExcludePriorityFee
-                  }
+                 
+                  
+                  {shippingDetails?.data?.data?.priceBreakdown
+                      ?.totalExcludePriorityFee ?
+                   (<>  Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
+                    <br />
+                    Extra Mileage:{" "}
+                    {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
+                    <br /> Total: {shippingDetails?.data?.data?.priceBreakdown
+                      ?.totalExcludePriorityFee} </>) : (<> <img src="/images/dot.gif" width="13%" /></>)
+                  } 
+                  
+                 
+                  
                 </Grid>
+                
               </Grid>
               <hr />
               <br />
