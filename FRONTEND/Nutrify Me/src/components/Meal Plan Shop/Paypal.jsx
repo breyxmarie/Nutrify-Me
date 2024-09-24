@@ -25,9 +25,9 @@ function Paypal() {
         {
           amount: {
             currency_code: "PHP",
-            //  value: location.state.totalprice,
+            value: location.state.totalprice,
 
-            value: 0.01,
+            // value: 0.01,
           },
         },
       ],

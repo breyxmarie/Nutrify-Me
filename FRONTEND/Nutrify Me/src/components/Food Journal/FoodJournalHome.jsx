@@ -60,7 +60,7 @@ function FoodJournalHome() {
   };
 
   //! loading
-  const [loading1, setLoading1] = useState(false)
+  const [loading1, setLoading1] = useState(false);
   //!
   const tabContent = [
     {
@@ -117,41 +117,39 @@ function FoodJournalHome() {
           let tempOrder = [];
           let tempSet = [];
 
-
-          temp.map((item) => (
-          
-            item.orders.map((items) => (
-              tempOrder.push(items),
-              tempSet.push(resp.data.find((items1) => (
-                items1.shop_mealplan_id === items)))
-             
-            ))
-          ))
-         console.log(tempSet)
+          temp.map((item) =>
+            item.orders.map(
+              (items) => (
+                tempOrder.push(items),
+                tempSet.push(
+                  resp.data.find((items1) => items1.shop_mealplan_id === items)
+                )
+              )
+            )
+          );
+          console.log(tempSet);
           setOrderedMealPlans(tempSet);
           try {
             AxiosInstance.get(`shopmeal`).then((respo) => {
               let tempMealstalaga = [];
-              console.log(respo)
+              console.log(respo);
               tempOrder.map((item) =>
-                (
-                 // tempMealstalaga.push(
-                  respo.data?.filter(
-                    (items) => items.mealplan_id === item
-                  ).map((item1) => (
-                    tempMealstalaga.push(item1)
-                  ))
+                // tempMealstalaga.push(
+                respo.data
+                  ?.filter((items) => items.mealplan_id === item)
+                  .map((item1) => tempMealstalaga.push(item1))
                 //)
-              )
               );
-              console.log(tempMealstalaga)
+              console.log(tempMealstalaga);
               setShopMeal(tempMealstalaga);
             });
           } catch (error) {
-            console.log(error)
+            console.log(error);
           }
         });
-      } catch (error) {console.log(error)}
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     await AxiosInstance.get(`recommendmealplan`).then((res) => {
@@ -159,35 +157,38 @@ function FoodJournalHome() {
         res.data?.filter((item) => item.user_id == loggedInUser.user_id)
       );
 
-
       try {
         AxiosInstance.get(`recommendmeal`).then((respo) => {
           let tempMealstalaga = [];
-          console.log(res.data)
-          res.data.map((item1) =>
-            (console.log(respo.data?.filter(
-              (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
-            )),
-         //   tempMealstalaga.push(
-              respo.data?.filter(
-                (items) => items.recommend_mealplan_id === item1.recommend_mealplan_id
-              ).map((item1) => (
-                tempMealstalaga.push(item1)
-              ))
-           // )
-          )
+          console.log(res.data);
+          res.data.map(
+            (item1) => (
+              console.log(
+                respo.data?.filter(
+                  (items) =>
+                    items.recommend_mealplan_id === item1.recommend_mealplan_id
+                )
+              ),
+              //   tempMealstalaga.push(
+              respo.data
+                ?.filter(
+                  (items) =>
+                    items.recommend_mealplan_id === item1.recommend_mealplan_id
+                )
+                .map((item1) => tempMealstalaga.push(item1))
+              // )
+            )
           );
-          console.log(tempMealstalaga)
+          console.log(tempMealstalaga);
           //setRecommendMeal(tempMealstalaga);
           setRecommendMeal(tempMealstalaga);
-
         });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     });
   };
-  console.log(shopMeal)
+  console.log(shopMeal);
 
   const getJournalData = async (day) => {
     await AxiosInstance.get(`journalentry`).then((res) => {
@@ -1551,14 +1552,218 @@ function FoodJournalHome() {
   const onSubmitHandler = (data) => {
     console.log(data);
     console.log(dates);
-    console.log(activeTab, selectedMealPlan)
+    console.log(activeTab, selectedMealPlan);
 
-    setLoading1(true)
+    setLoading1(true);
 
-    if (activeTab === 1)
-    {
-      console.log("try1", selectedMealPlan)
-     // try {
+    if (activeTab === 1) {
+      console.log("try1", selectedMealPlan);
+      // try {
+      // AxiosInstance.post(`journalentry/`, {
+      //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
+      //   title: data.title,
+      //   entry: data.journal_entry,
+      //   systolic: data.systolic,
+      //   diastolic: data.diastolic,
+      //   user_id: loggedInUser.user_id,
+      //   meal_plan: finalMealPlan.name,
+      // }).then((res) => {
+      //   console.log(res.data.id);
+
+      if (selectedMealPlan === "Meal Plans by Nutritionist") {
+        let dayNum = dayjs(selectedDate).day();
+        console.log(dayNum, "try");
+        console.log(finalMealPlan);
+        // let tempList = shopMeal[0].filter((item) => (
+        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+        // ))
+
+        for (let i = 1; i < 6; i++) {
+          const startWeek = dayjs(selectedDate).subtract(
+            dayjs(selectedDate).day() - i,
+            "day"
+          );
+          const endWeek = startWeek.add(5, "day");
+          console.log(startWeek, endWeek, "hi");
+
+          const meals = [];
+          const tempU = recommendMeal?.filter(
+            (item) =>
+              item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
+          );
+          console.log(
+            tempU.filter((item) => parseInt(item.day) === i),
+            i
+          );
+
+          const sortedTemp = tempU
+            ?.filter((item) => parseInt(item.day) === i)
+            .sort((a, b) => {
+              const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+              return order.indexOf(a.type) - order.indexOf(b.type);
+            })
+            .map((item, index) => meals.push(item));
+
+          console.log(meals);
+          if (i === dayNum) {
+            try {
+              AxiosInstance.post(`journalentry/`, {
+                date: dayjs(selectedDate).format("YYYY-MM-DD"),
+                title: data.title,
+                entry: data.journal_entry,
+                systolic: data.systolic,
+                diastolic: data.diastolic,
+                user_id: loggedInUser.user_id,
+                meal_plan: finalMealPlan.name,
+              }).then((res) => {
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Breakfast",
+                    food: meals[0].food,
+                    calories: meals[0].calories,
+                    fat: meals[0].fat,
+                    protein: meals[0].protein,
+                    carbs: meals[0].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Lunch",
+                    food: meals[1].food,
+                    calories: meals[1].calories,
+                    fat: meals[1].fat,
+                    protein: meals[1].protein,
+                    carbs: meals[1].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Snack",
+                    food: meals[2].food,
+                    calories: meals[2].calories,
+                    fat: meals[2].fat,
+                    protein: meals[2].protein,
+                    carbs: meals[2].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Dinner",
+                    food: meals[3].food,
+                    calories: meals[3].calories,
+                    fat: meals[3].fat,
+                    protein: meals[3].protein,
+                    carbs: meals[3].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+            try {
+              AxiosInstance.post(`journalentry/`, {
+                date: startWeek.format("YYYY-MM-DD"), //!
+                title: "meal plan",
+                entry: "have meal plan",
+                systolic: 0,
+                diastolic: 0,
+                user_id: loggedInUser.user_id,
+                meal_plan: finalMealPlan.name,
+              }).then((res) => {
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Breakfast",
+                    food: meals[0].food,
+                    calories: meals[0].calories,
+                    fat: meals[0].fat,
+                    protein: meals[0].protein,
+                    carbs: meals[0].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Lunch",
+                    food: meals[1].food,
+                    calories: meals[1].calories,
+                    fat: meals[1].fat,
+                    protein: meals[1].protein,
+                    carbs: meals[1].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Snack",
+                    food: meals[2].food,
+                    calories: meals[2].calories,
+                    fat: meals[2].fat,
+                    protein: meals[2].protein,
+                    carbs: meals[2].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Dinner",
+                    food: meals[3].food,
+                    calories: meals[3].calories,
+                    fat: meals[3].fat,
+                    protein: meals[3].protein,
+                    carbs: meals[3].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+
         // AxiosInstance.post(`journalentry/`, {
         //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
         //   title: data.title,
@@ -1566,953 +1771,814 @@ function FoodJournalHome() {
         //   systolic: data.systolic,
         //   diastolic: data.diastolic,
         //   user_id: loggedInUser.user_id,
-        //   meal_plan: finalMealPlan.name, 
-        // }).then((res) => {
-        //   console.log(res.data.id);
+        //   meal_plan: finalMealPlan.name,
+        // }).then((res) => {})
 
-          if(selectedMealPlan === "Meal Plans by Nutritionist" ){
-            let dayNum = dayjs(selectedDate).day();
-            console.log(dayNum, "try")
-            console.log(finalMealPlan)
-            // let tempList = shopMeal[0].filter((item) => (
-            //   item.mealplan_id === finalMealPlan.shop_mealplan_id
-            // ))
-            
-          
-                        for (let i = 1; i < 6; i++) {
-            
-                          const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
-            const endWeek = startWeek.add(5, 'day') ;
-            console.log(startWeek, endWeek  , "hi")
-            
-            
-                          const meals = [];
-                          const tempU = recommendMeal?.filter((item) => (
-                            item.recommend_mealplan_id === finalMealPlan.recommend_mealplan_id
-                          ))
-                          console.log(tempU.filter((item) => (
-                            parseInt(item.day) === i
-                          )), i)
-            
-            
-                         const sortedTemp = tempU?.filter((item) => (
-                            parseInt(item.day) === i
-                          )).sort((a, b) => {
-                            const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-                            return order.indexOf(a.type) - order.indexOf(b.type);
-                          })
-                          .map((item, index) => meals.push(item));
-            
-                          console.log(meals)
-                          if (i === dayNum){
-                            try {
-                              AxiosInstance.post(`journalentry/`, {
-                                date: dayjs(selectedDate).format("YYYY-MM-DD"),
-                                title: data.title,
-                                entry: data.journal_entry,
-                                systolic: data.systolic,
-                                diastolic: data.diastolic,
-                                user_id: loggedInUser.user_id,
-                                meal_plan: finalMealPlan.name, 
-                              }).then((res) => {
-                                  try {
-                                AxiosInstance.post(`foodentry/`, {
-                                  type: "Breakfast",
-                                  food: meals[0].food,
-                                  calories: meals[0].calories,
-                                  fat: meals[0].fat,
-                                  protein: meals[0].protein,
-                                  carbs: meals[0].carbs,
-                                  journal_id: res.data.id,
-                                }).then((res) => {
-                                  console.log(res, res.data);
-                                });
-                              } catch (error) {
-                                console.log(error.response, error);
-                              }
-            
-                              try {
-                                AxiosInstance.post(`foodentry/`, {
-                                  type: "Lunch",
-                                  food: meals[1].food,
-                                  calories: meals[1].calories,
-                                  fat: meals[1].fat,
-                                  protein: meals[1].protein,
-                                  carbs: meals[1].carbs,
-                                  journal_id: res.data.id,
-                                }).then((res) => {
-                                  console.log(res, res.data);
-                                });
-                              } catch (error) {
-                                console.log(error.response, error);
-                              }
-            
-                              try {
-                                AxiosInstance.post(`foodentry/`, {
-                                  type: "Snack",
-                                  food: meals[2].food,
-                                  calories: meals[2].calories,
-                                  fat: meals[2].fat,
-                                  protein: meals[2].protein,
-                                  carbs: meals[2].carbs,
-                                  journal_id: res.data.id,
-                                }).then((res) => {
-                                  console.log(res, res.data);
-                                });
-                              } catch (error) {
-                                console.log(error.response, error);
-                              }
-            
-            
-                              try {
-                                AxiosInstance.post(`foodentry/`, {
-                                  type: "Dinner",
-                                  food: meals[3].food,
-                                  calories: meals[3].calories,
-                                  fat: meals[3].fat,
-                                  protein: meals[3].protein,
-                                  carbs: meals[3].carbs,
-                                  journal_id: res.data.id,
-                                }).then((res) => {
-                                  console.log(res, res.data);
-                                });
-                              } catch (error) {
-                                console.log(error.response, error);
-                              }
-                              })
-                            }
-                            catch (error){
-                                console.log(error)
-                            }
-                          }
-                            else {
-            
-            
-            
-                              try {
-                                AxiosInstance.post(`journalentry/`, {
-                                  date: startWeek.format("YYYY-MM-DD"),//! 
-                                  title: "meal plan",
-                                  entry: "have meal plan",
-                                  systolic: 0,
-                                  diastolic: 0,
-                                  user_id: loggedInUser.user_id,
-                                  meal_plan: finalMealPlan.name, 
-                                }).then((res) => {
-                                    try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Breakfast",
-                                    food: meals[0].food,
-                                    calories: meals[0].calories,
-                                    fat: meals[0].fat,
-                                    protein: meals[0].protein,
-                                    carbs: meals[0].carbs,
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-              
-                                try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Lunch",
-                                    food: meals[1].food,
-                                    calories: meals[1].calories,
-                                    fat: meals[1].fat,
-                                    protein: meals[1].protein,
-                                    carbs: meals[1].carbs,
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-              
-                                try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Snack",
-                                    food: meals[2].food,
-                                    calories: meals[2].calories,
-                                    fat: meals[2].fat,
-                                    protein: meals[2].protein,
-                                    carbs: meals[2].carbs,
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-              
-              
-                                try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Dinner",
-                                    food: meals[3].food,
-                                    calories: meals[3].calories,
-                                    fat: meals[3].fat,
-                                    protein: meals[3].protein,
-                                    carbs: meals[3].carbs,
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-                                })
-                              }
-                              catch (error){
-                                  console.log(error)
-                              }
-                            }
-                        }
-            
-            
-            
-                        // AxiosInstance.post(`journalentry/`, {
-                        //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
-                        //   title: data.title,
-                        //   entry: data.journal_entry,
-                        //   systolic: data.systolic,
-                        //   diastolic: data.diastolic,
-                        //   user_id: loggedInUser.user_id,
-                        //   meal_plan: finalMealPlan.name, 
-                        // }).then((res) => {})
-            
-            
-            
-            
-            
-                        // dayjs(selectedDate).format("YYYY-MM-DD")
-                        // shopMeal[0].filter((item) => (
-                        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
-                        // ))
-                        // // .sort((a, b) => {
-                        // //   if (a.day !== b.day) {
-                        // //     return a.day - b.day;
-                        // //   } else {
-                        // //     return a.type.localeCompare(b.type);
-                        // //   }
-                        // // })
-                        // .map((meal) => (
-                        // console.log(meal)
-                        // ))
-                        // try {
-                        //   AxiosInstance.post(`foodentry/`, {
-                        //     type: "Breakfast",
-                        //     food: data.breakfast_food,
-                        //     calories: data.breakfast_calories,
-                        //     fat: data.breakfast_fat,
-                        //     protein: data.breakfast_protein,
-                        //     carbs: data.breakfast_carbs,
-                        //     journal_id: res.data.id,
-                        //   }).then((res) => {
-                        //     console.log(res, res.data);
-                        //   });
-                        // } catch (error) {
-                        //   console.log(error.response, error);
-                        // }
-                
-                        // try {
-                        //   AxiosInstance.post(`foodentry/`, {
-                        //     type: "Lunch",
-                        //     food: data.lunch_food,
-                        //     calories: data.lunch_calories,
-                        //     fat: data.lunch_fat,
-                        //     protein: data.lunch_protein,
-                        //     carbs: data.lunch_carbs,
-                        //     journal_id: res.data.id,
-                        //   }).then((res) => {
-                        //     console.log(res, res.data);
-                        //   });
-                        // } catch (error) {
-                        //   console.log(error.response);
-                        // }
-                
-                        // try {
-                        //   AxiosInstance.post(`foodentry/`, {
-                        //     type: "Snack",
-                        //     food: data.snack_food,
-                        //     calories: data.snack_calories,
-                        //     fat: data.snack_fat,
-                        //     protein: data.snack_protein,
-                        //     carbs: data.snack_carbs,
-                        //     journal_id: res.data.id,
-                        //   }).then((res) => {
-                        //     console.log(res, res.data);
-                        //   });
-                        // } catch (error) {
-                        //   console.log(error.response);
-                        // }
-                
-                        // try {
-                        //   AxiosInstance.post(`foodentry/`, {
-                        //     type: "Dinner",
-                        //     food: data.dinner_food,
-                        //     calories: data.dinner_calories,
-                        //     fat: data.dinner_fat,
-                        //     protein: data.dinner_protein,
-                        //     carbs: data.dinner_carbs,
-                        //     journal_id: res.data.id,
-                        //   }).then((res) => {
-                        //     console.log(res, res.data);
-                        //     getJournalData(dayjs().format("YYYY-MM-DD"));
-                      
-                        //     reset();
-                        //     handleClose();
-                        //   });
-                        // } catch (error) {
-                        //   console.log(error.response);
-                        // }
-                      }
-          
-          else if(selectedMealPlan === "Generated Meal Plans" )
-            {
-
-              console.log(finalMealPlan)
-              let dayNum = dayjs(selectedDate).day();
-              console.log(dayNum, "try")
-              // let tempList = shopMeal[0].filter((item) => (
-              //   item.mealplan_id === finalMealPlan.shop_mealplan_id
-              // ))
-              
-              // console.log(shopMeal[0].filter((item) => (
-              //      item.mealplan_id === finalMealPlan.shop_mealplan_id
-              //    )))
-                          for (let i = 1; i < 6; i++) {
-              
-                            const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
-              const endWeek = startWeek.add(5, 'day') ;
-              console.log(startWeek, endWeek  , "hi")
-              
-              
-                          //   const meals = [];
-                          //   const tempU = shopMeal[0].filter((item) => (
-                          //     item.mealplan_id === finalMealPlan.shop_mealplan_id
-                          //   ))
-                          //   console.log(tempU.filter((item) => (
-                          //     parseInt(item.day) === i
-                          //   )), i)
-              
-              
-                          //  const sortedTemp = tempU.filter((item) => (
-                          //     parseInt(item.day) === i
-                          //   )).sort((a, b) => {
-                          //     const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-                          //     return order.indexOf(a.type) - order.indexOf(b.type);
-                          //   })
-                          //   .map((item, index) => meals.push(item));
-              
-                          //   console.log(meals)
-                            if (i === dayNum){
-                              try {
-                                AxiosInstance.post(`journalentry/`, {
-                                  date: dayjs(selectedDate).format("YYYY-MM-DD"),
-                                  title: data.title,
-                                  entry: data.journal_entry,
-                                  systolic: data.systolic,
-                                  diastolic: data.diastolic,
-                                  user_id: loggedInUser.user_id,
-                                  meal_plan: finalMealPlan.name, 
-                                }).then((res) => {
-                               
-                                    try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Breakfast",
-                                    food: finalMealPlan.meal[i - 1].meals[0].details.recipe.label,
-                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.calories / finalMealPlan.meal[i - 1].meals[0].details.recipe.yield),
-                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[0].total),
-                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[2].total),
-                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[1].total),
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-              
-                                try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Lunch",
-                                    food: finalMealPlan.meal[i - 1].meals[1].details.recipe.label,
-                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.calories / finalMealPlan.meal[i - 1].meals[1].details.recipe.yield),
-                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[0].total),
-                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[2].total),
-                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[1].total),
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-              
-                                try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Snack",
-                                    food: finalMealPlan.meal[i - 1].meals[2].details.recipe.label,
-                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.calories / finalMealPlan.meal[i - 1].meals[2].details.recipe.yield),
-                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[0].total),
-                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[2].total),
-                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[1].total),
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-              
-              
-                                try {
-                                  AxiosInstance.post(`foodentry/`, {
-                                    type: "Dinner",
-                                    food: finalMealPlan.meal[i - 1].meals[3].details.recipe.label,
-                                    calories: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.calories / finalMealPlan.meal[i - 1].meals[3].details.recipe.yield),
-                                    fat: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[0].total),
-                                    protein: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[2].total),
-                                    carbs: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[1].total),
-                                    journal_id: res.data.id,
-                                  }).then((res) => {
-                                    console.log(res, res.data);
-                                    if(i === 5) {
-                                      getJournalData()
-
-                                      handleClose();
-                                      toast.success("Entry Added");
-                                      setLoading1(false)
-                                      setActiveTab(0)
-                                      reset();
-                                    }
-                                  });
-                                } catch (error) {
-                                  console.log(error.response, error);
-                                }
-                                })
-                              }
-                              catch (error){
-                                  console.log(error)
-                              }
-                            }
-                              else {
-              
-              
-              
-                                try {
-                                  AxiosInstance.post(`journalentry/`, {
-                                    date: startWeek.format("YYYY-MM-DD"),//! 
-                                    title: "meal plan",
-                                    entry: "have meal plan",
-                                    systolic: 0,
-                                    diastolic: 0,
-                                    user_id: loggedInUser.user_id,
-                                    meal_plan: finalMealPlan.name, 
-                                  }).then((res) => {
-                                      try {
-                                    AxiosInstance.post(`foodentry/`, {
-                                      type: "Breakfast",
-                                      food: finalMealPlan.meal[i - 1].meals[0].details.recipe.label,
-                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.calories / finalMealPlan.meal[i - 1].meals[0].details.recipe.yield),
-                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[0].total),
-                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[2].total),
-                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[0].details.recipe.digest[1].total),
-                                      journal_id: res.data.id,
-                                    }).then((res) => {
-                                      console.log(res, res.data);
-                                    });
-                                  } catch (error) {
-                                    console.log(error.response, error);
-                                  }
-                
-                                  try {
-                                    AxiosInstance.post(`foodentry/`, {
-                                      type: "Lunch",
-                                      food: finalMealPlan.meal[i - 1].meals[1].details.recipe.label,
-                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.calories / finalMealPlan.meal[i - 1].meals[1].details.recipe.yield),
-                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[0].total),
-                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[2].total),
-                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[1].details.recipe.digest[1].total),
-                                      journal_id: res.data.id,
-                                    }).then((res) => {
-                                      console.log(res, res.data);
-                                    });
-                                  } catch (error) {
-                                    console.log(error.response, error);
-                                  }
-                
-                                  try {
-                                    AxiosInstance.post(`foodentry/`, {
-                                      type: "Snack",
-                                      food: finalMealPlan.meal[i - 1].meals[2].details.recipe.label,
-                                
-                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.calories / finalMealPlan.meal[i - 1].meals[2].details.recipe.yield),
-                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[0].total),
-                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[2].total),
-                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[2].details.recipe.digest[1].total),
-                                      journal_id: res.data.id,
-                                    }).then((res) => {
-                                      console.log(res, res.data);
-                                    });
-                                  } catch (error) {
-                                    console.log(error.response, error);
-                                  }
-                
-                
-                                  try {
-                                    AxiosInstance.post(`foodentry/`, {
-                                      type: "Dinner",
-                                      food: finalMealPlan.meal[i - 1].meals[3].details.recipe.label,
-                                      calories: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.calories / finalMealPlan.meal[i - 1].meals[3].details.recipe.yield),
-                                      fat: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[0].total),
-                                      protein: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[2].total),
-                                      carbs: Math.round(finalMealPlan.meal[i - 1].meals[3].details.recipe.digest[1].total),
-                                      journal_id: res.data.id,
-                                    }).then((res) => {
-                                      console.log(res, res.data);
-
-                                      if(i === 5) {
-                                        getJournalData()
-                                        handleClose();
-
-                                        toast.success("Entry Added");
-                                        setLoading1(false)
-                                        setActiveTab(0)
-                                        reset();
-                                      }
-                                    });
-                                  } catch (error) {
-                                    console.log(error.response, error);
-                                  }
-                                  })
-                                }
-                                catch (error){   
-                                    console.log(error)
-                                }
-                              }
-                          }
-
-                       
-          }
-          else if (selectedMealPlan === "Meal Plan Ordered"){    //! ordered meal plan so from shopmealplan table and shop meal
-
-            let dayNum = dayjs(selectedDate).day();
-console.log(dayNum, "try")
-// let tempList = shopMeal[0].filter((item) => (
-//   item.mealplan_id === finalMealPlan.shop_mealplan_id
-// ))
-
-
-            for (let i = 1; i < 6; i++) {
-
-              const startWeek = dayjs(selectedDate).subtract(dayjs(selectedDate).day() - i , 'day') 
-const endWeek = startWeek.add(5, 'day') ;
-console.log(startWeek, endWeek  , "hi")
-
-
-              const meals = [];
-              const tempU = shopMeal?.filter((item) => (
-                item.mealplan_id === finalMealPlan.shop_mealplan_id
-              ))
-              console.log(tempU.filter((item) => (
-                parseInt(item.day) === i
-              )), i)
-
-
-             const sortedTemp = tempU?.filter((item) => (
-                parseInt(item.day) === i
-              )).sort((a, b) => {
-                const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-                return order.indexOf(a.type) - order.indexOf(b.type);
-              })
-              .map((item, index) => meals.push(item));
-
-              console.log(meals)
-              if (i === dayNum){
-                try {
-                  AxiosInstance.post(`journalentry/`, {
-                    date: dayjs(selectedDate).format("YYYY-MM-DD"),
-                    title: data.title,
-                    entry: data.journal_entry,
-                    systolic: data.systolic,
-                    diastolic: data.diastolic,
-                    user_id: loggedInUser.user_id,
-                    meal_plan: finalMealPlan.name, 
-                  }).then((res) => {
-                      try {
-                    AxiosInstance.post(`foodentry/`, {
-                      type: "Breakfast",
-                      food: meals[0].food,
-                      calories: meals[0].calories,
-                      fat: meals[0].fat,
-                      protein: meals[0].protein,
-                      carbs: meals[0].carbs,
-                      journal_id: res.data.id,
-                    }).then((res) => {
-                      console.log(res, res.data);
-                    });
-                  } catch (error) {
-                    console.log(error.response, error);
-                  }
-
-                  try {
-                    AxiosInstance.post(`foodentry/`, {
-                      type: "Lunch",
-                      food: meals[1].food,
-                      calories: meals[1].calories,
-                      fat: meals[1].fat,
-                      protein: meals[1].protein,
-                      carbs: meals[1].carbs,
-                      journal_id: res.data.id,
-                    }).then((res) => {
-                      console.log(res, res.data);
-                    });
-                  } catch (error) {
-                    console.log(error.response, error);
-                  }
-
-                  try {
-                    AxiosInstance.post(`foodentry/`, {
-                      type: "Snack",
-                      food: meals[2].food,
-                      calories: meals[2].calories,
-                      fat: meals[2].fat,
-                      protein: meals[2].protein,
-                      carbs: meals[2].carbs,
-                      journal_id: res.data.id,
-                    }).then((res) => {
-                      console.log(res, res.data);
-                    });
-                  } catch (error) {
-                    console.log(error.response, error);
-                  }
-
-
-                  try {
-                    AxiosInstance.post(`foodentry/`, {
-                      type: "Dinner",
-                      food: meals[3].food,
-                      calories: meals[3].calories,
-                      fat: meals[3].fat,
-                      protein: meals[3].protein,
-                      carbs: meals[3].carbs,
-                      journal_id: res.data.id,
-                    }).then((res) => {
-                      console.log(res, res.data);
-                    });
-                  } catch (error) {
-                    console.log(error.response, error);
-                  }
-                  })
-                }
-                catch (error){
-                    console.log(error)
-                }
-              }
-                else {
-
-
-
-                  try {
-                    AxiosInstance.post(`journalentry/`, {
-                      date: startWeek.format("YYYY-MM-DD"),//! 
-                      title: "meal plan",
-                      entry: "have meal plan",
-                      systolic: 0,
-                      diastolic: 0,
-                      user_id: loggedInUser.user_id,
-                      meal_plan: finalMealPlan.name, 
-                    }).then((res) => {
-                        try {
-                      AxiosInstance.post(`foodentry/`, {
-                        type: "Breakfast",
-                        food: meals[0].food,
-                        calories: meals[0].calories,
-                        fat: meals[0].fat,
-                        protein: meals[0].protein,
-                        carbs: meals[0].carbs,
-                        journal_id: res.data.id,
-                      }).then((res) => {
-                        console.log(res, res.data);
-                      });
-                    } catch (error) {
-                      console.log(error.response, error);
-                    }
-  
-                    try {
-                      AxiosInstance.post(`foodentry/`, {
-                        type: "Lunch",
-                        food: meals[1].food,
-                        calories: meals[1].calories,
-                        fat: meals[1].fat,
-                        protein: meals[1].protein,
-                        carbs: meals[1].carbs,
-                        journal_id: res.data.id,
-                      }).then((res) => {
-                        console.log(res, res.data);
-                      });
-                    } catch (error) {
-                      console.log(error.response, error);
-                    }
-  
-                    try {
-                      AxiosInstance.post(`foodentry/`, {
-                        type: "Snack",
-                        food: meals[2].food,
-                        calories: meals[2].calories,
-                        fat: meals[2].fat,
-                        protein: meals[2].protein,
-                        carbs: meals[2].carbs,
-                        journal_id: res.data.id,
-                      }).then((res) => {
-                        console.log(res, res.data);
-                      });
-                    } catch (error) {
-                      console.log(error.response, error);
-                    }
-  
-  
-                    try {
-                      AxiosInstance.post(`foodentry/`, {
-                        type: "Dinner",
-                        food: meals[3].food,
-                        calories: meals[3].calories,
-                        fat: meals[3].fat,
-                        protein: meals[3].protein,
-                        carbs: meals[3].carbs,
-                        journal_id: res.data.id,
-                      }).then((res) => {
-                        console.log(res, res.data);
-                        if (i === 5) {
-                          getJournalData()
-                          handleClose();
-                          toast.success("Entry Added");
-                          setActiveTab(0)
-                          setLoading1(false)
-                        }
-                      });
-                    } catch (error) {
-                      console.log(error.response, error);
-                    }
-                    })
-                  }
-                  catch (error){   
-                      console.log(error)
-                  }
-                }
-
-
-            }
-
-
-
-            // AxiosInstance.post(`journalentry/`, {
-            //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
-            //   title: data.title,
-            //   entry: data.journal_entry,
-            //   systolic: data.systolic,
-            //   diastolic: data.diastolic,
-            //   user_id: loggedInUser.user_id,
-            //   meal_plan: finalMealPlan.name, 
-            // }).then((res) => {})
-
-
-
-
-
-            // dayjs(selectedDate).format("YYYY-MM-DD")
-            // shopMeal[0].filter((item) => (
-            //   item.mealplan_id === finalMealPlan.shop_mealplan_id
-            // ))
-            // .sort((a, b) => {
-            //   if (a.day !== b.day) {
-            //     return a.day - b.day;  
-            //   } else {
-            //     return a.type.localeCompare(b.type);
-            //   }
-            // })
-            // .map((meal) => (
-            // console.log(meal)
-            // ))
-            // try {
-            //   AxiosInstance.post(`foodentry/`, {
-            //     type: "Breakfast",
-            //     food: data.breakfast_food,
-            //     calories: data.breakfast_calories,
-            //     fat: data.breakfast_fat,
-            //     protein: data.breakfast_protein,
-            //     carbs: data.breakfast_carbs,
-            //     journal_id: res.data.id,
-            //   }).then((res) => {
-            //     console.log(res, res.data);
-            //   });
-            // } catch (error) {
-            //   console.log(error.response, error);
-            // }
-    
-            // try {
-            //   AxiosInstance.post(`foodentry/`, {
-            //     type: "Lunch",
-            //     food: data.lunch_food,
-            //     calories: data.lunch_calories,
-            //     fat: data.lunch_fat,
-            //     protein: data.lunch_protein,
-            //     carbs: data.lunch_carbs,
-            //     journal_id: res.data.id,
-            //   }).then((res) => {
-            //     console.log(res, res.data);
-            //   });
-            // } catch (error) {
-            //   console.log(error.response);
-            // }
-    
-            // try {
-            //   AxiosInstance.post(`foodentry/`, {
-            //     type: "Snack",
-            //     food: data.snack_food,
-            //     calories: data.snack_calories,
-            //     fat: data.snack_fat,
-            //     protein: data.snack_protein,
-            //     carbs: data.snack_carbs,
-            //     journal_id: res.data.id,
-            //   }).then((res) => {
-            //     console.log(res, res.data);
-            //   });
-            // } catch (error) {
-            //   console.log(error.response);
-            // }
-    
-            // try {
-            //   AxiosInstance.post(`foodentry/`, {
-            //     type: "Dinner",
-            //     food: data.dinner_food,
-            //     calories: data.dinner_calories,
-            //     fat: data.dinner_fat,
-            //     protein: data.dinner_protein,
-            //     carbs: data.dinner_carbs,
-            //     journal_id: res.data.id,
-            //   }).then((res) => {
-            //     console.log(res, res.data);
-            //     getJournalData(dayjs().format("YYYY-MM-DD"));
-          
-            //     reset();
-            //     handleClose();
-            //   });
-            // } catch (error) {
-            //   console.log(error.response);
-            // }
+        // dayjs(selectedDate).format("YYYY-MM-DD")
+        // shopMeal[0].filter((item) => (
+        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+        // ))
+        // // .sort((a, b) => {
+        // //   if (a.day !== b.day) {
+        // //     return a.day - b.day;
+        // //   } else {
+        // //     return a.type.localeCompare(b.type);
+        // //   }
+        // // })
+        // .map((meal) => (
+        // console.log(meal)
+        // ))
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Breakfast",
+        //     food: data.breakfast_food,
+        //     calories: data.breakfast_calories,
+        //     fat: data.breakfast_fat,
+        //     protein: data.breakfast_protein,
+        //     carbs: data.breakfast_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //   });
+        // } catch (error) {
+        //   console.log(error.response, error);
         // }
-  
-         
+
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Lunch",
+        //     food: data.lunch_food,
+        //     calories: data.lunch_calories,
+        //     fat: data.lunch_fat,
+        //     protein: data.lunch_protein,
+        //     carbs: data.lunch_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //   });
+        // } catch (error) {
+        //   console.log(error.response);
+        // }
+
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Snack",
+        //     food: data.snack_food,
+        //     calories: data.snack_calories,
+        //     fat: data.snack_fat,
+        //     protein: data.snack_protein,
+        //     carbs: data.snack_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //   });
+        // } catch (error) {
+        //   console.log(error.response);
+        // }
+
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Dinner",
+        //     food: data.dinner_food,
+        //     calories: data.dinner_calories,
+        //     fat: data.dinner_fat,
+        //     protein: data.dinner_protein,
+        //     carbs: data.dinner_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //     getJournalData(dayjs().format("YYYY-MM-DD"));
+
+        //     reset();
+        //     handleClose();
+        //   });
+        // } catch (error) {
+        //   console.log(error.response);
+        // }
+      } else if (selectedMealPlan === "Generated Meal Plans") {
+        console.log(finalMealPlan);
+        let dayNum = dayjs(selectedDate).day();
+        console.log(dayNum, "try");
+        // let tempList = shopMeal[0].filter((item) => (
+        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+        // ))
+
+        // console.log(shopMeal[0].filter((item) => (
+        //      item.mealplan_id === finalMealPlan.shop_mealplan_id
+        //    )))
+        for (let i = 1; i < 6; i++) {
+          const startWeek = dayjs(selectedDate).subtract(
+            dayjs(selectedDate).day() - i,
+            "day"
+          );
+          const endWeek = startWeek.add(5, "day");
+          console.log(startWeek, endWeek, "hi");
+
+          //   const meals = [];
+          //   const tempU = shopMeal[0].filter((item) => (
+          //     item.mealplan_id === finalMealPlan.shop_mealplan_id
+          //   ))
+          //   console.log(tempU.filter((item) => (
+          //     parseInt(item.day) === i
+          //   )), i)
+
+          //  const sortedTemp = tempU.filter((item) => (
+          //     parseInt(item.day) === i
+          //   )).sort((a, b) => {
+          //     const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+          //     return order.indexOf(a.type) - order.indexOf(b.type);
+          //   })
+          //   .map((item, index) => meals.push(item));
+
+          //   console.log(meals)
+          if (i === dayNum) {
+            try {
+              AxiosInstance.post(`journalentry/`, {
+                date: dayjs(selectedDate).format("YYYY-MM-DD"),
+                title: data.title,
+                entry: data.journal_entry,
+                systolic: data.systolic,
+                diastolic: data.diastolic,
+                user_id: loggedInUser.user_id,
+                meal_plan: finalMealPlan.name,
+              }).then((res) => {
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Breakfast",
+                    food: finalMealPlan.meal[i - 1].meals[0].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[0].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Lunch",
+                    food: finalMealPlan.meal[i - 1].meals[1].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[1].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Snack",
+                    food: finalMealPlan.meal[i - 1].meals[2].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[2].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Dinner",
+                    food: finalMealPlan.meal[i - 1].meals[3].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[3].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                    if (i === 5) {
+                      getJournalData();
+
+                      handleClose();
+                      toast.success("Entry Added");
+                      setLoading1(false);
+                      setActiveTab(0);
+                      reset();
+                    }
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+            try {
+              AxiosInstance.post(`journalentry/`, {
+                date: startWeek.format("YYYY-MM-DD"), //!
+                title: "meal plan",
+                entry: "have meal plan",
+                systolic: 0,
+                diastolic: 0,
+                user_id: loggedInUser.user_id,
+                meal_plan: finalMealPlan.name,
+              }).then((res) => {
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Breakfast",
+                    food: finalMealPlan.meal[i - 1].meals[0].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[0].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Lunch",
+                    food: finalMealPlan.meal[i - 1].meals[1].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[1].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[1].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Snack",
+                    food: finalMealPlan.meal[i - 1].meals[2].details.recipe
+                      .label,
+
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[2].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[2].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Dinner",
+                    food: finalMealPlan.meal[i - 1].meals[3].details.recipe
+                      .label,
+                    calories: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .calories /
+                        finalMealPlan.meal[i - 1].meals[3].details.recipe.yield
+                    ),
+                    fat: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .digest[0].total
+                    ),
+                    protein: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .digest[2].total
+                    ),
+                    carbs: Math.round(
+                      finalMealPlan.meal[i - 1].meals[3].details.recipe
+                        .digest[1].total
+                    ),
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+
+                    if (i === 5) {
+                      getJournalData();
+                      handleClose();
+
+                      toast.success("Entry Added");
+                      setLoading1(false);
+                      setActiveTab(0);
+                      reset();
+                    }
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+      } else if (selectedMealPlan === "Meal Plan Ordered") {
+        //! ordered meal plan so from shopmealplan table and shop meal
+
+        let dayNum = dayjs(selectedDate).day();
+        console.log(dayNum, "try");
+        // let tempList = shopMeal[0].filter((item) => (
+        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+        // ))
+
+        for (let i = 1; i < 6; i++) {
+          const startWeek = dayjs(selectedDate).subtract(
+            dayjs(selectedDate).day() - i,
+            "day"
+          );
+          const endWeek = startWeek.add(5, "day");
+          console.log(startWeek, endWeek, "hi");
+
+          const meals = [];
+          const tempU = shopMeal?.filter(
+            (item) => item.mealplan_id === finalMealPlan.shop_mealplan_id
+          );
+          console.log(
+            tempU.filter((item) => parseInt(item.day) === i),
+            i
+          );
+
+          const sortedTemp = tempU
+            ?.filter((item) => parseInt(item.day) === i)
+            .sort((a, b) => {
+              const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+              return order.indexOf(a.type) - order.indexOf(b.type);
+            })
+            .map((item, index) => meals.push(item));
+
+          console.log(meals);
+          if (i === dayNum) {
+            try {
+              AxiosInstance.post(`journalentry/`, {
+                date: dayjs(selectedDate).format("YYYY-MM-DD"),
+                title: data.title,
+                entry: data.journal_entry,
+                systolic: data.systolic,
+                diastolic: data.diastolic,
+                user_id: loggedInUser.user_id,
+                meal_plan: finalMealPlan.name,
+              }).then((res) => {
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Breakfast",
+                    food: meals[0].food,
+                    calories: meals[0].calories,
+                    fat: meals[0].fat,
+                    protein: meals[0].protein,
+                    carbs: meals[0].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Lunch",
+                    food: meals[1].food,
+                    calories: meals[1].calories,
+                    fat: meals[1].fat,
+                    protein: meals[1].protein,
+                    carbs: meals[1].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Snack",
+                    food: meals[2].food,
+                    calories: meals[2].calories,
+                    fat: meals[2].fat,
+                    protein: meals[2].protein,
+                    carbs: meals[2].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Dinner",
+                    food: meals[3].food,
+                    calories: meals[3].calories,
+                    fat: meals[3].fat,
+                    protein: meals[3].protein,
+                    carbs: meals[3].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          } else {
+            try {
+              AxiosInstance.post(`journalentry/`, {
+                date: startWeek.format("YYYY-MM-DD"), //!
+                title: "meal plan",
+                entry: "have meal plan",
+                systolic: 0,
+                diastolic: 0,
+                user_id: loggedInUser.user_id,
+                meal_plan: finalMealPlan.name,
+              }).then((res) => {
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Breakfast",
+                    food: meals[0].food,
+                    calories: meals[0].calories,
+                    fat: meals[0].fat,
+                    protein: meals[0].protein,
+                    carbs: meals[0].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Lunch",
+                    food: meals[1].food,
+                    calories: meals[1].calories,
+                    fat: meals[1].fat,
+                    protein: meals[1].protein,
+                    carbs: meals[1].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Snack",
+                    food: meals[2].food,
+                    calories: meals[2].calories,
+                    fat: meals[2].fat,
+                    protein: meals[2].protein,
+                    carbs: meals[2].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+
+                try {
+                  AxiosInstance.post(`foodentry/`, {
+                    type: "Dinner",
+                    food: meals[3].food,
+                    calories: meals[3].calories,
+                    fat: meals[3].fat,
+                    protein: meals[3].protein,
+                    carbs: meals[3].carbs,
+                    journal_id: res.data.id,
+                  }).then((res) => {
+                    console.log(res, res.data);
+                    if (i === 5) {
+                      getJournalData();
+                      handleClose();
+                      toast.success("Entry Added");
+                      setActiveTab(0);
+                      setLoading1(false);
+                    }
+                  });
+                } catch (error) {
+                  console.log(error.response, error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }
+
+        // AxiosInstance.post(`journalentry/`, {
+        //   date: dayjs(selectedDate).format("YYYY-MM-DD"),
+        //   title: data.title,
+        //   entry: data.journal_entry,
+        //   systolic: data.systolic,
+        //   diastolic: data.diastolic,
+        //   user_id: loggedInUser.user_id,
+        //   meal_plan: finalMealPlan.name,
+        // }).then((res) => {})
+
+        // dayjs(selectedDate).format("YYYY-MM-DD")
+        // shopMeal[0].filter((item) => (
+        //   item.mealplan_id === finalMealPlan.shop_mealplan_id
+        // ))
+        // .sort((a, b) => {
+        //   if (a.day !== b.day) {
+        //     return a.day - b.day;
+        //   } else {
+        //     return a.type.localeCompare(b.type);
+        //   }
+        // })
+        // .map((meal) => (
+        // console.log(meal)
+        // ))
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Breakfast",
+        //     food: data.breakfast_food,
+        //     calories: data.breakfast_calories,
+        //     fat: data.breakfast_fat,
+        //     protein: data.breakfast_protein,
+        //     carbs: data.breakfast_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //   });
+        // } catch (error) {
+        //   console.log(error.response, error);
+        // }
+
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Lunch",
+        //     food: data.lunch_food,
+        //     calories: data.lunch_calories,
+        //     fat: data.lunch_fat,
+        //     protein: data.lunch_protein,
+        //     carbs: data.lunch_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //   });
+        // } catch (error) {
+        //   console.log(error.response);
+        // }
+
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Snack",
+        //     food: data.snack_food,
+        //     calories: data.snack_calories,
+        //     fat: data.snack_fat,
+        //     protein: data.snack_protein,
+        //     carbs: data.snack_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //   });
+        // } catch (error) {
+        //   console.log(error.response);
+        // }
+
+        // try {
+        //   AxiosInstance.post(`foodentry/`, {
+        //     type: "Dinner",
+        //     food: data.dinner_food,
+        //     calories: data.dinner_calories,
+        //     fat: data.dinner_fat,
+        //     protein: data.dinner_protein,
+        //     carbs: data.dinner_carbs,
+        //     journal_id: res.data.id,
+        //   }).then((res) => {
+        //     console.log(res, res.data);
+        //     getJournalData(dayjs().format("YYYY-MM-DD"));
+
+        //     reset();
+        //     handleClose();
+        //   });
+        // } catch (error) {
+        //   console.log(error.response);
+        // }
+        // }
+
         // });
-    //  }
-      //  catch (error) {
-      //   console.log(error.response);
-      // }
-    }
-  }
-    else {
+        //  }
+        //  catch (error) {
+        //   console.log(error.response);
+        // }
+      }
+    } else {
       try {
-      AxiosInstance.post(`journalentry/`, {
-        date: dayjs(selectedDate).format("YYYY-MM-DD"),
-        title: data.title,
-        entry: data.journal_entry,
-        systolic: data.systolic,
-        diastolic: data.diastolic,
-        user_id: loggedInUser.user_id,
-      }).then((res) => {
-        console.log(res.data.id);
+        AxiosInstance.post(`journalentry/`, {
+          date: dayjs(selectedDate).format("YYYY-MM-DD"),
+          title: data.title,
+          entry: data.journal_entry,
+          systolic: data.systolic,
+          diastolic: data.diastolic,
+          user_id: loggedInUser.user_id,
+        }).then((res) => {
+          console.log(res.data.id);
 
-        try {
-          AxiosInstance.post(`foodentry/`, {
-            type: "Breakfast",
-            food: data.breakfast_food,
-            calories: data.breakfast_calories,
-            fat: data.breakfast_fat,
-            protein: data.breakfast_protein,
-            carbs: data.breakfast_carbs,
-            journal_id: res.data.id,
-          }).then((res) => {
-            console.log(res, res.data);
-          });
-        } catch (error) {
-          console.log(error.response, error);
-        }
+          try {
+            AxiosInstance.post(`foodentry/`, {
+              type: "Breakfast",
+              food: data.breakfast_food,
+              calories: data.breakfast_calories,
+              fat: data.breakfast_fat,
+              protein: data.breakfast_protein,
+              carbs: data.breakfast_carbs,
+              journal_id: res.data.id,
+            }).then((res) => {
+              console.log(res, res.data);
+            });
+          } catch (error) {
+            console.log(error.response, error);
+          }
 
-        try {
-          AxiosInstance.post(`foodentry/`, {
-            type: "Lunch",
-            food: data.lunch_food,
-            calories: data.lunch_calories,
-            fat: data.lunch_fat,
-            protein: data.lunch_protein,
-            carbs: data.lunch_carbs,
-            journal_id: res.data.id,
-          }).then((res) => {
-            console.log(res, res.data);
-          });
-        } catch (error) {
-          console.log(error.response);
-        }
+          try {
+            AxiosInstance.post(`foodentry/`, {
+              type: "Lunch",
+              food: data.lunch_food,
+              calories: data.lunch_calories,
+              fat: data.lunch_fat,
+              protein: data.lunch_protein,
+              carbs: data.lunch_carbs,
+              journal_id: res.data.id,
+            }).then((res) => {
+              console.log(res, res.data);
+            });
+          } catch (error) {
+            console.log(error.response);
+          }
 
-        try {
-          AxiosInstance.post(`foodentry/`, {
-            type: "Snack",
-            food: data.snack_food,
-            calories: data.snack_calories,
-            fat: data.snack_fat,
-            protein: data.snack_protein,
-            carbs: data.snack_carbs,
-            journal_id: res.data.id,
-          }).then((res) => {
-            console.log(res, res.data);
-          });
-        } catch (error) {
-          console.log(error.response);
-        }
+          try {
+            AxiosInstance.post(`foodentry/`, {
+              type: "Snack",
+              food: data.snack_food,
+              calories: data.snack_calories,
+              fat: data.snack_fat,
+              protein: data.snack_protein,
+              carbs: data.snack_carbs,
+              journal_id: res.data.id,
+            }).then((res) => {
+              console.log(res, res.data);
+            });
+          } catch (error) {
+            console.log(error.response);
+          }
 
-        try {
-          AxiosInstance.post(`foodentry/`, {
-            type: "Dinner",
-            food: data.dinner_food,
-            calories: data.dinner_calories,
-            fat: data.dinner_fat,
-            protein: data.dinner_protein,
-            carbs: data.dinner_carbs,
-            journal_id: res.data.id,
-          }).then((res) => {
-            console.log(res, res.data);
-            getJournalData(dayjs().format("YYYY-MM-DD"));
-            setCaloriesBvalue(0);
-            setFatBvalue(0);
-            setProteinBvalue(0);
-            setCarbsBvalue(0);
-            setCaloriesLvalue(0);
-            setFatLvalue(0);
-            setProteinLvalue(0);
-            setCarbsLvalue(0);
-            setCaloriesSvalue(0);
-            setFatSvalue(0);
-            setProteinSvalue(0);
-            setCarbsSvalue(0);
-            setCaloriesDvalue(0);
-            setFatDvalue(0);
-            setProteinDvalue(0);
-            setCarbsDvalue(0); 
-            reset();
-            handleClose();
-          });
-        } catch (error) {
-          console.log(error.response);
-        }
-      });
-    } catch (error) {
-      console.log(error.response);
-    }
+          try {
+            AxiosInstance.post(`foodentry/`, {
+              type: "Dinner",
+              food: data.dinner_food,
+              calories: data.dinner_calories,
+              fat: data.dinner_fat,
+              protein: data.dinner_protein,
+              carbs: data.dinner_carbs,
+              journal_id: res.data.id,
+            }).then((res) => {
+              console.log(res, res.data);
+              getJournalData(dayjs().format("YYYY-MM-DD"));
+              setCaloriesBvalue(0);
+              setFatBvalue(0);
+              setProteinBvalue(0);
+              setCarbsBvalue(0);
+              setCaloriesLvalue(0);
+              setFatLvalue(0);
+              setProteinLvalue(0);
+              setCarbsLvalue(0);
+              setCaloriesSvalue(0);
+              setFatSvalue(0);
+              setProteinSvalue(0);
+              setCarbsSvalue(0);
+              setCaloriesDvalue(0);
+              setFatDvalue(0);
+              setProteinDvalue(0);
+              setCarbsDvalue(0);
+              reset();
+              handleClose();
+            });
+          } catch (error) {
+            console.log(error.response);
+          }
+        });
+      } catch (error) {
+        console.log(error.response);
+      }
     }
   };
 
@@ -2682,11 +2748,11 @@ console.log(startWeek, endWeek  , "hi")
   //?
 
   //! set choices
-const setChoice = (e) => {
-  console.log(e)
-  setSelectedMealPlan(e.target.value) 
-  setFinalMealPlan()
-}
+  const setChoice = (e) => {
+    console.log(e);
+    setSelectedMealPlan(e.target.value);
+    setFinalMealPlan();
+  };
   //?
   return (
     <div
@@ -2937,7 +3003,6 @@ const setChoice = (e) => {
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             />
-                             
                           </Grid>
                         </Grid>
                       </Grid>
@@ -4227,213 +4292,229 @@ const setChoice = (e) => {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                
-               {loading1 ? (<><center>  <img src="/images/pacman.gif" width="13%" />
-                <Typography>Saving your entry please wait...</Typography></center></>) : (<form onSubmit={handleSubmit(onSubmitHandler)}>
-                  <Grid container spacing={2}>
-                    <Grid xs={2}>
+                {loading1 ? (
+                  <>
+                    <center>
                       {" "}
-                      <img src="/images/food journal icon.png" />
-                    </Grid>
-                    <Grid xs={8}>New Food Journal Entry</Grid>
-                    <Grid xs={2}>
-                      <Button sx={{ float: "right" }} onClick={handleClose}>
-                        <img src="/images/close.png" height="10" weight="10" />
-                      </Button>
-                    </Grid>
-                  </Grid>{" "}
-                  <center>
-                    <Grid container spacing={2} sx={{ my: 2, mx: 0 }}>
-                      <Grid xs={6}>
-                        <Grid container spacing={2}>
-                          <Grid xs={2} sx={{ mt: 2 }}>
-                            {" "}
-                            Title:{" "}
-                          </Grid>
-                          <Grid xs={6}>
-                            {" "}
-                            <TextField
-                              size="small"
-                              id="title"
-                              name="title"
-                              label=""
-                              fullWidth
-                              margin="dense"
-                              sx={{
-                                mr: 2,
-                                background: "#ffffff",
-                                color: "#000000",
-                              }}
-                              {...register("title")}
-                              // error={errors.title ? true : false}
-                              // id="filled-basic"
-                              // label="Title"
-                              // variant="filled"
-                              // sx={{ mr: 2 }}
-                              // value={idToCall}
-                              // onChange={(e) => setIdToCall(e.target.value)}
-                            />
-                             <Typography variant="inherit" color="textSecondary">
-                {errors.title?.message}
-              </Typography>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                      <Grid xs={6}>
+                      <img src="/images/pacman.gif" width="13%" />
+                      <Typography>Saving your entry please wait...</Typography>
+                    </center>
+                  </>
+                ) : (
+                  <form onSubmit={handleSubmit(onSubmitHandler)}>
+                    <Grid container spacing={2}>
+                      <Grid xs={2}>
                         {" "}
-                        <Grid container spacing={2}>
-                          <Grid xs={2}>
-                            {" "}
-                            <Typography sx={{ mt: 2 }}>
-                              Date of Entry
-                            </Typography>
-                          </Grid>
-                          <Grid xs={2}>
-                            {" "}
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              <DatePicker
-                                sx={{ background: "#ffffff", width: "400%" }}
-                                onChange={(e) =>
-                                  setDates(Dayjs(e["$d"]).format("YYYY-MM-DD"))
-                                }
-                                defaultValue={dayjs(selectedDate)}
-                                disabled={true}
-                                // name="date_entry"
-                                // {...register("date_entry")}
-                                // error={errors.date_entry ? true : false}
-                              />
-                            </LocalizationProvider>
-                          </Grid>
-                        </Grid>
+                        <img src="/images/food journal icon.png" />
+                      </Grid>
+                      <Grid xs={8}>New Food Journal Entry</Grid>
+                      <Grid xs={2}>
+                        <Button sx={{ float: "right" }} onClick={handleClose}>
+                          <img
+                            src="/images/close.png"
+                            height="10"
+                            weight="10"
+                          />
+                        </Button>
                       </Grid>
                     </Grid>{" "}
-                    <Typography
-                      sx={{
-                        color: "#ffffff",
-                        fontWeight: "bold",
-                        my: 2,
-                        ml: "5%",
-                      }}
-                      display="flex"
-                      justifyContent="flex-start"
-                    >
-                      Blood Pressure
-                    </Typography>
-                    <Grid container spacing={2} sx={{ mx: "5%", mr: "10%" }}>
-                      <Grid xs={4}>
-                        {" "}
-                        <TextField
-                          id="systolic"
-                          name="systolic"
-                          fullWidth
-                          margin="dense"
-                          {...register("systolic")}
-                          // error={errors.systolic ? true : false}
-                          label="Systolic"
-                          variant="filled"
-                          sx={{
-                            width: "100%",
-                            mr: 4,
-                            background: "#ffffff",
-                            color: "#000000",
-                          }}
-                          // value={idToCall}
-                          // onChange={(e) => setIdToCall(e.target.value)}
-                        />
-                         <Typography variant="inherit" color="textSecondary">
-                {errors.systolic?.message}
-              </Typography>
-                      </Grid>
-                      <Grid xs={4}>
-                        {" "}
-                        <TextField
-                          id="diastolic"
-                          name="diastolic"
-                          fullWidth
-                          margin="dense"
-                          {...register("diastolic")}
-                          // error={errors.diastolic ? true : false}
-                          label="Diastolic"
-                          variant="filled"
-                          sx={{
-                            width: "100%",
-                            mr: 2,
-                            mx: 2,
-                            background: "#ffffff",
-                            color: "#000000",
-                          }}
-                          // value={idToCall}
-                          // onChange={(e) => setIdToCall(e.target.value)}
-                        />
-                         <Typography variant="inherit" color="textSecondary">
-                {errors.diastolic?.message}
-              </Typography>
-                      </Grid>
-                    </Grid>
-                  </center>
-                  <Grid container spacing={2} sx={{ m: 0 }}>
-                    <Grid
-                      xs={6}
-                      sx={{ mx: 0, mt: 1 }}
-                      display="flex"
-                      justifyContent="flex-start"
-                    >
-                      <Box sx={{ width: "80%" }}>
-                        <center> Journal Entry</center>
-
-                        <TextField
-                          id="journal_entry"
-                          name="journal_entry"
-                          label=""
-                          fullWidth
-                          margin="dense"
-                          {...register("journal_entry")}
-                          // error={errors.journal_entry ? true : false}
-                          multiline
-                          rows={6}
-                          sx={{
-                            //  width: "150%",
-                            mr: 2,
-                            background: "#ffffff",
-                            color: "#000000",
-                          }}
-                          // value={idToCall}
-                          // onChange={(e) => setIdToCall(e.target.value)}
-                        />
-                         <Typography variant="inherit" color="textSecondary">
-                {errors.journal_entry?.message}
-              </Typography>
-                        <br />
-                        <center>
-                          <Button
-                            type="submit"
+                    <center>
+                      <Grid container spacing={2} sx={{ my: 2, mx: 0 }}>
+                        <Grid xs={6}>
+                          <Grid container spacing={2}>
+                            <Grid xs={2} sx={{ mt: 2 }}>
+                              {" "}
+                              Title:{" "}
+                            </Grid>
+                            <Grid xs={6}>
+                              {" "}
+                              <TextField
+                                size="small"
+                                id="title"
+                                name="title"
+                                label=""
+                                fullWidth
+                                margin="dense"
+                                sx={{
+                                  mr: 2,
+                                  background: "#ffffff",
+                                  color: "#000000",
+                                }}
+                                {...register("title")}
+                                // error={errors.title ? true : false}
+                                // id="filled-basic"
+                                // label="Title"
+                                // variant="filled"
+                                // sx={{ mr: 2 }}
+                                // value={idToCall}
+                                // onChange={(e) => setIdToCall(e.target.value)}
+                              />
+                              <Typography
+                                variant="inherit"
+                                color="textSecondary"
+                              >
+                                {errors.title?.message}
+                              </Typography>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid xs={6}>
+                          {" "}
+                          <Grid container spacing={2}>
+                            <Grid xs={2}>
+                              {" "}
+                              <Typography sx={{ mt: 2 }}>
+                                Date of Entry
+                              </Typography>
+                            </Grid>
+                            <Grid xs={2}>
+                              {" "}
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DatePicker
+                                  sx={{ background: "#ffffff", width: "400%" }}
+                                  onChange={(e) =>
+                                    setDates(
+                                      Dayjs(e["$d"]).format("YYYY-MM-DD")
+                                    )
+                                  }
+                                  defaultValue={dayjs(selectedDate)}
+                                  disabled={true}
+                                  // name="date_entry"
+                                  // {...register("date_entry")}
+                                  // error={errors.date_entry ? true : false}
+                                />
+                              </LocalizationProvider>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>{" "}
+                      <Typography
+                        sx={{
+                          color: "#ffffff",
+                          fontWeight: "bold",
+                          my: 2,
+                          ml: "5%",
+                        }}
+                        display="flex"
+                        justifyContent="flex-start"
+                      >
+                        Blood Pressure
+                      </Typography>
+                      <Grid container spacing={2} sx={{ mx: "5%", mr: "10%" }}>
+                        <Grid xs={4}>
+                          {" "}
+                          <TextField
+                            id="systolic"
+                            name="systolic"
+                            fullWidth
+                            margin="dense"
+                            {...register("systolic")}
+                            // error={errors.systolic ? true : false}
+                            label="Systolic"
+                            variant="filled"
                             sx={{
-                              fontWeight: "bold",
+                              width: "100%",
+                              mr: 4,
                               background: "#ffffff",
-                              color: primaryColor,
-                              backgroundRadius: 10,
-                              "&:hover": {
-                                backgroundColor: " #E66253",
-                                color: "#ffffff",
-                                border: 1,
-                                borderColor: "#ffffff",
-                              },
+                              color: "#000000",
                             }}
-                          >
-                            SUBMIT
-                          </Button>
-                        </center>
-                      </Box>
-                      <br />
-                      <br />
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                          <Typography variant="inherit" color="textSecondary">
+                            {errors.systolic?.message}
+                          </Typography>
+                        </Grid>
+                        <Grid xs={4}>
+                          {" "}
+                          <TextField
+                            id="diastolic"
+                            name="diastolic"
+                            fullWidth
+                            margin="dense"
+                            {...register("diastolic")}
+                            // error={errors.diastolic ? true : false}
+                            label="Diastolic"
+                            variant="filled"
+                            sx={{
+                              width: "100%",
+                              mr: 2,
+                              mx: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                          <Typography variant="inherit" color="textSecondary">
+                            {errors.diastolic?.message}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </center>
+                    <Grid container spacing={2} sx={{ m: 0 }}>
+                      <Grid
+                        xs={6}
+                        sx={{ mx: 0, mt: 1 }}
+                        display="flex"
+                        justifyContent="flex-start"
+                      >
+                        <Box sx={{ width: "80%" }}>
+                          <center> Journal Entry</center>
 
-                      <br />
+                          <TextField
+                            id="journal_entry"
+                            name="journal_entry"
+                            label=""
+                            fullWidth
+                            margin="dense"
+                            {...register("journal_entry")}
+                            // error={errors.journal_entry ? true : false}
+                            multiline
+                            rows={6}
+                            sx={{
+                              //  width: "150%",
+                              mr: 2,
+                              background: "#ffffff",
+                              color: "#000000",
+                            }}
+                            // value={idToCall}
+                            // onChange={(e) => setIdToCall(e.target.value)}
+                          />
+                          <Typography variant="inherit" color="textSecondary">
+                            {errors.journal_entry?.message}
+                          </Typography>
+                          <br />
+                          <center>
+                            <Button
+                              type="submit"
+                              sx={{
+                                fontWeight: "bold",
+                                background: "#ffffff",
+                                color: primaryColor,
+                                backgroundRadius: 10,
+                                "&:hover": {
+                                  backgroundColor: " #E66253",
+                                  color: "#ffffff",
+                                  border: 1,
+                                  borderColor: "#ffffff",
+                                },
+                              }}
+                            >
+                              SUBMIT
+                            </Button>
+                          </center>
+                        </Box>
+                        <br />
+                        <br />
 
-                      <br />
-                      <br />
-                      <br />
+                        <br />
 
-                      {/* Meal Plan: <br />
+                        <br />
+                        <br />
+                        <br />
+
+                        {/* Meal Plan: <br />
                       <Select
                         labelId="demo-simple-select-filled-label"
                         id="demo-simple-select-filled"
@@ -4445,1282 +4526,1351 @@ const setChoice = (e) => {
                           <MenuItem value={option}>{option}</MenuItem>
                         ))}
                       </Select> */}
-                    </Grid>
-                    <Grid xs={6} sx={{ ml: 0 }}>
-                      <center>
-                        <Typography
-                          sx={{ fontWeight: "bold", fontSize: "1.5em", mt: 1 }}
-                        >
-                          {" "}
-                          Meals{" "}
-                        </Typography>
-                      </center>
-                      <Tabs
-                        value={activeTab}
-                        style={{
-                          color: "#f00", // Change text color to red
-                          fontSize: "18px", // Increase font size
-                          fontWeight: "bold", // Make text bold
-                        }}
-                        onChange={handleTabChange}
-                        indicatorColor="primary"
-                        centered
-                      >
-                        {tabContent.map((tab, index) => (
-                          <Tab
-                            key={index}
-                            label={tab.title}
-                            style={{
-                              color: "#ffffff", // Change text color to red
-                              fontSize: "14px", // Increase font size
-                              //fontWeight: "bold", // Make text bold
+                      </Grid>
+                      <Grid xs={6} sx={{ ml: 0 }}>
+                        <center>
+                          <Typography
+                            sx={{
+                              fontWeight: "bold",
+                              fontSize: "1.5em",
+                              mt: 1,
                             }}
-                          />
-                        ))}
-                      </Tabs>
-                      {tabContent.map((tab, index) => (
-                        <Box key={index} hidden={activeTab !== index}>
-                          {tab.content}
-                        </Box>
-                      ))}
-                      {activeTab === 0 ? (
-                        <Box>
-                          <Box>
-                            <Typography>Breakfast</Typography>
-                            <Grid container spacing={2} sx={{ my: 2 }}>
-                              <Grid xs={6}>
-                                <TextField
-                                  id="breakfast_food"
-                                  name="breakfast_food"
-                                  fullWidth
-                                  margin="dense"
-                                  {...register("breakfast_food")}
-                                  error={errors.breakfast_food ? true : false}
-                                  label="Food Eaten:"
-                                  variant="filled"
-                                  size="small"
-                                  InputLabelProps={{
-                                    style: { color: "#000000" },
-                                  }}
-                                  sx={{
-                                    mr: 2,
-                                    background: "#ffffff",
-                                    color: "#000000",
-                                  }}
-
-                                  // value={idToCall}
-                                  // onChange={(e) => setIdToCall(e.target.value)}
-                                />
-                              </Grid>
-                              <Grid xs={6}>
-                                {" "}
-                                {/* <TextField
-                              id="filled-basic"
-                              label="Meal Plan:"
-                              variant="filled"
-                              size="small"
-                              fullWidth
-                              InputLabelProps={{
-                                style: { color: "#000000" },
-                              }}
-                              sx={{
-                                ml: 2,
-                                background: "#ffffff",
-                                color: "#000000",
-                              }}
-
-                              // value={idToCall}
-                              // onChange={(e) => setIdToCall(e.target.value)}
-                            /> */}
-                              </Grid>{" "}
-                              <Grid container spacing={2}>
-                                <Grid xs={6}>
-                                  {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
-                                  <br />
-                                  <center>
-                                    <Typography> Calories</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/calorieswhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="breakfast_calories"
-                                        name="breakfast_calories"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        fullWidth
-                                        margin="dense"
-                                        {...register("breakfast_calories")}
-                                        // error={
-                                        //   errors.breakfast_calorie ? true : false
-                                        // }
-                                        // value={
-                                        //   typeof caloriesBvalue === "number"
-                                        //     ? caloriesBvalue
-                                        //     : 800
-                                        // }
-
-                                        value={
-                                          typeof caloriesBvalue === "number"
-                                            ? caloriesBvalue
-                                            : 0
-                                        }
-                                        onChange={handleCaloriesBSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={caloriesBvalue}
-                                        size="small"
-                                        onChange={handleCaloriesBInputChange}
-                                        onBlur={handleCaloriesBBlur}
-                                        inputProps={{
-                                          step: 0,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                  <center>
-                                    <Typography> Fat</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/fatwhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="breakfast_fat"
-                                        name="breakfast_fat"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("breakfast_fat")}
-                                        value={
-                                          typeof fatBvalue === "number"
-                                            ? fatBvalue
-                                            : 0
-                                        }
-                                        onChange={handleFatBSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={fatBvalue}
-                                        size="small"
-                                        onChange={handleFatBInputChange}
-                                        onBlur={handleFatBBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                  {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
-                                </Grid>
-                                <Grid xs={6}>
-                                  <br />{" "}
-                                  <center>
-                                    <Typography> Protein</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/proteinwhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="breakfast_protein"
-                                        name="breakfast_protein"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("breakfast_protein")}
-                                        value={
-                                          typeof proteinBvalue === "number"
-                                            ? proteinBvalue
-                                            : 0
-                                        }
-                                        onChange={handleProteinBSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={proteinBvalue}
-                                        size="small"
-                                        onChange={handleProteinBInputChange}
-                                        onBlur={handleProteinBBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>{" "}
-                                  <center>
-                                    <Typography> Carbs</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/carbswhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="breakfast_carbs"
-                                        name="breakfast_carbs"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("breakfast_carbs")}
-                                        value={
-                                          typeof carbsBvalue === "number"
-                                            ? carbsBvalue
-                                            : 0
-                                        }
-                                        onChange={handleCarbsBSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={carbsBvalue}
-                                        size="small"
-                                        onChange={handleCarbsBInputChange}
-                                        onBlur={handleCarbsBBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                          <Box sx={{ mt: 2 }}>
-                            Lunch
-                            <Grid container spacing={2} sx={{ my: 2 }}>
-                              <Grid xs={6}>
-                                <TextField
-                                  id="lunch_food"
-                                  name="lunch_food"
-                                  margin="dense"
-                                  {...register("lunch_food")}
-                                  error={errors.lunch_food ? true : false}
-                                  label="Food Eaten:"
-                                  variant="filled"
-                                  size="small"
-                                  fullWidth
-                                  InputLabelProps={{
-                                    style: { color: "#000000" },
-                                  }}
-                                  sx={{
-                                    mr: 2,
-                                    background: "#ffffff",
-                                    color: "#000000",
-                                  }}
-
-                                  // value={idToCall}
-                                  // onChange={(e) => setIdToCall(e.target.value)}
-                                />
-                              </Grid>
-                              <Grid xs={6}>
-                                {" "}
-                                {/* <TextField
-                              id="filled-basic"
-                              label="Meal Plan:"
-                              variant="filled"
-                              size="small"
-                              fullWidth
-                              InputLabelProps={{
-                                style: { color: "#000000" },
-                              }}
-                              sx={{
-                                ml: 2,
-                                background: "#ffffff",
-                                color: "#000000",
-                              }}
-
-                              // value={idToCall}
-                              // onChange={(e) => setIdToCall(e.target.value)}
-                            /> */}
-                              </Grid>
-                              <Grid container spacing={2}>
-                                <Grid xs={6}>
-                                  {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
-                                  <br />
-                                  <center>
-                                    <Typography> Calories</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/calorieswhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="lunch_calories"
-                                        name="lunch_calories"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("lunch_calories")}
-                                        value={
-                                          typeof caloriesLvalue === "number"
-                                            ? caloriesLvalue
-                                            : 0
-                                        }
-                                        onChange={handleCaloriesLSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={caloriesLvalue}
-                                        size="small"
-                                        onChange={handleCaloriesLInputChange}
-                                        onBlur={handleCaloriesLBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                  <center>
-                                    <Typography> Fat</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/fatwhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="lunch_fat"
-                                        name="lunch_fat"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("lunch_fat")}
-                                        value={
-                                          typeof fatLvalue === "number"
-                                            ? fatLvalue
-                                            : 0
-                                        }
-                                        onChange={handleFatLSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={fatLvalue}
-                                        size="small"
-                                        onChange={handleFatLInputChange}
-                                        onBlur={handleFatLBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                  {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
-                                </Grid>
-                                <Grid xs={6}>
-                                  <br />{" "}
-                                  <center>
-                                    <Typography> Protein</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/proteinwhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="lunch_protein"
-                                        name="lunch_protein"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("lunch_protein")}
-                                        value={
-                                          typeof proteinLvalue === "number"
-                                            ? proteinLvalue
-                                            : 0
-                                        }
-                                        onChange={handleProteinLSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={proteinLvalue}
-                                        size="small"
-                                        onChange={handleProteinLInputChange}
-                                        onBlur={handleProteinLBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>{" "}
-                                  <center>
-                                    <Typography> Carbs</Typography>
-                                  </center>
-                                  <Grid
-                                    container
-                                    spacing={2}
-                                    alignItems="center"
-                                  >
-                                    <br />
-                                    <br />
-                                    <Grid item>
-                                      <img
-                                        src="/images/carbswhite.png"
-                                        height="25"
-                                      />
-                                    </Grid>
-                                    <Grid item xs>
-                                      <Slider
-                                        id="lunch_carbs"
-                                        name="lunch_carbs"
-                                        min={0}
-                                        step={1}
-                                        max={1000}
-                                        label=""
-                                        {...register("lunch_carbs")}
-                                        value={
-                                          typeof carbsLvalue === "number"
-                                            ? carbsLvalue
-                                            : 0
-                                        }
-                                        onChange={handleCarbsLSliderChange}
-                                        aria-labelledby="input-slider"
-                                        sx={{ color: secondaryColor }}
-                                      />
-                                    </Grid>
-                                    <Grid item>
-                                      <Input
-                                        value={carbsLvalue}
-                                        size="small"
-                                        onChange={handleCarbsLInputChange}
-                                        onBlur={handleCarbsLBlur}
-                                        inputProps={{
-                                          step: 1,
-                                          min: 0,
-                                          max: 1000,
-                                          type: "number",
-                                          "aria-labelledby": "input-slider",
-                                        }}
-                                      />
-                                    </Grid>
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                          Meals
-                          <Box>
-                            Snack
-                            <Grid container spacing={2} sx={{ my: 2 }}>
-                              <Grid xs={6}>
-                                <TextField
-                                  id="snack_food"
-                                  name="title"
-                                  fullWidth
-                                  margin="dense"
-                                  {...register("snack_food")}
-                                  error={errors.snack_food ? true : false}
-                                  label="Food Eaten:"
-                                  variant="filled"
-                                  size="small"
-                                  InputLabelProps={{
-                                    style: { color: "#000000" },
-                                  }}
-                                  sx={{
-                                    mr: 2,
-                                    background: "#ffffff",
-                                    color: "#000000",
-                                  }}
-
-                                  // value={idToCall}
-                                  // onChange={(e) => setIdToCall(e.target.value)}
-                                />
-                              </Grid>
-                              <Grid xs={6}>
-                                {" "}
-                                {/* <TextField
-                              id="filled-basic"
-                              label="Meal Plan:"
-                              variant="filled"
-                              size="small"
-                              fullWidth
-                              InputLabelProps={{
-                                style: { color: "#000000" },
-                              }}
-                              sx={{
-                                ml: 2,
-                                background: "#ffffff",
-                                color: "#000000",
-                              }}
-
-                              // value={idToCall}
-                              // onChange={(e) => setIdToCall(e.target.value)}
-                            /> */}
-                              </Grid>
-                            </Grid>
-                            <Grid container spacing={2}>
-                              <Grid xs={6}>
-                                {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
-                                <br />
-                                <center>
-                                  <Typography> Calories</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/calorieswhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="snack_calories"
-                                      name="snack_calories"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("snack_calories")}
-                                      value={
-                                        typeof caloriesSvalue === "number"
-                                          ? caloriesSvalue
-                                          : 0
-                                      }
-                                      onChange={handleCaloriesSSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={caloriesSvalue}
-                                      size="small"
-                                      onChange={handleCaloriesSInputChange}
-                                      onBlur={handleCaloriesSBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>
-                                <center>
-                                  <Typography> Fat</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/fatwhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="snack_fat"
-                                      name="snack_fat"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("snack_fat")}
-                                      value={
-                                        typeof fatSvalue === "number"
-                                          ? fatSvalue
-                                          : 0
-                                      }
-                                      onChange={handleFatSSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={fatSvalue}
-                                      size="small"
-                                      onChange={handleFatSInputChange}
-                                      onBlur={handleFatSBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>
-                                {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
-                              </Grid>
-                              <Grid xs={6}>
-                                <br />{" "}
-                                <center>
-                                  <Typography> Protein</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/proteinwhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="snack_protein"
-                                      name="snack_protein"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("snack_protein")}
-                                      value={
-                                        typeof proteinSvalue === "number"
-                                          ? proteinSvalue
-                                          : 0
-                                      }
-                                      onChange={handleProteinSSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={proteinSvalue}
-                                      size="small"
-                                      onChange={handleProteinSInputChange}
-                                      onBlur={handleProteinSBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>{" "}
-                                <center>
-                                  <Typography> Carbs</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/carbswhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="snack_carbs"
-                                      name="snack_carbs"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("snack_carbs")}
-                                      value={
-                                        typeof carbsSvalue === "number"
-                                          ? carbsSvalue
-                                          : 0
-                                      }
-                                      onChange={handleCarbsSSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={carbsSvalue}
-                                      size="small"
-                                      onChange={handleCarbsSInputChange}
-                                      onBlur={handleCarbsSBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Box>
-                          <Box>
-                            Dinner
-                            <Grid container spacing={2} sx={{ my: 2 }}>
-                              <Grid xs={6}>
-                                <TextField
-                                  id="dinner_food"
-                                  name="dinner_food"
-                                  margin="dense"
-                                  {...register("dinner_food")}
-                                  error={errors.title ? true : false}
-                                  label="Food Eaten:"
-                                  variant="filled"
-                                  size="small"
-                                  fullWidth
-                                  InputLabelProps={{
-                                    style: { color: "#000000" },
-                                  }}
-                                  sx={{
-                                    mr: 2,
-                                    background: "#ffffff",
-                                    color: "#000000",
-                                  }}
-
-                                  // value={idToCall}
-                                  // onChange={(e) => setIdToCall(e.target.value)}
-                                />
-                              </Grid>
-                              <Grid xs={6}>
-                                {" "}
-                                {/* <TextField
-                              id="filled-basic"
-                              label="Meal Plan:"
-                              variant="filled"
-                              size="small"
-                              fullWidth
-                              InputLabelProps={{
-                                style: { color: "#000000" },
-                              }}
-                              sx={{
-                                ml: 2,
-                                background: "#ffffff",
-                                color: "#000000",
-                              }}
-
-                              // value={idToCall}
-                              // onChange={(e) => setIdToCall(e.target.value)}
-                            /> */}
-                              </Grid>
-                            </Grid>
-                            <Grid container spacing={2}>
-                              <Grid xs={6}>
-                                {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
-                                <br />
-                                <center>
-                                  <Typography> Calories</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/calorieswhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="dinner_calories"
-                                      name="dinner_calories"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("dinner_calories")}
-                                      value={
-                                        typeof caloriesDvalue === "number"
-                                          ? caloriesDvalue
-                                          : 0
-                                      }
-                                      onChange={handleCaloriesDSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={caloriesDvalue}
-                                      size="small"
-                                      onChange={handleCaloriesDInputChange}
-                                      onBlur={handleCaloriesDBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>
-                                <center>
-                                  <Typography> Fat</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/fatwhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="dinner_fat"
-                                      name="dinner_fat"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("dinner_fat")}
-                                      value={
-                                        typeof fatDvalue === "number"
-                                          ? fatDvalue
-                                          : 0
-                                      }
-                                      onChange={handleFatDSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={fatDvalue}
-                                      size="small"
-                                      onChange={handleFatDInputChange}
-                                      onBlur={handleFatDBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>
-                                {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
-                              </Grid>
-                              <Grid xs={6}>
-                                <br />{" "}
-                                <center>
-                                  <Typography> Protein</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/proteinwhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="dinner_protein"
-                                      name="dinner_protein"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("dinner_protein")}
-                                      value={
-                                        typeof proteinDvalue === "number"
-                                          ? proteinDvalue
-                                          : 0
-                                      }
-                                      onChange={handleProteinDSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={proteinDvalue}
-                                      size="small"
-                                      onChange={handleProteinDInputChange}
-                                      onBlur={handleProteinDBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>{" "}
-                                <center>
-                                  <Typography> Carbs</Typography>
-                                </center>
-                                <Grid container spacing={2} alignItems="center">
-                                  <br />
-                                  <br />
-                                  <Grid item>
-                                    <img
-                                      src="/images/carbswhite.png"
-                                      height="25"
-                                    />
-                                  </Grid>
-                                  <Grid item xs>
-                                    <Slider
-                                      id="dinner_carbs"
-                                      name="dinner_carbs"
-                                      min={0}
-                                      step={1}
-                                      max={1000}
-                                      label=""
-                                      {...register("dinner_carbs")}
-                                      value={
-                                        typeof carbsDvalue === "number"
-                                          ? carbsDvalue
-                                          : 0
-                                      }
-                                      onChange={handleCarbsDSliderChange}
-                                      aria-labelledby="input-slider"
-                                      sx={{ color: secondaryColor }}
-                                    />
-                                  </Grid>
-                                  <Grid item>
-                                    <Input
-                                      value={carbsDvalue}
-                                      size="small"
-                                      onChange={handleCarbsDInputChange}
-                                      onBlur={handleCarbsDBlur}
-                                      inputProps={{
-                                        step: 1,
-                                        min: 0,
-                                        max: 1000,
-                                        type: "number",
-                                        "aria-labelledby": "input-slider",
-                                      }}
-                                    />
-                                  </Grid>
-                                </Grid>
-                              </Grid>
-                            </Grid>
-                          </Box>{" "}
-                        </Box>
-                      ) : (
-                        <Box>
-                          <Typography>
-                            Choose your Meal Plan for this Week!
-                          </Typography>
-                          <Select
-                            labelId="demo-simple-select-filled-label"
-                            id="demo-simple-select-filled"
-                            // value={selectedNutritionist}
-                            onChange={(e) =>
-                              setChoice(e)
-                            }
-                            name="type"
-                            width="full"
-                            size="small"
-                            //  {...register("type")}
-                            //  error={errors.type ? true : false}
                           >
-                            {planChoices?.map((option) => (
-                              <MenuItem key={option} value={option}>
-                                {option}
-                              </MenuItem>
-                            ))}
-                          </Select>
-
-                          {selectedMealPlan === "Meal Plans by Nutritionist" ? (
+                            {" "}
+                            Meals{" "}
+                          </Typography>
+                        </center>
+                        <Tabs
+                          value={activeTab}
+                          style={{
+                            color: "#f00", // Change text color to red
+                            fontSize: "18px", // Increase font size
+                            fontWeight: "bold", // Make text bold
+                          }}
+                          onChange={handleTabChange}
+                          indicatorColor="primary"
+                          centered
+                        >
+                          {tabContent.map((tab, index) => (
+                            <Tab
+                              key={index}
+                              label={tab.title}
+                              style={{
+                                color: "#ffffff", // Change text color to red
+                                fontSize: "14px", // Increase font size
+                                //fontWeight: "bold", // Make text bold
+                              }}
+                            />
+                          ))}
+                        </Tabs>
+                        {tabContent.map((tab, index) => (
+                          <Box key={index} hidden={activeTab !== index}>
+                            {tab.content}
+                          </Box>
+                        ))}
+                        {activeTab === 0 ? (
+                          <Box>
                             <Box>
-                              {" "}
-                              <Select
-                                labelId="demo-simple-select-filled-label"
-                                id="demo-simple-select-filled"
-                                // value={selectedNutritionist}
-                                onChange={(e) =>
-                                  setFinalMealPlan(e.target.value)
-                                }
-                                name="type"
-                                width="full"
-                                size="small"
-                                //  {...register("type")}
-                                //  error={errors.type ? true : false}
-                              >
-                                {recommendedMealPlans?.map((option) => (
-                                  <MenuItem key={option} value={option}>
-                                    {option.name}
-                                  </MenuItem>
-                                ))}
-                              </Select>
+                              <Typography>Breakfast</Typography>
+                              <Grid container spacing={2} sx={{ my: 2 }}>
+                                <Grid xs={6}>
+                                  <TextField
+                                    id="breakfast_food"
+                                    name="breakfast_food"
+                                    fullWidth
+                                    margin="dense"
+                                    {...register("breakfast_food")}
+                                    error={errors.breakfast_food ? true : false}
+                                    label="Food Eaten:"
+                                    variant="filled"
+                                    size="small"
+                                    InputLabelProps={{
+                                      style: { color: "#000000" },
+                                    }}
+                                    sx={{
+                                      mr: 2,
+                                      background: "#ffffff",
+                                      color: "#000000",
+                                    }}
 
-                              {console.log(finalMealPlan, recommendMeal?.filter((item) => (
-                                      item?.recommend_mealplan_id_id === finalMealPlan?.recommend_mealplan_id
-                                    )))}
-                                    {console.log(recommendMeal)}
-                              {recommendedMealPlans && finalMealPlan ? (
-                                <Box>
-                                  {console.log(finalMealPlan, recommendMeal?.filter((item) => (
-                                      item?.recommend_mealplan_id === finalMealPlan?.recommend_mealplan_id
-                                    )))}
-                                  <Typography>{finalMealPlan?.name}</Typography>
-                                  {
-                                    recommendMeal?.filter((item) => (
-                                      item?.recommend_mealplan_id === finalMealPlan?.recommend_mealplan_id
-                                    ))
-                                    .sort((a, b) => {
-                                      const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-                                      return order.indexOf(a.type) - order.indexOf(b.type);
-                                    })
-                                    .sort((a, b) => {
-                                      const order = ['1','2','3','4','5'];
-                                      return order.indexOf(a.day) - order.indexOf(b.day);
-                                    })
-                                  
-                                    .map((meal) => (
-                                      <tr key={meal?.shop_meal_id}>
-                                         <td>{meal?.type}</td>
-                                        <td>{meal?.food}</td>
-                                       
-                                      
-                                      </tr>
-                                    ))
-                                  }
+                                    // value={idToCall}
+                                    // onChange={(e) => setIdToCall(e.target.value)}
+                                  />
+                                </Grid>
+                                <Grid xs={6}>
+                                  {" "}
+                                  {/* <TextField
+                              id="filled-basic"
+                              label="Meal Plan:"
+                              variant="filled"
+                              size="small"
+                              fullWidth
+                              InputLabelProps={{
+                                style: { color: "#000000" },
+                              }}
+                              sx={{
+                                ml: 2,
+                                background: "#ffffff",
+                                color: "#000000",
+                              }}
 
-                               
-                                  </Box>
-                              )
-                            : (<>{console.log(finalMealPlan)}</>)  
-                            }
+                              // value={idToCall}
+                              // onChange={(e) => setIdToCall(e.target.value)}
+                            /> */}
+                                </Grid>{" "}
+                                <Grid container spacing={2}>
+                                  <Grid xs={6}>
+                                    {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                                    <br />
+                                    <center>
+                                      <Typography> Calories</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/calorieswhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="breakfast_calories"
+                                          name="breakfast_calories"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          fullWidth
+                                          margin="dense"
+                                          {...register("breakfast_calories")}
+                                          // error={
+                                          //   errors.breakfast_calorie ? true : false
+                                          // }
+                                          // value={
+                                          //   typeof caloriesBvalue === "number"
+                                          //     ? caloriesBvalue
+                                          //     : 800
+                                          // }
+
+                                          value={
+                                            typeof caloriesBvalue === "number"
+                                              ? caloriesBvalue
+                                              : 0
+                                          }
+                                          onChange={handleCaloriesBSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={caloriesBvalue}
+                                          size="small"
+                                          onChange={handleCaloriesBInputChange}
+                                          onBlur={handleCaloriesBBlur}
+                                          inputProps={{
+                                            step: 0,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                    <center>
+                                      <Typography> Fat</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/fatwhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="breakfast_fat"
+                                          name="breakfast_fat"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("breakfast_fat")}
+                                          value={
+                                            typeof fatBvalue === "number"
+                                              ? fatBvalue
+                                              : 0
+                                          }
+                                          onChange={handleFatBSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={fatBvalue}
+                                          size="small"
+                                          onChange={handleFatBInputChange}
+                                          onBlur={handleFatBBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                    {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                                  </Grid>
+                                  <Grid xs={6}>
+                                    <br />{" "}
+                                    <center>
+                                      <Typography> Protein</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/proteinwhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="breakfast_protein"
+                                          name="breakfast_protein"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("breakfast_protein")}
+                                          value={
+                                            typeof proteinBvalue === "number"
+                                              ? proteinBvalue
+                                              : 0
+                                          }
+                                          onChange={handleProteinBSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={proteinBvalue}
+                                          size="small"
+                                          onChange={handleProteinBInputChange}
+                                          onBlur={handleProteinBBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>{" "}
+                                    <center>
+                                      <Typography> Carbs</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/carbswhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="breakfast_carbs"
+                                          name="breakfast_carbs"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("breakfast_carbs")}
+                                          value={
+                                            typeof carbsBvalue === "number"
+                                              ? carbsBvalue
+                                              : 0
+                                          }
+                                          onChange={handleCarbsBSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={carbsBvalue}
+                                          size="small"
+                                          onChange={handleCarbsBInputChange}
+                                          onBlur={handleCarbsBBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
                             </Box>
-                          ) : selectedMealPlan === "Generated Meal Plans" ? (
-                            <Box>
-                              {" "}
-                              <Select
-                                labelId="demo-simple-select-filled-label"
-                                id="demo-simple-select-filled"
-                                // value={selectedNutritionist}
-                                onChange={(e) =>
-                                  setFinalMealPlan(e.target.value)
-                                }
-                                name="type"
-                                width="full"
-                                size="small"
-                                //  {...register("type")}
-                                //  error={errors.type ? true : false}
-                              >
-                                {generatedMealPlans?.map((option) => (
-                                  <MenuItem key={option} value={option}>
-                                    {option.name}
-                                  </MenuItem>
-                                ))}
-                              </Select>
+                            <Box sx={{ mt: 2 }}>
+                              Lunch
+                              <Grid container spacing={2} sx={{ my: 2 }}>
+                                <Grid xs={6}>
+                                  <TextField
+                                    id="lunch_food"
+                                    name="lunch_food"
+                                    margin="dense"
+                                    {...register("lunch_food")}
+                                    error={errors.lunch_food ? true : false}
+                                    label="Food Eaten:"
+                                    variant="filled"
+                                    size="small"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      style: { color: "#000000" },
+                                    }}
+                                    sx={{
+                                      mr: 2,
+                                      background: "#ffffff",
+                                      color: "#000000",
+                                    }}
 
-                              {finalMealPlan ? (
-                                <Box>
-                                  {console.log(finalMealPlan)}
-                                  <Typography>{finalMealPlan?.name}</Typography>
-                                <Box>
-                                  {finalMealPlan?.meal?.map((item) => (
-                                    <Box>
-                                    {item?.Day}
-                                    {item?.meals.map((items) => (
-                                      <Box>
-                                        {items?.Meal} : {items?.details.recipe.label}
-                                      </Box>
-                                    ))}
-                                    </Box>
+                                    // value={idToCall}
+                                    // onChange={(e) => setIdToCall(e.target.value)}
+                                  />
+                                </Grid>
+                                <Grid xs={6}>
+                                  {" "}
+                                  {/* <TextField
+                              id="filled-basic"
+                              label="Meal Plan:"
+                              variant="filled"
+                              size="small"
+                              fullWidth
+                              InputLabelProps={{
+                                style: { color: "#000000" },
+                              }}
+                              sx={{
+                                ml: 2,
+                                background: "#ffffff",
+                                color: "#000000",
+                              }}
+
+                              // value={idToCall}
+                              // onChange={(e) => setIdToCall(e.target.value)}
+                            /> */}
+                                </Grid>
+                                <Grid container spacing={2}>
+                                  <Grid xs={6}>
+                                    {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                                    <br />
+                                    <center>
+                                      <Typography> Calories</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/calorieswhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="lunch_calories"
+                                          name="lunch_calories"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("lunch_calories")}
+                                          value={
+                                            typeof caloriesLvalue === "number"
+                                              ? caloriesLvalue
+                                              : 0
+                                          }
+                                          onChange={handleCaloriesLSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={caloriesLvalue}
+                                          size="small"
+                                          onChange={handleCaloriesLInputChange}
+                                          onBlur={handleCaloriesLBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                    <center>
+                                      <Typography> Fat</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/fatwhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="lunch_fat"
+                                          name="lunch_fat"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("lunch_fat")}
+                                          value={
+                                            typeof fatLvalue === "number"
+                                              ? fatLvalue
+                                              : 0
+                                          }
+                                          onChange={handleFatLSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={fatLvalue}
+                                          size="small"
+                                          onChange={handleFatLInputChange}
+                                          onBlur={handleFatLBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                    {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                                  </Grid>
+                                  <Grid xs={6}>
+                                    <br />{" "}
+                                    <center>
+                                      <Typography> Protein</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/proteinwhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="lunch_protein"
+                                          name="lunch_protein"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("lunch_protein")}
+                                          value={
+                                            typeof proteinLvalue === "number"
+                                              ? proteinLvalue
+                                              : 0
+                                          }
+                                          onChange={handleProteinLSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={proteinLvalue}
+                                          size="small"
+                                          onChange={handleProteinLInputChange}
+                                          onBlur={handleProteinLBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>{" "}
+                                    <center>
+                                      <Typography> Carbs</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/carbswhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="lunch_carbs"
+                                          name="lunch_carbs"
+                                          min={0}
+                                          step={1}
+                                          max={1000}
+                                          label=""
+                                          {...register("lunch_carbs")}
+                                          value={
+                                            typeof carbsLvalue === "number"
+                                              ? carbsLvalue
+                                              : 0
+                                          }
+                                          onChange={handleCarbsLSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={carbsLvalue}
+                                          size="small"
+                                          onChange={handleCarbsLInputChange}
+                                          onBlur={handleCarbsLBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 1000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                            Meals
+                            <Box>
+                              Snack
+                              <Grid container spacing={2} sx={{ my: 2 }}>
+                                <Grid xs={6}>
+                                  <TextField
+                                    id="snack_food"
+                                    name="title"
+                                    fullWidth
+                                    margin="dense"
+                                    {...register("snack_food")}
+                                    error={errors.snack_food ? true : false}
+                                    label="Food Eaten:"
+                                    variant="filled"
+                                    size="small"
+                                    InputLabelProps={{
+                                      style: { color: "#000000" },
+                                    }}
+                                    sx={{
+                                      mr: 2,
+                                      background: "#ffffff",
+                                      color: "#000000",
+                                    }}
+
+                                    // value={idToCall}
+                                    // onChange={(e) => setIdToCall(e.target.value)}
+                                  />
+                                </Grid>
+                                <Grid xs={6}>
+                                  {" "}
+                                  {/* <TextField
+                              id="filled-basic"
+                              label="Meal Plan:"
+                              variant="filled"
+                              size="small"
+                              fullWidth
+                              InputLabelProps={{
+                                style: { color: "#000000" },
+                              }}
+                              sx={{
+                                ml: 2,
+                                background: "#ffffff",
+                                color: "#000000",
+                              }}
+
+                              // value={idToCall}
+                              // onChange={(e) => setIdToCall(e.target.value)}
+                            /> */}
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={2}>
+                                <Grid xs={6}>
+                                  {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                                  <br />
+                                  <center>
+                                    <Typography> Calories</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/calorieswhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="snack_calories"
+                                        name="snack_calories"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("snack_calories")}
+                                        value={
+                                          typeof caloriesSvalue === "number"
+                                            ? caloriesSvalue
+                                            : 0
+                                        }
+                                        onChange={handleCaloriesSSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={caloriesSvalue}
+                                        size="small"
+                                        onChange={handleCaloriesSInputChange}
+                                        onBlur={handleCaloriesSBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                  <center>
+                                    <Typography> Fat</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/fatwhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="snack_fat"
+                                        name="snack_fat"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("snack_fat")}
+                                        value={
+                                          typeof fatSvalue === "number"
+                                            ? fatSvalue
+                                            : 0
+                                        }
+                                        onChange={handleFatSSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={fatSvalue}
+                                        size="small"
+                                        onChange={handleFatSInputChange}
+                                        onBlur={handleFatSBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                  {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                                </Grid>
+                                <Grid xs={6}>
+                                  <br />{" "}
+                                  <center>
+                                    <Typography> Protein</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/proteinwhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="snack_protein"
+                                        name="snack_protein"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("snack_protein")}
+                                        value={
+                                          typeof proteinSvalue === "number"
+                                            ? proteinSvalue
+                                            : 0
+                                        }
+                                        onChange={handleProteinSSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={proteinSvalue}
+                                        size="small"
+                                        onChange={handleProteinSInputChange}
+                                        onBlur={handleProteinSBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>{" "}
+                                  <center>
+                                    <Typography> Carbs</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/carbswhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="snack_carbs"
+                                        name="snack_carbs"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("snack_carbs")}
+                                        value={
+                                          typeof carbsSvalue === "number"
+                                            ? carbsSvalue
+                                            : 0
+                                        }
+                                        onChange={handleCarbsSSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={carbsSvalue}
+                                        size="small"
+                                        onChange={handleCarbsSInputChange}
+                                        onBlur={handleCarbsSBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                            <Box>
+                              Dinner
+                              <Grid container spacing={2} sx={{ my: 2 }}>
+                                <Grid xs={6}>
+                                  <TextField
+                                    id="dinner_food"
+                                    name="dinner_food"
+                                    margin="dense"
+                                    {...register("dinner_food")}
+                                    error={errors.title ? true : false}
+                                    label="Food Eaten:"
+                                    variant="filled"
+                                    size="small"
+                                    fullWidth
+                                    InputLabelProps={{
+                                      style: { color: "#000000" },
+                                    }}
+                                    sx={{
+                                      mr: 2,
+                                      background: "#ffffff",
+                                      color: "#000000",
+                                    }}
+
+                                    // value={idToCall}
+                                    // onChange={(e) => setIdToCall(e.target.value)}
+                                  />
+                                </Grid>
+                                <Grid xs={6}>
+                                  {" "}
+                                  {/* <TextField
+                              id="filled-basic"
+                              label="Meal Plan:"
+                              variant="filled"
+                              size="small"
+                              fullWidth
+                              InputLabelProps={{
+                                style: { color: "#000000" },
+                              }}
+                              sx={{
+                                ml: 2,
+                                background: "#ffffff",
+                                color: "#000000",
+                              }}
+
+                              // value={idToCall}
+                              // onChange={(e) => setIdToCall(e.target.value)}
+                            /> */}
+                                </Grid>
+                              </Grid>
+                              <Grid container spacing={2}>
+                                <Grid xs={6}>
+                                  {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
+                                  <br />
+                                  <center>
+                                    <Typography> Calories</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/calorieswhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="dinner_calories"
+                                        name="dinner_calories"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("dinner_calories")}
+                                        value={
+                                          typeof caloriesDvalue === "number"
+                                            ? caloriesDvalue
+                                            : 0
+                                        }
+                                        onChange={handleCaloriesDSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={caloriesDvalue}
+                                        size="small"
+                                        onChange={handleCaloriesDInputChange}
+                                        onBlur={handleCaloriesDBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                  <center>
+                                    <Typography> Fat</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/fatwhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="dinner_fat"
+                                        name="dinner_fat"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("dinner_fat")}
+                                        value={
+                                          typeof fatDvalue === "number"
+                                            ? fatDvalue
+                                            : 0
+                                        }
+                                        onChange={handleFatDSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={fatDvalue}
+                                        size="small"
+                                        onChange={handleFatDInputChange}
+                                        onBlur={handleFatDBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                  {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
+                                </Grid>
+                                <Grid xs={6}>
+                                  <br />{" "}
+                                  <center>
+                                    <Typography> Protein</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/proteinwhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="dinner_protein"
+                                        name="dinner_protein"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("dinner_protein")}
+                                        value={
+                                          typeof proteinDvalue === "number"
+                                            ? proteinDvalue
+                                            : 0
+                                        }
+                                        onChange={handleProteinDSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={proteinDvalue}
+                                        size="small"
+                                        onChange={handleProteinDInputChange}
+                                        onBlur={handleProteinDBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>{" "}
+                                  <center>
+                                    <Typography> Carbs</Typography>
+                                  </center>
+                                  <Grid
+                                    container
+                                    spacing={2}
+                                    alignItems="center"
+                                  >
+                                    <br />
+                                    <br />
+                                    <Grid item>
+                                      <img
+                                        src="/images/carbswhite.png"
+                                        height="25"
+                                      />
+                                    </Grid>
+                                    <Grid item xs>
+                                      <Slider
+                                        id="dinner_carbs"
+                                        name="dinner_carbs"
+                                        min={0}
+                                        step={1}
+                                        max={1000}
+                                        label=""
+                                        {...register("dinner_carbs")}
+                                        value={
+                                          typeof carbsDvalue === "number"
+                                            ? carbsDvalue
+                                            : 0
+                                        }
+                                        onChange={handleCarbsDSliderChange}
+                                        aria-labelledby="input-slider"
+                                        sx={{ color: secondaryColor }}
+                                      />
+                                    </Grid>
+                                    <Grid item>
+                                      <Input
+                                        value={carbsDvalue}
+                                        size="small"
+                                        onChange={handleCarbsDInputChange}
+                                        onBlur={handleCarbsDBlur}
+                                        inputProps={{
+                                          step: 1,
+                                          min: 0,
+                                          max: 1000,
+                                          type: "number",
+                                          "aria-labelledby": "input-slider",
+                                        }}
+                                      />
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                              </Grid>
+                            </Box>{" "}
+                          </Box>
+                        ) : (
+                          <Box>
+                            <Typography>
+                              Choose your Meal Plan for this Week!
+                            </Typography>
+                            <Select
+                              labelId="demo-simple-select-filled-label"
+                              id="demo-simple-select-filled"
+                              // value={selectedNutritionist}
+                              onChange={(e) => setChoice(e)}
+                              name="type"
+                              width="full"
+                              size="small"
+                              //  {...register("type")}
+                              //  error={errors.type ? true : false}
+                            >
+                              {planChoices?.map((option) => (
+                                <MenuItem key={option} value={option}>
+                                  {option}
+                                </MenuItem>
+                              ))}
+                            </Select>
+
+                            {selectedMealPlan ===
+                            "Meal Plans by Nutritionist" ? (
+                              <Box>
+                                {" "}
+                                <Select
+                                  labelId="demo-simple-select-filled-label"
+                                  id="demo-simple-select-filled"
+                                  // value={selectedNutritionist}
+                                  onChange={(e) =>
+                                    setFinalMealPlan(e.target.value)
+                                  }
+                                  name="type"
+                                  width="full"
+                                  size="small"
+                                  //  {...register("type")}
+                                  //  error={errors.type ? true : false}
+                                >
+                                  {recommendedMealPlans?.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option.name}
+                                    </MenuItem>
                                   ))}
-                                </Box>
-                                  </Box>
-                              )
-                            : (<>{console.log(finalMealPlan)}</>)  
-                            }
-                            </Box>
-                          ) : selectedMealPlan === "Meal Plan Ordered" ? (
-                            <Box>
-                              {" "}
-                              <Select
-                                labelId="demo-simple-select-filled-label"
-                                id="demo-simple-select-filled"
-                                // value={selectedNutritionist}
-                                onChange={(e) =>
-                                  setFinalMealPlan(e.target.value)
-                                }
-                                name="type"
-                                width="full"
-                                size="small"
-                                //  {...register("type")}
-                                //  error={errors.type ? true : false}
-                              >
-                                {orderedMealPlans?.map((option) => (
-                                  <MenuItem key={option} value={option}>
-                                    {option.name}
-                                  </MenuItem>
-                                ))}
-                              </Select>
+                                </Select>
+                                {console.log(
+                                  finalMealPlan,
+                                  recommendMeal?.filter(
+                                    (item) =>
+                                      item?.recommend_mealplan_id_id ===
+                                      finalMealPlan?.recommend_mealplan_id
+                                  )
+                                )}
+                                {console.log(recommendMeal)}
+                                {recommendedMealPlans && finalMealPlan ? (
+                                  <Box>
+                                    {console.log(
+                                      finalMealPlan,
+                                      recommendMeal?.filter(
+                                        (item) =>
+                                          item?.recommend_mealplan_id ===
+                                          finalMealPlan?.recommend_mealplan_id
+                                      )
+                                    )}
+                                    <Typography>
+                                      {finalMealPlan?.name}
+                                    </Typography>
+                                    {recommendMeal
+                                      ?.filter(
+                                        (item) =>
+                                          item?.recommend_mealplan_id ===
+                                          finalMealPlan?.recommend_mealplan_id
+                                      )
+                                      .sort((a, b) => {
+                                        const order = [
+                                          "Breakfast",
+                                          "Lunch",
+                                          "Snack",
+                                          "Dinner",
+                                        ];
+                                        return (
+                                          order.indexOf(a.type) -
+                                          order.indexOf(b.type)
+                                        );
+                                      })
+                                      .sort((a, b) => {
+                                        const order = ["1", "2", "3", "4", "5"];
+                                        return (
+                                          order.indexOf(a.day) -
+                                          order.indexOf(b.day)
+                                        );
+                                      })
 
-                              {finalMealPlan ? (
-                                <Box>
-                                  {console.log(finalMealPlan)}
-                                  <Typography>{finalMealPlan?.name}</Typography>
-                                  {
-                                    shopMeal?.filter((item) => (
-                                      item?.mealplan_id === finalMealPlan?.shop_mealplan_id
-                                    ))
-                                    // .sort((a, b) => {
-                                    //   if (a.day !== b.day) {
-                                    //     return a.day - b.day;
-                                    //   } else {
-                                    //     return a.type.localeCompare(b.type);
-                                    //   }
-                                    // })
-                                    .sort((a, b) => {
-                                      const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-                                      return order.indexOf(a.type) - order.indexOf(b.type);
-                                    })
-                                    .sort((a, b) => {
-                                      const order = ['1','2','3','4','5'];
-                                      return order.indexOf(a.day) - order.indexOf(b.day);
-                                    })
-                                    .map((meal) => (
-                                      <tr key={meal?.shop_meal_id}>
-                                         <td>{meal?.type}</td>
-                                        <td>{meal?.food}</td>
-                                       
-                                        {/* ... other table cells ... */}
-                                      </tr>
-                                    ))
-                                  }
+                                      .map((meal) => (
+                                        <tr key={meal?.shop_meal_id}>
+                                          <td>{meal?.type}</td>
+                                          <td>{meal?.food}</td>
+                                        </tr>
+                                      ))}
                                   </Box>
-                              )
-                            : (<>{console.log(finalMealPlan)}</>)  
-                            }
-                            </Box>
-                          ) : (
-                            <Box></Box>
-                          )}
-                        </Box>
-                      )}
+                                ) : (
+                                  <>{console.log(finalMealPlan)}</>
+                                )}
+                              </Box>
+                            ) : selectedMealPlan === "Generated Meal Plans" ? (
+                              <Box>
+                                {" "}
+                                <Select
+                                  labelId="demo-simple-select-filled-label"
+                                  id="demo-simple-select-filled"
+                                  // value={selectedNutritionist}
+                                  onChange={(e) =>
+                                    setFinalMealPlan(e.target.value)
+                                  }
+                                  name="type"
+                                  width="full"
+                                  size="small"
+                                  //  {...register("type")}
+                                  //  error={errors.type ? true : false}
+                                >
+                                  {generatedMealPlans?.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                                {finalMealPlan ? (
+                                  <Box>
+                                    {console.log(finalMealPlan)}
+                                    <Typography>
+                                      {finalMealPlan?.name}
+                                    </Typography>
+                                    <Box>
+                                      {finalMealPlan?.meal?.map((item) => (
+                                        <Box>
+                                          {item?.Day}
+                                          {item?.meals.map((items) => (
+                                            <Box>
+                                              {items?.Meal} :{" "}
+                                              {items?.details.recipe.label}
+                                            </Box>
+                                          ))}
+                                        </Box>
+                                      ))}
+                                    </Box>
+                                  </Box>
+                                ) : (
+                                  <>{console.log(finalMealPlan)}</>
+                                )}
+                              </Box>
+                            ) : selectedMealPlan === "Meal Plan Ordered" ? (
+                              <Box>
+                                {" "}
+                                <Select
+                                  labelId="demo-simple-select-filled-label"
+                                  id="demo-simple-select-filled"
+                                  // value={selectedNutritionist}
+                                  onChange={(e) =>
+                                    setFinalMealPlan(e.target.value)
+                                  }
+                                  name="type"
+                                  width="full"
+                                  size="small"
+                                  //  {...register("type")}
+                                  //  error={errors.type ? true : false}
+                                >
+                                  {orderedMealPlans?.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                                {finalMealPlan ? (
+                                  <Box>
+                                    {console.log(finalMealPlan)}
+                                    <Typography>
+                                      {finalMealPlan?.name}
+                                    </Typography>
+                                    {shopMeal
+                                      ?.filter(
+                                        (item) =>
+                                          item?.mealplan_id ===
+                                          finalMealPlan?.shop_mealplan_id
+                                      )
+                                      // .sort((a, b) => {
+                                      //   if (a.day !== b.day) {
+                                      //     return a.day - b.day;
+                                      //   } else {
+                                      //     return a.type.localeCompare(b.type);
+                                      //   }
+                                      // })
+                                      .sort((a, b) => {
+                                        const order = [
+                                          "Breakfast",
+                                          "Lunch",
+                                          "Snack",
+                                          "Dinner",
+                                        ];
+                                        return (
+                                          order.indexOf(a.type) -
+                                          order.indexOf(b.type)
+                                        );
+                                      })
+                                      .sort((a, b) => {
+                                        const order = ["1", "2", "3", "4", "5"];
+                                        return (
+                                          order.indexOf(a.day) -
+                                          order.indexOf(b.day)
+                                        );
+                                      })
+                                      .map((meal) => (
+                                        <tr key={meal?.shop_meal_id}>
+                                          <td>{meal?.type}</td>
+                                          <td>{meal?.food}</td>
+
+                                          {/* ... other table cells ... */}
+                                        </tr>
+                                      ))}
+                                  </Box>
+                                ) : (
+                                  <>{console.log(finalMealPlan)}</>
+                                )}
+                              </Box>
+                            ) : (
+                              <Box></Box>
+                            )}
+                          </Box>
+                        )}
+                      </Grid>
                     </Grid>
-                  </Grid>
-                  {/* <button
+                    {/* <button
                     style={{
                       background: "#ffffff",
                       color: primaryColor,
@@ -5730,7 +5880,8 @@ const setChoice = (e) => {
                   >
                     SUBMIT
                   </button> */}
-                </form>) }
+                  </form>
+                )}
               </Box>
             </Modal>
           </Grid>
@@ -5853,92 +6004,98 @@ const setChoice = (e) => {
       {/* {console.log(journalEntry)} */}
       {/* {journalEntry[0].title} */}
       {foodEntry.length > 0 ? (
-        foodEntry.sort((a, b) => {
-                const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
-                return order.indexOf(a.type) - order.indexOf(b.type);
-              }).map((meal, index) => (
-          <Grid container spacing={2} sx={{ mb: "1px" }}>
-            <Grid xs={4}>
-              <img src={getMealPic(index)} height="30%" />
-            </Grid>
-            <Grid xs={6}>
-              <Typography
-                sx={{
-                  color: "#99756E",
-                  fontSize: {
-                    xs: "1em", // For extra small screens
-                    sm: "1.3em", // For small screens
-                    md: "1.5em", // For medium screens
-                    lg: "2em", // For large screens
-                  },
-                  textAlign: "left",
-                }}
-              >
-                {meal.type}:{meal.food}
-              </Typography>
-              <br />
-              <Grid
-                container
-                justify="flex-end"
-                alignItems="left"
-                spacing={2}
-                sx={{ mt: 0 }}
-              >
-                <Grid xs={6} md={3}>
-                  <img src="/images/calories.png" />
-                  {meal.calories} calories
-                </Grid>
-                <Grid xs={6} md={3}>
-                  {" "}
-                  <img src="/images/fat.png" /> {meal.fat}g fat
-                </Grid>
-                <Grid xs={6} md={3}>
-                  {" "}
-                  <img src="/images/carbs.png" /> {meal.carbs}g carbs
-                </Grid>
-                <Grid xs={6} md={3}>
-                  {" "}
-                  <img src="/images/protein.png" /> {meal.protein}g protein
+        foodEntry
+          .sort((a, b) => {
+            const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+            return order.indexOf(a.type) - order.indexOf(b.type);
+          })
+          .map((meal, index) => (
+            <Grid container spacing={2} sx={{ mb: "1px" }}>
+              <Grid xs={4}>
+                <img src={getMealPic(index)} height="30%" />
+              </Grid>
+              <Grid xs={6}>
+                <Typography
+                  sx={{
+                    color: "#99756E",
+                    fontSize: {
+                      xs: "1em", // For extra small screens
+                      sm: "1.3em", // For small screens
+                      md: "1.5em", // For medium screens
+                      lg: "2em", // For large screens
+                    },
+                    textAlign: "left",
+                  }}
+                >
+                  {meal.type}:{meal.food}
+                </Typography>
+                <br />
+                <Grid
+                  container
+                  justify="flex-end"
+                  alignItems="left"
+                  spacing={2}
+                  sx={{ mt: 0 }}
+                >
+                  <Grid xs={6} md={3}>
+                    <img src="/images/calories.png" />
+                    {meal.calories} calories
+                  </Grid>
+                  <Grid xs={6} md={3}>
+                    {" "}
+                    <img src="/images/fat.png" /> {meal.fat}g fat
+                  </Grid>
+                  <Grid xs={6} md={3}>
+                    {" "}
+                    <img src="/images/carbs.png" /> {meal.carbs}g carbs
+                  </Grid>
+                  <Grid xs={6} md={3}>
+                    {" "}
+                    <img src="/images/protein.png" /> {meal.protein}g protein
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid xs={2}>
-              {/* <Button
+              <Grid xs={2}>
+                {/* <Button
                 sx={{ color: "#E66253", textDecoration: "underline" }}
                 onClick={() => handleSelectMeal(meal)}
               >
                 View Details{" "}
               </Button> */}
 
-              <Modal
-                open={opens}
-                onClose={handleCloses}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Box sx={styles}>
-                  <Grid container spacing={2}>
-                    <Grid xs={2}>
-                      {" "}
-                      <img src="/images/food journal icon.png" />
+                <Modal
+                  open={opens}
+                  onClose={handleCloses}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={styles}>
+                    <Grid container spacing={2}>
+                      <Grid xs={2}>
+                        {" "}
+                        <img src="/images/food journal icon.png" />
+                      </Grid>
+                      <Grid xs={8}>[Date]</Grid>
+                      <Grid xs={2}>
+                        <Button
+                          key={index}
+                          sx={{ float: "right" }}
+                          onClick={() => handleClose()}
+                        >
+                          <img
+                            src="/images/close.png"
+                            height="10"
+                            weight="10"
+                          />
+                        </Button>
+                      </Grid>
                     </Grid>
-                    <Grid xs={8}>[Date]</Grid>
-                    <Grid xs={2}>
-                      <Button
-                        key={index}
-                        sx={{ float: "right" }}
-                        onClick={() => handleClose()}
-                      >
-                        <img src="/images/close.png" height="10" weight="10" />
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  {modalContent}
-                </Box>
-              </Modal>
+                    {modalContent}
+                  </Box>
+                </Modal>
+              </Grid>
             </Grid>
-          </Grid>
-        ))
+          ))
       ) : (
         <div></div>
       )}

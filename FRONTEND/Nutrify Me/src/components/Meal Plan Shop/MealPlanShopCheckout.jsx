@@ -1430,7 +1430,6 @@ function MealPlanShopCheckout() {
                     fontWeight: "bold",
                   }}
                 >
-                    
                   {addressData.length === 0 ? (
                     <Typography sx={{ color: "#000000" }}>
                       Loading...
@@ -1709,22 +1708,31 @@ function MealPlanShopCheckout() {
                   Courier: Lalamove
                 </Grid>
                 <Grid xs={6}>
-                 
-                  
                   {shippingDetails?.data?.data?.priceBreakdown
-                      ?.totalExcludePriorityFee ?
-                   (<>  Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
-                    <br />
-                    Extra Mileage:{" "}
-                    {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
-                    <br /> Total: {shippingDetails?.data?.data?.priceBreakdown
-                      ?.totalExcludePriorityFee} </>) : (<> <img src="/images/dot.gif" width="13%" /></>)
-                  } 
-                  
-                 
-                  
+                    ?.totalExcludePriorityFee ? (
+                    <>
+                      {" "}
+                      Base Rate:{" "}
+                      {shippingDetails?.data?.data?.priceBreakdown?.base}
+                      <br />
+                      Extra Mileage:{" "}
+                      {
+                        shippingDetails?.data?.data?.priceBreakdown
+                          ?.extraMileage
+                      }
+                      <br /> Total:{" "}
+                      {
+                        shippingDetails?.data?.data?.priceBreakdown
+                          ?.totalExcludePriorityFee
+                      }{" "}
+                    </>
+                  ) : (
+                    <>
+                      {" "}
+                      <img src="/images/dot.gif" width="13%" />
+                    </>
+                  )}
                 </Grid>
-                
               </Grid>
               <hr />
               <br />

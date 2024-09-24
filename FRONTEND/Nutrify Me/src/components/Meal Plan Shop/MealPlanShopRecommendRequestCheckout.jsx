@@ -158,7 +158,7 @@ function MealPlanShopRecommendRequestCheckout() {
     try {
       AxiosInstance.post(`address/`, {
         user_id: loggedInUser.user_id,
-        phone:  "+639345678901",
+        phone: "+639345678901",
         address: "asdfasfdsfd random lorem ipsum",
         name: "random namessssssss",
         default: false,
@@ -217,7 +217,6 @@ function MealPlanShopRecommendRequestCheckout() {
     };
 
   useEffect(() => {
-
     console.log(data);
     if (searchOriginLatitude && searchOriginLongtitude) {
       console.log(
@@ -339,13 +338,12 @@ function MealPlanShopRecommendRequestCheckout() {
   const [shopMeal, setShopMeal] = useState([]);
   const [cartMeal, setCartMeal] = useState([]);
 
-
-  const [recommendMeals, setRecommendMeals] = useState([])
+  const [recommendMeals, setRecommendMeals] = useState([]);
   const getData = async () => {
     const mealData = await AxiosInstance.get(`recommendmealplan`);
 
-    setRecommendMeals(mealData.data)
-  }
+    setRecommendMeals(mealData.data);
+  };
   const getCartData = async () => {
     const temp = location.state;
     setSubTotalPrices(location.state.request.price);
@@ -353,9 +351,7 @@ function MealPlanShopRecommendRequestCheckout() {
       parseInt(location.state.price) + parseInt(shippingPrice)
     );
 
-    console.log(
-      parseInt(location.state.price) + parseInt(shippingPrice)
-    );
+    console.log(parseInt(location.state.price) + parseInt(shippingPrice));
     // try {
     //   const response = await AxiosInstance.get(`cart`);
     //   const filteredData = response.data.filter(
@@ -519,7 +515,10 @@ function MealPlanShopRecommendRequestCheckout() {
         notes: notes,
         totalprice: parseInt(totalOrderPrice),
         shipping_price: shippingPrice,
-        name: recommendMeals.find((item) => item.recommend_mealplan_id === location.state.recommend_mealplan_id ).name
+        name: recommendMeals.find(
+          (item) =>
+            item.recommend_mealplan_id === location.state.recommend_mealplan_id
+        ).name,
       };
 
       try {
@@ -710,7 +709,7 @@ function MealPlanShopRecommendRequestCheckout() {
 
   useEffect(() => {
     // addNewObject();
-    getData()
+    getData();
     getCartData();
     //getAddressData();
     const tempPrice = calculateSubTotalPrice();
@@ -1491,12 +1490,12 @@ function MealPlanShopRecommendRequestCheckout() {
                         //   )
                         // }
                       >
-                          <Marker
-                              position={{
-                                lng: addressData[selectedAddress].lang,
-                                lat: addressData[selectedAddress].longi,
-                              }}
-                            />
+                        <Marker
+                          position={{
+                            lng: addressData[selectedAddress].lang,
+                            lat: addressData[selectedAddress].longi,
+                          }}
+                        />
                       </Map>
                     </div>
                   </APIProvider>
@@ -1567,28 +1566,32 @@ function MealPlanShopRecommendRequestCheckout() {
         <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
           {console.log(location.state)}
           <Grid container spacing={2} sx={{ mt: "20px" }}>
-        <Grid xs={12} md={4}>
-                    {" "}
-                    <img src = "/images/food.png" width="50%" height="80%" />
-                  </Grid>
-                  <Grid xs={12} md={4} sx={{ textAlign: "center" }}>
-                    <Typography sx={{ color: "#99756E", mt: 3 }}>
-                    {location.state.meal.name}
-                    {console.log(location.state)}
-                  {recommendMeals.find((item) => item.recommend_mealplan_id === location.state.recommend_mealplan_id )?.name} 
-                    </Typography>
-                    <Typography sx={{ color: "#E66253", mt: "2%" }}>
-                      {" "}
-                      Php  {location.state.price}
-                    </Typography>
-                  </Grid>
-                  <Grid xs={12} md={4} sx={{ mt: "5%" }}>
-                    {/* x {item.quantity} */}
-                  </Grid>
-                  </Grid>
-       
+            <Grid xs={12} md={4}>
+              {" "}
+              <img src="/images/food.png" width="50%" height="80%" />
+            </Grid>
+            <Grid xs={12} md={4} sx={{ textAlign: "center" }}>
+              <Typography sx={{ color: "#99756E", mt: 3 }}>
+                {location.state.meal.name}
+                {console.log(location.state)}
+                {
+                  recommendMeals.find(
+                    (item) =>
+                      item.recommend_mealplan_id ===
+                      location.state.recommend_mealplan_id
+                  )?.name
+                }
+              </Typography>
+              <Typography sx={{ color: "#E66253", mt: "2%" }}>
+                {" "}
+                Php {location.state.price}
+              </Typography>
+            </Grid>
+            <Grid xs={12} md={4} sx={{ mt: "5%" }}>
+              {/* x {item.quantity} */}
+            </Grid>
+          </Grid>
 
-         
           {/* {shopMeal.map((item, index) => (
             <Grid container spacing={2} sx={{ mt: "20px" }}>
               <Grid xs={4}>
@@ -1612,7 +1615,7 @@ function MealPlanShopRecommendRequestCheckout() {
           <br />
           <br />
 
-          <Box sx={{ mx: 5 }}>
+         <Box sx={{ mx: 5 }}>
             <Typography sx={{ textAlign: "left", color: "#99756E" }}>
               Order Notes (Optional)
             </Typography>
@@ -1742,15 +1745,26 @@ function MealPlanShopRecommendRequestCheckout() {
               Courier: Lalamove
             </Grid>
             <Grid xs={6}>
-            {shippingDetails?.data?.data?.priceBreakdown
-                      ?.totalExcludePriorityFee ?
-                   (<>  Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
-                    <br />
-                    Extra Mileage:{" "}
-                    {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
-                    <br /> Total: {shippingDetails?.data?.data?.priceBreakdown
-                      ?.totalExcludePriorityFee} </>) : (<> <img src="/images/dot.gif" width="13%" /></>)
-                  } 
+              {shippingDetails?.data?.data?.priceBreakdown
+                ?.totalExcludePriorityFee ? (
+                <>
+                  {" "}
+                  Base Rate: {shippingDetails?.data?.data?.priceBreakdown?.base}
+                  <br />
+                  Extra Mileage:{" "}
+                  {shippingDetails?.data?.data?.priceBreakdown?.extraMileage}
+                  <br /> Total:{" "}
+                  {
+                    shippingDetails?.data?.data?.priceBreakdown
+                      ?.totalExcludePriorityFee
+                  }{" "}
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/dot.gif" width="13%" />
+                </>
+              )}
               {/* <FormControl sx={{ ml: 15, mb: 3 }}>
                 <FormLabel id="demo-radio-buttons-group-label">
                   Shipping/Delivery
