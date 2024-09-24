@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
+import { PhoneInput } from "react-international-phone";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import { Typography } from "@mui/material";
@@ -823,14 +824,12 @@ function MealPlanShopRequestCheckout() {
               </Grid>
               <Grid xs={5} sx={{ ml: 4 }}>
                 Phone <br />
-                <TextField
-                  id="phone"
-                  name="phone"
-                  label="Phone"
-                  fullWidth
-                  margin="dense"
+                <PhoneInput
+                  // style={{ width: "80%" }}
+                  style={{ width: "1000px" }} // Adjust the width as needed
+                  //width="50%"
+                  defaultCountry="ph"
                   {...register("phone")}
-                  error={errors.phone ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
                   {errors.phone?.message}
@@ -1403,7 +1402,7 @@ function MealPlanShopRequestCheckout() {
       {/* //? */}
       <div>
         {/* ... input fields for pickup, delivery, goods */}
-        <button onClick={handleGetQuotes}>Get Quotes</button>
+        {/* <button onClick={handleGetQuotes}>Get Quotes</button> */}
         {quotes.length > 0 && (
           <div>
             {/* Display available quote options */}
@@ -1632,12 +1631,12 @@ function MealPlanShopRequestCheckout() {
       "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
     */}
 
-          <PayPalScriptProvider options={initialOptions}>
+          {/* <PayPalScriptProvider options={initialOptions}>
             <PayPalButtons
               createOrder={(data, actions) => createOrder(data, actions)}
               onApprove={(data, actions) => onApprove(data, actions)}
             />
-          </PayPalScriptProvider>
+          </PayPalScriptProvider> */}
 
           {/* <PayPalScriptProvider
             options={{

@@ -10,6 +10,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import * as React from "react";
 import { useForm } from "react-hook-form";
+import { PhoneInput } from "react-international-phone";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Box from "@mui/material/Box";
@@ -831,14 +832,12 @@ function MealPlanShopRecommendRequestCheckout() {
               </Grid>
               <Grid xs={5} sx={{ ml: 4 }}>
                 Phone <br />
-                <TextField
-                  id="phone"
-                  name="phone"
-                  label="Phone"
-                  fullWidth
-                  margin="dense"
+                <PhoneInput
+                  // style={{ width: "80%" }}
+                  style={{ width: "1000px" }} // Adjust the width as needed
+                  //width="50%"
+                  defaultCountry="ph"
                   {...register("phone")}
-                  error={errors.phone ? true : false}
                 />
                 <Typography variant="inherit" color="textSecondary">
                   {errors.phone?.message}
@@ -1411,7 +1410,7 @@ function MealPlanShopRecommendRequestCheckout() {
       {/* //? */}
       <div>
         {/* ... input fields for pickup, delivery, goods */}
-        <button onClick={handleGetQuotes}>Get Quotes</button>
+        {/* <button onClick={handleGetQuotes}>Get Quotes</button> */}
         {quotes.length > 0 && (
           <div>
             {/* Display available quote options */}
@@ -1643,12 +1642,12 @@ function MealPlanShopRecommendRequestCheckout() {
       "AXRvhS2MV7tg97f_voPhdPAUfM9_L22vwboBIZVMGsUlZQdVR4XFUT-Jk3PwhFbvkhdKK1F1_v8QYf6d",
     */}
 
-          <PayPalScriptProvider options={initialOptions}>
+          {/* <PayPalScriptProvider options={initialOptions}>
             <PayPalButtons
               createOrder={(data, actions) => createOrder(data, actions)}
               onApprove={(data, actions) => onApprove(data, actions)}
             />
-          </PayPalScriptProvider>
+          </PayPalScriptProvider> */}
 
           {/* <PayPalScriptProvider
             options={{
