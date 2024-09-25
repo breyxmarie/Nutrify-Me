@@ -716,9 +716,8 @@ function TelemedicineConsultation() {
                 </Grid>
                 <Grid xs={12} md={3} sx={{ textAlign: "left" }}>
                   <Box sx={{ ml: 5, mr: 5 }}>
-                    {console.log(location)}
-                    Name: {location.state.tempN.first_name} {""}
-                    {location.state.tempN.last_name}
+                    Name: {location?.state?.tempN?.first_name} {""}
+                    {location?.state?.tempN?.last_name}
                     <br />
                     <Grid container spacing={2} sx={{ mt: "5px" }}>
                       <Grid xs={2}>
