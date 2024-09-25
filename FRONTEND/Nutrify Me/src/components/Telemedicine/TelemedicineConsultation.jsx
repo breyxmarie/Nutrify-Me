@@ -708,7 +708,7 @@ function TelemedicineConsultation() {
               >
                 <Grid xs={12} md={2}>
                   <img
-                    src={location.state.tempN.image}
+                    src={location?.state?.tempN?.image}
                     width="60px"
                     height="60px"
                     style={{}}
