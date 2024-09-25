@@ -12,7 +12,7 @@ import dayjs from "dayjs";
 
 function PayPalRecommend() {
   const navigate = useNavigate();
-        const location = useLocation();
+  const location = useLocation();
   console.log(location.state.datas.totalprice);
   const receivedData = location.state;
   const [paid, setPaid] = useState(false);
@@ -25,8 +25,8 @@ function PayPalRecommend() {
         {
           amount: {
             currency_code: "PHP",
-            value: location.state.datas.totalprice,
-            // value: 0.01,
+            //  value: location.state.datas.totalprice,
+            value: 0.01,
           },
         },
       ],

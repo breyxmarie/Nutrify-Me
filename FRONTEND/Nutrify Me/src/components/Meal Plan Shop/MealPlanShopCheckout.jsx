@@ -1753,7 +1753,7 @@ function MealPlanShopCheckout() {
             <br />
 
             <Button
-              onClick={() => placeOrder()}
+              // onClick={() => placeOrder()}
               type="submit"
               sx={{
                 background: "#E66253",

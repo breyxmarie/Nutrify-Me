@@ -28,7 +28,7 @@ function MealPlanTest() {
   const [foodChoices, setFoodChoices] = useState();
   const [mealName, setMealName] = useState();
   const [divPhase, setDivPhase] = useState("calculator"); // calculator, choices, loading, meals
-  const [loading1, setLoading1] = useState(false)
+  const [loading1, setLoading1] = useState(false);
   //? Modal
   const [opens, setOpens] = React.useState(false);
   const handleOpens = () => setOpens(true);
@@ -1295,7 +1295,7 @@ function MealPlanTest() {
 
             cuisineFood.push({ cuisine, meals });
           }
-            console.log(cuisineFood);
+          console.log(cuisineFood);
 
           let tempB = await getRecipesApi(
             `q=&dishType=main&mealType=breakfast&health=${diet}&health=${allergen}&calories=${cal.minbreakfast}-${cal.maxbreakfast}`
@@ -1942,9 +1942,9 @@ function MealPlanTest() {
         allergen: selectedAllergen,
       }).then((res) => {
         // navigate(`/`);
-       
+
         handleClose();
-        
+
         setSaving(false);
         toast.success("Meal Plan Saved!");
         // console.log(res);
@@ -2607,8 +2607,13 @@ function MealPlanTest() {
               >
                 <Box sx={style}>
                   {saving ? (
-                    <><center>  <img src="/images/pacman.gif" width="43%" />
-                <Typography>Saving please wait...</Typography></center></>
+                    <>
+                      <center>
+                        {" "}
+                        <img src="/images/pacman.gif" width="43%" />
+                        <Typography>Saving please wait...</Typography>
+                      </center>
+                    </>
                   ) : (
                     <center>
                       Save
@@ -2709,22 +2714,35 @@ function MealPlanTest() {
           </Grid>
 
           {/* <Typography display="flex" justifyContent="center"> */}
-          <Typography display="flex" justifyContent="center" sx={{ fontWeight:"bold", color: "#99756E", fontSize: "1.45em" }}> 
-            Cuisine:  {selectedCuisine.map((item, index) => (
-              <>{item} 
-           
-              {index + 1 != selectedCuisine.length ? 
-                   ( <>{","}</>) : (<></>)
-              }
-              </>
-            ))} </Typography>
+          <Typography
+            display="flex"
+            justifyContent="center"
+            sx={{ fontWeight: "bold", color: "#99756E", fontSize: "1.45em" }}
+          >
+            Cuisine:{" "}
+            {selectedCuisine.map((item, index) => (
+              <>
+                {item}
 
-           
-           
-            <Typography display="flex" justifyContent="center" sx={{ fontWeight:"bold", color: "#99756E", fontSize: "1.45em" }}> 
-               Diet Info: {selectedDiet} <br /> </Typography>
-               <Typography display="flex" justifyContent="center" sx={{ fontWeight:"bold", color: "#99756E", fontSize: "1.45em" }}> 
-            Allergen: {selectedAllergen}</Typography>
+                {index + 1 != selectedCuisine.length ? <>{","}</> : <></>}
+              </>
+            ))}{" "}
+          </Typography>
+
+          <Typography
+            display="flex"
+            justifyContent="center"
+            sx={{ fontWeight: "bold", color: "#99756E", fontSize: "1.45em" }}
+          >
+            Diet Info: {selectedDiet} <br />{" "}
+          </Typography>
+          <Typography
+            display="flex"
+            justifyContent="center"
+            sx={{ fontWeight: "bold", color: "#99756E", fontSize: "1.45em" }}
+          >
+            Allergen: {selectedAllergen}
+          </Typography>
           {/* </Typography> */}
 
           <Grid container spacing={2}>
