@@ -1527,6 +1527,11 @@ try{
           (appoint) =>
             loggedInUser.user_id === appoint.user_id &&
             Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
+            && 
+            // dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
+            // === dayjs().format("hh:mm A") || 
+            dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
+            <=  dayjs().format("hh:mm A")
         );
         console.log(res.data);
 
