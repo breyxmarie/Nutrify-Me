@@ -944,6 +944,7 @@ function NutritionistHome() {
   //     clients.unpublish(localTracks).then(() => clients.leave());
   //   };
   // }, []);
+  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
   useEffect(() => {
  
