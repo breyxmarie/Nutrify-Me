@@ -28,11 +28,30 @@ import {
   useMeeting,
   useParticipant,
 } from "@videosdk.live/react-sdk";
-import { authToken, createMeeting } from "../api";
+//import { authToken, createMeeting } from "../api";
 import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
+
+
+  const createMeeting = async ({ token }) => {
+    const res = await fetch(`https://api.videosdk.live/v2/rooms`, {
+      method: "POST",
+      headers: {
+        authorization: `${authToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    });
+    //Destructuring the roomId from the response
+    const { roomId } = await res.json();
+    return roomId;
+  };
+  const authToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
+
+
   const navigate = useNavigate();
   const location = useLocation();
   // const apiKey = "mmhfdzb5evj2"; // the API key can be found in the "Credentials" section
@@ -1015,7 +1034,7 @@ function TelemedicineConsultation() {
     >
       {/* {meetingView} */}
       {console.log(authToken)}
-      {/* {authToken && meetingId ? ( */}
+      {authToken && meetingId ? (
         <MeetingProvider
           config={{
             meetingId,
@@ -1030,7 +1049,7 @@ function TelemedicineConsultation() {
       ) : (
         // <JoinScreen getMeetingAndToken={getMeetingAndToken} />
         <JoinScreen getMeetingAndToken={meetingId} />
-      {/* )} */}
+      )}
       //! {/* <ParticipantView props={getMeetingAndToken} /> */}
     </div>
   );
