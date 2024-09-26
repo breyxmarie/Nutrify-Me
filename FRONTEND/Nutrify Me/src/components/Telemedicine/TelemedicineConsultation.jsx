@@ -1015,7 +1015,7 @@ function TelemedicineConsultation() {
     >
       {/* {meetingView} */}
       {console.log(authToken)}
-      {authToken && meetingId ? (
+      {/* {authToken && meetingId ? ( */}
         <MeetingProvider
           config={{
             meetingId,
@@ -1030,7 +1030,7 @@ function TelemedicineConsultation() {
       ) : (
         // <JoinScreen getMeetingAndToken={getMeetingAndToken} />
         <JoinScreen getMeetingAndToken={meetingId} />
-      )}
+      {/* )} */}
       //! {/* <ParticipantView props={getMeetingAndToken} /> */}
     </div>
   );
