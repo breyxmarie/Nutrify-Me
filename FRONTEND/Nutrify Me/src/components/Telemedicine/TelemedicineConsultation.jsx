@@ -38,14 +38,30 @@ function TelemedicineConsultation() {
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
 
   const createMeeting = async ({ token }) => {
-    const res = await fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/https://api.videosdk.live/v2/rooms`, {
-      method: "POST",
-      headers: {
-        authorization: `${authToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({}),
-    });
+    try {
+   
+  
+      const response = await fetch('https://proxynutrifyme-4a3d23e2f725.herokuapp.com/https://api.videosdk.live/v2/rooms', {
+        method: 'POST',
+        headers: {
+          authorization: `Bearer ${authToken}`, // Use Bearer token format for authorization
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}), // Empty body if no data needs to be sent
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Room created successfully:', data); // Handle the response data
+  
+    } catch (error) {
+      console.error('Error creating room:', error); // Handle errors gracefully
+    }
+
+    
     //Destructuring the roomId from the response
     const { roomId } = await res.json();
     return roomId;
