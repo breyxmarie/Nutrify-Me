@@ -1013,6 +1013,7 @@ function TelemedicineConsultation() {
       }}
     >
       {/* {meetingView} */}
+      {console.log(authToken)}
       {authToken && meetingId ? (
         <MeetingProvider
           config={{

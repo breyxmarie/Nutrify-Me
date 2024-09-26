@@ -11,6 +11,8 @@ import { Modal, Tab, Tabs } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function MealPlanShopRequest() {
+  const buttons = ["Pending Orders", "Approved Orders", "Disapproved Orders"];
+  const [activeButton, setActiveButton] = useState(0);
   const [pendingOrder, setPendingOrder] = useState([]);
   const [approvedOrder, setApprovedOrder] = useState([]);
   const [disapprovedOrder, setDisapprovedOrder] = useState([]);
@@ -264,7 +266,554 @@ function MealPlanShopRequest() {
         color: "#000000",
       }}
     >
-      <Typography
+      <Grid container spacing={2}>
+        {" "}
+        {buttons.map((buttonLabel, index) => (
+          <Grid item xs={6} sm={4} md={4} key={index}>
+            <Button
+              key={index}
+              variant="contained" // Adjust variant as needed
+              onClick={() => setActiveButton(index)}
+              sx={{
+                borderColor: "#ffffff",
+                fontWeight: "bold",
+                boxShadow: 1,
+                mx: 1,
+                fontSize: "20px",
+                background: "#ffffff",
+                color: activeButton === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+                "&:hover": {
+                  backgroundColor: "#E66253",
+                  color: "#ffffff",
+                  border: 0.5,
+                  borderColor: "#ffffff",
+                },
+              }}
+            >
+              {buttonLabel}
+            </Button>{" "}
+          </Grid>
+        ))}
+      </Grid>
+
+      {activeButton === 0 ? (
+        <>
+          {" "}
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.6em",
+              mt: 5,
+              mb: 3,
+            }}
+          >
+            {" "}
+            Pending Orders
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  mb: 1,
+                }}
+              >
+                Generated Meal Plans
+              </Typography>
+              {/* {loading1 ? (<>loading.....</>)
+          : ()} */}
+              {pendingOrder.length > 0 && loading1 === true ? (
+                <Grid container spacing={2}>
+                  {pendingOrder.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Box
+                        sx={{
+                          background: "#898246",
+                          borderRadius: 4,
+                          mx: "10%",
+                          color: "#ffffff",
+                          py: 2,
+                        }}
+                      >
+                        Date: {item.request.date}
+                        <br />
+                        Status: {item.request.status}
+                        <br />
+                        <Button
+                          onClick={() => handleOpen(item.meal)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 0,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          View Details
+                        </Button>
+                        {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : pendingOrder.length === 0 && loading1 === false ? (
+                <>No Orders</>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/magnify.gif" width="13%" />
+                  <Typography>Loading...</Typography>
+                </>
+              )}
+            </Grid>
+
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  mb: 1,
+                }}
+              >
+                Recommended Meal Plans
+              </Typography>
+
+              {pendingOrderRecommend.length > 0 && loading2 === true ? (
+                <Grid container spacing={2}>
+                  {pendingOrderRecommend.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Box
+                        sx={{
+                          background: "#898246",
+                          borderRadius: 4,
+                          mx: "10%",
+                          color: "#ffffff",
+                          py: 2,
+                        }}
+                      >
+                        Date: {item.date}
+                        <br />
+                        Status: {item.status}
+                        <br />
+                        <Button
+                          onClick={() => handleOpenRecommend(item.meal)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 0,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          View Details
+                        </Button>
+                        {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : pendingOrderRecommend.length === 0 && loading2 === false ? (
+                <>No Orders</>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/magnify.gif" width="13%" />
+                  <Typography>Loading...</Typography>
+                </>
+              )}
+            </Grid>
+          </Grid>
+        </>
+      ) : activeButton === 1 ? (
+        <>
+          {" "}
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.6em",
+              mt: 3,
+              mb: 3,
+            }}
+          >
+            {" "}
+            Approved Orders
+          </Typography>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  mb: 1,
+                }}
+              >
+                Generated Meal Plans
+              </Typography>
+              {approvedOrder.length > 0 && loading3 === true ? (
+                <Grid container spacing={2}>
+                  {approvedOrder.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Box
+                        sx={{
+                          background: "#898246",
+                          borderRadius: 4,
+                          mx: "10%",
+                          color: "#ffffff",
+                          py: 2,
+                        }}
+                      >
+                        Date: {item.request.date}
+                        <br />
+                        Status: {item.request.status}
+                        <br />
+                        <Button
+                          onClick={() => handleOpen(item.meal)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 0,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          View Details
+                        </Button>
+                        {console.log(item)}
+                        <Button
+                          onClick={() => pay(item)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 3,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          Pay
+                        </Button>
+                        {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : approvedOrder.length === 0 && loading3 === false ? (
+                <>No Orders</>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/magnify.gif" width="13%" />
+                  <Typography>Loading...</Typography>
+                </>
+              )}
+            </Grid>
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  mb: 1,
+                }}
+              >
+                Recommended Meal Plans
+              </Typography>
+
+              {}
+              {approvedOrderRecommend.length > 0 && loading4 === true ? (
+                <Grid container spacing={2}>
+                  {approvedOrderRecommend.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Box
+                        sx={{
+                          background: "#898246",
+                          borderRadius: 4,
+                          mx: "10%",
+                          color: "#ffffff",
+                          py: 2,
+                        }}
+                      >
+                        Date: {item.date}
+                        <br />
+                        Status: {item.status}
+                        <br />
+                        <Button
+                          onClick={() => handleOpenRecommend(item.meal)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 0,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          View Details
+                        </Button>
+                        <Button
+                          onClick={() => payRecommend(item)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 3,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          Pay
+                        </Button>
+                        {/* {item.meal.meal.map((items) => (
+            <Box> ?
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : approvedOrderRecommend.length === 0 && loading4 === false ? (
+                <>No Orders</>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/magnify.gif" width="13%" />
+                  <Typography>Loading...</Typography>
+                </>
+              )}
+            </Grid>
+          </Grid>
+        </>
+      ) : activeButton === 2 ? (
+        <>
+          <Typography
+            sx={{
+              color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "1.6em",
+              mt: 5,
+              mb: 5,
+            }}
+          >
+            {" "}
+            Disapproved Orders
+          </Typography>
+
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  mb: 1,
+                }}
+              >
+                Generated Meal Plans
+              </Typography>
+              {disapprovedOrder.length > 0 && loading5 === true ? (
+                <Grid container spacing={2}>
+                  {disapprovedOrder.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Box
+                        sx={{
+                          background: "#898246",
+                          borderRadius: 4,
+                          mx: "10%",
+                          color: "#ffffff",
+                          py: 2,
+                        }}
+                      >
+                        Date: {item.request.date}
+                        <br />
+                        Status: {item.request.status}
+                        <br />
+                        <Button
+                          onClick={() => handleOpen(item.meal)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 0,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          View Details
+                        </Button>
+                        {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : disapprovedOrder.length === 0 && loading5 === false ? (
+                <>No Orders</>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/magnify.gif" width="13%" />
+                  <Typography>Loading...</Typography>
+                </>
+              )}
+            </Grid>
+            <Grid xs={6}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "1.5em",
+                  mb: 1,
+                }}
+              >
+                Recommended Meal Plans
+              </Typography>
+
+              {disapprovedOrderRecommend.length > 0 && loading6 === true ? (
+                <Grid container spacing={2}>
+                  {disapprovedOrderRecommend.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={6} key={index}>
+                      <Box
+                        sx={{
+                          background: "#898246",
+                          borderRadius: 4,
+                          mx: "10%",
+                          color: "#ffffff",
+                          py: 2,
+                        }}
+                      >
+                        Date: {item.date}
+                        <br />
+                        Status: {item.status}
+                        <br />
+                        <Button
+                          onClick={() => handleOpenRecommend(item.meal)}
+                          sx={{
+                            background: "#ffffff",
+                            color: "#E66253",
+                            ml: 0,
+                            mt: 1,
+                            fontWeight: "bold",
+                            "&:hover": {
+                              backgroundColor: "#E66253",
+                              color: "#ffffff",
+                              border: 0.5,
+                              borderColor: "#ffffff",
+                            },
+                          }}
+                        >
+                          View Details
+                        </Button>
+                        {/* {item.meal.meal.map((items) => (
+            <Box>
+              {" "}
+              {items.Day}
+              {items.meals.map((item1) => (
+                <>{item1.Meal}</>
+              ))}
+            </Box>
+          ))} */}
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : disapprovedOrderRecommend.length === 0 &&
+                loading6 === false ? (
+                <>No Orders</>
+              ) : (
+                <>
+                  {" "}
+                  <img src="/images/magnify.gif" width="13%" />
+                  <Typography>Loading...</Typography>
+                </>
+              )}
+            </Grid>
+          </Grid>
+        </>
+      ) : (
+        <></>
+      )}
+
+      {/* <Typography
         sx={{
           color: "#99756E",
           fontWeight: "bold",
@@ -289,8 +838,7 @@ function MealPlanShopRequest() {
           >
             Generated Meal Plans
           </Typography>
-          {/* {loading1 ? (<>loading.....</>)
-          : ()} */}
+         
           {pendingOrder.length > 0 && loading1 === true ? (
             <Grid container spacing={2}>
               {pendingOrder.map((item, index) => (
@@ -326,15 +874,7 @@ function MealPlanShopRequest() {
                     >
                       View Details
                     </Button>
-                    {/* {item.meal.meal.map((items) => (
-            <Box>
-              {" "}
-              {items.Day}
-              {items.meals.map((item1) => (
-                <>{item1.Meal}</>
-              ))}
-            </Box>
-          ))} */}
+                
                   </Box>
                 </Grid>
               ))}
@@ -397,15 +937,7 @@ function MealPlanShopRequest() {
                     >
                       View Details
                     </Button>
-                    {/* {item.meal.meal.map((items) => (
-            <Box>
-              {" "}
-              {items.Day}
-              {items.meals.map((item1) => (
-                <>{item1.Meal}</>
-              ))}
-            </Box>
-          ))} */}
+                 
                   </Box>
                 </Grid>
               ))}
@@ -501,15 +1033,7 @@ function MealPlanShopRequest() {
                     >
                       Pay
                     </Button>
-                    {/* {item.meal.meal.map((items) => (
-            <Box>
-              {" "}
-              {items.Day}
-              {items.meals.map((item1) => (
-                <>{item1.Meal}</>
-              ))}
-            </Box>
-          ))} */}
+         
                   </Box>
                 </Grid>
               ))}
@@ -590,15 +1114,7 @@ function MealPlanShopRequest() {
                     >
                       Pay
                     </Button>
-                    {/* {item.meal.meal.map((items) => (
-            <Box> ?
-              {" "}
-              {items.Day}
-              {items.meals.map((item1) => (
-                <>{item1.Meal}</>
-              ))}
-            </Box>
-          ))} */}
+                 
                   </Box>
                 </Grid>
               ))}
@@ -613,12 +1129,12 @@ function MealPlanShopRequest() {
             </>
           )}
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* //! */}
 
       {/* //! disapprove  */}
-      <Typography
+      {/* <Typography
         sx={{
           color: "#99756E",
           fontWeight: "bold",
@@ -686,7 +1202,7 @@ function MealPlanShopRequest() {
                 <>{item1.Meal}</>
               ))}
             </Box>
-          ))} */}
+          ))} 
                   </Box>
                 </Grid>
               ))}
@@ -748,15 +1264,7 @@ function MealPlanShopRequest() {
                     >
                       View Details
                     </Button>
-                    {/* {item.meal.meal.map((items) => (
-            <Box>
-              {" "}
-              {items.Day}
-              {items.meals.map((item1) => (
-                <>{item1.Meal}</>
-              ))}
-            </Box>
-          ))} */}
+                  
                   </Box>
                 </Grid>
               ))}
@@ -771,7 +1279,7 @@ function MealPlanShopRequest() {
             </>
           )}
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* //!  */}
       <Modal

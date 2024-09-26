@@ -202,7 +202,38 @@ function TelemedicineHome() {
   };
 
   const transferNutritionist = () => {
+    console.log(appointmentList)
+    console.log(appointData)
+    let toDelete = []
+
+
     try {
+    AxiosInstance.get(`scheduledeck`).then((res) => {
+      //res.filter((item) => item.date === && item.time && item.nutritionist_id === designatedNutritionist.nutritionist_id)
+   
+
+      appointmentList.map((items) => (
+      console.log(items)
+      ))
+     
+      console.log(toDelete, "hi")
+      appointmentList.map((items) => (
+       res.data.filter((item) => item.date === items.date && 
+       item.time === items.time && item.nutritionist_id === designatedNutritionist.nutritionist_id).map
+       ((item1) => (toDelete.push(item1)))
+      ))
+      console.log(toDelete, "hi")
+
+    // console.log(appointmentList.map((items) => ( console.log(
+    //   res.filter((item) => item.date === items.date && 
+    //   item.time === items.time && 
+    //   item.nutritionist_id === designatedNutritionist.nutritionist_id)
+    // ))), "hi")
+
+    console.log(appointmentList) //pending appointment
+    console.log(appointData) //appointment
+    // toDelete scheduledeck
+       try {
       AxiosInstance.put(`patientnutritionistagreement/`, {
         agree_id: agreeDetails.agree_id,
         status: "Disagree",
@@ -210,15 +241,98 @@ function TelemedicineHome() {
         user_id: loggedInUser.user_id,
       }).then((res) => {
         console.log(res.data);
+        
+
+
+try{
+          AxiosInstance.delete(`patientnutritionistagreement/${agreeDetails.agree_id}`)
+          .then((response) => {
+            console.log(response)
+          })
+        }
+        catch (error) {
+          console.log(error)
+        }
+
+
+        appointmentList.map((item) => (
+          AxiosInstance.delete(`pendingappointment/${item.pending_id}`)
+          .then((response) => {
+            console.log(response)
+          })
+        ))
+
+        appointData.map((item) => (
+          AxiosInstance.delete(`appointment/${item.appointment_id}`)
+          .then((response) => {
+            console.log(response)
+          })
+        ))
+
+        toDelete.map((item) => (
+          AxiosInstance.delete(`scheduledeck/${item.schedule_id}`)
+          .then((response) => {
+            console.log(response)
+          })
+        ))
+        
+        //!
         toast.success("Nutritionist Removed");
         GetData();
         setDesignatedNutritionist(null);
         handleCloseTransfer();
+
+        //!
+
+
         // navigate("/?success=registered");
+        // AxiosInstance.delete(`appointment/${cartData[0].cart_id}`).then((respon) => {
+        //   AxiosInstance.delete(`scheduledeck/${cartData[0].cart_id}`).then((respons) => {
+        //     AxiosInstance.delete(`pendingappointment/${cartData[0].cart_id}`).then((response) => {
+  
+        //     });
+        //   });
+        // });
       });
     } catch (error) {
       console.log(error.response.data);
     }
+
+
+    }) }
+    catch (error) {
+      console.log(error)
+    }
+
+    console.log(toDelete)
+    // try {
+    //   AxiosInstance.put(`patientnutritionistagreement/`, {
+    //     agree_id: agreeDetails.agree_id,
+    //     status: "Disagree",
+    //     nutritionist_id: designatedNutritionist.nutritionist_id,
+    //     user_id: loggedInUser.user_id,
+    //   }).then((res) => {
+    //     console.log(res.data);
+
+    //     //!
+    //     toast.success("Nutritionist Removed");
+    //     GetData();
+    //     setDesignatedNutritionist(null);
+    //     handleCloseTransfer();
+
+    //     //!
+    //     navigate("/?success=registered");
+    //     AxiosInstance.delete(`appointment/${cartData[0].cart_id}`).then((respon) => {
+    //       AxiosInstance.delete(`scheduledeck/${cartData[0].cart_id}`).then((respons) => {
+    //         AxiosInstance.delete(`pendingappointment/${cartData[0].cart_id}`).then((response) => {
+  
+    //         });
+    //       });
+    //     });
+    //   });
+    // } catch (error) {
+    //   console.log(error.response.data);
+    // }
   };
 
   //!
@@ -1991,6 +2105,7 @@ function TelemedicineHome() {
       }).then((res) => {
         console.log(res.data);
         handleScheduleClose();
+        GetData()
         // navigate("/?success=registered");
       });
     } catch (error) {

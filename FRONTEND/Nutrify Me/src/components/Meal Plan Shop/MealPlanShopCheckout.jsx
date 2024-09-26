@@ -1413,7 +1413,7 @@ function MealPlanShopCheckout() {
                   xs: "18%", // Extra small devices (less than 600px)
                   sm: "15%", // Small devices (600px and up)
                   md: "15%", // Medium devices (900px and up)
-                  lg: "10%",
+                  lg: "15%",
                 },
               }}
             >
@@ -1436,12 +1436,6 @@ function MealPlanShopCheckout() {
                     </Typography>
                   ) : (
                     <>
-                      {console.log(
-                        addressData[selectedAddress].lang,
-                        selectedAddress,
-                        selectedLong,
-                        selectedLat
-                      )}
                       <Typography sx={{ color: "#000000" }}>
                         {addressData[selectedAddress]?.name} |{" "}
                         {addressData[selectedAddress]?.phone}{" "}
@@ -1451,26 +1445,27 @@ function MealPlanShopCheckout() {
                         {addressData[selectedAddress]?.address}{" "}
                       </Typography>
 
-                      <APIProvider
-                        apiKey={API_KEY}
-                        onLoad={() => console.log("Maps API has loaded.")}
+                      <Box
+                        sx={{
+                          width: {
+                            xs: "80%", // Extra small devices (less than 600px)
+                            sm: "70%", // Small devices (600px and up)
+                            md: "100%", // Medium devices (900px and up)
+                            lg: "100%", // Large devices (1200px and up)
+                            xl: "35%", // Extra large devices (1536px and up)
+                          },
+                          height: {
+                            xs: "150%", // Extra small devices (less than 600px)
+                            sm: "150%", // Small devices (600px and up)
+                            md: "350%", // Medium devices (900px and up)
+                            lg: "400%", // Large devices (1200px and up)
+                          },
+                        }}
                       >
-                        <Box
-                          sx={{
-                            width: {
-                              xs: "80%", // Extra small devices (less than 600px)
-                              sm: "70%", // Small devices (600px and up)
-                              md: "50%", // Medium devices (900px and up)
-                              lg: "40%", // Large devices (1200px and up)
-                              xl: "35%", // Extra large devices (1536px and up)
-                            },
-                            height: {
-                              xs: "150%", // Extra small devices (less than 600px)
-                              sm: "150%", // Small devices (600px and up)
-                              md: "180%", // Medium devices (900px and up)
-                              lg: "200%", // Large devices (1200px and up)
-                            },
-                          }}
+                        {" "}
+                        <APIProvider
+                          apiKey={API_KEY}
+                          onLoad={() => console.log("Maps API has loaded.")}
                         >
                           <Map
                             defaultZoom={13}
@@ -1489,8 +1484,8 @@ function MealPlanShopCheckout() {
                               }}
                             />
                           </Map>
-                        </Box>
-                      </APIProvider>
+                        </APIProvider>
+                      </Box>
                     </>
                   )}
                 </Grid>

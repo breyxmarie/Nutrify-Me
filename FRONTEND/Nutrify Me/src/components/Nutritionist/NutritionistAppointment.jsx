@@ -212,7 +212,7 @@ function NutritionistAppointment() {
         )
       );
       console.log(
-        filteredData.find((data) => data.date === dayjs().format("YYYY-MM-DD"))
+        filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD"))
       );
       setAppointmentData(filteredData);
 
@@ -221,11 +221,11 @@ function NutritionistAppointment() {
       );
       console.log(te.length);
 
-      const formattedTime = filteredData.find(
+      const formattedTime = filteredData?.find(
         (data) => data.date === dayjs().format("YYYY-MM-DD")
       )?.time;
 
-      const formattedDay = filteredData.find(
+      const formattedDay = filteredData?.find(
         (data) => data.date === dayjs().format("YYYY-MM-DD")
       )?.date;
 
@@ -240,10 +240,10 @@ function NutritionistAppointment() {
                   width="100"
                   height="100"
                   src={
-                    user.data.find(
+                    user?.data.find(
                       (user) =>
                         user.user_id ===
-                        filteredData.find(
+                        filteredData?.find(
                           (data) => data.date === dayjs().format("YYYY-MM-DD")
                         )?.user_id
                     )?.image
@@ -255,10 +255,10 @@ function NutritionistAppointment() {
                 <p>
                   User: {console.log(user.data)}
                   {
-                    user.data.find(
+                    user?.data.find(
                       (user) =>
                         user.user_id ===
-                        filteredData.find(
+                        filteredData?.find(
                           (data) => data.date === dayjs().format("YYYY-MM-DD")
                         )?.user_id
                     )?.first_name
@@ -269,7 +269,7 @@ function NutritionistAppointment() {
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
               Date:{"     "}
               {dayjs(
-                filteredData.find(
+                filteredData?.find(
                   (data) => data.date === dayjs().format("YYYY-MM-DD")
                 )?.date
               ).format("MMMM DD, YYYY")}
@@ -299,10 +299,10 @@ function NutritionistAppointment() {
                 onClick={() =>
                   navigate("/nutritionist-consultation", {
                     state: {
-                      tempN: user.data.find(
+                      tempN: user?.data.find(
                         (user) =>
                           user.user_id ===
-                          filteredData.find(
+                          filteredData?.find(
                             (data) => data.date === dayjs().format("YYYY-MM-DD")
                           ).user_id
                       ),
@@ -351,7 +351,7 @@ function NutritionistAppointment() {
                 <Grid xs={6}>
                   <Typography>
                     {
-                      users.find((user) => user.user_id === item.user_id)
+                      users?.find((user) => user.user_id === item.user_id)
                         ?.first_name
                     }
                   </Typography>
@@ -485,7 +485,7 @@ function NutritionistAppointment() {
                   <Grid xs={6}>
                     <Typography>
                       {
-                        users.find((user) => user.user_id === item.user_id)
+                        users?.find((user) => user.user_id === item.user_id)
                           ?.first_name
                       }
                     </Typography>
@@ -543,7 +543,7 @@ function NutritionistAppointment() {
                   <Grid xs={6}>
                     <Typography>
                       {
-                        users.find((user) => user.user_id === item.user_id)
+                        users?.find((user) => user.user_id === item.user_id)
                           ?.first_name
                       }
                     </Typography>
@@ -602,7 +602,7 @@ function NutritionistAppointment() {
                     <Grid xs={6}>
                       <Typography>
                         {
-                          users.find((user) => user.user_id === item.user_id)
+                          users?.find((user) => user.user_id === item.user_id)
                             ?.first_name
                         }
                       </Typography>
@@ -651,7 +651,7 @@ function NutritionistAppointment() {
                   <Grid xs={6}>
                     <Typography>
                       {
-                        users.find((user) => user.user_id === item.user_id)
+                        users?.find((user) => user.user_id === item.user_id)
                           ?.first_name
                       }
                     </Typography>
@@ -1099,12 +1099,12 @@ function NutritionistAppointment() {
                           >
                             User:{" "}
                             {
-                              user.find(
+                              user?.find(
                                 (item) => item.user_id === items.user_id
                               ).first_name
                             }{" "}
                             {
-                              user.find(
+                              user?.find(
                                 (item) => item.user_id === items.user_id
                               ).last_name
                             }
@@ -1229,12 +1229,12 @@ function NutritionistAppointment() {
                           >
                             User:{" "}
                             {
-                              user.find(
+                              user?.find(
                                 (item) => item.user_id === items.user_id
                               ).first_name
                             }{" "}
                             {
-                              user.find(
+                              user?.find(
                                 (item) => item.user_id === items.user_id
                               ).last_name
                             }

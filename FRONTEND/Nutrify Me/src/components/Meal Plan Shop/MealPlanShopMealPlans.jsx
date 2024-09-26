@@ -864,7 +864,7 @@ function MealPlanShopMealPlans() {
           )}
         </Box>
       </Modal>
-      <Box
+      {/* <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
           ml: "4%",
@@ -884,7 +884,7 @@ function MealPlanShopMealPlans() {
           display: "flex",
           alignItems: "center",
         }}
-      ></Box>
+      ></Box> */}
 
       <Box>
         <Typography

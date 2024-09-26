@@ -22,7 +22,7 @@ function MealPlanShopOrders() {
   //const [orderID, setOrderID] = useState(null);
 
   //const [status, setStatus] = useState(null);
-
+  const buttons = ["Day 1", "Day 2", "Day 3", "Day 4", "Day 5"];
   const getData = async () => {
     try {
       const response = await AxiosInstance.get(`shopmealplan`);
