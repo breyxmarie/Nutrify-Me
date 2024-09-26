@@ -34,6 +34,8 @@ import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
 
+  const authToken =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
 
   const createMeeting = async ({ token }) => {
     const res = await fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/https://api.videosdk.live/v2/rooms`, {
@@ -48,9 +50,7 @@ function TelemedicineConsultation() {
     const { roomId } = await res.json();
     return roomId;
   };
-  const authToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
-
+ 
 
   const navigate = useNavigate();
   const location = useLocation();
