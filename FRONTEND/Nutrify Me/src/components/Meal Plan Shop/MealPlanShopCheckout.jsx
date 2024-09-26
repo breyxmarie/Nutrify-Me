@@ -1403,17 +1403,18 @@ function MealPlanShopCheckout() {
               CHECKOUT
             </Typography>
 
-            <Box
+<Grid container = {2}>
+  <Grid xs = {12} lg = {6}> <Box
               sx={{
                 borderRadius: 0,
                 border: 1,
                 ml: "5%",
                 mr: "5%",
                 pb: {
-                  xs: "18%", // Extra small devices (less than 600px)
-                  sm: "15%", // Small devices (600px and up)
-                  md: "15%", // Medium devices (900px and up)
-                  lg: "15%",
+                  xs: "50%", // Extra small devices (less than 600px)
+                  sm: "50%", // Small devices (600px and up)
+                  md: "35%", // Medium devices (900px and up)
+                  lg: "45%",
                 },
               }}
             >
@@ -1448,17 +1449,17 @@ function MealPlanShopCheckout() {
                       <Box
                         sx={{
                           width: {
-                            xs: "80%", // Extra small devices (less than 600px)
-                            sm: "70%", // Small devices (600px and up)
+                            xs: "70%", // Extra small devices (less than 600px)
+                            sm: "90%", // Small devices (600px and up)
                             md: "100%", // Medium devices (900px and up)
                             lg: "100%", // Large devices (1200px and up)
-                            xl: "35%", // Extra large devices (1536px and up)
+                            // Extra large devices (1536px and up)
                           },
                           height: {
-                            xs: "150%", // Extra small devices (less than 600px)
-                            sm: "150%", // Small devices (600px and up)
-                            md: "350%", // Medium devices (900px and up)
-                            lg: "400%", // Large devices (1200px and up)
+                            xs: "250%", // Extra small devices (less than 600px)
+                            sm: "400%", // Small devices (600px and up)
+                            md: "450%", // Medium devices (900px and up)
+                            lg: "600%", // Large devices (1200px and up)
                           },
                         }}
                       >
@@ -1537,9 +1538,9 @@ function MealPlanShopCheckout() {
                   </Modal>
                 </Grid>
               </Grid>
-            </Box>
-            <br />
-            <Box sx={{ border: 1, borderRadius: 3, ml: "5%", mr: "5%" }}>
+            </Box></Grid>
+  <Grid xs = {12} lg = {6}> 
+    <Box sx={{ border: 1, borderRadius: 3, ml: "5%", mr: "5%" }}>
               {shopMeal.map((item, index) => (
                 <Grid container spacing={2} sx={{ mt: "20px" }}>
                   <Grid xs={12} md={4}>
@@ -1576,16 +1577,17 @@ function MealPlanShopCheckout() {
                   onChange={(event) => setNotes(event.target.value)}
                 />
               </Box>
-            </Box>
-
-            <br />
-
-            <Box
+            </Box></Grid>
+</Grid>
+           
+           <Grid container spacing = {2} sx = {{mt: 3,}}>
+            <Grid xs = {12} lg = {6}>  <Box
               sx={{
                 textAlign: "left",
                 border: 1,
                 ml: "5%",
                 mr: "5%",
+               
                 color: "#99756E",
               }}
             >
@@ -1636,10 +1638,8 @@ function MealPlanShopCheckout() {
                 </Typography>
               </FormControl>
               {/* <Button type="submit">Submit</Button> */}
-            </Box>
-            <br />
-            <br />
-            <Box
+            </Box></Grid>
+            <Grid xs = {12} lg = {6}><Box
               sx={{
                 border: 1,
                 ml: "5%",
@@ -1652,12 +1652,12 @@ function MealPlanShopCheckout() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  my: 5,
+                  my: 0,
                   fontSize: {
                     xs: "1em", // For extra small screens
                     sm: "1em", // For small screens
                     md: "1.5em", // For medium screens
-                    lg: "2.0em", // For large screens
+                    lg: "1em", // For large screens
                     xl: "2em", // For extra large screens
                   },
                 }}
@@ -1666,7 +1666,7 @@ function MealPlanShopCheckout() {
               </Typography>
               <hr />
               <br />
-              <Grid container spacing={2} sx={{ my: 5 }}>
+              <Grid container spacing={2} sx={{ my: 0 }}>
                 {" "}
                 <Grid
                   xs={6}
@@ -1675,7 +1675,7 @@ function MealPlanShopCheckout() {
                       xs: "1em", // For extra small screens
                       sm: "1em", // For small screens
                       md: "1em", // For medium screens
-                      lg: "1em", // For large screens
+                      lg: "em", // For large screens
                     },
                   }}
                 >
@@ -1686,7 +1686,7 @@ function MealPlanShopCheckout() {
 
               <hr />
               <br />
-              <Grid container spacing={2} sx={{ my: 5 }}>
+              <Grid container spacing={2} sx={{ my: 0 }}>
                 {" "}
                 <Grid
                   xs={6}
@@ -1731,7 +1731,7 @@ function MealPlanShopCheckout() {
               </Grid>
               <hr />
               <br />
-              <Grid container spacing={2} sx={{ my: 5 }}>
+              <Grid container spacing={2} sx={{ my: 0 }}>
                 {" "}
                 <Grid xs={6}>SHIPPING FEE</Grid>
                 <Grid xs={6}>Php {shippingPrice}</Grid>
@@ -1743,7 +1743,12 @@ function MealPlanShopCheckout() {
                 <Grid xs={6}>TOTAL</Grid>
                 <Grid xs={6}>Php {totalOrderPrice}</Grid>
               </Grid>
-            </Box>
+            </Box></Grid>
+           </Grid>
+
+          
+           
+            
             <br />
             <br />
 

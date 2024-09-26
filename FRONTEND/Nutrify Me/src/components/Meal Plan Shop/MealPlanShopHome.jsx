@@ -141,7 +141,7 @@ function MealPlanShopHome() {
         color: "#000000",
       }}
     >
-      <Box
+      {/* <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
           mt: 2,
@@ -162,7 +162,7 @@ function MealPlanShopHome() {
           display: "flex",
           alignItems: "center",
         }}
-      ></Box>
+      ></Box> */}
 
       <Box>
         <Typography

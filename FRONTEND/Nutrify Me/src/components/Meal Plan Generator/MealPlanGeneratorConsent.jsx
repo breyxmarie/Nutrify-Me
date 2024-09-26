@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -6,10 +6,26 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Grid from "@mui/material/Grid";
+import AxiosInstance from "../forms/AxiosInstance";
+import { useLoggedInUser } from "../LoggedInUserContext";
+
 
 function MealPlanGeneratorConsent() {
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState(false);
+  //! profiling details
+  const [profDetails, setProfDetails] = useState();
+  const getData = () => {
+    AxiosInstance.get(`profiling`).then((res) => {
+      setProfDetails(res.data.find((item) => item.user_id === loggedInUser.user_id))
+     });
+  }
+  useEffect(() => {
+    getData()
+  }, [])
+  //!
+
 
   const handleChange = () => {
     setIsChecked(!isChecked);
@@ -17,7 +33,7 @@ function MealPlanGeneratorConsent() {
 
   const proceed = () => {
     if (isChecked) {
-      navigate("/test");
+      navigate("/test",  {state : {profDetails}});
     } else {
       toast("Agree to Terms and Conditions");
     }

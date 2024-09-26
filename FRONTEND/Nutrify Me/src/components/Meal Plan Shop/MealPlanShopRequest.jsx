@@ -9,8 +9,11 @@ import Grid from "@mui/material/Grid";
 import AxiosInstance from "../forms/AxiosInstance";
 import { Modal, Tab, Tabs } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useLoggedInUser } from "../LoggedInUserContext";
+
 
 function MealPlanShopRequest() {
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
   const buttons = ["Pending Orders", "Approved Orders", "Disapproved Orders"];
   const [activeButton, setActiveButton] = useState(0);
   const [pendingOrder, setPendingOrder] = useState([]);
@@ -85,13 +88,15 @@ function MealPlanShopRequest() {
 
     const reverse = responseCart.data.reverse();
 
-    const pendingData = reverse.filter((item) => item.status === "Pending");
-    const approveData = reverse.filter((item) => item.status === "Approved");
+    const pendingData = reverse.filter((item) => item.status === "Pending" && item.user_id === loggedInUser.user_id);
+    const approveData = reverse.filter((item) => item.status === "Approved" && item.user_id === loggedInUser.user_id);
     const disapproveData = reverse.filter(
-      (item) => item.status === "Dispproved"
+      (item) => item.status === "Dispproved" && item.user_id === loggedInUser.user_id
     );
 
-    const reverseRecommend = recommendData.data.reverse();
+    const reverseRecommend = recommendData.data.filter(
+      (item) => item.user_id === loggedInUser.user_id
+    ).reverse();
     const pendingDataRecommend = reverseRecommend.filter(
       (item) => item.status === "Pending"
     );

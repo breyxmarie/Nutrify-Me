@@ -1547,9 +1547,12 @@ try{
             >
               {" "}
               {/* //! ayusin toh */}
+
+              {/* { (<></>): (<></>)} */}
+              {console.log(temp)}
               <p>Date {dayjs(temp.date).format("MMMM DD, YYYY")}</p>
               <p>
-                Time: {dayjs(temp.date + " " + temp.time).format("HH:MM A")}
+                Time: {dayjs(temp.date + "" + temp.time).format("hh:mm A")}
               </p>
               <p>
                 Dietitian: {designatedNutritionist?.first_name} {"  "}
@@ -1577,7 +1580,8 @@ try{
                   color: "#ffffff",
                 }}
               > */}
-              <Button
+
+              { dayjs().format("hh:mm A") === dayjs(temp.date + "" + temp.time).format("hh:mm A") ? (<> <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
                 onClick={() =>
                   navigate("/telemedicine-consultation", {
@@ -1586,7 +1590,8 @@ try{
                 }
               >
                 Go to Consultation
-              </Button>
+              </Button></>): (<></>)}
+             
               {/* </Link>{" "} */}
             </Box>
           );
@@ -2260,7 +2265,7 @@ try{
       {/*  */}
       {/* <MainUserNavbar />
       <TeleMedNavBar /> */}
-      <Box
+      {/* <Box
         sx={{
           backgroundImage: "url('/images/telemedPic.png')",
           mt: 2,
@@ -2281,7 +2286,7 @@ try{
           display: "flex",
           alignItems: "center",
         }}
-      ></Box>
+      ></Box> */}
       <Box sx={{ flexGrow: 1, my: 3, color: "#99756E", mx: 5 }}>
         {" "}
         {/* // ! modify pa dito like what if walang appointment si user */}

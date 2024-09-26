@@ -17,6 +17,8 @@ import LalamoveApi from "../Meal Plan Shop//LalamoveApi";
 import emailjs from "@emailjs/browser";
 
 function SellerOrders() {
+  const buttons = ["New Orders", "Past Orders"];
+  const [activeButton, setActiveButton] = useState(0);
   const [orderData, setOrderData] = useState([]);
   const [userData, setUserData] = useState([]);
   const [mealData, setMealData] = useState([]);
@@ -407,8 +409,36 @@ function SellerOrders() {
       }}
     >
       <ChatBox />
-       
-      <Typography   sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 0, mb: 1 }}>New Orders</Typography>
+      <Grid container spacing={2}>
+ {buttons.map((buttonLabel, index) => (
+    <Grid item xs={6} sm={6} md={6} key={index}>
+    <Button
+      key={index}
+      variant="contained" // Adjust variant as needed
+      onClick={() => setActiveButton(index)}
+      sx={{
+        borderColor: "#ffffff",
+        fontWeight: "bold",
+        boxShadow: 1,
+        mx: 1,
+        fontSize: "20px",
+        background: "#ffffff",
+        color: activeButton === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+        "&:hover": {
+          backgroundColor: "#E66253",
+          color: "#ffffff",
+          border: 0.5,
+          borderColor: "#ffffff",
+        },
+      }}
+    >
+      {buttonLabel}
+    </Button>{" "}
+  </Grid>
+ ))}
+</Grid>
+
+{activeButton === 0 ? (<><Typography   sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 0, mb: 1 }}>New Orders</Typography>
       <br />
      
 
@@ -630,194 +660,42 @@ function SellerOrders() {
               <img src="/images/magnify.gif" width="13%" />
               <Typography>Loading...</Typography>
             </>
-          ) }
+          ) }</>) : 
+activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 1 }}>Past Orders</Typography>
+  {doneOrder.length > 0 && loading2 === true ? 
+  (<>
+  {doneOrder.map((item, index) => (
+    <Grid item xs={3} sm={4} md={6} key={index}>
+      <Box
+        sx={{
+          border: 1,
+          backgroundColor: "#E66253",
+          borderRadius: 3,
+          color: "#ffffff",
+        }}
+      >
+        <br />
 
-
-     
-
-      <Typography   sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 1 }}>Past Orders</Typography>
-      {doneOrder.length > 0 && loading2 === true ? 
-      (<>
-      {doneOrder.map((item, index) => (
-        <Grid item xs={3} sm={4} md={6} key={index}>
-          <Box
-            sx={{
-              border: 1,
-              backgroundColor: "#E66253",
-              borderRadius: 3,
-              color: "#ffffff",
-            }}
-          >
-            <br />
-
-            <Grid container spacing={2}>
-              <Grid xs={5}>Date: {item.date}</Grid>
-              <Grid xs={6}>Payment: {item.payment}</Grid>
-            </Grid>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid xs={6}>
-                Name:
-                {
-                  userData?.find((items) => items.user_id === item.user_id)
-                    ?.first_name
-                }
-              </Grid>
-              <Grid xs={6}>
-                Total Order Price:{item.totalprice - item.shipping_price}{" "}
-              </Grid>
-              <Grid xs={6}></Grid>
-            </Grid>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid xs={6}>
-                <Button
-                  sx={{
-                    color: "#ffffff",
-                    border: 0,
-                    // fontWeight: "bold",
-                    backgroundColor: "#539801",
-                    "&:hover": {
-                      backgroundColor: "#ffffff",
-                      color: " #539801",
-                      border: 0.5,
-                      borderColor: "#539801",
-                    },
-                  }}
-                  onClick={() => handleOpenDetails(item.order_id)}
-                >
-                  Details
-                </Button>
-
-                <Modal
-                  open={isOpenDetails}
-                  onClose={handleCloseDetails}
-                  aria-labelledby="modal-title"
-                  aria-describedby="modal-description"
-                >
-                  <Box sx={style}>
-                    <Grid container spacing={2}>
-                      <Grid xs={2}>
-                        {" "}
-                        <img src="/images/food journal icon.png" />
-                      </Grid>
-                      <Grid xs={8}>Order Details</Grid>
-                      <Grid xs={2}>
-                        <Button
-                          key={index}
-                          sx={{ float: "right" }}
-                          onClick={() => handleCloseDetails()}
-                        >
-                          <img
-                            src="/images/close.png"
-                            height="10"
-                            weight="10"
-                          />
-                        </Button>
-                      </Grid>
-                    </Grid>
-                    {selectedMealDetails.map((item) => (
-                      <>
-                        <Typography>{item.meal_plan.name}</Typography>
-                        {console.log(item.meals)}
-                        Orders: <br />
-                        <Grid container spacing={2} sx={{ m: 1.5 }}>
-                          {item.meals.map((items, index) => (
-                            <Box>
-                              Day {items.day}
-                              <Grid container spacing={2} sx={{ m: 1.5 }}>
-                                {items.meals.map((i, index) => (
-                                  <Grid item xs={3} sm={3} md={3} key={index}>
-                                    <Box>
-                                      {i.type}:{i.food}
-                                    </Box>
-                                  </Grid>
-                                ))}
-                              </Grid>
-                            </Box>
-                          ))}
-                        </Grid>
-                      </>
-                    ))}
-                  </Box>
-                </Modal>
-              </Grid>
-              <Grid xs={6}>Shipping Price:{item.shipping_price}</Grid>
-            </Grid>
-            <Grid container spacing={2} sx={{ mt: 1 }}>
-              <Grid xs={6}></Grid>
-              <Grid xs={6}>Total Price:{item.totalprice}</Grid>
-            </Grid>
-
-            <Modal
-              open={isOpen}
-              onClose={handleClose}
-              aria-labelledby="modal-title"
-              aria-describedby="modal-description"
-            >
-              <Box sx={style}>
-                {loading ? (
-                  <>Loading Please Wait...</>
-                ) : (
-                  <>
-                    {item.date}
-                    <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
-                      <Grid xs={2}>
-                        {" "}
-                        <img src="/images/food journal icon.png" />
-                      </Grid>
-                      <Grid xs={8}>Edit Food Information</Grid>
-                      <Grid xs={2}>
-                        <Button sx={{ float: "right" }} onClick={handleClose}>
-                          <img
-                            src="/images/close.png"
-                            height="10"
-                            weight="10"
-                          />
-                        </Button>
-                      </Grid>
-                    </Grid>
-                    Name:
-                    <TextField
-                      id="outlined-multiline-flexible"
-                      sx={{
-                        width: "70%",
-                        background: "#ffffff",
-                        borderRadius: 0,
-                      }}
-                      // value={param.meals.Breakfast.food}
-                      name="name"
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                    />
-                    Phone Number:
-                    <TextField
-                      id="outlined-multiline-flexible"
-                      sx={{
-                        width: "70%",
-                        background: "#ffffff",
-                        borderRadius: 0,
-                      }}
-                      value={phone}
-                      onChange={(event) => setPhone(event.target.value)}
-                      // value={param.meals.Breakfast.food}
-                      name="name"
-                    />
-                    {selectedAddress}
-                    <Button
-                      onClick={() =>
-                        createOrder(
-                          selectedAddress,
-                          selectedUser,
-                          selectedOrder
-                        )
-                      }
-                    >
-                      Create Order
-                    </Button>
-                  </>
-                )}
-              </Box>
-            </Modal>
-            {/* <Button
+        <Grid container spacing={2}>
+          <Grid xs={5}>Date: {item.date}</Grid>
+          <Grid xs={6}>Payment: {item.payment}</Grid>
+        </Grid>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
+          <Grid xs={6}>
+            Name:
+            {
+              userData?.find((items) => items.user_id === item.user_id)
+                ?.first_name
+            }
+          </Grid>
+          <Grid xs={6}>
+            Total Order Price:{item.totalprice - item.shipping_price}{" "}
+          </Grid>
+          <Grid xs={6}></Grid>
+        </Grid>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
+          <Grid xs={6}>
+            <Button
               sx={{
                 color: "#ffffff",
                 border: 0,
@@ -830,40 +708,198 @@ function SellerOrders() {
                   borderColor: "#539801",
                 },
               }}
-              onClick={() =>
-                handleOpen(item.address_id, item.user_id, item.order_id)
-              }
+              onClick={() => handleOpenDetails(item.order_id)}
             >
-              Deploy Order
+              Details
             </Button>
-            <Button
-              onClick={() => completeOrder(item.order_id)}
-              sx={{
-                color: "#E66253",
-                border: 0,
-                // fontWeight: "bold",
-                backgroundColor: "#ffffff",
-                "&:hover": {
-                  backgroundColor: "#E66253",
-                  color: "#ffffff",
-                  border: 0.5,
-                  borderColor: "#ffffff",
-                },
-              }}
+
+            <Modal
+              open={isOpenDetails}
+              onClose={handleCloseDetails}
+              aria-labelledby="modal-title"
+              aria-describedby="modal-description"
             >
-              Order Done
-            </Button> */}
-          </Box>
+              <Box sx={style}>
+                <Grid container spacing={2}>
+                  <Grid xs={2}>
+                    {" "}
+                    <img src="/images/food journal icon.png" />
+                  </Grid>
+                  <Grid xs={8}>Order Details</Grid>
+                  <Grid xs={2}>
+                    <Button
+                      key={index}
+                      sx={{ float: "right" }}
+                      onClick={() => handleCloseDetails()}
+                    >
+                      <img
+                        src="/images/close.png"
+                        height="10"
+                        weight="10"
+                      />
+                    </Button>
+                  </Grid>
+                </Grid>
+                {selectedMealDetails.map((item) => (
+                  <>
+                    <Typography>{item.meal_plan.name}</Typography>
+                    {console.log(item.meals)}
+                    Orders: <br />
+                    <Grid container spacing={2} sx={{ m: 1.5 }}>
+                      {item.meals.map((items, index) => (
+                        <Box>
+                          Day {items.day}
+                          <Grid container spacing={2} sx={{ m: 1.5 }}>
+                            {items.meals.map((i, index) => (
+                              <Grid item xs={3} sm={3} md={3} key={index}>
+                                <Box>
+                                  {i.type}:{i.food}
+                                </Box>
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </Box>
+                      ))}
+                    </Grid>
+                  </>
+                ))}
+              </Box>
+            </Modal>
+          </Grid>
+          <Grid xs={6}>Shipping Price:{item.shipping_price}</Grid>
         </Grid>
- ))}</>) : doneOrder.length === 0 && loading2 === false ? (
-  <>No Orders</>
+        <Grid container spacing={2} sx={{ mt: 1 }}>
+          <Grid xs={6}></Grid>
+          <Grid xs={6}>Total Price:{item.totalprice}</Grid>
+        </Grid>
+
+        <Modal
+          open={isOpen}
+          onClose={handleClose}
+          aria-labelledby="modal-title"
+          aria-describedby="modal-description"
+        >
+          <Box sx={style}>
+            {loading ? (
+              <>Loading Please Wait...</>
+            ) : (
+              <>
+                {item.date}
+                <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
+                  <Grid xs={2}>
+                    {" "}
+                    <img src="/images/food journal icon.png" />
+                  </Grid>
+                  <Grid xs={8}>Edit Food Information</Grid>
+                  <Grid xs={2}>
+                    <Button sx={{ float: "right" }} onClick={handleClose}>
+                      <img
+                        src="/images/close.png"
+                        height="10"
+                        weight="10"
+                      />
+                    </Button>
+                  </Grid>
+                </Grid>
+                Name:
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{
+                    width: "70%",
+                    background: "#ffffff",
+                    borderRadius: 0,
+                  }}
+                  // value={param.meals.Breakfast.food}
+                  name="name"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+                Phone Number:
+                <TextField
+                  id="outlined-multiline-flexible"
+                  sx={{
+                    width: "70%",
+                    background: "#ffffff",
+                    borderRadius: 0,
+                  }}
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  // value={param.meals.Breakfast.food}
+                  name="name"
+                />
+                {selectedAddress}
+                <Button
+                  onClick={() =>
+                    createOrder(
+                      selectedAddress,
+                      selectedUser,
+                      selectedOrder
+                    )
+                  }
+                >
+                  Create Order
+                </Button>
+              </>
+            )}
+          </Box>
+        </Modal>
+        {/* <Button
+          sx={{
+            color: "#ffffff",
+            border: 0,
+            // fontWeight: "bold",
+            backgroundColor: "#539801",
+            "&:hover": {
+              backgroundColor: "#ffffff",
+              color: " #539801",
+              border: 0.5,
+              borderColor: "#539801",
+            },
+          }}
+          onClick={() =>
+            handleOpen(item.address_id, item.user_id, item.order_id)
+          }
+        >
+          Deploy Order
+        </Button>
+        <Button
+          onClick={() => completeOrder(item.order_id)}
+          sx={{
+            color: "#E66253",
+            border: 0,
+            // fontWeight: "bold",
+            backgroundColor: "#ffffff",
+            "&:hover": {
+              backgroundColor: "#E66253",
+              color: "#ffffff",
+              border: 0.5,
+              borderColor: "#ffffff",
+            },
+          }}
+        >
+          Order Done
+        </Button> */}
+      </Box>
+    </Grid>
+))}</>) : doneOrder.length === 0 && loading2 === false ? (
+<>No Orders</>
 ) : (
-  <>
-    {" "}
-    <img src="/images/magnify.gif" width="13%" />
-    <Typography>Loading...</Typography>
-  </>
-) }
+<>
+{" "}
+<img src="/images/magnify.gif" width="13%" />
+<Typography>Loading...</Typography>
+</>
+) }</>) : 
+(<></>)}
+
+
+
+      
+
+
+     
+
+     
 
 
 

@@ -7,11 +7,13 @@ import TextField from "@mui/material/TextField";
 import { Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { ToastContainer, toast } from "react-toastify";
-
+import Grid from "@mui/material/Grid";
 
 function SellerRequestOrders() {
+  const buttons = ["Pending Orders", "Approved Orders"];
   const [requestData, setRequestData] = useState([]);
   const [mealData, setMealData] = useState([]);
+  const [activeButton, setActiveButton] = useState(0);
   const [selectedOrder, setSelectedOrder] = useState();
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenPrice, setIsOpenPrice] = useState(false);
@@ -355,10 +357,45 @@ console.log(tempResponse)
         fontFamily: "Poppins",
       }}
     >
-         <Typography
+      <Grid container spacing={2}>
+ {buttons.map((buttonLabel, index) => (
+    <Grid item xs={6} sm={6} md={6} key={index}>
+    <Button
+      key={index}
+      variant="contained" // Adjust variant as needed
+      onClick={() => setActiveButton(index)}
+      sx={{
+        borderColor: "#ffffff",
+        fontWeight: "bold",
+        boxShadow: 1,
+        mx: 1,
+        fontSize: "20px",
+        background: "#ffffff",
+        color: activeButton === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+        "&:hover": {
+          backgroundColor: "#E66253",
+          color: "#ffffff",
+          border: 0.5,
+          borderColor: "#ffffff",
+        },
+      }}
+    >
+      {buttonLabel}
+    </Button>{" "}
+  </Grid>
+ ))}
+</Grid>
+
+{activeButton === 0 ? (
+        <>     
+
+<Typography
         sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
       >
       Pending Requests</Typography> 
+
+      <Grid container spacing = {2}> 
+        <Grid xs = {6}> 
       Generated Meal Plans<br/>
       {console.log(pendingRequests)}
       {pendingRequests.length > 0 && loading1 === true ? 
@@ -442,11 +479,9 @@ console.log(tempResponse)
               <img src="/images/magnify.gif" width="13%" />
               <Typography>Loading...</Typography>
             </>
-          ) }
+          ) }</Grid>
+        <Grid xs = {6}><Typography>Recommended Meal Plans</Typography>
 
-<br/>
-<Typography>Recommended Meal Plans</Typography>
-{console.log(recommendData)}
 {recommendData.filter(
       (item) => item.status === "Pending"
     ).length > 0 ? 
@@ -535,16 +570,16 @@ console.log(tempResponse)
           <img src="/images/magnify.gif" width="13%" />
           <Typography>Loading...</Typography> */}
         </>
-      ) }
-
-
-
-
-
-         <Typography
+      ) }</Grid>
+      </Grid>
+      
+      </> ) : activeButton === 1 ? (<> 
+      <Typography
         sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.6em", mt: 5, mb: 3 }}
       >
       Approved Request </Typography>
+<Grid container spacing = {2}>
+  <Grid xs = {6}>
       Generated Meal Plans <br/>
       {approveRequests.length > 0 && loading3 === true ? 
       (<>
@@ -556,6 +591,7 @@ console.log(tempResponse)
           mx: "10%",
           color: "#ffffff",
           py: 2,
+          mt: 2,
         }}>
           {" "}
           {item.request.date}
@@ -603,10 +639,8 @@ console.log(tempResponse)
           <img src="/images/magnify.gif" width="13%" />
           <Typography>Loading...</Typography>
         </>
-      ) }
-
-<br/>
-<Typography>Recommended Meal Plans</Typography>
+      ) }</Grid> 
+  <Grid xs = {6}><Typography>Recommended Meal Plans</Typography>
 {recommendData.filter(
       (item) => item.status === "Approved"
     ).length > 0  ? 
@@ -666,7 +700,25 @@ console.log(tempResponse)
           <img src="/images/magnify.gif" width="13%" />
           <Typography>Loading...</Typography> */}
         </>
-      ) }
+      ) }</Grid> 
+
+</Grid>
+<br/>
+</>) 
+        : (<></>)
+}
+
+
+
+
+
+   
+
+
+
+
+
+        
        
 
 <Modal

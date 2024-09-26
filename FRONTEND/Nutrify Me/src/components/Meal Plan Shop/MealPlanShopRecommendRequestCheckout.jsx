@@ -1438,7 +1438,15 @@ function MealPlanShopRecommendRequestCheckout() {
           CHECKOUT
         </Typography>
 
-        <Box sx={{ borderRadius: 0, border: 1, mx: 20 }}>
+        <Grid container = {2}>
+        <Grid xs = {12} lg = {6}><Box sx={{ borderRadius: 0, border: 1, mx: 5,
+            pb: {
+              xs: "18%", // Extra small devices (less than 600px)
+              sm: "20%", // Small devices (600px and up)
+              md: "35%", // Medium devices (900px and up)
+              lg: "45%",
+            },
+         }}>
           <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>
             <Grid xs={2}>
               <img src="/images/location.png" />
@@ -1461,12 +1469,28 @@ function MealPlanShopRecommendRequestCheckout() {
                     {addressData[selectedAddress]?.phone} <br />
                     {addressData[selectedAddress]?.address}
                   </Typography>
-
+                  <Box
+                        sx={{
+                          width: {
+                            xs: "70%", // Extra small devices (less than 600px)
+                            sm: "90%", // Small devices (600px and up)
+                            md: "100%", // Medium devices (900px and up)
+                            lg: "100%", // Large devices (1200px and up)
+                            // Extra large devices (1536px and up)
+                          },
+                          height: {
+                            xs: "250%", // Extra small devices (less than 600px)
+                            sm: "400%", // Small devices (600px and up)
+                            md: "430%", // Medium devices (900px and up)
+                            lg: "450%", // Large devices (1200px and up)
+                          },
+                        }}
+                      > 
                   <APIProvider
                     apiKey={API_KEY}
                     onLoad={() => console.log("Maps API has loaded.")}
                   >
-                    <div style={{ height: "100px" }}>
+                 
                       {/* <Map
             defaultCenter={{ lat: 53.54992, lng: 10.00678 }}
             defaultZoom={10}
@@ -1497,8 +1521,9 @@ function MealPlanShopRecommendRequestCheckout() {
                           }}
                         />
                       </Map>
-                    </div>
+                  
                   </APIProvider>
+                  </Box>
                 </>
               )}
               {/* <Typography sx={{ color: "#000000" }}>
@@ -1560,10 +1585,9 @@ function MealPlanShopRecommendRequestCheckout() {
               </Modal>
             </Grid>
           </Grid>
-        </Box>
-        <br />
-        {console.log(location.state)}
-        <Box sx={{ border: 1, borderRadius: 3, mx: 20 }}>
+        </Box></Grid>
+        <Grid xs = {12} lg = {6}>
+        <Box sx={{ border: 1, borderRadius: 3, mx: 5 }}>
           {console.log(location.state)}
           <Grid container spacing={2} sx={{ mt: "20px" }}>
             <Grid xs={12} md={4}>
@@ -1573,7 +1597,7 @@ function MealPlanShopRecommendRequestCheckout() {
             <Grid xs={12} md={4} sx={{ textAlign: "center" }}>
               <Typography sx={{ color: "#99756E", mt: 3 }}>
                 {location.state.meal.name}
-                {console.log(location.state)}
+             
                 {
                   recommendMeals.find(
                     (item) =>
@@ -1629,10 +1653,12 @@ function MealPlanShopRecommendRequestCheckout() {
             />
           </Box>
         </Box>
-
-        <br />
-
-        <Box sx={{ textAlign: "left", border: 1, mx: 20, color: "#99756E" }}>
+        </Grid>
+        </Grid>
+        
+       
+        <Grid container = {2} sx = {{mt:3}}>
+        <Grid xs = {12} lg = {6}> <Box sx={{ textAlign: "left", border: 1, mx: 5, color: "#99756E" }}>
           <Typography
             sx={{ ml: 5, mt: 5, color: "#99756E", fontWeight: "bold" }}
           >
@@ -1713,24 +1739,22 @@ function MealPlanShopRecommendRequestCheckout() {
               {errors1.payment?.message}
             </Typography>
           </FormControl>
-          <Button type="submit">Submit</Button>
-        </Box>
-        <br />
-        <br />
-        <Box sx={{ border: 1, mx: 20, color: "#99756E", fontSize: "20px" }}>
+          {/* <Button type="submit">Submit</Button> */}
+        </Box></Grid>
+        <Grid xs = {12} lg = {6}>    <Box sx={{ border: 1, mx: 5, color: "#99756E", fontSize: "20px" }}>
           <Typography
             sx={{
               color: "#99756E",
               fontWeight: "bold",
-              my: 5,
-              fontSize: "30px",
+              my: 0,
+              fontSize: "1.5em",
             }}
           >
             PAYMENT DETAILS
           </Typography>
           <hr />
           <br />
-          <Grid container spacing={2} sx={{ my: 5 }}>
+          <Grid container spacing={2} sx={{ my: 0 }}>
             {" "}
             <Grid xs={6}>ORDER SUBTOTAL</Grid>
             <Grid xs={6}>Php {subTotalPrices}</Grid>
@@ -1738,7 +1762,7 @@ function MealPlanShopRecommendRequestCheckout() {
 
           <hr />
           <br />
-          <Grid container spacing={2} sx={{ my: 5 }}>
+          <Grid container spacing={2} sx={{ my: 0 }}>
             {" "}
             <Grid xs={6}>
               SHIPPING DETAILS <br />
@@ -1809,7 +1833,7 @@ function MealPlanShopRecommendRequestCheckout() {
           </Grid>
           <hr />
           <br />
-          <Grid container spacing={2} sx={{ my: 5 }}>
+          <Grid container spacing={2} sx={{ my: 0 }}>
             {" "}
             <Grid xs={6}>SHIPPING FEE</Grid>
             <Grid xs={6}>Php {shippingPrice}</Grid>
@@ -1821,9 +1845,11 @@ function MealPlanShopRecommendRequestCheckout() {
             <Grid xs={6}>TOTAL</Grid>
             <Grid xs={6}>Php {totalOrderPrice}</Grid>
           </Grid>
-        </Box>
-        <br />
-        <br />
+        </Box></Grid>
+
+        </Grid>
+
+        
 
         {/* <Link to={"/meal-plan-shop-home"}> */}
         <Button

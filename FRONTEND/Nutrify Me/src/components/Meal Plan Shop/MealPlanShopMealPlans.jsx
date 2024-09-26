@@ -21,6 +21,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { ToastContainer, toast } from "react-toastify";
 
+
 function MealPlanShopMealPlans() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
 
@@ -61,19 +62,21 @@ function MealPlanShopMealPlans() {
   // ! modal style
 
   const style = {
+    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
+    display: "flex",
+    flexDirection: "column",
     overflowY: "auto", // Enable vertical scrolling
     position: "absolute",
     top: "50%",
+    color: "#ffffff",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 400,
-    bgcolor: "background.paper",
-    border: "0",
+    minWidth: "90%", // Adjust minimum width as needed
+    //bgcolor: "background.paper",
+    background: "#E66253",
     boxShadow: 24,
     p: 4,
-    background: "#E66253",
-    borderRadius: 5,
-    color: "#ffffff",
+    borderRadius: 4,
   };
   //!
   const mealPlan = [
@@ -293,6 +296,10 @@ function MealPlanShopMealPlans() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [openDetails, setOpenDetails] = React.useState(false);
+  const handleOpenDetails = () => setOpenDetails(true);
+  const handleCloseDetails = () => setOpenDetails(false);
   const [selectedMeal, setSelectedMeal] = useState([]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -323,7 +330,9 @@ function MealPlanShopMealPlans() {
     return groupedData;
   };
 
+  const [selectedPlan, setSelectedPlan] = useState([])
   const setMealDetails = (num, planName) => {
+    handleOpenDetails()
     setSelectedMeal(shopMeal.filter((item) => item.mealplan_id == num));
     const selects = shopMeal.filter((item) => item.mealplan_id == num);
 
@@ -338,7 +347,7 @@ function MealPlanShopMealPlans() {
       {
         days[i]
           .sort((a, b) => {
-            const order = ["breakfast", "lunch", "snack", "dinner"];
+            const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
             return order.indexOf(a.type) - order.indexOf(b.type);
           })
           .map((item, index) => meals.push(item));
@@ -348,7 +357,7 @@ function MealPlanShopMealPlans() {
     }
 
     console.log(data);
-
+    setSelectedPlan(data)
     setMealDetailsDiv(
       // <Box>
       //   {selectedMeal ? (
@@ -432,7 +441,7 @@ function MealPlanShopMealPlans() {
                     },
                   }}
                 >
-                  {console.log(item)}
+                 
 
                   <Typography
                     sx={{
@@ -864,6 +873,46 @@ function MealPlanShopMealPlans() {
           )}
         </Box>
       </Modal>
+
+      <Modal
+        open={openDetails}
+        onClose={handleCloseDetails}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+         {selectedPlan.map((item) => (
+          <><center><Typography sx = {{fontWeight: "bold"}}>Day {item.day}</Typography> </center><br/>
+          <Grid container spacing={2} sx={{ mt: 0 }}>
+          {item.meal .sort((a, b) => {
+            const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+            return order.indexOf(a.type) - order.indexOf(b.type);
+          }).map((items, index) => (
+            
+           
+               <Grid
+                        xs={12}
+                        sm={12}
+                        md={6}
+                        key={index}
+                        sx={{ my: 0 }}
+                      >
+                        <center>
+            {items.type}<br/>
+            <img src={items.image} width="30%" height="50%" />
+            <br/>
+            {items.food}
+            </center>
+            </Grid>
+           
+          ))
+          }   
+           </Grid>       </>
+         ))}
+        
+        </Box>
+      </Modal>
+
       {/* <Box
         sx={{
           backgroundImage: "url('/images/shop.png')",
@@ -905,8 +954,196 @@ function MealPlanShopMealPlans() {
 
         <Grid container spacing={2}>
           <Grid xs={12} sm={12} md={7}>
-            {mealDetailsDiv}
+            {/* {mealDetailsDiv} */}
+            <Grid container spacing={2}> 
+
+            <Grid
+                            item
+                            xs={0}
+                            sm={0}
+                            md={1}
+                            lg={1}
+                            sx={{
+                              display: {
+                                xs: "none", // Hide on extra small screens
+                                sm: "none",
+                                md: "block", // Display on small screens and up
+                              },
+                            }}
+                          > <Button
+                          onClick={() => handlePrevC()}
+                          sx={{ mt: "235%", background: "#ffffff" }}
+                        >
+                          <img
+                            src="/images/left arrow.png"
+                            width="30px"
+                            height="30px"
+                          />
+                        </Button></Grid>
+                        <Grid item xs={12} md={10}>
+                        <Slider
+              {...settings}
+              ref={sliderRefC}
+              sx={{
+                color: "#000000",
+                border: 1,
+                borderColor: "#000000",
+              }}
+            > {shopMealPlan
+              .filter(
+                (item) =>
+                  item.start_week ==
+                  dayjs(value).startOf("week").format("YYYY-MM-DD")
+              )
+              .map((plan, index) => (
+                <Grid
+                  item
+                  xs={8}
+                  sm={8}
+                  md={6}
+                  key={index}
+                  sx={{
+                    mb: {
+                      xs: "45%", // For extra small screens
+                      sm: "18%", // For small screens
+                      md: "10%", // For medium screens (default)
+                      lg: "6%", // For large screens
+                      xl: "7%", // For extra large screens
+                    },
+                  }}
+                >
+                  <center>
+                  <img src={plan.image} width="60%" height="30%" />
+                  </center>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "#99756E",
+                      fontWeight: "bold",
+                      fontSize: {
+                        xs: "1em", // For extra small screens
+                        sm: "1.0em", // For small screens
+                        md: "1.0em", // For medium screens
+                        lg: "1.5em", // For large screens
+                      },
+                    }}
+                  >
+                    {plan.name}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      mx: "0%",
+                      fontSize: {
+                        xs: "0.8em", // For extra small screens
+                        sm: "1.0em", // For small screens
+                        md: "1.0em", // For medium screens
+                        lg: "1.0em", // For large screens
+                      },
+                    }}
+                  >
+                    {plan.description}
+                  </Typography>
+                  <Typography variant="body1">
+                    PHP {plan.price}
+                  </Typography>
+                  <Button
+                    sx={{
+                      borderRadius: 4,
+                      background: "#D9D9D9",
+                      color: "#000000",
+                      ml: 2,
+
+                      px: 2,
+                      py: 1,
+                      fontSize: {
+                        xs: "0.5em", // For extra small screens
+                        sm: "0.5em", // For small screens
+                        md: "0.8em", // For medium screens
+                        lg: "0.8em", // For large screens
+                      },
+                      "&:hover": {
+                        backgroundColor: "#ffffff",
+                        color: "#000000",
+                        border: 1,
+                      },
+                    }}
+                    onClick={() => addToCart(plan.shop_mealplan_id)}
+                  >
+                    ADD TO CART
+                  </Button>
+                  <Button
+                    sx={{
+                      borderRadius: 4,
+                      background: "#E66253",
+                      color: "#ffffff",
+                      ml: 2,
+
+                      px: 2,
+                      py: 1,
+                      fontSize: {
+                        xs: "0.5em", // For extra small screens
+                        sm: "0.5em", // For small screens
+                        md: "0.8em", // For medium screens
+                        lg: "0.8em", // For large screens
+                      },
+                      "&:hover": {
+                        backgroundColor: "#ffffff",
+                        color: "#E66253",
+                        border: 1,
+                      },
+                    }}
+                    //  onClick={() => openMealPlan(plan.shop_mealplan_id)}
+                    onClick={() =>
+                      setMealDetails(plan.shop_mealplan_id, plan.name)
+                    }
+                  >
+                    VIEW
+                  </Button>
+                  <Typography
+          sx={{
+            color: "#000000",
+            display: {
+              xs: "block", // Hide on extra small screens
+              sm: "none",
+            },
+            fontWeight: "bold",
+            mt: 4,
+          }}
+        >
+          Swipe to See More
+        </Typography>
+                </Grid>
+              ))}</Slider> </Grid>
+   <Grid
+            item
+            xs={0}
+            sm={0}
+            md={1}
+            lg={1}
+            sx={{
+              display: {
+                xs: "none", // Hide on extra small screens
+                sm: "none",
+                md: "block", // Display on small screens and up
+              },
+            }}
+          >
+                            {" "}
+                            {/* Button container (adjust width as needed) */}
+                            <Button
+                              onClick={() => handleNextC()}
+                              sx={{ mt: "235%", background: "#ffffff" }}
+                            >
+                              <img
+                                src="/images/right arrow.png"
+                                width="30px"
+                                height="30px"
+                              />
+                            </Button>
+                          </Grid>
+            </Grid>
           </Grid>
+      
           <Grid
             xs={12}
             sm={12}
@@ -934,7 +1171,7 @@ function MealPlanShopMealPlans() {
           </Grid>
         </Grid>
 
-        <Grid container spacing={2}>
+        {/* <Grid container spacing={2}>
           {shopMealPlan.length === 0 ? (
             <Typography>Loading...</Typography>
           ) : (
@@ -1060,8 +1297,8 @@ function MealPlanShopMealPlans() {
               )}
             </>
           )}
-        </Grid>
-      </Box>
+        </Grid> */}
+      </Box> 
     </div>
   );
 }

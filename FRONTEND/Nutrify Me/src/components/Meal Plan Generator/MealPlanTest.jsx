@@ -24,6 +24,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { NavLink, Link, useLocation } from "react-router-dom";
 
 function MealPlanTest() {
+  const location = useLocation();
+  const [profDetails, setProfDetails] = useState()
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [foodChoices, setFoodChoices] = useState();
   const [mealName, setMealName] = useState();
@@ -36,6 +38,19 @@ function MealPlanTest() {
     setOpens(false);
   };
 
+ 
+  console.log(location)
+  //! profiling details
+  const getData = () => {
+    AxiosInstance.get(`profiling`).then((res) => {
+      setProfDetails(res.data.find((item) => item.user_id === loggedInUser.user_id))
+   setGender(res.data.find((item) => item.user_id === loggedInUser.user_id).gender)
+    });
+  }
+  useEffect(() => {
+    getData()
+  }, [])
+  //!
   //?
   //! pop up
   const PopupTrigger = styled.span`
@@ -101,7 +116,7 @@ function MealPlanTest() {
   const [carbs, setCarbs] = useState();
   const [generatedMeal, setGeneratedMeal] = useState([]);
   const [age, setAge] = useState(0);
-  const [gender, setGender] = useState("none");
+  const [gender, setGender] = useState();
   const [goal, setGoal] = useState("none");
   const [height, setHeight] = useState(0);
   const [weight, setWeight] = useState(0);
@@ -2138,6 +2153,7 @@ function MealPlanTest() {
                     name="gender"
                     width="50%"
                     fullWidth
+                    value = {location.state.profDetails.gender}
                     {...register("gender")}
                     error={errors.gender ? true : false}
                   >
@@ -2243,6 +2259,7 @@ function MealPlanTest() {
                     fullWidth
                     size="small"
                     margin="dense"
+                    value= {location.state.profDetails.age}
                     {...register("age")}
                     error={errors.age ? true : false}
                     type="number"

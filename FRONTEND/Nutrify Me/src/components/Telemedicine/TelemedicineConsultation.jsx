@@ -191,7 +191,7 @@ function TelemedicineConsultation() {
     };
     return (
       <div>
-        <input
+        {/* <input
           type="text"
           placeholder="Enter Meeting Id"
           onChange={(e) => {
@@ -200,7 +200,7 @@ function TelemedicineConsultation() {
         />
         <button onClick={onClick}>Join</button>
         {" or "}
-        <button onClick={onClick}>Create Meeting</button>
+        <button onClick={onClick}>Create Meeting</button> */}
       </div>
     );
   }
@@ -828,7 +828,10 @@ function TelemedicineConsultation() {
                   <br />
                 </Box>
               ) : (
-                <div>hi</div>
+                <div>
+                  <img src="/images/pacman.gif" width="23%" />
+                  <Typography>Loading....</Typography>
+                   </div>
               )}
               <Grid
                 container
@@ -946,7 +949,9 @@ function TelemedicineConsultation() {
           <p>Joining the meeting...</p>
         ) : (
           // <button onClick={joinMeeting}>Join</button>
-          <div>hi</div>
+          <div> <img src="/images/pacman.gif" width="23%" />
+          <Typography>Loading.... </Typography>
+          </div>
         )}
       </div>
     );
@@ -1061,11 +1066,11 @@ useEffect(() => {
         >
           <MeetingView meetingId={meetingId} onMeetingLeave={onMeetingLeave} />
         </MeetingProvider>
-      ) : (
-        // <JoinScreen getMeetingAndToken={getMeetingAndToken} />
+  
+       <JoinScreen getMeetingAndToken={getMeetingAndToken} />
         <JoinScreen getMeetingAndToken={meetingId} />
       {/* )} */}
-      //! {/* <ParticipantView props={getMeetingAndToken} /> */}
+       {/* <ParticipantView props={getMeetingAndToken} /> */}
     </div>
   );
 }
