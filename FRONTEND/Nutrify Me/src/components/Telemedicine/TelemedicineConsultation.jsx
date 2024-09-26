@@ -642,7 +642,7 @@ function TelemedicineConsultation() {
         props.onMeetingLeave();
       },
     });
-    join()
+    
     console.log([...participants.entries()].length);
     const joinMeeting = () => {
       setJoined("JOINING");
