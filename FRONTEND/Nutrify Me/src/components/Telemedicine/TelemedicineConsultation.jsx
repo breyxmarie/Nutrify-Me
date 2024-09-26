@@ -681,7 +681,7 @@ function TelemedicineConsultation() {
     // }, [micStream, micOn]);
 
     // //!
-
+    join();
     useEffect(() => {
       join();
     }, []);
