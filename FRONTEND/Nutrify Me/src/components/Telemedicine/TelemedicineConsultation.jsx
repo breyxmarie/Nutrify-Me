@@ -38,7 +38,7 @@ function TelemedicineConsultation() {
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
 
   const createMeeting = async ({ token }) => {
-    const res = await axios.post('https://proxynutrifyme-4a3d23e2f725.herokuapp.com/https://api.videosdk.live/v2/rooms',
+    const res = await axios.post('https://api.videosdk.live/v2/rooms',
       {}, // Empty body if no data needs to be sent
       {
         headers: {
@@ -1037,7 +1037,7 @@ function TelemedicineConsultation() {
     >
       {/* {meetingView} */}
       {console.log(authToken)}
-      {authToken && meetingId ? (
+      {/* {authToken && meetingId ? ( */}
         <MeetingProvider
           config={{
             meetingId,
@@ -1052,7 +1052,7 @@ function TelemedicineConsultation() {
       ) : (
         // <JoinScreen getMeetingAndToken={getMeetingAndToken} />
         <JoinScreen getMeetingAndToken={meetingId} />
-      )}
+      {/* )} */}
       //! {/* <ParticipantView props={getMeetingAndToken} /> */}
     </div>
   );
