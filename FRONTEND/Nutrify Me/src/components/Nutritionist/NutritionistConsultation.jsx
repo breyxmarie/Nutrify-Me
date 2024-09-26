@@ -944,6 +944,17 @@ function NutritionistHome() {
   //     clients.unpublish(localTracks).then(() => clients.leave());
   //   };
   // }, []);
+
+  useEffect(() => {
+ 
+    // Trigger any logic here
+    console.log("authToken and meetingId are available");
+
+    // Update the forceRender state to trigger a re-render
+    setForceRender(forceRender => forceRender + 1);
+ 
+}, [authToken, meetingId]);
+
   return (
     <div
       className="content"
