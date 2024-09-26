@@ -36,7 +36,7 @@ function TelemedicineConsultation() {
 
 
   const createMeeting = async ({ token }) => {
-    const res = await fetch(`https://api.videosdk.live/v2/rooms`, {
+    const res = await fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/https://api.videosdk.live/v2/rooms`, {
       method: "POST",
       headers: {
         authorization: `${authToken}`,
