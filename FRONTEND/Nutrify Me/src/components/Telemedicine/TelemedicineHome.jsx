@@ -1586,7 +1586,8 @@ try{
                 }}
               > */}
 
-              { dayjs().format("hh:mm A") === dayjs(temp.date + "" + temp.time).format("hh:mm A") ? (<> <Button
+              { dayjs().format("hh:mm A") === dayjs(temp.date + "" + temp.time).format("hh:mm A") ? (
+                <> <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
                 onClick={() =>
                   navigate("/telemedicine-consultation", {
@@ -1595,9 +1596,20 @@ try{
                 }
               >
                 Go to Consultation
-              </Button></>): (<></>)}
+              </Button>
+              </>): (<></>)}
              
               {/* </Link>{" "} */}
+              <Button
+                sx={{ background: "#E66253", color: "#ffffff" }}
+                onClick={() =>
+                  navigate("/telemedicine-consultation", {
+                    state: { tempN },
+                  })
+                }
+              >
+                Go to Consultation
+              </Button>
             </Box>
           );
         } else {
