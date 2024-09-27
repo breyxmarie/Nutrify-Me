@@ -1723,38 +1723,38 @@ function NutritionistCreateMealPlan() {
             >
               <Typography sx={{ my: 1 }}>
                 <img src="/images/calories.png" />
-                {tempMeal[activeButtonIndex].meals.Breakfast.calories +
-                tempMeal[activeButtonIndex].meals.Lunch.calories + 
-                tempMeal[activeButtonIndex].meals.Snack.calories  +
-                tempMeal[activeButtonIndex].meals.Dinner.calories
+                {tempMeal[activeButtonIndex]?.meals.Breakfast.calories +
+                tempMeal[activeButtonIndex]?.meals.Lunch.calories + 
+                tempMeal[activeButtonIndex]?.meals.Snack.calories  +
+                tempMeal[activeButtonIndex]?.meals.Dinner.calories
                 } {" "} calories
               </Typography>
 
               <Typography sx={{ my: 1 }}>
                 <img src="/images/fat.png" />
-                {tempMeal[activeButtonIndex].meals.Breakfast.fat +
-                tempMeal[activeButtonIndex].meals.Lunch.fat + 
-                tempMeal[activeButtonIndex].meals.Snack.fat  +
-                tempMeal[activeButtonIndex].meals.Dinner.fat
+                {tempMeal[activeButtonIndex]?.meals.Breakfast.fat +
+                tempMeal[activeButtonIndex]?.meals.Lunch.fat + 
+                tempMeal[activeButtonIndex]?.meals.Snack.fat  +
+                tempMeal[activeButtonIndex]?.meals.Dinner.fat
                 } {" "} fat
               </Typography>
 
               <Typography sx={{ my: 1 }}>
                 <img src="/images/carbs.png" />
              
-                {tempMeal[activeButtonIndex].meals.Breakfast.carbs +
-                tempMeal[activeButtonIndex].meals.Lunch.carbs + 
-                tempMeal[activeButtonIndex].meals.Snack.carbs  +
-                tempMeal[activeButtonIndex].meals.Dinner.carbs
+                {tempMeal[activeButtonIndex]?.meals.Breakfast.carbs +
+                tempMeal[activeButtonIndex]?.meals.Lunch.carbs + 
+                tempMeal[activeButtonIndex]?.meals.Snack.carbs  +
+                tempMeal[activeButtonIndex]?.meals.Dinner.carbs
                 } {" "} carbs
               </Typography>
 
               <Typography sx={{ my: 1 }}>
                 <img src="/images/protein.png" />
-                {tempMeal[activeButtonIndex].meals.Breakfast.protein +
-                tempMeal[activeButtonIndex].meals.Lunch.protein + 
-                tempMeal[activeButtonIndex].meals.Snack.protein  +
-                tempMeal[activeButtonIndex].meals.Dinner.protein
+                {tempMeal[activeButtonIndex]?.meals.Breakfast.protein +
+                tempMeal[activeButtonIndex]?.meals.Lunch.protein + 
+                tempMeal[activeButtonIndex]?.meals.Snack.protein  +
+                tempMeal[activeButtonIndex]?.meals.Dinner.protein
                 } {" "}protein
               </Typography>
             </Box>
