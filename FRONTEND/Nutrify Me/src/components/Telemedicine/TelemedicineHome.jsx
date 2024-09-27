@@ -2841,13 +2841,13 @@ try{
             px: 3,
             pt: "50px",
             pb: "30px",
-            ml: 10,
+            ml: 15,
             mr: 10,
             borderColor: "#E66253",
           }}
         >
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid xs={6}>
+            <Grid xs={12} md ={6}>
               <Typography
                 sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2em" }}
               >
@@ -2976,7 +2976,7 @@ try{
               </Box>
             </Modal>
 
-            <Grid xs={6}>
+            <Grid  xs={12} md ={6}>
               <Tabs
                 value={activeTab}
                 // sx={{
@@ -3002,7 +3002,7 @@ try{
                       fontWeight: "bold",
                       borderColor: "#E66253",
                       borderRadius: 2,
-                      mr: 4,
+                      mr:2,
                       //fontWeight: "bold", // Make text bold
                     }}
                   />

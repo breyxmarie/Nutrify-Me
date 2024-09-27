@@ -33,6 +33,7 @@ function PayPalRecommend() {
     });
   };
 
+  //!lagay loading here 
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
     console.log(order);
@@ -86,6 +87,7 @@ function PayPalRecommend() {
             //   // setActiveTab(0);
           });
 
+          //! lagay sa loob nun after sa taas para domino effect
           location.state.state.meal.map((item) =>
             item.meals.map((items) =>
               //console.log(item.Day.substring(4))
@@ -107,6 +109,7 @@ function PayPalRecommend() {
             )
           );
 
+          //! pati ito domino effect tas dito close yun loading
           try {
             AxiosInstance.delete(
               `requestedrecommendmeals/${location.state.state.request_id}`
