@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, } from "react";
 import Box from "@mui/material/Box";
 import AxiosInstance from "../forms/AxiosInstance";
 import Button from "@mui/material/Button";
@@ -8,6 +8,8 @@ import { Typography } from "@mui/material";
 import dayjs from "dayjs";
 import { ToastContainer, toast } from "react-toastify";
 import Grid from "@mui/material/Grid";
+import emailjs from "@emailjs/browser";
+import { debounce } from "lodash"; // Install lodash if needed
 
 function SellerRequestOrders() {
   const buttons = ["Pending Orders", "Approved Orders"];
@@ -25,11 +27,15 @@ function SellerRequestOrders() {
   const [price, setPrice] = useState(0);
   // request:
   //  meal
+  const [loading, setLoading] = useState();
   const [loading1, setLoading1] = useState();
 
   const [loading2, setLoading2] = useState();
   const [loading3, setLoading3] = useState();
   const [loading4, setLoading4] = useState();
+  const [loading5, setLoading5] = useState();
+  const [loading6, setLoading6] = useState();
+
 
   const style = {
     maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
@@ -94,114 +100,116 @@ function SellerRequestOrders() {
   const [userData, setUserData] = useState([])
   const refreshData = () => {};
   const [recommendData, setRecommendData] = useState([])
-  const getData = async () => {
-    const tempResponse = await AxiosInstance.get(`requestedmeals`);
-    const tempRecommendResponse = await AxiosInstance.get(`requestedrecommendmeals/`);
+
+
+  const getData = useCallback(
+    debounce(async () => {
+      try {
+        const [mealResponse, requestResponse, recommendResponse, userResponse] = await Promise.all([
+          AxiosInstance.get('generatedmeal'),
+          AxiosInstance.get('requestedmeals'),
+          AxiosInstance.get('requestedrecommendmeals'),
+          AxiosInstance.get('user')
+        ]);
+
+        const reverseRequestData = requestResponse.data.reverse();
+        const reverseRecommendData = recommendResponse.data.reverse();
+
+
+
+
+        const pendingData = reverseRequestData.filter(
+          (item) => item.status === "Pending"
+        );
+        const approveData = reverseRequestData.filter(
+          (item) => item.status === "Approved"
+        );
+
+        const tempData = [];
+        pendingData.forEach((item) => {
+          const meals = mealResponse.data.find(
+            (items) => items.generatedMeal_id === item.generatedMeal_id
+          );
+          // console.log(meals);
     
-    const mealData = await AxiosInstance.get(`generatedmeal`);
-    const useData = await AxiosInstance.get(`user`);
-    console.log(useData.data)
-    setUserData(useData.data)
-console.log(tempResponse)
-    const reverseResponse = tempResponse.data.reverse();
-    const reverseRecommendResponse = tempRecommendResponse.data.reverse();
-    setRecommendData(reverseRecommendResponse)
-
+          const newData = {
+            request: item,
+            meal: meals,
+          };
     
-    if (recommendData.filter(
-      (item) => item.status === "Pending"
-    ).length > 0) {
-      setLoading2(true);
-    } else {
-      setLoading2(false);
-    }
+          tempData.push(newData);
+        });
 
-    console.log(recommendData.filter(
-      (item) => item.status === "Approved"
-    ).length)
-    if (recommendData.filter(
-      (item) => item.status === "Approved"
-    ).length > 0) {
-      setLoading4(true);
-    } else {
-      setLoading4(false);
-    }
+
+        const tempDataApprove = [];
+        approveData.forEach((item) => {
+          const meals = mealResponse.data.find(
+            (items) => items.generatedMeal_id === item.generatedMeal_id
+          );
+          // console.log(meals);
     
-    const pendingData = reverseResponse.filter(
-      (item) => item.status === "Pending"
-    );
-    // console.log(pendingData);
-    const approveData = reverseResponse.filter(
-      (item) => item.status === "Approved"
-    );
+          const newData = {
+            request: item,
+            meal: meals,
+          };
+    
+          tempDataApprove.push(newData);
+        });
 
-    const disapproveData = reverseResponse.filter(
-      (item) => item.status === "Dispproved"
-    );
+        setPendingRequests(tempData)
+        setApproveRequests(tempDataApprove)
 
-    const tempData = [];
-    pendingData.forEach((item) => {
-      const meals = mealData.data.find(
-        (items) => items.generatedMeal_id === item.generatedMeal_id
-      );
-      // console.log(meals);
+        setMealData(mealResponse.data);
+        setUserData(userResponse.data);
+        setRecommendData(reverseRecommendData);
+        setRequestData(reverseRequestData);
 
-      const newData = {
-        request: item,
-        meal: meals,
-      };
+        // Process pending and approved requests
+      //  setPendingRequests(reverseRequestData.filter(item => item.status === "Pending"));
+       // setApproveRequests(reverseRequestData.filter(item => item.status === "Approved"));
+        
+        if (reverseRequestData.filter(item => item.status === "Pending").length > 0) {
+          setLoading1(true);
+        } else {
+          setLoading1(false);
+        }
 
-      tempData.push(newData);
-    });
+        if (recommendData.filter(
+          (item) => item.status === "Pending"
+        ).length > 0) {
+          setLoading2(true);
+        } else {
+          setLoading2(false);
+        }
 
-    // console.log(tempData);
-    const tempDataApprove = [];
-    approveData.forEach((item) => {
-      const meals = mealData.data.find(
-        (items) => items.generatedMeal_id === item.generatedMeal_id
-      );
-      // console.log(meals);
-
-      const newData = {
-        request: item,
-        meal: meals,
-      };
-
-      tempDataApprove.push(newData);
-    });
-
-    const tempDataDisapprove = [];
-    disapproveData.forEach((item) => {
-      const meals = mealData.data.find(
-        (items) => items.generatedMeal_id === item.generatedMeal_id
-      );
-      // console.log(meals);
-
-      const newData = {
-        request: item,
-        meal: meals,
-      };
-
-      tempDataDisapprove.push(newData);
-    });
-
-    // console.log(tempData);
-    setRequestData(tempData);
-
-    if (tempData.length > 0) {
-      setLoading1(true);
-    } else {
+        if (reverseRequestData.filter(item => item.status === "Approved").length > 0) {
+          setLoading3(true);
+        } else {
+          setLoading3(false);
+        }
+console.log(recommendData.filter(
+  (item) => item.status === "Approved"
+).length > 0)
+        if (recommendData.filter(
+          (item) => item.status === "Approved"
+        ).length > 0) {
+          setLoading4(true);
+          console.log(loading4, "true")
+        } else {
+          setLoading4(false);
+        }
+        
+      setLoading(false);
       setLoading1(false);
-    }
-    setPendingRequests(tempData);
-    if (tempDataApprove.length > 0) {
-      setLoading3(true);
-    } else {
+      setLoading2(false);
       setLoading3(false);
-    }
-    setApproveRequests(tempDataApprove);
-    setDisapproveRequests(tempDataDisapprove);
-  };
+      setLoading4(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      
+      }
+    }, 300), []); // 300ms debounce delay, prevents frequent calls
+
 
   useEffect(() => {
     getData();
@@ -210,6 +218,7 @@ console.log(tempResponse)
 
 
   const approveOrderRecommend = async () => {
+    setLoading5(true)
     const response = await AxiosInstance.get(`requestedrecommendmeals`);
 
     const tempData = response.data.find(
@@ -230,6 +239,7 @@ console.log(tempResponse)
       }).then((res) => {
         console.log(res);
         getData();
+        setLoading5(false)
         handleClosePriceRecommend();
         toast.success("Request Approved!");
         // try {
@@ -284,12 +294,14 @@ console.log(tempResponse)
   };
 
   const approveOrder = async () => {
+    setLoading5(true)
     const response = await AxiosInstance.get(`requestedmeals`);
 
     const tempData = response.data.find(
       (item) => item.request_id === selectedOrder
     );
     console.log(price);
+    const tempUser = userData.find((item) => item.user_id = tempData.user_id)
     try {
       AxiosInstance.put(`requestedmeals/`, {
         request_id: tempData.request_id,
@@ -303,8 +315,14 @@ console.log(tempResponse)
       }).then((res) => {
         console.log(res);
         getData();
+       
         handleClosePrice();
+        setLoading5(true)
         toast.success("Request Approved!");
+        sendEmail(
+          tempUser.email,
+          tempUser.first_name
+        );
         // try {
         //   AxiosInstance.delete(`requestedmeals/${id}`).then((res) => {
         //     getData();
@@ -348,6 +366,39 @@ console.log(tempResponse)
       console.log(error);
     }
   };
+
+  //! email
+
+  const sendEmail = (email, name) => { 
+    const forms = {
+      user_email: email,
+   
+      to_name: name,
+    };
+    emailjs
+    .send(
+      "service_1b6yxba",
+      "template_nzy8scl",
+      {
+        user_email: email,
+       
+        to_name: name,
+      },
+      {
+        publicKey: "_TwsSJqvcqcfz3C1h",
+      }
+    )
+    .then(
+      () => {
+        console.log("SUCCESS!");
+      },
+      (error) => {
+        console.log("FAILED...", error);
+      }
+    );
+
+  }
+  //!
   return (
     <div
       className="content"
@@ -398,7 +449,7 @@ console.log(tempResponse)
         <Grid xs = {6}> 
       Generated Meal Plans<br/>
       {console.log(pendingRequests)}
-      {pendingRequests.length > 0 && loading1 === true ? 
+      {pendingRequests.length > 0 && loading === false ? 
       (<> {pendingRequests.map((item) => (
         // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
         <Box     sx={{
@@ -411,7 +462,7 @@ console.log(tempResponse)
         }}> 
           {" "}
           {/* {console.log(item)} */}
-          {item.request.date}
+          {item?.request?.date}
           <br/>
           By: {" "} 
           {userData.find((items) => items.user_id === item.request.user_id).first_name}
@@ -471,7 +522,7 @@ console.log(tempResponse)
             </Box>
           ))} */}
         </Box>
-      ))}</>) : pendingRequests.length === 0 && loading1 === false ? (
+      ))}</>) : pendingRequests.length === 0 && loading === false ? (
             <>No Orders</>
           ) : (
             <>
@@ -484,7 +535,7 @@ console.log(tempResponse)
 
 {recommendData.filter(
       (item) => item.status === "Pending"
-    ).length > 0 ? 
+    ).length > 0 && loading === false ? 
       (<>
 {recommendData.filter(
       (item) => item.status === "Pending"
@@ -562,7 +613,7 @@ console.log(tempResponse)
         </Box>
        ))}</>) : recommendData.filter(
         (item) => item.status === "Pending"
-      ).length === 0 && loading2 === false ? (
+      ).length === 0 && loading === false ? (
         <>No Orders</>
       ) : (
         <>
@@ -581,7 +632,7 @@ console.log(tempResponse)
 <Grid container spacing = {2}>
   <Grid xs = {6}>
       Generated Meal Plans <br/>
-      {approveRequests.length > 0 && loading3 === true ? 
+      { approveRequests.length > 0 && loading === false ? 
       (<>
       {approveRequests.map((item) => (
         // const tempMeal = mealData.find((items) =>items.generatedMeal_id === item.generatedMeal_id)
@@ -631,7 +682,7 @@ console.log(tempResponse)
             </Box>
           ))} */}
         </Box>
-      ))}</>) : approveRequests.length === 0 && loading3 === false ? (
+      ))}</>) : approveRequests.length === 0 && loading === false ? (
         <Typography>No Orders</Typography>
       ) : (
         <>
@@ -641,9 +692,9 @@ console.log(tempResponse)
         </>
       ) }</Grid> 
   <Grid xs = {6}><Typography>Recommended Meal Plans</Typography>
-{recommendData.filter(
+{ recommendData.filter(
       (item) => item.status === "Approved"
-    ).length > 0  ? 
+    ).length > 0 && loading === false ? 
       (<>
 {recommendData.filter(
       (item) => item.status === "Approved"
@@ -692,7 +743,7 @@ console.log(tempResponse)
         </Box>
       ))}</>) : recommendData.filter(
         (item) => item.status === "Approved"
-      ).length === 0 && loading4 === false ? (
+      ).length === 0 && loading === false ? (
         <>No Orders</>
       ) : (
         <>
@@ -728,6 +779,9 @@ console.log(tempResponse)
         aria-describedby="modal-description"
       >
         <Box sx={style}>
+
+
+
           {selectedOrder?.name}
           <br/> 
         
@@ -756,24 +810,32 @@ console.log(tempResponse)
         aria-describedby="modal-description"
       >
         <Box sx={style}>
-          Input Price:
-          <TextField
-            onChange={(event) => setPrice(event.target.value)}
-          ></TextField>
-          <Button  sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }} onClick={() => approveOrder()}>Approve</Button>
-        </Box>
+
+        {loading5 ?  
+          (<>    <center>
+            <img src="/images/spin.gif" width="13%" />
+            <br/>
+            Approving Please Wait...
+            </center></>) : 
+            (<>Input Price:
+              <TextField
+                onChange={(event) => setPrice(event.target.value)}
+              ></TextField>
+              <Button  sx={{
+                      background: "#ffffff",
+                      color: "#E66253",
+                      ml: 0,
+                      mt: 1,
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }} onClick={() => approveOrder()}>Approve</Button>
+            </>) }
+          </Box>
       </Modal>
 
       <Modal
@@ -783,25 +845,32 @@ console.log(tempResponse)
         aria-describedby="modal-description"
       >
         <Box sx={style}>
-          Input Price:
-       
-          <TextField
-            onChange={(event) => setPrice(event.target.value)}
-          ></TextField>
-          <Button    sx={{
-                  background: "#ffffff",
-                  color: "#E66253",
-                  ml: 0,
-                  mt: 1,
-                  fontWeight: "bold",
-                  "&:hover": {
-                    backgroundColor: "#E66253",
-                    color: "#ffffff",
-                    border: 0.5,
-                    borderColor: "#ffffff",
-                  },
-                }} onClick={() => approveOrderRecommend()}>Approve</Button>
-        </Box>
+          {loading5 ?  
+          (<>    <center>
+            <img src="/images/spin.gif" width="13%" />
+            <br/>
+            Approving Please Wait...
+            </center></>) :
+          (<>Input Price:
+            <TextField
+              onChange={(event) => setPrice(event.target.value)}
+            ></TextField>
+            <Button    sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    ml: 0,
+                    mt: 1,
+                    fontWeight: "bold",
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 0.5,
+                      borderColor: "#ffffff",
+                    },
+                  }} onClick={() => approveOrderRecommend()}>Approve</Button>
+         </>)}
+
+           </Box>
       </Modal>
 
 

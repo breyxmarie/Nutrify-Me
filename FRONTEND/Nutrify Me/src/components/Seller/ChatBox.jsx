@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import AxiosInstance from "../forms/AxiosInstance";
 import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
+import dayjs from "dayjs";
 
 function ChatBox(props) {
   const [orders, setOrders] = useState([]);
@@ -56,7 +57,7 @@ function ChatBox(props) {
               }}
             >
               Date: {item.date} <br /> Time:
-              {item.time}
+              {dayjs(item.date + "" + item.time).format("hh:mm A")}
               <br />
               Customer:
               <br />

@@ -29,7 +29,7 @@ function SellerOrders() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [name, setName] = useState("Project Fit");
-  const [phone, setPhone] = useState("012345678912");
+  const [phone, setPhone] = useState("+639171561080");
   const [addressData, setAddressData] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState();
   const [selectedUser, setSelectedUser] = useState();
@@ -38,8 +38,8 @@ function SellerOrders() {
   const [userDetails, setUserDetails] = useState([]);
   const [orderDetails, setOrderDetails] = useState([]);
   const [loading1, setLoading1] = useState();
-
   const [loading2, setLoading2] = useState();
+  const [loading3, setLoading3] = useState();
   const style = {
     maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
     display: "flex",
@@ -82,10 +82,11 @@ function SellerOrders() {
   // }
   const handleOpenDetails = async (orderId) => {
     setSelectedMealDetails([]);
+    console.log(orderId)
     const tempPlanData = await AxiosInstance.get(`shopmealplan`);
     const tempMealsData = await AxiosInstance.get(`shopmeal`);
 
-    const orderItems = allOrder.find((item) => item.order_id === orderId);
+    const orderItems = allOrder.find((item) => item.order_id === orderId.order_id);
     console.log(orderItems);
 
     // let tempPlan = allOrder.find((item) => item.order_id === orderId);
@@ -125,9 +126,12 @@ function SellerOrders() {
           });
         }
         console.log(tempMealArray);
+        console.log(orderId.schedule_date[0])
         const newMealDetail = {
           meal_plan: planIds,
           meals: tempMealArray,
+          start_date: orderId.schedule_date[0],
+          end_date: orderId.schedule_date[1],
         };
 
         newMeals.push(newMealDetail);
@@ -196,6 +200,7 @@ function SellerOrders() {
 
   const createOrder = async (address_ids, user_id, orderId) => {
     setLoading(true);
+    console.log(loading)
     console.log(address_ids, addressData);
     const foundAddress = addressData.find(
       (item) => item.address_id === address_ids
@@ -450,6 +455,7 @@ function SellerOrders() {
           <Grid item xs={3} sm={4} md={6} key={index}>
             <Box
               sx={{
+                py: 3,
                 border: 1,
                 backgroundColor: "#E66253",
                 borderRadius: 3,
@@ -490,7 +496,7 @@ function SellerOrders() {
                         borderColor: "#539801",
                       },
                     }}
-                    onClick={() => handleOpenDetails(item.order_id)}
+                    onClick={() => handleOpenDetails(item)}
                   >
                     Details
                   </Button>
@@ -522,7 +528,10 @@ function SellerOrders() {
                           </Button>
                         </Grid>
                       </Grid>
-                      {selectedMealDetails.map((item) => (
+                     
+                      Dates: {dayjs(selectedMealDetails[0]?.start_date).format("MMMM DD, YYYY")} 
+                      - {dayjs(selectedMealDetails[0]?.end_date).format("MMMM DD, YYYY")}
+                      {selectedMealDetails?.map((item) => (
                         <>
                           <Typography>{item.meal_plan.name}</Typography>
                           {console.log(item.meals)}
@@ -562,7 +571,16 @@ function SellerOrders() {
                 aria-describedby="modal-description"
               >
                 <Box sx={style}>
-                  {" "}
+                {loading ? (
+              <>
+              <center>
+              <img src="/images/spin.gif" width="13%" />
+              <br/>
+              Deploying Please Wait...
+              </center>
+              </>
+            ) : (
+              <>
                   {item.date}
                   <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
                     <Grid xs={2}>
@@ -602,20 +620,34 @@ function SellerOrders() {
                     // value={param.meals.Breakfast.food}
                     name="name"
                   />
-                  {selectedAddress}
+                  
                   <Button
+                   sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    mt: 1,
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 0.5,
+                      borderColor: "#ffffff",
+                    },
+                  }}
                     onClick={() =>
                       createOrder(selectedAddress, selectedUser, selectedOrder)
                     }
                   >
                     Create Order
                   </Button>
+                  </>
+            )}
                 </Box>
               </Modal>
               <Button
                 sx={{
                   color: "#ffffff",
                   border: 0,
+                  mr: 3,
                   // fontWeight: "bold", 
                   backgroundColor: "#539801",
                   "&:hover": {
@@ -708,7 +740,7 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
                   borderColor: "#539801",
                 },
               }}
-              onClick={() => handleOpenDetails(item.order_id)}
+              onClick={() => handleOpenDetails(item)}
             >
               Details
             </Button>
@@ -740,10 +772,12 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
                     </Button>
                   </Grid>
                 </Grid>
-                {selectedMealDetails.map((item) => (
+                Dates: {dayjs(selectedMealDetails[0]?.start_date).format("MMMM DD, YYYY")} 
+                      - {dayjs(selectedMealDetails[0]?.end_date).format("MMMM DD, YYYY")}
+                      {selectedMealDetails.map((item) => (
                   <>
                     <Typography>{item.meal_plan.name}</Typography>
-                    {console.log(item.meals)}
+                    
                     Orders: <br />
                     <Grid container spacing={2} sx={{ m: 1.5 }}>
                       {item.meals.map((items, index) => (
@@ -780,8 +814,14 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
           aria-describedby="modal-description"
         >
           <Box sx={style}>
-            {loading ? (
-              <>Loading Please Wait...</>
+            {loading3 ? (
+             <>
+             <center>
+             <img src="/images/spin.gif" width="13%" />
+             <br/>
+             Deploying Please Wait...
+             </center>
+             </>
             ) : (
               <>
                 {item.date}
@@ -827,7 +867,7 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
                   // value={param.meals.Breakfast.food}
                   name="name"
                 />
-                {selectedAddress}
+              
                 <Button
                   onClick={() =>
                     createOrder(
@@ -836,6 +876,17 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
                       selectedOrder
                     )
                   }
+                  sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    mt: 1,
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 0.5,
+                      borderColor: "#ffffff",
+                    },
+                  }}
                 >
                   Create Order
                 </Button>

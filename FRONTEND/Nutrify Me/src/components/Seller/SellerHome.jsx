@@ -16,8 +16,10 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import Slider from "react-slick";
 import ChatBox from "./ChatBox";
 import AxiosInstance from "../forms/AxiosInstance";
+import { useNavigate } from "react-router-dom";
 
 function SellerHome() {
+  const navigate = useNavigate();
   const [pendingOrder, setPendingOrder] = useState([]);
   const [userData, setUserData] = useState([]);
 
@@ -323,7 +325,7 @@ function SellerHome() {
                 mx: "10%",
               }}
             >
-              UPDATE THE MENU ITEMS <br /> READY FOR MEAL PLANNING!
+              ADD MENU ITEMS <br /> READY FOR MEAL PLANNING!
             </Typography>
 
             <br />
@@ -344,6 +346,7 @@ function SellerHome() {
                   borderColor: "#E66253",
                 },
               }}
+              onClick={() => navigate("/seller-createMealPlan")}
             >
               BROWSE
             </Button>
@@ -351,6 +354,7 @@ function SellerHome() {
         </Grid>
       </Box>
 
+{/*  
       <Grid container spacing={2}>
         <Grid xs={6}>
           <Box
@@ -517,36 +521,18 @@ function SellerHome() {
                   </Grid>
                   <Grid xs={4}>
                     {item.date}
-                    {/* {items.date} <br />
-                    {items.time} */}
+                 
                   </Grid>
                 </Grid>
               </Box>
             ))}
 
-            {/* {mealPlans.map((items, index) => (
-              <Box sx={{ my: 4, mx: 10, border: 2, borderRadius: 3 }}>
-                <Grid container spacing={2} sx={{ mx: 5, my: 3 }}>
-                  <Grid xs={2}>
-                    <img src={items.image} />
-                  </Grid>
-                  <Grid xs={4}>
-                    {items.username} <br />
-                    <br />
-                    <br />
-                    <br />
-                    ORDER #{items.orderId}
-                  </Grid>
-                  <Grid xs={4}>
-                    {items.date} <br />
-                    {items.time}
-                  </Grid>
-                </Grid>
-              </Box>
-            ))} */}
+     
           </Box>
         </Grid>
       </Grid>
+
+      */}
     </div>
   );
 }
