@@ -505,7 +505,7 @@ function MealPlanShopRequestCheckout() {
         // orders: cartData[0].orders,
         date: dayjs().format("YYYY-MM-DD"),
         status: "Ordered",
-        address_id: selectedAddress,
+        address_id: addressData[selectedAddress].address_id,
         payment: payment,
         shipping: "Lalamove",
         notes: notes,

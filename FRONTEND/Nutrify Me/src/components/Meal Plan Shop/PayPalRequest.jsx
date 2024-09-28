@@ -16,6 +16,7 @@ function PayPalRequest() {
   console.log(location.state.datas.totalprice);
   const receivedData = location.state;
   const [paid, setPaid] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [orderDetails, setOrderDetails] = useState([]);
 
   const createOrder = async (data, actions) => {
@@ -25,8 +26,8 @@ function PayPalRequest() {
         {
           amount: {
             currency_code: "PHP",
-            //value: location.state.datas.totalprice,
-            value: 0.01,
+           value: location.state.datas.totalprice,
+            //value: 0.01,
           },
         },
       ],
@@ -36,8 +37,9 @@ function PayPalRequest() {
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
     console.log(order);
-    setPaid(true);
+    setLoading(true)
     setOrderDetails(order);
+    console.log(location)
 
     try {
       console.log(location.state.state.meal.meal);
@@ -66,8 +68,8 @@ function PayPalRequest() {
             shipping_price: location.state.datas.shipping_price,
             payment_details: order,
             schedule_date: [
-              dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-              dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+              location.state.state.request.start_week,
+              location.state.state.request.end_week
             ],
             // shippingPrice
           }).then((res) => {
@@ -111,6 +113,8 @@ function PayPalRequest() {
             `requestedmeals/${location.state.state.request.request_id}`
           ).then((res) => {
             console.log(res);
+            setPaid(true);
+            setLoading(false)
           });
           //   navigate("/meal-plan-shop-home");
         } catch (error) {
@@ -161,52 +165,60 @@ function PayPalRequest() {
 
   return (
     <div
-      className="content"
-      style={{
-        paddingBottom: "40px",
-        marginTop: "40px",
-        fontFamily: "Poppins",
-      }}
-    >
-      {console.log(location)}
-      {paid ? (
-        <>
-          {" "}
-          <img src="/images/payment.png" width="12%" height="12%" />
-          <Typography
-            sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.8em" }}
-          >
-            PAYMENT SUCCESSFUL!
-          </Typography>
-          <Button onClick={back} sx={{ textDecoration: "underline" }}>
-            Back to Merchant
-          </Button>
-        </>
-      ) : (
-        <>
-          {" "}
-          <img src="/images/payment.png" width="12%" height="12%" />
-          <Typography
-            sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.5em" }}
-          >
-            PAYMENT
-          </Typography>
-          <Typography sx={{ color: "#99756E", fontSize: "1.1em" }}>
-            Select Payment Method
-          </Typography>
-          <center>
-            <Box justifyContent="center" sx={{ px: "25%", mt: 2 }}>
-              <PayPalScriptProvider options={initialOptions}>
-                <PayPalButtons
-                  createOrder={(data, actions) => createOrder(data, actions)}
-                  onApprove={(data, actions) => onApprove(data, actions)}
-                />
-              </PayPalScriptProvider>
-            </Box>
+    className="content"
+    style={{
+      paddingBottom: "40px",
+      marginTop: "40px",
+      fontFamily: "Poppins",
+    }}
+  >
+
+    {paid === true && loading === false ? (
+      <>
+        {" "}
+        <img src="/images/payment.png" width="12%" height="12%" />
+        <Typography
+          sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.8em" }}
+        >
+          PAYMENT SUCCESSFUL!
+        </Typography>
+        <Button onClick={back} sx={{ textDecoration: "underline" }}>
+          Back to Merchant
+        </Button>
+      </>
+    ) : paid === false && loading === false ? (
+      <>
+        {" "}
+        <img src="/images/payment.png" width="12%" height="12%" />
+        <Typography
+          sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.5em" }}
+        >
+          PAYMENT
+        </Typography>
+        <Typography sx={{ color: "#99756E", fontSize: "1.1em" }}>
+          Select Payment Method
+        </Typography>
+        <center>
+          <Box justifyContent="center" sx={{ px: "25%", mt: 2 }}>
+            <PayPalScriptProvider options={initialOptions}>
+              <PayPalButtons
+                createOrder={(data, actions) => createOrder(data, actions)}
+                onApprove={(data, actions) => onApprove(data, actions)}
+              />
+            </PayPalScriptProvider>
+          </Box>
+        </center>
+      </>
+    ) : paid === false && loading === true ? (<>
+     <center>
+          <img src="/images/spin.gif" width="13%" />
+          <br/>
+          Capturing Order Please Wait...
           </center>
-        </>
-      )}
-    </div>
+    </>)
+  : (<></>)
+  }
+  </div>
   );
 }
 

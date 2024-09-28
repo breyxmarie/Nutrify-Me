@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 
 function PayPalRecommend() {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
   const location = useLocation();
   console.log(location.state.datas.totalprice);
   const receivedData = location.state;
@@ -25,8 +26,8 @@ function PayPalRecommend() {
         {
           amount: {
             currency_code: "PHP",
-            //  value: location.state.datas.totalprice,
-            value: 0.01,
+            value: location.state.datas.totalprice,
+           // value: 0.01,
           },
         },
       ],
@@ -37,7 +38,7 @@ function PayPalRecommend() {
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
     console.log(order);
-    setPaid(true);
+    setLoading(true)
     setOrderDetails(order);
 
     try {
@@ -115,6 +116,8 @@ function PayPalRecommend() {
               `requestedrecommendmeals/${location.state.state.request_id}`
             ).then((res) => {
               console.log(res);
+              setPaid(true);
+              setLoading(false)
             });
           } catch (error) {
             console.log(error);
@@ -169,52 +172,60 @@ function PayPalRecommend() {
 
   return (
     <div
-      className="content"
-      style={{
-        paddingBottom: "40px",
-        marginTop: "40px",
-        fontFamily: "Poppins",
-      }}
-    >
-      {console.log(location)}
-      {paid ? (
-        <>
-          {" "}
-          <img src="/images/payment.png" width="12%" height="12%" />
-          <Typography
-            sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.8em" }}
-          >
-            PAYMENT SUCCESSFUL!
-          </Typography>
-          <Button onClick={back} sx={{ textDecoration: "underline" }}>
-            Back to Merchant
-          </Button>
-        </>
-      ) : (
-        <>
-          {" "}
-          <img src="/images/payment.png" width="12%" height="12%" />
-          <Typography
-            sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.5em" }}
-          >
-            PAYMENT
-          </Typography>
-          <Typography sx={{ color: "#99756E", fontSize: "1.1em" }}>
-            Select Payment Method
-          </Typography>
-          <center>
-            <Box justifyContent="center" sx={{ px: "25%", mt: 2 }}>
-              <PayPalScriptProvider options={initialOptions}>
-                <PayPalButtons
-                  createOrder={(data, actions) => createOrder(data, actions)}
-                  onApprove={(data, actions) => onApprove(data, actions)}
-                />
-              </PayPalScriptProvider>
-            </Box>
+    className="content"
+    style={{
+      paddingBottom: "40px",
+      marginTop: "40px",
+      fontFamily: "Poppins",
+    }}
+  >
+
+    {paid === true && loading === false ? (
+      <>
+        {" "}
+        <img src="/images/payment.png" width="12%" height="12%" />
+        <Typography
+          sx={{ color: "#99756E", fontWeight: "bold", fontSize: "1.8em" }}
+        >
+          PAYMENT SUCCESSFUL!
+        </Typography>
+        <Button onClick={back} sx={{ textDecoration: "underline" }}>
+          Back to Merchant
+        </Button>
+      </>
+    ) : paid === false && loading === false ? (
+      <>
+        {" "}
+        <img src="/images/payment.png" width="12%" height="12%" />
+        <Typography
+          sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2.5em" }}
+        >
+          PAYMENT
+        </Typography>
+        <Typography sx={{ color: "#99756E", fontSize: "1.1em" }}>
+          Select Payment Method
+        </Typography>
+        <center>
+          <Box justifyContent="center" sx={{ px: "25%", mt: 2 }}>
+            <PayPalScriptProvider options={initialOptions}>
+              <PayPalButtons
+                createOrder={(data, actions) => createOrder(data, actions)}
+                onApprove={(data, actions) => onApprove(data, actions)}
+              />
+            </PayPalScriptProvider>
+          </Box>
+        </center>
+      </>
+    ) : paid === false && loading === true ? (<>
+     <center>
+          <img src="/images/spin.gif" width="13%" />
+          <br/>
+          Capturing Order Please Wait...
           </center>
-        </>
-      )}
-    </div>
+    </>)
+  : (<></>)
+  }
+  </div>
   );
 }
 

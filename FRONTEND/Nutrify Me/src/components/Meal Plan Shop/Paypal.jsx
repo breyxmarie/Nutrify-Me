@@ -11,23 +11,24 @@ import AxiosInstance from "../forms/AxiosInstance";
 import dayjs from "dayjs";
 
 function Paypal() {
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate();
   const location = useLocation();
   const receivedData = location.state;
-  // console.log(location.state.state.request.start_week);
+
   const [paid, setPaid] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
 
   const createOrder = async (data, actions) => {
-    // console.log(process.env.BASE_URL);
+   
     return actions.order.create({
       purchase_units: [
         {
           amount: {
             currency_code: "PHP",
-            // value: location.state.totalprice,
+           value: location.state.totalprice,
 
-            value: 0.01,
+          // value: 0.01,
           },
         },
       ],
@@ -36,8 +37,8 @@ function Paypal() {
 
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
-    console.log(order);
-    setPaid(true);
+  
+    setLoading(true)
     setOrderDetails(order);
 
     try {
@@ -60,6 +61,8 @@ function Paypal() {
         // shippingPrice
       }).then((res) => {
         console.log(res, res.data);
+        setPaid(true);
+        setLoading(false)
       });
     } catch (error) {
       console.log(error);
@@ -88,8 +91,8 @@ function Paypal() {
         fontFamily: "Poppins",
       }}
     >
-      {console.log(location)}
-      {paid ? (
+  
+      {paid === true && loading === false ? (
         <>
           {" "}
           <img src="/images/payment.png" width="12%" height="12%" />
@@ -102,7 +105,7 @@ function Paypal() {
             Back to Merchant
           </Button>
         </>
-      ) : (
+      ) : paid === false && loading === false ? (
         <>
           {" "}
           <img src="/images/payment.png" width="12%" height="12%" />
@@ -125,7 +128,15 @@ function Paypal() {
             </Box>
           </center>
         </>
-      )}
+      ) : paid === false && loading === true ? (<>
+       <center>
+            <img src="/images/spin.gif" width="13%" />
+            <br/>
+            Capturing Order Please Wait...
+            </center>
+      </>)
+    : (<></>)
+    }
     </div>
   );
 }

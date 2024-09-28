@@ -2841,8 +2841,8 @@ try{
             px: 3,
             pt: "50px",
             pb: "30px",
-            ml: 15,
-            mr: 10,
+            ml: "5%",
+            mr: "5%",
             borderColor: "#E66253",
           }}
         >
@@ -2875,15 +2875,17 @@ try{
         <br /> */}
 
               <center>
-                <Grid container spacing={2} sx={{ ml: "180px", mt: 1 }}>
-                  <Grid xs={3} sx={{ float: "right" }}>
+                <Grid container spacing={2} sx={{ ml: "10%", mt: 1 }}>
+                  <Grid xs={4} sx={{ float: "right" }}>
                     {designatedNutritionist?.schedule_day.map((item) => (
                       <>
                         {item} <br />
                       </>
                     ))}
                   </Grid>
-                  <Grid xs={3} sx={{ float: "left" }}>
+                  <Grid xs={6} sx={{ float: "left" ,   display: "flex",
+                                justifyContent: "flex-start",
+                                alignItems: "flex-start", }}>
                     {designatedNutritionist?.schedule_time.map((item) => (
                       <>
                         {item} <br />

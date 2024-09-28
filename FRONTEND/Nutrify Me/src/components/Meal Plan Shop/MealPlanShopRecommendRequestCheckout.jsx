@@ -1441,9 +1441,9 @@ function MealPlanShopRecommendRequestCheckout() {
         <Grid container = {2}>
         <Grid xs = {12} lg = {6}><Box sx={{ borderRadius: 0, border: 1, mx: 5,
             pb: {
-              xs: "18%", // Extra small devices (less than 600px)
-              sm: "20%", // Small devices (600px and up)
-              md: "35%", // Medium devices (900px and up)
+              xs: "60%", // Extra small devices (less than 600px)
+              sm: "30%", // Small devices (600px and up)
+              md: "45%", // Medium devices (900px and up)
               lg: "45%",
             },
          }}>
@@ -1472,15 +1472,15 @@ function MealPlanShopRecommendRequestCheckout() {
                   <Box
                         sx={{
                           width: {
-                            xs: "70%", // Extra small devices (less than 600px)
+                            xs: "100%", // Extra small devices (less than 600px)
                             sm: "90%", // Small devices (600px and up)
                             md: "100%", // Medium devices (900px and up)
                             lg: "100%", // Large devices (1200px and up)
                             // Extra large devices (1536px and up)
                           },
                           height: {
-                            xs: "250%", // Extra small devices (less than 600px)
-                            sm: "400%", // Small devices (600px and up)
+                            xs: "110%", // Extra small devices (less than 600px)
+                            sm: "200%", // Small devices (600px and up)
                             md: "430%", // Medium devices (900px and up)
                             lg: "450%", // Large devices (1200px and up)
                           },
