@@ -59,6 +59,9 @@ function SellerOrders() {
     color: "#ffffff",
   };
 
+  const [forceRender, setForceRender] = useState(0); 
+
+
   const handleOpen = (addressId, userId, orderId) => {
     console.log(userId);
 
@@ -271,6 +274,7 @@ function SellerOrders() {
               );
               setLoading(false);
               handleClose();
+              setForceRender(forceRender => forceRender + 1);
             });
           } catch (error) {
             console.log(error.response);
