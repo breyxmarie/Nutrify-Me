@@ -2641,12 +2641,14 @@ function FoodJournalHome() {
 
   const [journalId, setJournalId] = useState();
   const [foodEntries, setFoodEntries] = useState([]);
+  const [mealPlan, setMealPlan] = useState()
   const [open1, setOpen1] = React.useState(false);
-  const handleOpen1 = (id, date, entry) => {
+  const handleOpen1 = (id, date, entry, meal) => {
     setFoodEntries(entry);
     setDates(date);
     setJournalId(id);
     setOpen1(true);
+    setMealPlan(meal)
   };
   const handleClose1 = () => {
     handleReset();
@@ -2660,7 +2662,7 @@ function FoodJournalHome() {
   const onSubmitUpdateHandler = (data) => {
     console.log(data);
     console.log(dates);
-
+    console.log(mealPlan)
     try {
       AxiosInstance.put(`journalentry/`, {
         journal_id: journalId,
@@ -2670,6 +2672,7 @@ function FoodJournalHome() {
         systolic: data.systolic,
         diastolic: data.diastolic,
         user_id: loggedInUser.user_id,
+        meal_plan: mealPlan, 
       }).then((res) => {
         console.log(res);
 
@@ -2943,7 +2946,8 @@ function FoodJournalHome() {
                 handleOpen1(
                   journalEntry[0].journal_id,
                   journalEntry[0].date,
-                  foodEntry
+                  foodEntry,
+                  journalEntry[0].meal_plan,
                 )
               }
             >
