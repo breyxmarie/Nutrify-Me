@@ -24,8 +24,12 @@ function ChatBox(props) {
     }
   };
 
+  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+
+  
   useEffect(() => {
     getData();
+    setForceRender(forceRender => forceRender + 1);
   }, []);
   let hide = {
     display: "none",
