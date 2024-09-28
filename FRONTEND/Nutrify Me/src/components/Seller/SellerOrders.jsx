@@ -275,6 +275,7 @@ function SellerOrders() {
               setLoading(false);
               handleClose();
               setForceRender(forceRender => forceRender + 1);
+              toast.success("Order Deployed!");
             });
           } catch (error) {
             console.log(error.response);
