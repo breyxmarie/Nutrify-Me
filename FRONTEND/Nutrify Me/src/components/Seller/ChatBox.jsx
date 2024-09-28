@@ -6,7 +6,7 @@ import Grid from "@mui/material/Grid";
 import { Typography } from "@mui/material";
 import dayjs from "dayjs";
 
-function ChatBox(props) {
+function ChatBox({ forceUpdate }) {
   const [orders, setOrders] = useState([]);
 
   const getData = () => {
@@ -31,6 +31,13 @@ function ChatBox(props) {
     getData();
     setForceRender(forceRender => forceRender + 1);
   }, []);
+
+  useEffect(() => {
+    getData();
+    setForceRender(forceRender => forceRender + 1);
+  }, [forceUpdate]);
+
+
   let hide = {
     display: "none",
   };
@@ -38,7 +45,7 @@ function ChatBox(props) {
     display: "block",
   };
   let textRef = React.createRef();
-  const { messages } = props;
+  // const { messages } = props;
 
   const [chatopen, setChatopen] = useState(false);
   const toggle = (e) => {

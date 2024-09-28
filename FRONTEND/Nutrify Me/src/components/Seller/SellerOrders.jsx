@@ -274,7 +274,8 @@ function SellerOrders() {
               );
               setLoading(false);
               handleClose();
-              setForceRender(forceRender => forceRender + 1);
+             setForceRender(forceRender => forceRender + 1);
+              this.forceUpdate();
               toast.success("Order Deployed!");
             });
           } catch (error) {
@@ -418,7 +419,7 @@ function SellerOrders() {
         color: "#000000",
       }}
     >
-      <ChatBox />
+      <ChatBox forceUpdate={forceRender}/>
       <Grid container spacing={2}>
  {buttons.map((buttonLabel, index) => (
     <Grid item xs={6} sm={6} md={6} key={index}>
