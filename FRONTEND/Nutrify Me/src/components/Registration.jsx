@@ -88,12 +88,20 @@ function Registration() {
       .string()
       .required("Password is required")
       .min(4, "Password length should be at least 4 characters")
-      .max(12, "Password cannot exceed more than 12 characters"),
+      .max(12, "Password cannot exceed more than 12 characters")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/,
+        "Password must contain letters, numbers, and special characters"
+      ),
     conpassword: yup
       .string()
       .required("Confirm Password is required")
       .min(4, "Password length should be at least 4 characters")
       .max(12, "Password cannot exceed more than 12 characters")
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{4,}$/,
+        "Password must contain letters, numbers, and special characters"
+      )
       .oneOf([yup.ref("password")], "Passwords do not match"),
   });
 
@@ -518,6 +526,10 @@ function Registration() {
                   {...register("password")}
                   error={errors.password ? true : false}
                 />
+                 <Typography variant="inherit" color="textSecondary">
+                  {errors.password?.message}
+                </Typography>
+
                 <Typography textAlign="left" sx={{ color: "#000000" }}>
                   Confirm Password
                 </Typography>
