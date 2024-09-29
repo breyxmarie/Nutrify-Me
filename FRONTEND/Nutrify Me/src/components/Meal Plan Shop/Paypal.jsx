@@ -61,8 +61,14 @@ function Paypal() {
         // shippingPrice
       }).then((res) => {
         console.log(res, res.data);
-        setPaid(true);
+        AxiosInstance.delete(`cart/${location.state.cart_id}`)
+        .then((resp) => {
+          console.log(resp);
+          setPaid(true);
         setLoading(false)
+        });;
+        
+        
       });
     } catch (error) {
       console.log(error);

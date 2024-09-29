@@ -342,7 +342,9 @@ function MealPlanShopCart() {
       <center>
         {" "}
         <Link
-          to={`/meal-plan-shop-checkout/${orderNumber}`}
+       //   to={`/meal-plan-shop-checkout/${orderNumber}`}
+          to={`/meal-plan-shop-checkout`}
+
           state={{ cartItems: cartItems }}
           sx={{ mx: "30px" }}
         >

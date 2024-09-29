@@ -303,7 +303,9 @@ function App() {
                   }
                 />
                 <Route
-                  path="/meal-plan-shop-checkout/:cartId?"
+              //    path="/meal-plan-shop-checkout/:cartId?"
+                  path="/meal-plan-shop-checkout"
+
                   element={
                     <>
                       <MainUserNavBar />

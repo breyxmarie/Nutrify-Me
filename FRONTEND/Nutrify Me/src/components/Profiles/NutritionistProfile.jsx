@@ -527,7 +527,7 @@ function NutritionistProfile() {
           password: data.password,
           first_name: data.firstname,
           last_name: data.lastname,
-          privilege: "User",
+          privilege: "Nutritionist",
           email: loggedInUser.email,
           image: "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
           active: 1,

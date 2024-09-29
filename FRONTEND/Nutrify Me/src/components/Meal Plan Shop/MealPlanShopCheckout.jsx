@@ -502,11 +502,12 @@ function MealPlanShopCheckout() {
         notes: notes,
         totalprice: parseInt(totalOrderPrice),
         shipping_price: shippingPrice,
+        cart_id: cartData[0].cart_id,
       };
 
       try {
-        const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
-        console.log(response);
+       // const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
+       // console.log(response);
 
         navigate("/paypal-payment", { state: datas });
       } catch (error) {
