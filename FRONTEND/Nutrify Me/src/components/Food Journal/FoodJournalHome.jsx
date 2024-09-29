@@ -2570,6 +2570,25 @@ function FoodJournalHome() {
               journal_id: res.data.id,
             }).then((res) => {
               console.log(res, res.data);
+
+
+
+
+
+             
+              // setForceRender(forceRender => forceRender + 1);
+              toast.success("Entry Added");
+              setLoading1(false);
+              setActiveTab(0);
+             
+
+
+
+
+
+
+
+
               getJournalData(dayjs().format("YYYY-MM-DD"));
               setCaloriesBvalue(0);
               setFatBvalue(0);
