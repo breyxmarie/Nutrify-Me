@@ -503,6 +503,12 @@ function MealPlanShopRecommendRequestCheckout() {
   });
 
   const onSubmitHandler1 = async (data) => {
+
+
+    if (shippingDetails?.data?.data?.priceBreakdown
+      ?.totalExcludePriorityFee) {
+
+           
     if (payment === "Paypal") {
       const datas = {
         user_id: loggedInUser.user_id,
@@ -625,6 +631,15 @@ function MealPlanShopRecommendRequestCheckout() {
     //     ? "/user-home"
     //     : "/meal-plan-shop-home"
     // );
+      }
+      else {
+        console.log("no amount")
+        alert('Shipping Price still loading');
+      }
+
+
+
+   
   };
 
   //!
