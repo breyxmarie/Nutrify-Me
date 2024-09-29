@@ -569,6 +569,7 @@ function SellerCreateMealPlan() {
         console.log(activeButtonIndex, `Day ${activeButtonIndex + 1}`)
         changeDiv(activeButtonIndex, `Day ${activeButtonIndex + 1}`)
         setLoading1(false)
+        setFile()
         // setDivContent(
         //   <Box sx={{ mx: 7 }}>
         //     {Object.keys(tempMeal[indexmeal].meals).map((mealName) => (
