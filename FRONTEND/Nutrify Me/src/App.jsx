@@ -74,6 +74,7 @@ import Dietician from "./components/Admin/Dietician";
 import AdminNavbBar from "./components/NavBars/AdminNavBar";
 import SellerNavBar from "./components/NavBars/SellerNavBar";
 import SellerHome from "./components/Seller/SellerHome";
+import SellerMealPlansList from "./components/Seller/SellerMealPlansList";
 import SellerOrders from "./components/Seller/SellerOrders";
 import SellerRequestOrders from "./components/Seller/SellerRequestOrders";
 import SellerCreateMealPlan from "./components/Seller/SellerCreateMealPlan";
@@ -640,11 +641,12 @@ function App() {
                   element={
                     <>
                       <SellerNavBar />
-                      <SellerMenuItems />
+                      <SellerMealPlansList />
                       <Footer />
                     </>
                   }
                 />
+                
                 <Route
                   path="/seller-orders"
                   element={

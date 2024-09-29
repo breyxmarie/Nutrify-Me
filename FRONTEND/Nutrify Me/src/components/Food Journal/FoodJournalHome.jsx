@@ -51,6 +51,7 @@ import ImageContext from "../ImageContext";
 
 function FoodJournalHome() {
   //! tabs
+  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
   const [selectedMealPlan, setSelectedMealPlan] = useState();
   const [finalMealPlan, setFinalMealPlan] = useState(); //!
   const [activeTab, setActiveTab] = useState(0);
@@ -1753,6 +1754,17 @@ function FoodJournalHome() {
                     journal_id: res.data.id,
                   }).then((res) => {
                     console.log(res, res.data);
+                    if (i === 5) {
+                      getJournalData(dayjs(selectedDate).format("YYYY-MM-DD"));
+                      setSelectedMealPlan()
+                      setFinalMealPlan()
+                      handleClose();
+                      // setForceRender(forceRender => forceRender + 1);
+                      toast.success("Entry Added");
+                      setLoading1(false);
+                      setActiveTab(0);
+                      reset();
+                    }
                   });
                 } catch (error) {
                   console.log(error.response, error);
@@ -2018,9 +2030,11 @@ function FoodJournalHome() {
                   }).then((res) => {
                     console.log(res, res.data);
                     if (i === 5) {
-                      getJournalData();
-
+                      getJournalData(dayjs(selectedDate).format("YYYY-MM-DD"));
+                      setSelectedMealPlan()
+                      setFinalMealPlan()
                       handleClose();
+                      // setForceRender(forceRender => forceRender + 1);
                       toast.success("Entry Added");
                       setLoading1(false);
                       setActiveTab(0);
@@ -2163,7 +2177,7 @@ function FoodJournalHome() {
                     console.log(res, res.data);
 
                     if (i === 5) {
-                      getJournalData();
+                      getJournalData(dayjs(selectedDate).format("YYYY-MM-DD"));
                       handleClose();
 
                       toast.success("Entry Added");
@@ -2365,11 +2379,15 @@ function FoodJournalHome() {
                   }).then((res) => {
                     console.log(res, res.data);
                     if (i === 5) {
-                      getJournalData();
+                      getJournalData(dayjs(selectedDate).format("YYYY-MM-DD"));
+                      setSelectedMealPlan()
+                      setFinalMealPlan()
                       handleClose();
+                      // setForceRender(forceRender => forceRender + 1);
                       toast.success("Entry Added");
-                      setActiveTab(0);
                       setLoading1(false);
+                      setActiveTab(0);
+                      reset();
                     }
                   });
                 } catch (error) {

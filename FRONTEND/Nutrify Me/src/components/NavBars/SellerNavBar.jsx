@@ -30,7 +30,7 @@ function SellerNavBar() {
   const pages = [
     { names: "HOME", links: "/seller-home" },
     { names: "CREATE MEAL PLAN", links: "/seller-createMealPlan" },
-    // { names: "MENU ITEMS", links: "/seller-menu-items" },
+     { names: "MENU ITEMS", links: "/seller-menu-items" },
     { names: "ORDERS", links: "/seller-orders" },
     { names: "REQUEST ORDERS", links: "/seller-request-meals" },
   ];
