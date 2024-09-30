@@ -7,6 +7,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import Button from "@mui/material/Button";
+
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
@@ -16,6 +17,8 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import dayjs from "dayjs";
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import Dayjs from "dayjs";
 import { Tab, Tabs } from "@mui/material";
 import moment from "moment";
@@ -206,20 +209,58 @@ function NutritionistAppointment() {
       );
       console.log("try try", filteredData);
 
+      dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
       setTodayAppointment(
         filteredData.filter(
           (data) => data.date === dayjs().format("YYYY-MM-DD")
         )
       );
-      console.log(
-        filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD"))
-      );
+
+
+  //     const appointmentStart = dayjs(`${data.date} ${data.time}`, "YYYY-MM-DD HH:mm:ss"); // Appointment start time
+  // const appointmentEnd = appointmentStart.add(30, 'minute'); // Appointment lasts for 30 minutes
+  // const currentTime = dayjs(); // Current time
+
+
+      console.log(filteredData, dayjs().format("hh:mm:ss"))
+      console.log(filteredData.map((item) => (
+        console.log(item.time, dayjs(item.date + "" + item.time).format("hh:mm A"))
+      )))
+  //     console.log( filteredData?.find((data) => 
+  //      // data.date === dayjs().format("YYYY-MM-DD") && 
+  //     dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
+  //   ).time)
+  //  // console.log(dayjs().isSameOrBefore(dayjs(data.date + "" + data.time)))
+  //     console.log(
+  //       filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD") 
+  //       &&   dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`, "YYYY-MM-DD HH:mm:ss")) === true
+  //                dayjs(`${data.date} ${data.time}`).add(30, 'minute')     
+  //                        //dayjs().format("hh:mm A") >= dayjs(data.date + "" + data.time).format("hh:mm A")
+  //                       )
+  //     );
+console.log(filteredData?.find((data) => 
+  data.date === dayjs().format("YYYY-MM-DD")   
+       && 
+       dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+      && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+      ))
+      
+
+
       setAppointmentData(filteredData);
 
-      const te = filteredData.filter(
-        (item) => item.date === dayjs().format("YYYY-MM-DD")
-      );
-      console.log(te.length);
+    //   const te = filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD") 
+    //   && dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
+    //  );
+
+    const te = filteredData?.find((data) => 
+      data.date === dayjs().format("YYYY-MM-DD")   
+           && 
+           dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+          && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+          )
+      console.log(te);
 
       const formattedTime = filteredData?.find(
         (data) => data.date === dayjs().format("YYYY-MM-DD")
@@ -229,10 +270,12 @@ function NutritionistAppointment() {
         (data) => data.date === dayjs().format("YYYY-MM-DD")
       )?.date;
 
-      if (te.length > 0) {
+      
+      if (te) {
         console.log("console console", te);
         setTodayAppointment(
           <Box sx={{ mx: 10 }}>
+            
             {" "}
             <Grid container spacing={2}>
               <Grid xs={4}>
@@ -276,12 +319,13 @@ function NutritionistAppointment() {
             </Typography>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
               Time:
-              {console.log(
+              {dayjs(te.date + "" + te.time).format("hh:mm A")}
+              {/* {console.log(
                 // formatTime12Hour(formattedTime),
                 formattedTime,
                 dayjs(formattedDay + formattedTime).format("h:mm A")
               )}
-              {dayjs(formattedDay + formattedTime).format("h:mm A")}
+              {dayjs(formattedDay + formattedTime).format("h:mm A")} */}
             </Typography>
             <center>
               {/* <Link
@@ -756,8 +800,10 @@ function NutritionistAppointment() {
       }}
     >
       <ToastContainer />
+      
       <Grid container spacing={2}>
         <Grid xs={6}>
+        <Typography>Today's Appointment</Typography>
           <Box sx={{ border: 1 }}>
             <br />
             <br />
@@ -803,9 +849,7 @@ function NutritionistAppointment() {
       <Box sx={{ border: 1, ml: "10px", mr: "10%" }}>
         <br />
         <br />
-        {appointmentData.map(
-          (item, index) => (console.log("hi"), console.log(item))
-        )}
+      
         <Grid container spacing={2} sx={{ ml: "10px", mr: "10%" }}>
           <Grid xs={7} sx={{ textAlign: "left" }}>
             Schedule of Appointments Log

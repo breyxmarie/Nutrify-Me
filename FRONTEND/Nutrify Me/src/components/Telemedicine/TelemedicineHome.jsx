@@ -1603,7 +1603,7 @@ try{
               </>): (<></>)}
              
               {/* </Link>{" "} */}
-              <Button
+              {/* <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
                 onClick={() =>
                   navigate("/telemedicine-consultation", {
@@ -1612,7 +1612,7 @@ try{
                 }
               >
                 Go to Consultation
-              </Button>
+              </Button> */}
             </Box>
           );
         } else {
