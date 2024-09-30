@@ -1,4 +1,4 @@
-.calendar-wrapper {
+/* .calendar-wrapper {
   position: relative;
 }
 
@@ -19,13 +19,13 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: 300px; /* Adjust width as needed */
+  width: 300px; 
   z-index: 10;
-  display: none; /* Initially hidden */
+  display: none; 
 }
 
 .calendar.active {
-  display: block; /* Show calendar on trigger click */
+  display: block;
 }
 
 .calendar-header {
@@ -36,7 +36,7 @@
 .calendar-cell {
   width: 42px;
   height: 42px;
-  border: 1px solid transparent; /* Remove borders on inner cells */
+  border: 1px solid transparent; 
   text-align: center;
   line-height: 42px;
   cursor: pointer;
@@ -49,4 +49,92 @@
 
 .selected {
   background-color: #ccc;
+}
+
+.my-calendar {
+  background-color: #f0f0f0;
+  color: "#000000"
+}
+ */
+/* Calendar container */
+.react-calendar {
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  color: black; /* Default text color for the whole calendar */
+}
+
+/* Navigation buttons (previous, next) */
+.react-calendar__navigation button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: black; /* Navigation buttons in black */
+}
+
+/* Calendar navigation (month/year heading) */
+.react-calendar__navigation {
+  background-color: #E66253;
+  color: white;
+  border-radius: 5px;
+}
+
+/* Weekday labels */
+.react-calendar__month-view__weekdays__weekday {
+  color: black; /* Ensures weekday text is black */
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+/* Individual day tiles */
+.react-calendar__tile {
+  padding: 10px;
+  margin: 5px;
+  text-align: center;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  color: black; /* Ensures day text is black */
+}
+
+/* Highlight for the selected day */
+.react-calendar__tile--active {
+  background-color: #007bff;
+  color: white; /* White text for active tile */
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+/* Styling Saturdays (red color) */
+.react-calendar__month-view__days__day--saturday {
+  color: black; /* Ensure Saturday text is black */
+}
+
+/* Styling Sundays (red color) */
+.react-calendar__month-view__days__day--sunday {
+  color: black; /* Ensure Sunday text is black */
+}
+
+/* Styling a specific date like 30th (custom background) */
+.react-calendar__tile--now {
+  background-color: #ffffcc;
+  color: black;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+/* Hover effect for tiles */
+.react-calendar__tile:hover {
+  background-color: #eeeeee;
+}
+
+/* Fix for weekends to ensure all day text is black */
+.react-calendar__tile--weekend {
+  color: black; /* Ensure weekend day text is black */
 }

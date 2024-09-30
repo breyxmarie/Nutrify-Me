@@ -2508,6 +2508,7 @@ function FoodJournalHome() {
           systolic: data.systolic,
           diastolic: data.diastolic,
           user_id: loggedInUser.user_id,
+          meal_plan: "No Meal Plan",
         }).then((res) => {
           console.log(res.data.id);
 
@@ -2589,7 +2590,7 @@ function FoodJournalHome() {
 
 
 
-              getJournalData(dayjs().format("YYYY-MM-DD"));
+              getJournalData(dayjs(selectedDate).format("YYYY-MM-DD"));
               setCaloriesBvalue(0);
               setFatBvalue(0);
               setProteinBvalue(0);

@@ -49,6 +49,7 @@ import { useNavigate } from "react-router-dom";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Peer from "simple-peer";
 import io from "socket.io-client";
+//import 'react-calendar/dist/Calendar.css';
 
 // * functions for calendar
 function getRandomNumber(min, max) {
@@ -688,6 +689,7 @@ try{
 
   const handleDateChanges = async (date) => {
     // Get the day of the week (e.g., "Tuesday")
+    setFreeTime()
     setTimeDiv(<div>nagbago na ba </div>);
     setSelectedDates(date);
     console.log(date);
@@ -975,6 +977,7 @@ try{
 
   const [tempNut, setTempNut] = useState();
   const handleChange = (event) => {
+    setFreeTime()
     setSelectedNutritionist(event.target.value);
     const tempNut = nutritionist.find(
       (nut) => nut.nutritionist_id === event.target.value
@@ -2304,7 +2307,7 @@ try{
           alignItems: "center",
         }}
       ></Box> */}
-      <Box sx={{ flexGrow: 1, my: 3, color: "#99756E", mx: 5 }}>
+      <Box sx={{ flexGrow: 1, my: 3, color: "#99756E", mx: 5, ml: "8%" }}>
         {" "}
         {/* // ! modify pa dito like what if walang appointment si user */}
         <Grid container spacing={2}>
@@ -2318,6 +2321,7 @@ try{
                   md: "2.0em", // For medium screens
                   lg: "2.5em", // For large screens
                 },
+               
                 fontWeight: "bold",
                 mt: 2,
                 mb: 0,
@@ -2362,6 +2366,7 @@ try{
             {/* {DateModal} */}
 
             {/* //! Calendar */}
+           
             <div
               className="calendar-app"
               style={{ backgroundColor: "#f5f5f5" }}
@@ -2370,13 +2375,20 @@ try{
                 {/* Days of the week */}
               </div>
               <Calendar
+             className="my-calendar"
                 onChange={onChange}
                 value={date}
-                className={isLoading ? "loading" : ""}
-                style={{
-                  border: "1px solid #898246",
-                  backgroundColor: "#f5f5f5",
-                }}
+                //className={isLoading ? "loading" : ""}
+                // style={{
+                //   color: "#000000",
+                //   border: "1px solid #898246",
+                //   backgroundColor: "#f5f5f5",
+                //   // Additional styling options (optional)
+                //   width: "300px", // Adjust the width as needed
+                //   height: "300px", // Adjust the height as needed
+                //   borderRadius: "5px",
+                //   boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.2)",
+                // }}
               />
               {/* {isPopupVisible && (
                 <div className="popup">
@@ -2596,8 +2608,8 @@ try{
                               //  minDate={dayjs().add(7, "day")}
                               //  open // Keep the calendar open
                             />
-                            {console.log(freeTime)}
-                            <Typography sx={{ mb: 1 }}>Select Time</Typography>
+                            {console.log(selectedDates)}
+                            {freeTime ? (<>   <Typography sx={{ mb: 1 }}>Select Time</Typography>
                             <Select
                               labelId="demo-simple-select-filled-label"
                               id="demo-simple-select-filled"
@@ -2613,7 +2625,10 @@ try{
                                   {option}
                                 </MenuItem>
                               ))}
-                            </Select>
+                            </Select></>) 
+                            : (<></>)
+                            }
+                         
                           </>
                         ) : (
                           <div></div>
@@ -2755,7 +2770,7 @@ try{
             />
           </LocalizationProvider>
 
-          <Typography sx={{ mb: 1 }}>Select Time</Typography>
+          {selectedDates ? (<> <Typography sx={{ mb: 1 }}>Select Time</Typography>
           <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
@@ -2771,7 +2786,11 @@ try{
                 {option}
               </MenuItem>
             ))}
-          </Select>
+          </Select></>)
+        : (<></>)  
+        }
+
+         
 
           {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             {selectedDates ? (
