@@ -25,6 +25,9 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FormHelperText } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+
 //import DatePicker from "react-date-picker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
@@ -104,6 +107,8 @@ function ServerDay(props) {
 // *
 
 function TelemedicineHome() {
+  dayjs.extend(isSameOrBefore);
+  dayjs.extend(isSameOrAfter);
   //! tabs
   const [appointmentList, setAppointmentList] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
@@ -1521,21 +1526,60 @@ try{
   const getPendingList = () => {};
   const [todayAppointment, setTodayAppointment] = useState();
   // <h2>No Scheduled Consultation </h2>
-  const GetAppointmentData = async () => {
+   const GetAppointmentData = async () => {
     await AxiosInstance.get(`appointment`)
       .then((res) => {
         // setAppointment(res.data);
 
-        const temp = res.data.find(
-          (appoint) =>
-            loggedInUser.user_id === appoint.user_id &&
-            Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
-            && 
-            // dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
-            // === dayjs().format("hh:mm A") || 
-            dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
-            <=  dayjs().format("hh:mm A")
-        );
+
+        let tempCheck = res.data.find((data) => 
+          data.date === dayjs().format("YYYY-MM-DD")   
+               && 
+               dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+              && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+              )
+
+
+        let temp;
+        if (tempCheck) {
+          temp = res.data.find(
+            (appoint) =>
+              loggedInUser.user_id === appoint.user_id &&
+              Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
+              && 
+              // dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
+              // === dayjs().format("hh:mm A") || 
+              dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
+              <=  dayjs().format("hh:mm A")
+          );
+        }
+        else {
+          temp =  res.data.find((data) => 
+            data.date === dayjs().format("YYYY-MM-DD")   
+                 && 
+                 dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
+                )
+        }
+
+
+
+
+
+
+
+
+
+
+        // const temp = res.data.find(
+        //   (appoint) =>
+        //     loggedInUser.user_id === appoint.user_id &&
+        //     Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
+        //     && 
+        //     // dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
+        //     // === dayjs().format("hh:mm A") || 
+        //     dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
+        //     <=  dayjs().format("hh:mm A")
+        // );
         console.log(res.data);
 
         if (temp) {
@@ -1562,10 +1606,10 @@ try{
               <p>
                 Time: {dayjs(temp.date + "" + temp.time).format("hh:mm A")}
               </p>
-              <p>
-                Dietitian: {designatedNutritionist?.first_name} {"  "}
+              {/* <p>
+                Nutritionist: {designatedNutritionist?.first_name} {"  "}
                 {designatedNutritionist?.last_name}
-              </p>
+              </p> */}
               {/* <center>
                 <Link
                   to={{
@@ -1588,8 +1632,21 @@ try{
                   color: "#ffffff",
                 }}
               > */}
+{console.log(dayjs().format("hh:mm A") === 
+dayjs(temp.date + "" + temp.time).format("hh:mm A"), 
+dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
 
-              { dayjs().format("hh:mm A") === dayjs(temp.date + "" + temp.time).format("hh:mm A") ? (
+{console.log(dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
+&& dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')))}
+              {/* console.log(filteredData?.find((data) => 
+  data.date === dayjs().format("YYYY-MM-DD")   
+       && 
+       dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+      && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+      )) */}
+              
+              { dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
+&& dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')) ? (
                 <> <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
                 onClick={() =>
@@ -2159,6 +2216,7 @@ try{
         paddingBottom: "5px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000", 
       }}
     >
       {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -2770,7 +2828,10 @@ try{
             />
           </LocalizationProvider>
 
-          {selectedDates ? (<> <Typography sx={{ mb: 1 }}>Select Time</Typography>
+          {/* {selectedDates ? (<> <Typography sx={{ mb: 1 }}>Select Time</Typography>
+          */}
+         
+         <br/>
           <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
@@ -2786,9 +2847,10 @@ try{
                 {option}
               </MenuItem>
             ))}
-          </Select></>)
-        : (<></>)  
-        }
+          </Select>
+         {/*  </>)
+       : (<></>)  
+        } */}
 
          
 
@@ -2894,7 +2956,7 @@ try{
         <br /> */}
 
               <center>
-                <Grid container spacing={2} sx={{ ml: "10%", mt: 1 }}>
+                <Grid container spacing={2} sx={{ ml: "10%", mt: 1, color:"#000000" }}>
                   <Grid xs={4} sx={{ float: "right" }}>
                     {designatedNutritionist?.schedule_day.map((item) => (
                       <>
@@ -3076,7 +3138,7 @@ try{
                               }}
                             >
                               {dayjs(items.date + " " + items.time).format(
-                                "HH:mm A"
+                                "hh:mm A"
                               )}
                             </Typography>
 
@@ -3132,7 +3194,7 @@ try{
                               }}
                             >
                               {dayjs(items.date + " " + items.time).format(
-                                "HH:mm A"
+                                "hh:mm A"
                               )}
                             </Typography>
 
@@ -3188,7 +3250,7 @@ try{
                               }}
                             >
                               {dayjs(items.date + " " + items.time).format(
-                                "HH:mm A"
+                                "hh:mm A"
                               )}
                             </Typography>
 

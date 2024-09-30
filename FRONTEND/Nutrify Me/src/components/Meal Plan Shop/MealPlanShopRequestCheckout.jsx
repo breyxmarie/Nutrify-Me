@@ -1435,7 +1435,7 @@ function MealPlanShopRequestCheckout() {
           <Box sx={{ borderRadius: 0, border: 1, mx: 5 ,  pb: {
                   xs: "50%", // Extra small devices (less than 600px)
                   sm: "50%", // Small devices (600px and up)
-                  md: "35%", // Medium devices (900px and up)
+                  md: "45%", // Medium devices (900px and up)
                   lg: "45%",
                 },}}>
           <Grid container spacing={2} sx={{ my: "20px", mx: "20px" }}>

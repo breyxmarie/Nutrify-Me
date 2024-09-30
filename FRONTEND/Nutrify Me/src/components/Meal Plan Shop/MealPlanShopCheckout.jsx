@@ -1470,9 +1470,9 @@ function MealPlanShopCheckout() {
                           },
                           height: {
                             xs: "250%", // Extra small devices (less than 600px)
-                            sm: "400%", // Small devices (600px and up)
-                            md: "450%", // Medium devices (900px and up)
-                            lg: "600%", // Large devices (1200px and up)
+                            sm: "300%", // Small devices (600px and up)
+                            md: "350%", // Medium devices (900px and up)
+                            lg: "400%", // Large devices (1200px and up)
                           },
                         }}
                       >

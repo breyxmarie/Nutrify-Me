@@ -254,12 +254,38 @@ console.log(filteredData?.find((data) =>
     //   && dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
     //  );
 
-    const te = filteredData?.find((data) => 
-      data.date === dayjs().format("YYYY-MM-DD")   
-           && 
-           dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
-          && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
-          )
+let tempCheck = filteredData?.find((data) => 
+  data.date === dayjs().format("YYYY-MM-DD")   
+       && 
+       dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+      && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+      )
+
+      let te;
+    if (tempCheck) {
+      te = filteredData?.find((data) => 
+        data.date === dayjs().format("YYYY-MM-DD")   
+             && 
+             dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+            && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+            )
+    }
+    else {
+      te =  filteredData?.find((data) => 
+        data.date === dayjs().format("YYYY-MM-DD")   
+             && 
+             dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
+            )
+    }
+
+    //let te;
+    
+    // const te = filteredData?.find((data) => 
+    //   data.date === dayjs().format("YYYY-MM-DD")   
+    //        && 
+    //        dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+    //       && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+    //       )
       console.log(te);
 
       const formattedTime = filteredData?.find(
@@ -284,11 +310,8 @@ console.log(filteredData?.find((data) =>
                   height="100"
                   src={
                     user?.data.find(
-                      (user) =>
-                        user.user_id ===
-                        filteredData?.find(
-                          (data) => data.date === dayjs().format("YYYY-MM-DD")
-                        )?.user_id
+                      (user) => user.user_id === te.user_id
+                    
                     )?.image
                   }
                 />
@@ -299,11 +322,7 @@ console.log(filteredData?.find((data) =>
                   User: {console.log(user.data)}
                   {
                     user?.data.find(
-                      (user) =>
-                        user.user_id ===
-                        filteredData?.find(
-                          (data) => data.date === dayjs().format("YYYY-MM-DD")
-                        )?.user_id
+                      (user) => user.user_id === te.user_id
                     )?.first_name
                   }
                 </p>
@@ -312,9 +331,7 @@ console.log(filteredData?.find((data) =>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
               Date:{"     "}
               {dayjs(
-                filteredData?.find(
-                  (data) => data.date === dayjs().format("YYYY-MM-DD")
-                )?.date
+                te?.date
               ).format("MMMM DD, YYYY")}
             </Typography>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
@@ -338,24 +355,29 @@ console.log(filteredData?.find((data) =>
                 }}
               > */}
 
-              <Button
+              {console.log(user?.data.find(
+                        (user) => user.user_id === te.user_id
+                      ).user_id)}
+
+
+              {tempCheck ? (<><Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
                 onClick={() =>
                   navigate("/nutritionist-consultation", {
                     state: {
-                      tempN: user?.data.find(
-                        (user) =>
-                          user.user_id ===
-                          filteredData?.find(
-                            (data) => data.date === dayjs().format("YYYY-MM-DD")
-                          ).user_id
-                      ),
+                      tempN:  user?.data.find(
+                        (user) => user.user_id === te.user_id
+                      )
+                      
                     },
                   })
                 }
               >
                 Call
-              </Button>
+              </Button></>)
+            : (<></>)  
+            }
+              
               {/* </Link> */}
             </center>
             {/* <Link
@@ -1080,7 +1102,7 @@ console.log(filteredData?.find((data) =>
                           fontSize: "1em",
                         }}
                       >
-                        {dayjs(items.date + " " + items.time).format("HH:mm A")}
+                        {dayjs(items.date + " " + items.time).format("hh:mm A")}
                       </Typography>
                       <hr />
                     </Box>
@@ -1166,9 +1188,9 @@ console.log(filteredData?.find((data) =>
                           fontSize: "1em",
                         }}
                       >
-                        {dayjs(items.date + " " + items.time).format("HH:mm A")}
+                        {dayjs(items.date + " " + items.time).format("hh:mm A")}
                       </Typography>
-                      {console.log(items)}
+                  
                       <Button
                         Button
                         sx={{
@@ -1296,7 +1318,7 @@ console.log(filteredData?.find((data) =>
                           fontSize: "1em",
                         }}
                       >
-                        {dayjs(items.date + " " + items.time).format("HH:mm A")}
+                        {dayjs(items.date + " " + items.time).format("hh:mm A")}
                       </Typography>
 
                       <hr />

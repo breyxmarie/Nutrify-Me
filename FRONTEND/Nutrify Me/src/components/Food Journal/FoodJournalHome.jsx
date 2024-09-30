@@ -2698,6 +2698,7 @@ function FoodJournalHome() {
   };
 
   const onSubmitUpdateHandler = (data) => {
+    setLoading1(true)
     console.log(data);
     console.log(dates);
     console.log(mealPlan)
@@ -2777,6 +2778,10 @@ function FoodJournalHome() {
             journal_id: journalId,
           }).then((res) => {
             console.log(res, res.data);
+            toast.success("Entry Updated");
+            setLoading1(false);
+            getJournalData(dayjs(selectedDate).format("YYYY-MM-DD"));
+            handleClose1()
           });
         } catch (error) {
           console.log(error.response);
@@ -2999,7 +3004,15 @@ function FoodJournalHome() {
               aria-describedby="modal-modal-description"
             >
               <Box sx={style}>
-                {" "}
+                  {loading1 ? (
+                  <>
+                    <center>
+                      {" "}
+                      <img src="/images/pacman.gif" width="13%" />
+                      <Typography>Saving your entry please wait...</Typography>
+                    </center>
+                  </>
+                ) : (
                 <form onSubmit={handleSubmit1(onSubmitUpdateHandler)}>
                   <Grid container spacing={2}>
                     <Grid xs={2}>
@@ -4287,6 +4300,7 @@ function FoodJournalHome() {
                     )}
                   </Grid>
                 </form>
+              )}
               </Box>
             </Modal>
           </Grid>
