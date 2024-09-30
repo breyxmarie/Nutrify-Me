@@ -657,7 +657,9 @@ function NutritionistCreateMealPlan() {
       //   </Box>
       // );
       //changeDiv(activeButtonIndex, buttons[activeButtonIndex])
-      setLoading1(true)
+     
+      toast.success("Meal Created");
+      setLoading1(false)
       handleClose();
       return;
     } catch (error) {
