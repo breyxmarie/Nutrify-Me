@@ -106,6 +106,7 @@ function NutritionistProfile() {
 
   const editProfile = () => {
     GetData();
+    console.log(nutritionist, loggedInUser)
 
     const tempSchedule = [];
     for (let i = 0; i < nutritionist.schedule_day.length; i++) {
@@ -487,7 +488,7 @@ function NutritionistProfile() {
   });
 
   const onSubmitHandler = async (data) => {
-    setEdit(false);
+    //setEdit(false);
     console.log(data);
     console.log(file);
     let fileName = "";
@@ -508,489 +509,497 @@ function NutritionistProfile() {
         }).then((res) => {
           fileName = res.data;
           console.log(fileName);
+
+
+
+          if (data.username === loggedInUser.username) {
+            //console.log("same");
+      
+            try {
+              console.log(fileName);
+              AxiosInstance.put(`user/`, {
+                user_id: loggedInUser.user_id,
+                username: data.username,
+                password: data.password,
+                first_name: data.firstname,
+                last_name: data.lastname,
+                privilege: "Nutritionist",
+                email: loggedInUser.email,
+                image: "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
+                active: 1,
+              }).then((res) => {
+                console.log(res, res.data);
+                // navigate("/Profiling", {
+                //   state: { email: data.email, name: data.first_name },
+                // });
+      
+                // navigate("/Log-In?success=newPassword");
+                const tempDay = [];
+                const tempTime = [];
+                console.log(schedules);
+                for (let i = 0; i < schedules.length; i++) {
+                  console.log(schedules.length, schedules[i].day);
+                  tempDay.push(schedules[i].day);
+                  tempTime.push(
+                    schedules[i].start_time.format("h:mm A") +
+                      "-" +
+                      schedules[i].end_time.format("h:mm A")
+                  );
+                }
+                console.log(nutritionist);
+                console.log(fileName);
+                try {
+                  AxiosInstance.put(`nutritionist/`, {
+                    nutritionist_id: nutritionist.nutritionist_id,
+                    username: data.username,
+                    password: nutritionist.password,
+                    first_name: nutritionist.first_name,
+                    last_name: nutritionist.last_name,
+                    license_id: nutritionist.license_id,
+                    schedule_day: tempDay,
+                    schedule_time: tempTime,
+                    image:
+                      "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
+                    license_pic: nutritionist.license_pic,
+                    user_id: nutritionist.user_id,
+                  }).then((res) => {
+                    console.log(res);
+      
+                    const response = AxiosInstance.get(`nutritionist`);
+      
+                    AxiosInstance.get(`nutritionist/`).then((res) => {
+                      const newNutritionist = res.data.find(
+                        (user) => user.user_id === loggedInUser.user_id
+                      );
+                      setnNutritionist(newNutritionist);
+                      console.log(newNutritionist);
+                      const tempSchedule = [];
+                      for (let i = 0; i < newNutritionist.schedule_day.length; i++) {
+                        const timeRange = newNutritionist.schedule_time[i];
+                        const [startTime, endTime] = timeRange.split("-");
+      
+                        const temp = {
+                          day: newNutritionist.schedule_day[i],
+                          start_time: dayjs("2024-08-17" + " " + startTime),
+                          end_time: dayjs("2024-08-10" + " " + endTime),
+                        };
+      
+                        tempSchedule.push(temp);
+                      }
+      
+                      console.log(tempSchedule);
+                      // console.log(tempSchedule);
+                      // console.log(schedules);
+      
+                      setSchedules(tempSchedule);
+                    });
+      
+                    try {
+                      AxiosInstance.get(`user/`).then((res) => {
+                        // {
+                        //   res.data.map((item, index) =>
+                        //   //  console.log(item.username, item.password)
+                        //   );
+                        // }
+                        //  console.log(res.data);
+      
+                        const newUser = res.data.find(
+                          (user) => user.user_id === loggedInUser.user_id
+                        );
+                        console.log(newUser);
+                        setLoggedInUser(newUser);
+      
+                      //   setProfileDiv(
+                      //     <>
+                      //       <Button
+                      //         sx={{
+                      //           color: "#539801",
+                      //           border: 1,
+                      //           fontWeight: "bold",
+                      //           "&:hover": {
+                      //             backgroundColor: "#539801",
+                      //             color: "#ffffff",
+                      //             border: 0.5,
+                      //             borderColor: "#ffffff",
+                      //           },
+                      //         }}
+                      //         onClick={editProfile}
+                      //       >
+                      //         EDIT
+                      //       </Button>
+                      //       <Grid container spacing={2} sx={{ my: 3 }}>
+                      //         <Grid xs={6} sx={{ ml: "30%" }}>
+                      //           <Typography
+                      //             sx={{
+                      //               color: "#E66253",
+                      //               fontWeight: "bold",
+                      //               textAlign: "left",
+                      //             }}
+                      //           >
+                      //             Username
+                      //           </Typography>
+      
+                      //           <Typography
+                      //             sx={{ color: "#99756E", textAlign: "left" }}
+                      //           >
+                      //             {loggedInUser.username}
+                      //           </Typography>
+                      //         </Grid>
+                      //         <Grid xs={6}> </Grid>
+                      //       </Grid>
+                      //       <Grid container spacing={2} sx={{ my: 3 }}>
+                      //         <Grid xs={10} sx={{ ml: "30%" }}>
+                      //           <Typography
+                      //             sx={{
+                      //               color: "#E66253",
+                      //               fontWeight: "bold",
+                      //               textAlign: "left",
+                      //             }}
+                      //           >
+                      //             Name:{" "}
+                      //           </Typography>
+      
+                      //           <Typography
+                      //             sx={{ color: "#99756E", textAlign: "left" }}
+                      //           >
+                      //             {newUser.first_name} {""}
+                      //             {newUser.last_name}
+                      //           </Typography>
+                      //         </Grid>
+                      //         <Grid xs={6}> </Grid>
+                      //       </Grid>
+                      //       <Grid container spacing={2} sx={{ my: 3 }}>
+                      //         <Grid xs={2} sx={{ ml: "30%" }}>
+                      //           <Typography
+                      //             sx={{
+                      //               color: "#E66253",
+                      //               fontWeight: "bold",
+                      //               textAlign: "left",
+                      //             }}
+                      //           >
+                      //             Passoword:{" "}
+                      //           </Typography>
+      
+                      //           <Typography
+                      //             sx={{ color: "#99756E", textAlign: "left" }}
+                      //           >
+                      //             {newUser.password}
+                      //           </Typography>
+                      //         </Grid>
+                      //         <Grid xs={6}></Grid>
+                      //       </Grid>{" "}
+                      //       <Grid container spacing={2} sx={{ my: 3 }}>
+                      //         <Grid xs={2} sx={{ ml: "30%" }}>
+                      //           <Typography
+                      //             sx={{
+                      //               color: "#E66253",
+                      //               fontWeight: "bold",
+                      //               textAlign: "left",
+                      //             }}
+                      //           >
+                      //             E-mail:{" "}
+                      //           </Typography>
+      
+                      //           <Typography
+                      //             sx={{ color: "#99756E", textAlign: "left" }}
+                      //           >
+                      //             {loggedInUser.email}
+                      //           </Typography>
+                      //         </Grid>
+                      //         <Grid xs={6}></Grid>
+                      //       </Grid>
+                      //       <Box sx={{ ml: "21%", mt: "50px" }}>
+                      //         <Typography
+                      //           sx={{
+                      //             color: "#99756E",
+                      //             fontWeight: "bold",
+                      //             fontSize: "25px",
+                      //             float: "left",
+                      //             ml: 20,
+                      //           }}
+                      //         >
+                      //           Account Removal
+                      //         </Typography>
+                      //         <br />
+                      //         <br />
+                      //         <br />
+                      //         <Button
+                      //           sx={{
+                      //             background: "#E66253",
+                      //             color: "#ffffff",
+                      //             float: "left",
+                      //             ml: 20,
+                      //             px: 3,
+                      //             "&:hover": {
+                      //               backgroundColor: "#ffffff",
+                      //               color: "#E66253",
+                      //               border: 0.5,
+                      //               borderColor: "#E66253",
+                      //             },
+                      //           }}
+                      //         >
+                      //           DEACTIVATE ACCOUNT
+                      //         </Button>
+                      //       </Box>
+                      //       <br />
+                      //       <br />
+                      //       <br />
+                      //       <Button
+                      //         sx={{
+                      //           color: "#B3B3B3",
+                      //           border: 1,
+                      //           fontWeight: "bold",
+                      //           px: 5,
+                      //           "&:hover": {
+                      //             backgroundColor: "#B3B3B3",
+                      //             color: "#ffffff",
+                      //             border: 0.5,
+                      //             borderColor: "#ffffff",
+                      //           },
+                      //         }}
+                      //       >
+                      //         {" "}
+                      //         LOG OUT
+                      //       </Button>
+                      //     </>
+                      //   );
+                     });
+                      setEdit(false);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  });
+                } catch (error) {
+                  console.log(error);
+                }
+              });
+            } catch (error) {
+              console.log(error.response);
+            }
+          }
+
+          else {
+            // console.log("not same");
+            let usernameFinal = data.username;
+            let check = false;
+            AxiosInstance.get(`user/`).then((res) => {
+              // {
+              //   res.data.map((item, index) =>
+              //     console.log(item.username, item.password)
+              //   );
+              // }
+              // console.log(res.data);
+              check = res.data.some((user) => user.username === data.username);
+              // console.log(check);
+              const updatedDiv = document.getElementById("error-message");
+              if (check) {
+                updatedDiv.textContent = "username taken";
+                //  console.log("username taken");
+              } else {
+                updatedDiv.textContent = "username available";
+      
+                try {
+                  AxiosInstance.put(`user/`, {
+                    user_id: loggedInUser.user_id,
+                    username: data.username,
+                    password: data.password,
+                    first_name: data.firstname,
+                    last_name: data.lastname,
+                    privilege: "User",
+                    email: loggedInUser.email,
+                    //image: ,
+                  }).then((res) => {
+                    //  console.log(res, res.data);
+                    // navigate("/Profiling", {
+                    //   state: { email: data.email, name: data.first_name },
+                    // });
+      
+                    // navigate("/Log-In?success=newPassword");
+      
+                    AxiosInstance.get(`user/`).then((res) => {
+                      // {
+                      //   res.data.map((item, index) =>
+                      //     console.log(item.username, item.password)
+                      //   );
+                      // }
+                      console.log(res.data);
+                      const newUser = res.data.find(
+                        (user) => user.user_id === loggedInUser.user_id
+                      );
+                      setLoggedInUser(newUser);
+      
+                      // setProfileDiv(
+                      //   <>
+                      //     <Button
+                      //       sx={{
+                      //         color: "#539801",
+                      //         border: 1,
+                      //         fontWeight: "bold",
+                      //         "&:hover": {
+                      //           backgroundColor: "#539801",
+                      //           color: "#ffffff",
+                      //           border: 0.5,
+                      //           borderColor: "#ffffff",
+                      //         },
+                      //       }}
+                      //       onClick={editProfile}
+                      //     >
+                      //       EDIT
+                      //     </Button>
+                      //     <Grid container spacing={2} sx={{ my: 3 }}>
+                      //       <Grid xs={6} sx={{ ml: "30%" }}>
+                      //         <Typography
+                      //           sx={{
+                      //             color: "#E66253",
+                      //             fontWeight: "bold",
+                      //             textAlign: "left",
+                      //           }}
+                      //         >
+                      //           Username
+                      //         </Typography>
+      
+                      //         <Typography
+                      //           sx={{ color: "#99756E", textAlign: "left" }}
+                      //         >
+                      //           {loggedInUser.username}
+                      //         </Typography>
+                      //       </Grid>
+                      //       <Grid xs={6}> </Grid>
+                      //     </Grid>
+                      //     <Grid container spacing={2} sx={{ my: 3 }}>
+                      //       <Grid xs={10} sx={{ ml: "30%" }}>
+                      //         <Typography
+                      //           sx={{
+                      //             color: "#E66253",
+                      //             fontWeight: "bold",
+                      //             textAlign: "left",
+                      //           }}
+                      //         >
+                      //           Name:{" "}
+                      //         </Typography>
+      
+                      //         <Typography
+                      //           sx={{ color: "#99756E", textAlign: "left" }}
+                      //         >
+                      //           {newUser.first_name} {""}
+                      //           {newUser.last_name}
+                      //         </Typography>
+                      //       </Grid>
+                      //       <Grid xs={6}> </Grid>
+                      //     </Grid>
+                      //     <Grid container spacing={2} sx={{ my: 3 }}>
+                      //       <Grid xs={2} sx={{ ml: "30%" }}>
+                      //         <Typography
+                      //           sx={{
+                      //             color: "#E66253",
+                      //             fontWeight: "bold",
+                      //             textAlign: "left",
+                      //           }}
+                      //         >
+                      //           Passoword:{" "}
+                      //         </Typography>
+      
+                      //         <Typography
+                      //           sx={{ color: "#99756E", textAlign: "left" }}
+                      //         >
+                      //           {newUser.password}
+                      //         </Typography>
+                      //       </Grid>
+                      //       <Grid xs={6}></Grid>
+                      //     </Grid>{" "}
+                      //     <Grid container spacing={2} sx={{ my: 3 }}>
+                      //       <Grid xs={2} sx={{ ml: "30%" }}>
+                      //         <Typography
+                      //           sx={{
+                      //             color: "#E66253",
+                      //             fontWeight: "bold",
+                      //             textAlign: "left",
+                      //           }}
+                      //         >
+                      //           E-mail:{" "}
+                      //         </Typography>
+      
+                      //         <Typography
+                      //           sx={{ color: "#99756E", textAlign: "left" }}
+                      //         >
+                      //           {loggedInUser.email}
+                      //         </Typography>
+                      //       </Grid>
+                      //       <Grid xs={6}></Grid>
+                      //     </Grid>
+                      //     <Box sx={{ ml: "21%", mt: "50px" }}>
+                      //       <Typography
+                      //         sx={{
+                      //           color: "#99756E",
+                      //           fontWeight: "bold",
+                      //           fontSize: "25px",
+                      //           float: "left",
+                      //           ml: 20,
+                      //         }}
+                      //       >
+                      //         Account Removal
+                      //       </Typography>
+                      //       <br />
+                      //       <br />
+                      //       <br />
+                      //       <Button
+                      //         sx={{
+                      //           background: "#E66253",
+                      //           color: "#ffffff",
+                      //           float: "left",
+                      //           ml: 20,
+                      //           px: 3,
+                      //           "&:hover": {
+                      //             backgroundColor: "#ffffff",
+                      //             color: "#E66253",
+                      //             border: 0.5,
+                      //             borderColor: "#E66253",
+                      //           },
+                      //         }}
+                      //       >
+                      //         DEACTIVATE ACCOUNT
+                      //       </Button>
+                      //     </Box>
+                      //     <br />
+                      //     <br />
+                      //     <br />
+                      //     <Button
+                      //       sx={{
+                      //         color: "#B3B3B3",
+                      //         border: 1,
+                      //         fontWeight: "bold",
+                      //         px: 5,
+                      //         "&:hover": {
+                      //           backgroundColor: "#B3B3B3",
+                      //           color: "#ffffff",
+                      //           border: 0.5,
+                      //           borderColor: "#ffffff",
+                      //         },
+                      //       }}
+                      //     >
+                      //       {" "}
+                      //       LOG OUT
+                      //     </Button>
+                      //   </>
+                      // );
+                      setEdit(false)
+                    });
+                  });
+                } catch (error) {
+                  console.log(error.response);
+                }
+              }
+            });
+          }
         });
       } catch (error) {
         console.error("Error uploading file:", error); // Handle errors
       }
     }
 
-    let usernameFinal = data.username;
+    
 
-    if (data.username === loggedInUser.username) {
-      //console.log("same");
-
-      try {
-        console.log(fileName);
-        AxiosInstance.put(`user/`, {
-          user_id: loggedInUser.user_id,
-          username: data.username,
-          password: data.password,
-          first_name: data.firstname,
-          last_name: data.lastname,
-          privilege: "Nutritionist",
-          email: loggedInUser.email,
-          image: "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
-          active: 1,
-        }).then((res) => {
-          console.log(res, res.data);
-          // navigate("/Profiling", {
-          //   state: { email: data.email, name: data.first_name },
-          // });
-
-          // navigate("/Log-In?success=newPassword");
-          const tempDay = [];
-          const tempTime = [];
-          console.log(schedules);
-          for (let i = 0; i < schedules.length; i++) {
-            console.log(schedules.length, schedules[i].day);
-            tempDay.push(schedules[i].day);
-            tempTime.push(
-              schedules[i].start_time.format("h:mm A") +
-                "-" +
-                schedules[i].end_time.format("h:mm A")
-            );
-          }
-          console.log(nutritionist);
-          console.log(fileName);
-          try {
-            AxiosInstance.put(`nutritionist/`, {
-              nutritionist_id: nutritionist.nutritionist_id,
-              username: data.username,
-              password: nutritionist.password,
-              first_name: nutritionist.first_name,
-              last_name: nutritionist.last_name,
-              license_id: nutritionist.license_id,
-              schedule_day: tempDay,
-              schedule_time: tempTime,
-              image:
-                "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
-              license_pic: nutritionist.license_pic,
-              user_id: 101,
-            }).then((res) => {
-              console.log(res);
-
-              const response = AxiosInstance.get(`nutritionist`);
-
-              AxiosInstance.get(`nutritionist/`).then((res) => {
-                const newNutritionist = res.data.find(
-                  (user) => user.user_id === loggedInUser.user_id
-                );
-                setnNutritionist(newNutritionist);
-                console.log(newNutritionist);
-                const tempSchedule = [];
-                for (let i = 0; i < newNutritionist.schedule_day.length; i++) {
-                  const timeRange = newNutritionist.schedule_time[i];
-                  const [startTime, endTime] = timeRange.split("-");
-
-                  const temp = {
-                    day: newNutritionist.schedule_day[i],
-                    start_time: dayjs("2024-08-17" + " " + startTime),
-                    end_time: dayjs("2024-08-10" + " " + endTime),
-                  };
-
-                  tempSchedule.push(temp);
-                }
-
-                console.log(tempSchedule);
-                // console.log(tempSchedule);
-                // console.log(schedules);
-
-                setSchedules(tempSchedule);
-              });
-
-              try {
-                AxiosInstance.get(`user/`).then((res) => {
-                  // {
-                  //   res.data.map((item, index) =>
-                  //   //  console.log(item.username, item.password)
-                  //   );
-                  // }
-                  //  console.log(res.data);
-
-                  const newUser = res.data.find(
-                    (user) => user.user_id === loggedInUser.user_id
-                  );
-                  console.log(newUser);
-                  setLoggedInUser(newUser);
-
-                  setProfileDiv(
-                    <>
-                      <Button
-                        sx={{
-                          color: "#539801",
-                          border: 1,
-                          fontWeight: "bold",
-                          "&:hover": {
-                            backgroundColor: "#539801",
-                            color: "#ffffff",
-                            border: 0.5,
-                            borderColor: "#ffffff",
-                          },
-                        }}
-                        onClick={editProfile}
-                      >
-                        EDIT
-                      </Button>
-                      <Grid container spacing={2} sx={{ my: 3 }}>
-                        <Grid xs={6} sx={{ ml: "30%" }}>
-                          <Typography
-                            sx={{
-                              color: "#E66253",
-                              fontWeight: "bold",
-                              textAlign: "left",
-                            }}
-                          >
-                            Username
-                          </Typography>
-
-                          <Typography
-                            sx={{ color: "#99756E", textAlign: "left" }}
-                          >
-                            {loggedInUser.username}
-                          </Typography>
-                        </Grid>
-                        <Grid xs={6}> </Grid>
-                      </Grid>
-                      <Grid container spacing={2} sx={{ my: 3 }}>
-                        <Grid xs={10} sx={{ ml: "30%" }}>
-                          <Typography
-                            sx={{
-                              color: "#E66253",
-                              fontWeight: "bold",
-                              textAlign: "left",
-                            }}
-                          >
-                            Name:{" "}
-                          </Typography>
-
-                          <Typography
-                            sx={{ color: "#99756E", textAlign: "left" }}
-                          >
-                            {newUser.first_name} {""}
-                            {newUser.last_name}
-                          </Typography>
-                        </Grid>
-                        <Grid xs={6}> </Grid>
-                      </Grid>
-                      <Grid container spacing={2} sx={{ my: 3 }}>
-                        <Grid xs={2} sx={{ ml: "30%" }}>
-                          <Typography
-                            sx={{
-                              color: "#E66253",
-                              fontWeight: "bold",
-                              textAlign: "left",
-                            }}
-                          >
-                            Passoword:{" "}
-                          </Typography>
-
-                          <Typography
-                            sx={{ color: "#99756E", textAlign: "left" }}
-                          >
-                            {newUser.password}
-                          </Typography>
-                        </Grid>
-                        <Grid xs={6}></Grid>
-                      </Grid>{" "}
-                      <Grid container spacing={2} sx={{ my: 3 }}>
-                        <Grid xs={2} sx={{ ml: "30%" }}>
-                          <Typography
-                            sx={{
-                              color: "#E66253",
-                              fontWeight: "bold",
-                              textAlign: "left",
-                            }}
-                          >
-                            E-mail:{" "}
-                          </Typography>
-
-                          <Typography
-                            sx={{ color: "#99756E", textAlign: "left" }}
-                          >
-                            {loggedInUser.email}
-                          </Typography>
-                        </Grid>
-                        <Grid xs={6}></Grid>
-                      </Grid>
-                      <Box sx={{ ml: "21%", mt: "50px" }}>
-                        <Typography
-                          sx={{
-                            color: "#99756E",
-                            fontWeight: "bold",
-                            fontSize: "25px",
-                            float: "left",
-                            ml: 20,
-                          }}
-                        >
-                          Account Removal
-                        </Typography>
-                        <br />
-                        <br />
-                        <br />
-                        <Button
-                          sx={{
-                            background: "#E66253",
-                            color: "#ffffff",
-                            float: "left",
-                            ml: 20,
-                            px: 3,
-                            "&:hover": {
-                              backgroundColor: "#ffffff",
-                              color: "#E66253",
-                              border: 0.5,
-                              borderColor: "#E66253",
-                            },
-                          }}
-                        >
-                          DEACTIVATE ACCOUNT
-                        </Button>
-                      </Box>
-                      <br />
-                      <br />
-                      <br />
-                      <Button
-                        sx={{
-                          color: "#B3B3B3",
-                          border: 1,
-                          fontWeight: "bold",
-                          px: 5,
-                          "&:hover": {
-                            backgroundColor: "#B3B3B3",
-                            color: "#ffffff",
-                            border: 0.5,
-                            borderColor: "#ffffff",
-                          },
-                        }}
-                      >
-                        {" "}
-                        LOG OUT
-                      </Button>
-                    </>
-                  );
-                });
-                setEdit(false);
-              } catch (error) {
-                console.log(error);
-              }
-            });
-          } catch (error) {
-            console.log(error);
-          }
-        });
-      } catch (error) {
-        console.log(error.response);
-      }
-    } else {
-      // console.log("not same");
-
-      let check = false;
-      AxiosInstance.get(`user/`).then((res) => {
-        // {
-        //   res.data.map((item, index) =>
-        //     console.log(item.username, item.password)
-        //   );
-        // }
-        // console.log(res.data);
-        check = res.data.some((user) => user.username === data.username);
-        // console.log(check);
-        const updatedDiv = document.getElementById("error-message");
-        if (check) {
-          updatedDiv.textContent = "username taken";
-          //  console.log("username taken");
-        } else {
-          updatedDiv.textContent = "username available";
-
-          try {
-            AxiosInstance.put(`user/`, {
-              user_id: loggedInUser.user_id,
-              username: data.username,
-              password: data.password,
-              first_name: data.firstname,
-              last_name: data.lastname,
-              privilege: "User",
-              email: loggedInUser.email,
-            }).then((res) => {
-              //  console.log(res, res.data);
-              // navigate("/Profiling", {
-              //   state: { email: data.email, name: data.first_name },
-              // });
-
-              // navigate("/Log-In?success=newPassword");
-
-              AxiosInstance.get(`user/`).then((res) => {
-                // {
-                //   res.data.map((item, index) =>
-                //     console.log(item.username, item.password)
-                //   );
-                // }
-                console.log(res.data);
-                const newUser = res.data.find(
-                  (user) => user.user_id === loggedInUser.user_id
-                );
-                setLoggedInUser(newUser);
-
-                setProfileDiv(
-                  <>
-                    <Button
-                      sx={{
-                        color: "#539801",
-                        border: 1,
-                        fontWeight: "bold",
-                        "&:hover": {
-                          backgroundColor: "#539801",
-                          color: "#ffffff",
-                          border: 0.5,
-                          borderColor: "#ffffff",
-                        },
-                      }}
-                      onClick={editProfile}
-                    >
-                      EDIT
-                    </Button>
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={6} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          Username
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {loggedInUser.username}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}> </Grid>
-                    </Grid>
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={10} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          Name:{" "}
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {newUser.first_name} {""}
-                          {newUser.last_name}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}> </Grid>
-                    </Grid>
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={2} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          Passoword:{" "}
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {newUser.password}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}></Grid>
-                    </Grid>{" "}
-                    <Grid container spacing={2} sx={{ my: 3 }}>
-                      <Grid xs={2} sx={{ ml: "30%" }}>
-                        <Typography
-                          sx={{
-                            color: "#E66253",
-                            fontWeight: "bold",
-                            textAlign: "left",
-                          }}
-                        >
-                          E-mail:{" "}
-                        </Typography>
-
-                        <Typography
-                          sx={{ color: "#99756E", textAlign: "left" }}
-                        >
-                          {loggedInUser.email}
-                        </Typography>
-                      </Grid>
-                      <Grid xs={6}></Grid>
-                    </Grid>
-                    <Box sx={{ ml: "21%", mt: "50px" }}>
-                      <Typography
-                        sx={{
-                          color: "#99756E",
-                          fontWeight: "bold",
-                          fontSize: "25px",
-                          float: "left",
-                          ml: 20,
-                        }}
-                      >
-                        Account Removal
-                      </Typography>
-                      <br />
-                      <br />
-                      <br />
-                      <Button
-                        sx={{
-                          background: "#E66253",
-                          color: "#ffffff",
-                          float: "left",
-                          ml: 20,
-                          px: 3,
-                          "&:hover": {
-                            backgroundColor: "#ffffff",
-                            color: "#E66253",
-                            border: 0.5,
-                            borderColor: "#E66253",
-                          },
-                        }}
-                      >
-                        DEACTIVATE ACCOUNT
-                      </Button>
-                    </Box>
-                    <br />
-                    <br />
-                    <br />
-                    <Button
-                      sx={{
-                        color: "#B3B3B3",
-                        border: 1,
-                        fontWeight: "bold",
-                        px: 5,
-                        "&:hover": {
-                          backgroundColor: "#B3B3B3",
-                          color: "#ffffff",
-                          border: 0.5,
-                          borderColor: "#ffffff",
-                        },
-                      }}
-                    >
-                      {" "}
-                      LOG OUT
-                    </Button>
-                  </>
-                );
-              });
-            });
-          } catch (error) {
-            console.log(error.response);
-          }
-        }
-      });
-    }
+  
 
     // try {
     //   AxiosInstance.put(`user/`, {
@@ -1356,6 +1365,7 @@ function NutritionistProfile() {
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color: "#000000"
       }}
     >
       {/* <div className="schedule-manager">
@@ -1385,7 +1395,7 @@ function NutritionistProfile() {
 
       {edit ? (
         <>
-          <button onClick={click}>click</button>
+          {/* <button onClick={click}>click</button> */}
           <form onSubmit={handleSubmit(onSubmitHandler)}>
             <Grid container spacing={2} sx={{ my: 3 }}>
               <Grid xs={10} sx={{ mx: "30%" }}>
@@ -1655,9 +1665,9 @@ function NutritionistProfile() {
                   <Grid xs={2}>Start Time:</Grid>
                   <Grid xs={3}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      {console.log(schedules)}
+                      {/* {console.log(schedules)}
 
-                      {console.log(schedule.start_time)}
+                      {console.log(schedule.start_time)} */}
                       <DemoContainer
                         components={["TimePicker"]}
                         name="selectedDate"
@@ -1763,7 +1773,192 @@ function NutritionistProfile() {
           </div>
         </>
       ) : (
-        <>{profileDiv}</>
+        <>
+        {/* {profileDiv} */}
+        <Button
+        sx={{
+          color: "#539801",
+          border: 1,
+          fontWeight: "bold",
+          "&:hover": {
+            backgroundColor: "#539801",
+            color: "#ffffff",
+            border: 0.5,
+            borderColor: "#ffffff",
+          },
+        }}
+        onClick={editProfile}
+      >
+        EDIT
+      </Button>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid xs={6} sx={{ ml: "30%" }}>
+          <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left" }}
+          >
+            Username
+          </Typography>
+
+          <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+            {loggedInUser.username}
+          </Typography>
+        </Grid>
+        <Grid xs={6}> </Grid>
+      </Grid>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid xs={6} sx={{ ml: "30%" }}>
+          <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left" }}
+          >
+            Name:{" "}
+          </Typography>
+
+          <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+            {loggedInUser.first_name} {"  "}
+            {loggedInUser.last_name}
+            {/* <Grid container spacing={2}>
+              <Grid xs={6}>{loggedInUser.first_name} </Grid>
+              <Grid xs={2}>{loggedInUser.last_name}</Grid>
+            </Grid> */}
+          </Typography>
+        </Grid>
+        <Grid xs={6}> </Grid>
+      </Grid>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid xs={2} sx={{ ml: "30%" }}>
+          <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left" }}
+          >
+            Password:{" "}
+          </Typography>
+
+          <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+            {loggedInUser.password}
+          </Typography>
+        </Grid>
+        <Grid xs={6}></Grid>
+      </Grid>{" "}
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid xs={2} sx={{ ml: "30%" }}>
+          <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left" }}
+          >
+            E-mail:{" "}
+          </Typography>
+
+          <Typography sx={{ color: "#99756E", textAlign: "left" }}>
+            {loggedInUser.email}
+          </Typography>
+        </Grid>
+        <Grid xs={6}></Grid>
+      </Grid>
+      <Typography>Schedule:</Typography>
+      <Grid container spacing={2} sx={{ mt: 2 }}>
+        <Grid xs={6}>
+          <Typography>Day</Typography>
+
+          {/* {nutritionist.schedule_day  ((item) => (
+            <Typography>item</Typography>
+          ))} */}
+
+          {/* <Typography>{nutritionist?.schedule_day}</Typography>
+          {nutritionist?.schedule_day.map((item) => (
+            <Typography sx={{ color: "#000000" }}>{item}</Typography>
+          ))} */}
+
+          {/* {nutritionist ? (
+            //nutritionist?.schedule_day((item) => <Typography >item</Typography>)
+            <>weh</>
+          ) : (
+            // nutritionist?.schedule_day.map((item) => (
+            //   <Typography>{item}</Typography>
+            // ))
+            <>really ba</>
+          )}
+          {console.log(nutritionist?.username)} */}
+        </Grid>
+        <Grid xs={6}>
+          <Typography>Time </Typography>
+
+          {nutritionist && <Typography>{nutritionist.username} </Typography>}
+          <Typography sx={{ color: "#000000" }}>
+            {/* {nutritionist?.username}{" "} */}
+          </Typography>
+          {nutritionist !== null ? (
+            <>
+              <Typography>Day</Typography>
+
+              {/* {nutritionist}
+              {nutritionist?.schedule_time.map((item, index) => (
+                <Typography key={index}>
+                  {nutritionist?.schedule_day[index] === item
+                    ? item
+                    : `${item} (updated)`}
+                  {item}
+                </Typography>
+              ))} */}
+              <Typography>Time </Typography>
+              {/* ... Time rendering logic ... */}
+            </>
+          ) : (
+            <Typography>No schedule information available.</Typography>
+          )}
+        </Grid>
+      </Grid>
+      <Box sx={{ ml: "21%", mt: "50px" }}>
+        <Typography
+          sx={{
+            color: "#99756E",
+            fontWeight: "bold",
+            fontSize: "25px",
+            float: "left",
+            ml: 20,
+          }}
+        >
+          Account Removal
+        </Typography>
+        <br />
+        <br />
+        <br />
+        <Button
+          sx={{
+            background: "#E66253",
+            color: "#ffffff",
+            float: "left",
+            ml: 20,
+            px: 3,
+            "&:hover": {
+              backgroundColor: "#ffffff",
+              color: "#E66253",
+              border: 0.5,
+              borderColor: "#E66253",
+            },
+          }}
+        >
+          DEACTIVATE ACCOUNT
+        </Button>
+      </Box>
+      <br />
+      <br />
+      <br />
+      <Button
+        sx={{
+          color: "#B3B3B3",
+          border: 1,
+          fontWeight: "bold",
+          px: 5,
+          "&:hover": {
+            backgroundColor: "#B3B3B3",
+            color: "#ffffff",
+            border: 0.5,
+            borderColor: "#ffffff",
+          },
+        }}
+      >
+        {" "}
+        LOG OUT
+      </Button>
+        </>
       )}
 
       {/* {" "}
