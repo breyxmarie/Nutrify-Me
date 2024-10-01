@@ -18,8 +18,10 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 
 function NutritionistProfile() {
+  const navigate = useNavigate();
   const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist } =
     useLoggedInUser();
   const [userData, setUserData] = useState();
@@ -489,12 +491,217 @@ function NutritionistProfile() {
 
   const onSubmitHandler = async (data) => {
     //setEdit(false);
+    console.log(schedules)
     console.log(data);
     console.log(file);
     let fileName = "";
+   
     if (data.file.length < 1) {
       console.log("no file");
-    } else {
+    
+      if (data.username === loggedInUser.username) {
+        //console.log("same");
+    
+        try {
+          console.log(fileName);
+          AxiosInstance.put(`user/`, {
+            user_id: loggedInUser.user_id,
+            username: data.username,
+            password: data.password,
+            first_name: data.firstname,
+            last_name: data.lastname,
+            privilege: "Nutritionist",
+            email: loggedInUser.email,
+            image: loggedInUser.image,
+            active: 1,
+          }).then((res) => {
+            console.log(res, res.data);
+    
+            const tempDay = [];
+            const tempTime = [];
+            console.log(schedules);
+            for (let i = 0; i < schedules.length; i++) {
+              console.log(schedules.length, schedules[i].day);
+              tempDay.push(schedules[i].day);
+              tempTime.push(
+                schedules[i].start_time.format("h:mm A") +
+                  "-" +
+                  schedules[i].end_time.format("h:mm A")
+              );
+            }
+            console.log(nutritionist);
+            console.log(fileName);
+            try {
+              AxiosInstance.put(`nutritionist/`, {
+                nutritionist_id: nutritionist.nutritionist_id,
+                username: data.username,
+                password: nutritionist.password,
+                first_name: nutritionist.first_name,
+                last_name: nutritionist.last_name,
+                license_id: nutritionist.license_id,
+                schedule_day: tempDay,
+                schedule_time: tempTime,
+                image: nutritionist.image,
+                license_pic: nutritionist.license_pic,
+                user_id: nutritionist.user_id,
+              }).then((res) => {
+                console.log(res);
+    
+                AxiosInstance.get(`nutritionist/`).then((res) => {
+                  const newNutritionist = res.data.find(
+                    (user) => user.user_id === loggedInUser.user_id
+                  );
+                  setnNutritionist(newNutritionist);
+                  console.log(newNutritionist);
+                  const tempSchedule = [];
+                  for (let i = 0; i < newNutritionist.schedule_day.length; i++) {
+                    const timeRange = newNutritionist.schedule_time[i];
+                    const [startTime, endTime] = timeRange.split("-");
+    
+                    const temp = {
+                      day: newNutritionist.schedule_day[i],
+                      start_time: dayjs("2024-08-17" + " " + startTime),
+                      end_time: dayjs("2024-08-10" + " " + endTime),
+                    };
+    
+                    tempSchedule.push(temp);
+                  }
+    
+                  setSchedules(tempSchedule);
+                });
+    
+                try {
+                  AxiosInstance.get(`user/`).then((res) => {
+                    const newUser = res.data.find(
+                      (user) => user.user_id === loggedInUser.user_id
+                    );
+                    console.log(newUser);
+                    setLoggedInUser(newUser);
+                  });
+                  setEdit(false);
+                } catch (error) {
+                  console.log(error);
+                }
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          });
+        } catch (error) {
+          console.log(error.response);
+        }
+      } else {
+        // This else block was missing a closing bracket at the end
+        // console.log("not same");
+        let usernameFinal = data.username;
+        let check = false;
+        AxiosInstance.get(`user/`).then((res) => {
+          check = res.data.some((user) => user.username === data.username);
+    
+          const updatedDiv = document.getElementById("error-message");
+          if (check) {
+            updatedDiv.textContent = "username taken";
+          } else {
+            updatedDiv.textContent = "username available";
+            try {
+              AxiosInstance.put(`user/`, {
+                user_id: loggedInUser.user_id,
+                username: data.username,
+                password: data.password,
+                first_name: data.firstname,
+                last_name: data.lastname,
+                privilege: "Nutritionist",
+                email: loggedInUser.email,
+                image: loggedInUser.image,
+                active: 1,
+              }).then((res) => {
+                console.log(res, res.data);
+    
+                const tempDay = [];
+                const tempTime = [];
+                console.log(schedules);
+                for (let i = 0; i < schedules.length; i++) {
+                  console.log(schedules.length, schedules[i].day);
+                  tempDay.push(schedules[i].day);
+                  tempTime.push(
+                    schedules[i].start_time.format("h:mm A") +
+                      "-" +
+                      schedules[i].end_time.format("h:mm A")
+                  );
+                }
+    
+                try {
+                  AxiosInstance.put(`nutritionist/`, {
+                    nutritionist_id: nutritionist.nutritionist_id,
+                    username: data.username,
+                    password: nutritionist.password,
+                    first_name: nutritionist.first_name,
+                    last_name: nutritionist.last_name,
+                    license_id: nutritionist.license_id,
+                    schedule_day: tempDay,
+                    schedule_time: tempTime,
+                    image: nutritionist.image,
+                    license_pic: nutritionist.license_pic,
+                    user_id: nutritionist.user_id,
+                  }).then((res) => {
+                    console.log(res);
+    
+                    AxiosInstance.get(`nutritionist/`).then((res) => {
+                      const newNutritionist = res.data.find(
+                        (user) => user.user_id === loggedInUser.user_id
+                      );
+                      setnNutritionist(newNutritionist);
+                      console.log(newNutritionist);
+    
+                      const tempSchedule = [];
+                      for (let i = 0; i < newNutritionist.schedule_day.length; i++) {
+                        const timeRange = newNutritionist.schedule_time[i];
+                        const [startTime, endTime] = timeRange.split("-");
+    
+                        const temp = {
+                          day: newNutritionist.schedule_day[i],
+                          start_time: dayjs("2024-08-17" + " " + startTime),
+                          end_time: dayjs("2024-08-10" + " " + endTime),
+                        };
+    
+                        tempSchedule.push(temp);
+                      }
+    
+                      setSchedules(tempSchedule);
+                    });
+    
+                    try {
+                      AxiosInstance.get(`user/`).then((res) => {
+                        const newUser = res.data.find(
+                          (user) => user.user_id === loggedInUser.user_id
+                        );
+                        console.log(newUser);
+                        setLoggedInUser(newUser);
+                      });
+                      setEdit(false);
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  });
+                } catch (error) {
+                  console.log(error);
+                }
+              });
+            } catch (error) {
+              console.log(error.response);
+            }
+          }
+        });
+      }
+    }
+    
+
+
+
+
+
+          //! may profile image na inupload dito
+            else {
       console.log("there is  file");
       const formData = new FormData();
       formData.append("file", data.file[0]);
@@ -798,6 +1005,18 @@ function NutritionistProfile() {
               } else {
                 updatedDiv.textContent = "username available";
       
+                const formData = new FormData();
+                formData.append("file", data.file[0]);
+
+                try {
+                  //  const response =
+          
+                 AxiosInstance.post("shopmealplan/savefile", formData, {
+                    headers: {
+                      "Content-Type": "multipart/form-data",
+                    },
+                  }).then((respo) => {
+
                 try {
                   AxiosInstance.put(`user/`, {
                     user_id: loggedInUser.user_id,
@@ -807,9 +1026,285 @@ function NutritionistProfile() {
                     last_name: data.lastname,
                     privilege: "User",
                     email: loggedInUser.email,
-                    //image: ,
-                  }).then((res) => {
-                    //  console.log(res, res.data);
+                   image: "https://nightxperson.pythonanywhere.com/Photos/" + respo.data,
+                  }).then((resp) => {
+                     console.log(resp, resp.data);
+
+
+                      
+
+
+
+                      
+                     try {
+                      console.log(fileName);
+                      AxiosInstance.put(`user/`, {
+                        user_id: loggedInUser.user_id,
+                        username: data.username,
+                        password: data.password,
+                        first_name: data.firstname,
+                        last_name: data.lastname,
+                        privilege: "Nutritionist",
+                        email: loggedInUser.email,
+                        image: "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
+                        active: 1,
+                      }).then((res) => {
+                        console.log(res, res.data);
+                        // navigate("/Profiling", {
+                        //   state: { email: data.email, name: data.first_name },
+                        // });
+              
+                        // navigate("/Log-In?success=newPassword");
+                        const tempDay = [];
+                        const tempTime = [];
+                        console.log(schedules);
+                        for (let i = 0; i < schedules.length; i++) {
+                          console.log(schedules.length, schedules[i].day);
+                          tempDay.push(schedules[i].day);
+                          tempTime.push(
+                            schedules[i].start_time.format("h:mm A") +
+                              "-" +
+                              schedules[i].end_time.format("h:mm A")
+                          );
+                        }
+                        console.log(nutritionist);
+                        console.log(fileName);
+                        try {
+                          AxiosInstance.put(`nutritionist/`, {
+                            nutritionist_id: nutritionist.nutritionist_id,
+                            username: data.username,
+                            password: nutritionist.password,
+                            first_name: nutritionist.first_name,
+                            last_name: nutritionist.last_name,
+                            license_id: nutritionist.license_id,
+                            schedule_day: tempDay,
+                            schedule_time: tempTime,
+                            image:
+                              "https://nightxperson.pythonanywhere.com/Photos/" + fileName,
+                            license_pic: nutritionist.license_pic,
+                            user_id: nutritionist.user_id,
+                          }).then((res) => {
+                            console.log(res);
+              
+                            const response = AxiosInstance.get(`nutritionist`);
+              
+                            AxiosInstance.get(`nutritionist/`).then((res) => {
+                              const newNutritionist = res.data.find(
+                                (user) => user.user_id === loggedInUser.user_id
+                              );
+                              setnNutritionist(newNutritionist);
+                              console.log(newNutritionist);
+                              const tempSchedule = [];
+                              for (let i = 0; i < newNutritionist.schedule_day.length; i++) {
+                                const timeRange = newNutritionist.schedule_time[i];
+                                const [startTime, endTime] = timeRange.split("-");
+              
+                                const temp = {
+                                  day: newNutritionist.schedule_day[i],
+                                  start_time: dayjs("2024-08-17" + " " + startTime),
+                                  end_time: dayjs("2024-08-10" + " " + endTime),
+                                };
+              
+                                tempSchedule.push(temp);
+                              }
+              
+                              console.log(tempSchedule);
+                              // console.log(tempSchedule);
+                              // console.log(schedules);
+              
+                              setSchedules(tempSchedule);
+                            });
+              
+                            try {
+                              AxiosInstance.get(`user/`).then((res) => {
+                                // {
+                                //   res.data.map((item, index) =>
+                                //   //  console.log(item.username, item.password)
+                                //   );
+                                // }
+                                //  console.log(res.data);
+              
+                                const newUser = res.data.find(
+                                  (user) => user.user_id === loggedInUser.user_id
+                                );
+                                console.log(newUser);
+                                setLoggedInUser(newUser);
+              
+                              //   setProfileDiv(
+                              //     <>
+                              //       <Button
+                              //         sx={{
+                              //           color: "#539801",
+                              //           border: 1,
+                              //           fontWeight: "bold",
+                              //           "&:hover": {
+                              //             backgroundColor: "#539801",
+                              //             color: "#ffffff",
+                              //             border: 0.5,
+                              //             borderColor: "#ffffff",
+                              //           },
+                              //         }}
+                              //         onClick={editProfile}
+                              //       >
+                              //         EDIT
+                              //       </Button>
+                              //       <Grid container spacing={2} sx={{ my: 3 }}>
+                              //         <Grid xs={6} sx={{ ml: "30%" }}>
+                              //           <Typography
+                              //             sx={{
+                              //               color: "#E66253",
+                              //               fontWeight: "bold",
+                              //               textAlign: "left",
+                              //             }}
+                              //           >
+                              //             Username
+                              //           </Typography>
+              
+                              //           <Typography
+                              //             sx={{ color: "#99756E", textAlign: "left" }}
+                              //           >
+                              //             {loggedInUser.username}
+                              //           </Typography>
+                              //         </Grid>
+                              //         <Grid xs={6}> </Grid>
+                              //       </Grid>
+                              //       <Grid container spacing={2} sx={{ my: 3 }}>
+                              //         <Grid xs={10} sx={{ ml: "30%" }}>
+                              //           <Typography
+                              //             sx={{
+                              //               color: "#E66253",
+                              //               fontWeight: "bold",
+                              //               textAlign: "left",
+                              //             }}
+                              //           >
+                              //             Name:{" "}
+                              //           </Typography>
+              
+                              //           <Typography
+                              //             sx={{ color: "#99756E", textAlign: "left" }}
+                              //           >
+                              //             {newUser.first_name} {""}
+                              //             {newUser.last_name}
+                              //           </Typography>
+                              //         </Grid>
+                              //         <Grid xs={6}> </Grid>
+                              //       </Grid>
+                              //       <Grid container spacing={2} sx={{ my: 3 }}>
+                              //         <Grid xs={2} sx={{ ml: "30%" }}>
+                              //           <Typography
+                              //             sx={{
+                              //               color: "#E66253",
+                              //               fontWeight: "bold",
+                              //               textAlign: "left",
+                              //             }}
+                              //           >
+                              //             Passoword:{" "}
+                              //           </Typography>
+              
+                              //           <Typography
+                              //             sx={{ color: "#99756E", textAlign: "left" }}
+                              //           >
+                              //             {newUser.password}
+                              //           </Typography>
+                              //         </Grid>
+                              //         <Grid xs={6}></Grid>
+                              //       </Grid>{" "}
+                              //       <Grid container spacing={2} sx={{ my: 3 }}>
+                              //         <Grid xs={2} sx={{ ml: "30%" }}>
+                              //           <Typography
+                              //             sx={{
+                              //               color: "#E66253",
+                              //               fontWeight: "bold",
+                              //               textAlign: "left",
+                              //             }}
+                              //           >
+                              //             E-mail:{" "}
+                              //           </Typography>
+              
+                              //           <Typography
+                              //             sx={{ color: "#99756E", textAlign: "left" }}
+                              //           >
+                              //             {loggedInUser.email}
+                              //           </Typography>
+                              //         </Grid>
+                              //         <Grid xs={6}></Grid>
+                              //       </Grid>
+                              //       <Box sx={{ ml: "21%", mt: "50px" }}>
+                              //         <Typography
+                              //           sx={{
+                              //             color: "#99756E",
+                              //             fontWeight: "bold",
+                              //             fontSize: "25px",
+                              //             float: "left",
+                              //             ml: 20,
+                              //           }}
+                              //         >
+                              //           Account Removal
+                              //         </Typography>
+                              //         <br />
+                              //         <br />
+                              //         <br />
+                              //         <Button
+                              //           sx={{
+                              //             background: "#E66253",
+                              //             color: "#ffffff",
+                              //             float: "left",
+                              //             ml: 20,
+                              //             px: 3,
+                              //             "&:hover": {
+                              //               backgroundColor: "#ffffff",
+                              //               color: "#E66253",
+                              //               border: 0.5,
+                              //               borderColor: "#E66253",
+                              //             },
+                              //           }}
+                              //         >
+                              //           DEACTIVATE ACCOUNT
+                              //         </Button>
+                              //       </Box>
+                              //       <br />
+                              //       <br />
+                              //       <br />
+                              //       <Button
+                              //         sx={{
+                              //           color: "#B3B3B3",
+                              //           border: 1,
+                              //           fontWeight: "bold",
+                              //           px: 5,
+                              //           "&:hover": {
+                              //             backgroundColor: "#B3B3B3",
+                              //             color: "#ffffff",
+                              //             border: 0.5,
+                              //             borderColor: "#ffffff",
+                              //           },
+                              //         }}
+                              //       >
+                              //         {" "}
+                              //         LOG OUT
+                              //       </Button>
+                              //     </>
+                              //   );
+                             });
+                              setEdit(false);
+                            } catch (error) {
+                              console.log(error);
+                            }
+                          });
+                        } catch (error) {
+                          console.log(error);
+                        }
+                      });
+                    } catch (error) {
+                      console.log(error.response);
+                    }
+
+
+
+
+
+
+
+
                     // navigate("/Profiling", {
                     //   state: { email: data.email, name: data.first_name },
                     // });
@@ -988,6 +1483,12 @@ function NutritionistProfile() {
                 } catch (error) {
                   console.log(error.response);
                 }
+              })
+            }
+
+            catch (error) {
+              console.log(error)
+            }
               }
             });
           }
@@ -1186,7 +1687,7 @@ function NutritionistProfile() {
 
     const updatedData = [...schedules]; // Create a copy of the data array
     const updatedDay = { ...updatedData[index] }; // Create a copy of the object
-    updatedDay.start_time = event; // Update the start_time property
+    updatedDay.end_time = event; // Update the start_time property
     updatedData[index] = updatedDay; // Replace the original object with the updated one
     setSchedules(updatedData); // Update the state
   };
@@ -1202,7 +1703,7 @@ function NutritionistProfile() {
 
     const updatedData = [...schedules]; // Create a copy of the data array
     const updatedDay = { ...updatedData[index] }; // Create a copy of the object
-    updatedDay.end_time = event; // Update the start_time property
+    updatedDay.start_time = event; // Update the start_time property
     updatedData[index] = updatedDay; // Replace the original object with the updated one
     setSchedules(updatedData); // Update the state
   };
@@ -1358,6 +1859,13 @@ function NutritionistProfile() {
     ));
   };
   //?
+
+  const logout = () => {
+    
+    setLoggedInUser(null);
+    setNutritionists(null)
+    navigate("/");
+  }
   return (
     <div
       className="content"
@@ -1852,10 +2360,25 @@ function NutritionistProfile() {
         </Grid>
         <Grid xs={6}></Grid>
       </Grid>
-      <Typography>Schedule:</Typography>
+      <Typography   sx={{ color: "#E66253", fontWeight: "bold" }}
+         >Schedule:</Typography>
       <Grid container spacing={2} sx={{ mt: 2 }}>
         <Grid xs={6}>
-          <Typography>Day</Typography>
+        <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "right", mr: 2 }}
+          >
+           Day:{" "}
+          </Typography>
+
+     
+          {nutritionist?.schedule_day.map((item, index) => (
+                
+                  <Typography key={index}
+            sx={{ color: "#99756E", fontWeight: "bold", textAlign: "right" }}
+          >
+                  {item}
+                </Typography>
+              ))} 
 
           {/* {nutritionist.schedule_day  ((item) => (
             <Typography>item</Typography>
@@ -1877,17 +2400,23 @@ function NutritionistProfile() {
           )}
           {console.log(nutritionist?.username)} */}
         </Grid>
-        <Grid xs={6}>
-          <Typography>Time </Typography>
-
-          {nutritionist && <Typography>{nutritionist.username} </Typography>}
+        <Grid xs={4} sx = {{ml: 5}}>
+         
+        
           <Typography sx={{ color: "#000000" }}>
             {/* {nutritionist?.username}{" "} */}
           </Typography>
           {nutritionist !== null ? (
             <>
-              <Typography>Day</Typography>
-
+                <Typography
+            sx={{ color: "#E66253", fontWeight: "bold", textAlign: "left", ml: 5 }}
+          >Time </Typography>
+              {nutritionist?.schedule_time.map((item, index) => (
+                <Typography key={index}  sx={{ color: "#99756E", fontWeight: "bold", textAlign: "left" }}>
+                 
+                  {item}
+                </Typography>
+              ))} 
               {/* {nutritionist}
               {nutritionist?.schedule_time.map((item, index) => (
                 <Typography key={index}>
@@ -1897,7 +2426,7 @@ function NutritionistProfile() {
                   {item}
                 </Typography>
               ))} */}
-              <Typography>Time </Typography>
+             
               {/* ... Time rendering logic ... */}
             </>
           ) : (
@@ -1905,8 +2434,8 @@ function NutritionistProfile() {
           )}
         </Grid>
       </Grid>
-      <Box sx={{ ml: "21%", mt: "50px" }}>
-        <Typography
+      {/* <Box sx={{ ml: "21%", mt: "50px" }}>
+         <Typography
           sx={{
             color: "#99756E",
             fontWeight: "bold",
@@ -1937,11 +2466,12 @@ function NutritionistProfile() {
         >
           DEACTIVATE ACCOUNT
         </Button>
-      </Box>
+      </Box> */}
       <br />
       <br />
       <br />
       <Button
+      onClick={logout}
         sx={{
           color: "#B3B3B3",
           border: 1,

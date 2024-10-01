@@ -145,6 +145,8 @@ function NutritionistAppointment() {
   //  const te = appointmentData.filter(
   //   (item) => item.date === Dayjs(initialValue).format("YYYY-MM-DD")
   // );
+  dayjs.extend(isSameOrBefore);
+dayjs.extend(isSameOrAfter);
 
   function formatTime12Hour(date) {
     const hours = date.getHours() % 12 || 12;
@@ -394,11 +396,11 @@ let tempCheck = filteredData?.find((data) =>
         );
       } else {
         setTodayAppointment(
-          <>
-            <Typography sx={{ color: "#000000" }}>
+          <Box sx = {{pb: "30%"}}>
+            <Typography sx={{color: "#99756E", fontWeight: "bold", fontSize: "30px"}}>
               No Scheduled Consultation{" "}
             </Typography>
-          </>
+          </Box>
         );
       }
 
@@ -873,10 +875,23 @@ let tempCheck = filteredData?.find((data) =>
         <br />
       
         <Grid container spacing={2} sx={{ ml: "10px", mr: "10%" }}>
-          <Grid xs={7} sx={{ textAlign: "left" }}>
+          <Grid xs={12} sx={{ textAlign: "left" }}>
+            <center>
+          <Typography
+                            sx={{
+                              // display: "flex",
+                              // justifyContent: "flex-start",
+                              // alignItems: "flex-start",
+                              color: "#99756E",
+                              fontWeight: "bold",
+                              fontSize: "1.5em",
+                            }}
+                          > 
             Schedule of Appointments Log
+            </Typography>
+            </center>
           </Grid>
-          <Grid xs={2}>
+          <Grid xs={0}>
             {/* <Button
               sx={{
                 background: "#E66253",
@@ -900,7 +915,7 @@ let tempCheck = filteredData?.find((data) =>
               FILTER BY
             </Button> */}
 
-            <Tooltip title="Open settings">
+            {/* <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Button
                   variant="contained"
@@ -912,7 +927,7 @@ let tempCheck = filteredData?.find((data) =>
                   FILTER: {filtertext}
                 </Button>
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
 
             <Menu
               sx={{ mt: "45px" }}
@@ -1042,11 +1057,16 @@ let tempCheck = filteredData?.find((data) =>
             >
               Approve Appointments
             </Typography>
-            {pendingAppointmentList.filter((item) => item.status === "Approved")
+            {pendingAppointmentList.filter((item) => item.status === "Approved" && dayjs().isSameOrBefore(dayjs(item.date)))
               .length > 0 ? (
               <>
                 {pendingAppointmentList
-                  .filter((item) => item.status === "Approved")
+                 .sort((a, b) => {
+                  const dateA = dayjs(a.date);
+                  const dateB = dayjs(b.date);
+                  return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
+                })
+                  .filter((item) => item.status === "Approved" && dayjs().isSameOrBefore(dayjs(item.date)))
                   ?.map((items) => (
                     <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 , mt: 3}}>
                       <Grid container spacing={2}>
@@ -1128,11 +1148,16 @@ let tempCheck = filteredData?.find((data) =>
             >
               Pending Appointments
             </Typography>
-            {pendingAppointmentList.filter((item) => item.status === "pending")
+            {pendingAppointmentList.filter((item) => item.status === "pending" && dayjs().isSameOrBefore(dayjs(item.date)))
               .length > 0 ? (
               <>
                 {pendingAppointmentList
-                  .filter((item) => item.status === "pending")
+                .sort((a, b) => {
+                  const dateA = dayjs(a.date);
+                  const dateB = dayjs(b.date);
+                  return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
+                })
+                  .filter((item) => item.status === "pending" && dayjs().isSameOrBefore(dayjs(item.date)))
                   ?.map((items) => (
                     <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10, mt: 3 }}>
                       <Grid container spacing={2}>

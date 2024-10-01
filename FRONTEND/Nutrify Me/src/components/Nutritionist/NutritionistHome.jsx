@@ -395,10 +395,10 @@ function NutritionistHome() {
         color: "#000000",
       }}
     >
-    <Box sx = {{ml: 5, mr: 15}}>
-      <Grid container spacing={2} sx={{ mx: 5 }}>
+    <Box sx = {{ml: "5%", mr: "5%"}}>
+      <Grid container spacing={2} sx={{ mx: 0 }}>
         <Grid
-          xs={6}
+          xs={12} md = {5.5}
           sx={{ color: "#99756E", border: 1, borderColor: "#898246" }}
         >
           <Box sx={{ m: 5 }}>
@@ -421,8 +421,8 @@ function NutritionistHome() {
             />
           </Box>
         </Grid>
-        <Grid xs={5.5} sx = {{ml:5}}>
-          <h2>My Scheduled Appointments</h2>
+        <Grid xs={12} md = {5.5} sx = {{ml:"5%"}}>
+          <Typography sx={{color: "#99756E", fontWeight: "bold", fontSize: "30px"}}>My Scheduled Appointments</Typography>
 
           {/* //! Calendar */}
           <div className="calendar-app" style={{ backgroundColor: "#f5f5f5" }}>
@@ -507,7 +507,7 @@ function NutritionistHome() {
       </Box>
       <Box sx={{ mt: 5, mx: 5 }}>
         <Grid container spacing={2}>
-          <Grid xs={5} sx={{ mx: 6 }}>
+          <Grid xs={12} md = {12} sx={{ mx: 6 }}>
             <Box
               sx={{
                 backgroundImage: "url('/images/nutritionist home page.png')",
@@ -525,7 +525,7 @@ function NutritionistHome() {
               }}
             >
               <Grid container spacing={2}>
-                <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "30px" }}>
+                <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "5%" }}>
                   <Box display="flex" justifyContent="flex-start">
                     <Typography
                       sx={{
@@ -547,13 +547,13 @@ function NutritionistHome() {
                           px: 4,
                         }}
                       >
-                        GO TO TELEMEDICINE
+                        GO TO APPOINTMENT
                       </Button>
                     </Typography>
                     <br />
                   </Box>
                 </Grid>
-                <Grid xs={6}></Grid>
+                <Grid xs={12} md = {5} ></Grid>
               </Grid>
             </Box>
             <Box
@@ -574,7 +574,7 @@ function NutritionistHome() {
               }}
             >
               <Grid container spacing={2}>
-                <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "30px" }}>
+                <Grid xs={6} sx={{ justifyContent: "flex-end", ml: "5%" }}>
                   <Box display="flex" justifyContent="flex-start">
                     <Typography
                       sx={{
@@ -620,9 +620,9 @@ function NutritionistHome() {
               </Grid>
             </Box>
           </Grid>
-          <Grid xs={5} sx={{ mx: 5 }}>
+          <Grid xs={0} sx={{ mx: 5 }}>
             {" "}
-            <Box sx={{ border: 2, borderRadius: 5, borderColor: "#898246" }}>
+            {/* <Box sx={{ border: 2, borderRadius: 5, borderColor: "#898246" }}>
               <Typography>
                 Upcoming Appointments
                 <Button sx={{ color: "#B3B3B3", textDecoration: "underline" }}>
@@ -634,7 +634,7 @@ function NutritionistHome() {
                 appointmentData
                   .slice(1)
                   .map((item, index) => (
-                    <Box key={index}>{/* Your box content here */}</Box>
+                    <Box key={index}></Box>
                   ))
               ) : (
                 <p>No upcoming appointments.</p>
@@ -651,8 +651,7 @@ function NutritionistHome() {
                     borderColor: "#898246",
                   }}
                 >
-                  {/* {getUserInfo(item.user_id)}
-                  {console.log(loggedInUser)} */}
+                
                   {console.log(
                     users.find((user) => user.user_id === item.user_id)
                       ?.first_name
@@ -688,7 +687,7 @@ function NutritionistHome() {
                   <br />
                 </Box>
               ))}
-            </Box>
+            </Box> */}
           </Grid>
         </Grid>
       </Box>

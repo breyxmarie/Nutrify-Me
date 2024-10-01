@@ -96,6 +96,26 @@ console.log(userfound)
               )
             );
             break;
+          case "User":
+            // try {
+            //   AxiosInstance.put(`user/`, {
+            //     user_id: loggedInUser.user_id,
+            //     username: loggedInUser.username,
+            //     password: loggedInUser.password,
+            //     first_name: loggedInUser.first_name,
+            //     last_name: loggedInUser.last_name,
+            //     privilege: loggedInUser.privilege,
+            //     email: loggedInUser.email,
+            //     active: 0,
+            //     image: data.image,
+            //   }).then((res) => {
+            //     console.log(res, res.data);
+            //     handleOpen()
+            //   });
+            // } catch (error) {
+            //   console.log(error.response);
+            // }
+            break;
         }
         navigate(
           loggedInUser.privilege === "User"
@@ -108,7 +128,7 @@ console.log(userfound)
         );
       } 
         else {
-          toast.success("Yoru account has been deactivated please contact support");
+          toast.success("Your account has been deactivated please contact support");
 
       }
    

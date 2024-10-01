@@ -9,6 +9,8 @@ import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Modal from "@mui/material/Modal";
+
 
 function UserProfile() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
@@ -229,6 +231,7 @@ function UserProfile() {
                   <br />
                   <br />
                   <Button
+                  onClick = {logout}
                     sx={{
                       color: "#B3B3B3",
                       border: 1,
@@ -632,6 +635,7 @@ function UserProfile() {
                         <br />
                         <br />
                         <Button
+                        onClick = {deactivate}
                           sx={{
                             background: "#E66253",
                             color: "#ffffff",
@@ -1359,6 +1363,67 @@ function UserProfile() {
     GetData();
     // console.log(userData);
   }, []);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+ 
+  };
+
+
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 3,
+    color: "#ffffff",
+  };
+
+
+  const deactivate = () => {
+    try {
+      AxiosInstance.put(`user/`, {
+        user_id: loggedInUser.user_id,
+        username: loggedInUser.username,
+        password: loggedInUser.password,
+        first_name: loggedInUser.first_name,
+        last_name: loggedInUser.last_name,
+        privilege: loggedInUser.privilege,
+        email: loggedInUser.email,
+        active: 0,
+        image: data.image,
+      }).then((res) => {
+        console.log(res, res.data);
+        handleOpen()
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+    
+  }
+
+
+  const leave = () => {
+    navigate("/")
+  }
+  const logout = () => {
+    
+    setLoggedInUser(null);
+    setNutritionists(null)
+    navigate("/");
+  }
   return (
     <div
       className="content"
@@ -1368,6 +1433,24 @@ function UserProfile() {
         fontFamily: "Poppins",
       }}
     >
+
+              <Modal
+                open={isOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box sx={style}>
+                  <Typography sx = {{color: "#000000"}}>
+                    Your account has been deactivated please.
+                    Please Log In to activate again
+                  </Typography>
+
+                  <Button onClick={leave}>
+                    Okay</Button>
+
+                  </Box>
+                  </Modal>
       {" "}
       <center>
         {/* <img src="/images/profile pic.png" height="190" /> */}
