@@ -10,9 +10,17 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Modal from "@mui/material/Modal";
-
+import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 
 function UserProfile() {
+
+  const navigate = useNavigate();
+  const logout = () => {
+    
+    setLoggedInUser(null);
+    
+    navigate("/");
+  }
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [file, setFile] = useState();
   //console.log(loggedInUser);
@@ -210,6 +218,7 @@ function UserProfile() {
                     <br />
                     <br />
                     <Button
+                     onClick = {deactivate}
                       sx={{
                         background: "#E66253",
                         color: "#ffffff",
@@ -231,7 +240,7 @@ function UserProfile() {
                   <br />
                   <br />
                   <Button
-                  onClick = {logout}
+                  onClick={logout}
                     sx={{
                       color: "#B3B3B3",
                       border: 1,
@@ -421,6 +430,7 @@ function UserProfile() {
                         <br />
                         <br />
                         <Button
+                         onClick = {deactivate}
                           sx={{
                             background: "#E66253",
                             color: "#ffffff",
@@ -442,6 +452,7 @@ function UserProfile() {
                       <br />
                       <br />
                       <Button
+                       onClick={logout}
                         sx={{
                           color: "#B3B3B3",
                           border: 1,
@@ -669,6 +680,7 @@ function UserProfile() {
                             borderColor: "#ffffff",
                           },
                         }}
+                        onClick={logout}
                       >
                         {" "}
                         LOG OUT
@@ -848,6 +860,7 @@ function UserProfile() {
                             <br />
                             <br />
                             <Button
+                             onClick = {deactivate}
                               sx={{
                                 background: "#E66253",
                                 color: "#ffffff",
@@ -881,6 +894,7 @@ function UserProfile() {
                                 borderColor: "#ffffff",
                               },
                             }}
+                            onClick={logout}
                           >
                             {" "}
                             LOG OUT
@@ -1319,6 +1333,7 @@ function UserProfile() {
         <br />
         <br />
         <Button
+         onClick = {deactivate}
           sx={{
             background: "#E66253",
             color: "#ffffff",
@@ -1340,6 +1355,7 @@ function UserProfile() {
       <br />
       <br />
       <Button
+       onClick={logout}
         sx={{
           color: "#B3B3B3",
           border: 1,
@@ -1418,12 +1434,7 @@ function UserProfile() {
   const leave = () => {
     navigate("/")
   }
-  const logout = () => {
-    
-    setLoggedInUser(null);
-    setNutritionists(null)
-    navigate("/");
-  }
+
   return (
     <div
       className="content"
