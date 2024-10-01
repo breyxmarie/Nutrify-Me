@@ -21,6 +21,28 @@ function UserProfile() {
     
     navigate("/");
   }
+
+  const deactivate = () => {
+    try {
+      AxiosInstance.put(`user/`, {
+        user_id: loggedInUser.user_id,
+        username: loggedInUser.username,
+        password: loggedInUser.password,
+        first_name: loggedInUser.first_name,
+        last_name: loggedInUser.last_name,
+        privilege: loggedInUser.privilege,
+        email: loggedInUser.email,
+        active: 0,
+        image: data.image,
+      }).then((res) => {
+        console.log(res, res.data);
+        handleOpen()
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+    
+  }
   const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [file, setFile] = useState();
   //console.log(loggedInUser);
@@ -1408,27 +1430,7 @@ function UserProfile() {
   };
 
 
-  const deactivate = () => {
-    try {
-      AxiosInstance.put(`user/`, {
-        user_id: loggedInUser.user_id,
-        username: loggedInUser.username,
-        password: loggedInUser.password,
-        first_name: loggedInUser.first_name,
-        last_name: loggedInUser.last_name,
-        privilege: loggedInUser.privilege,
-        email: loggedInUser.email,
-        active: 0,
-        image: data.image,
-      }).then((res) => {
-        console.log(res, res.data);
-        handleOpen()
-      });
-    } catch (error) {
-      console.log(error.response);
-    }
-    
-  }
+
 
 
   const leave = () => {

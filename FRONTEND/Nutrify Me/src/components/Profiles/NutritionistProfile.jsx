@@ -2052,9 +2052,9 @@ function NutritionistProfile() {
           </form>
 
           <div className="schedule-manager">
-            Schedule
+            Add New Schedule
             <div className="schedule-form">
-              <Grid container spacing={2}>
+              {/* <Grid container spacing={2}>
                 <Grid xs={8}> Day:</Grid>
                 <Grid xs={0}>
                   {" "}
@@ -2071,11 +2071,26 @@ function NutritionistProfile() {
                     ))}
                   </Select>
                 </Grid>
-              </Grid>
+              </Grid> */}
 
               <Grid container spacing={2} sx={{ mt: 2 }}>
-                <Grid xs={2}>Start Time:</Grid>
+                {/* <Grid xs={2}>Start Time:</Grid> */}
+                <Grid xs = {3}>Day: <br/>
+                <Select
+                    labelId="demo-simple-select-filled-label"
+                    id="demo-simple-select-filled"
+                    value={day}
+                    // onChange={onChange}
+                    // error={!!error}
+                    onChange={(event) => setDay(event.target.value)}
+                  >
+                    {dayChoices.map((option) => (
+                      <MenuItem value={option}>{option}</MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
                 <Grid xs={3}>
+                Start Time:
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer
                       components={["TimePicker"]}
@@ -2102,8 +2117,9 @@ function NutritionistProfile() {
                     </DemoContainer>
                   </LocalizationProvider>
                 </Grid>
-                <Grid xs={2}>End Time:</Grid>
+                {/* <Grid xs={2}>End Time:</Grid> */}
                 <Grid xs={3}>
+                End Time:
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer
                       components={["TimePicker"]}
@@ -2130,6 +2146,25 @@ function NutritionistProfile() {
                     </DemoContainer>
                   </LocalizationProvider>
                 </Grid>
+                <Grid xs = {3}>
+                <Button onClick={handleAddSchedule}   
+              sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                float: "center",
+                mt: 5,
+                ml: 0,
+                px: 3,
+                "&:hover": {
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 0.5,
+                  borderColor: "#E66253",
+                },
+              }}>
+                 Add Schedule
+              </Button>
+                </Grid>
               </Grid>
               {/* <input
             type="text"
@@ -2143,17 +2178,20 @@ function NutritionistProfile() {
             value={newDetails}
             onChange={(event) => setNewDetails(event.target.value)}
           /> */}
-              <button onClick={handleAddSchedule}>
-                <i className="fas fa-plus"></i> Add Schedule
-              </button>
+          <br/>
+             
             </div>
+            <br/>
             {renderSchedules}
+            Schedule
             {schedules.map((schedule, index) => (
               <div key={index} className="schedule-item">
-                <Grid container spacing={2}>
-                  <Grid xs={8}> Day:</Grid>
-                  <Grid xs={0}>
+                {/* <Grid container spacing={2} sx={{ mt: 2 }}>
+                  <br/>
+                  <Grid xs={2}> Day:</Grid>
+                  <Grid xs={5}>
                     {" "}
+                    Day:
                     <Select
                       labelId="demo-simple-select-filled-label"
                       id="demo-simple-select-filled"
@@ -2167,12 +2205,29 @@ function NutritionistProfile() {
                       ))}
                     </Select>
                   </Grid>
-                </Grid>
+                </Grid> */}
 
                 <Grid container spacing={2} sx={{ mt: 2 }}>
-                  <Grid xs={2}>Start Time:</Grid>
+                  <Grid xs = {3}>
+                Day: <br/>
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      value={schedule.day}
+                      // onChange={onChange}
+                      // error={!!error}
+                      onChange={(event) => setDay(event.target.value)}
+                    >
+                      {dayChoices.map((option) => (
+                        <MenuItem value={option}>{option}</MenuItem>
+                      ))}
+                    </Select>
+                    </Grid>
+                  {/* <Grid xs={1}>Start Time:</Grid> */}
                   <Grid xs={3}>
+                  Start Time:
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <br/>
                       {/* {console.log(schedules)}
 
                       {console.log(schedule.start_time)} */}
@@ -2200,8 +2255,9 @@ function NutritionistProfile() {
                       </DemoContainer>
                     </LocalizationProvider>
                   </Grid>
-                  <Grid xs={2}>End Time:</Grid>
+                  {/* <Grid xs={1}>End Time:</Grid> */}
                   <Grid xs={3}>
+                  End Time:
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer
                         components={["TimePicker"]}
@@ -2230,14 +2286,26 @@ function NutritionistProfile() {
                       </DemoContainer>
                     </LocalizationProvider>
                   </Grid>
-                  <Grid>
+                  <Grid xs = {3}>
                     {" "}
-                    <button
-                      className="delete-button"
+                    <Button
+                      sx={{
+                        background: "#E66253",
+                        color: "#ffffff",
+                        float: "center",
+                        ml: 0,
+                        px: 3,
+                        "&:hover": {
+                          backgroundColor: "#ffffff",
+                          color: "#E66253",
+                          border: 0.5,
+                          borderColor: "#E66253",
+                        },
+                      }}
                       onClick={() => removeSchedule(index)}
                     >
-                      <i className="fas fa-minus"></i> Delete
-                    </button>
+                      Delete
+                    </Button>
                   </Grid>
                 </Grid>
 
