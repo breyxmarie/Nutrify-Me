@@ -715,7 +715,9 @@ function TelemedicineConsultation() {
         join();
         setHasJoined(true);  // Prevent future join calls
       }
-    }, [authToken, meetingId, hasJoined]); 
+    //}, [authToken, meetingId, hasJoined]); 
+  }, [authToken, meetingId, hasJoined]); 
+
     // useEffect(() => {
     //   if (joined !== "JOINED") {
     //     join();  // Only call join if the meeting hasn't been joined already
