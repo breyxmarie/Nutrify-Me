@@ -1456,9 +1456,9 @@ function MealPlanShopRecommendRequestCheckout() {
         <Grid container = {2}>
         <Grid xs = {12} lg = {6}><Box sx={{ borderRadius: 0, border: 1, mx: 5,
             pb: {
-              xs: "60%", // Extra small devices (less than 600px)
-              sm: "30%", // Small devices (600px and up)
-              md: "45%", // Medium devices (900px and up)
+              xs: "40%", // Extra small devices (less than 600px)
+              sm: "49%", // Small devices (600px and up)
+              md: "35%", // Medium devices (900px and up)
               lg: "45%",
             },
          }}>
@@ -1479,7 +1479,12 @@ function MealPlanShopRecommendRequestCheckout() {
                 <Typography sx={{ color: "#000000" }}>Loading...</Typography>
               ) : (
                 <>
-                  <Typography sx={{ color: "#000000" }}>
+                  <Typography sx={{ color: "#000000", fontSize:  {
+                  xs: "0.5em", // Extra small devices (less than 600px)
+                  sm: "0.8em", // Small devices (600px and up)
+                  md: "1em", // Medium devices (900px and up)
+                  lg: "1em",
+                }}}>
                     {addressData[selectedAddress]?.name} |{" "}
                     {addressData[selectedAddress]?.phone} <br />
                     {addressData[selectedAddress]?.address}
@@ -1494,10 +1499,10 @@ function MealPlanShopRecommendRequestCheckout() {
                             // Extra large devices (1536px and up)
                           },
                           height: {
-                            xs: "110%", // Extra small devices (less than 600px)
-                            sm: "200%", // Small devices (600px and up)
-                            md: "430%", // Medium devices (900px and up)
-                            lg: "450%", // Large devices (1200px and up)
+                            xs: "390%", // Extra small devices (less than 600px)
+                            sm: "400%", // Small devices (600px and up)
+                            md: "300%", // Medium devices (900px and up)
+                            lg: "300%", // Large devices (1200px and up)
                           },
                         }}
                       > 

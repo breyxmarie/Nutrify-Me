@@ -187,7 +187,7 @@ function AdminNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 7,
-              mx: "30%",
+              mx: "10%",
             }}
           >
             {pages.map((page) => (

@@ -120,11 +120,11 @@ console.log(userfound)
         navigate(
           loggedInUser.privilege === "User"
             ? "/user-home"
-            : loggedInUser.privilege === "Admin"
-            ? "/admin-home"
+            : loggedInUser.privilege === "Seller"
+            ? "/seller-home"
             : loggedInUser.privilege === "Nutritionist"
             ? "/nutritionist-home"
-            : "/seller-home"
+            : "/admin-home"
         );
       } 
         else {

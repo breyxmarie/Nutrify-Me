@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -267,9 +267,20 @@ function NutritionistCreateMealPlan() {
     // password: yup.string().min(8).max(32).required(),
   });
 
+  const [profiling, setProfiling] = useState()
+  const getData = async () => {
+    await AxiosInstance.get(`profiling`).then((res) => {
+      console.log(res.data, location.state.item.user_id)
+      setProfiling(res.data.find((item) => item.user_id === location.state.item.user_id));
+    })
+  }
+  console.log(location, profiling)
   const form1 = useForm({ resolver: yupResolver(schema) }); // For form 1 with schema1
   const form2 = useForm({ resolver: yupResolver(mealPlanschema) });
 
+  useEffect(() => {
+    getData()
+}, [])
   const {
     register,
     handleSubmit,
@@ -1501,41 +1512,21 @@ function NutritionistCreateMealPlan() {
                   Patient: {location.state.item.first_name}{" "}
                   {location.state.item.last_name}
                 </Typography>
-
-                <Typography
-                  display="flex"
-                  justifyContent="flex-start"
-                  sx={{
-                    color: "#99756E",
-                    fontWeight: "bold",
-                    fontSize: "1.2em",
-                  }}
-                >
-                  Hypertension:
-                </Typography>
-
-                <Typography
-                  display="flex"
-                  justifyContent="flex-start"
-                  sx={{
-                    color: "#99756E",
-                    fontWeight: "bold",
-                    fontSize: "1.2em",
-                  }}
-                >
-                  Medication:
-                </Typography>
-                <Typography
-                  display="flex"
-                  justifyContent="flex-start"
-                  sx={{
-                    color: "#99756E",
-                    fontWeight: "bold",
-                    fontSize: "1.2em",
-                  }}
-                >
-                  Hypertension Diagnosis Date:
-                </Typography>
+{console.log(profiling)}
+                <Typography display="flex"
+                        justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
+            Hypertension:  
+            { profiling?.hypertension ? (<>Yes</>)
+            : (<>No</>) }
+        </Typography>
+        <Typography display="flex"
+                        justifyContent="flex-start" sx = {{color: "#99756E", fontWeight:"bold", fontSize: "1.2em"}}>
+            Medication:
+               
+            { profiling?.takingMeds ? (<>Yes</>)
+            : (<>N/A</>) }
+        </Typography>
+           
                 {/* <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"

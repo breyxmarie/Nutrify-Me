@@ -2,12 +2,15 @@ import { Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import dayjs from "dayjs";
+import { ToastContainer, toast } from "react-toastify";
 import Button from "@mui/material/Button";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import AxiosInstance from "../forms/AxiosInstance";
 import Modal from "@mui/material/Modal";
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
+
 
 function HomePage() {
   const [userData, setUserData] = useState([]);
@@ -101,6 +104,7 @@ function HomePage() {
         image: data.image,
       }).then((res) => {
         console.log(res, res.data);
+        toast.success("Account Activated");
         navigate("/admin-home");
         GetData();
         // navigate("/Profiling", {
@@ -130,6 +134,7 @@ function HomePage() {
         console.log(res, res.data);
         GetData();
         navigate("/admin-home");
+        toast.success("Account Deactivated");
         // navigate("/Profiling", {
         //   state: { email: data.email, name: data.first_name },
         // });
@@ -296,7 +301,7 @@ function HomePage() {
           </Grid>
 
           <Grid xs={6} sx={{ float: "right" }}>
-            Date Today
+            {dayjs().format("MMMM DD, YYYY")}
           </Grid>
         </Grid>
       </Box>

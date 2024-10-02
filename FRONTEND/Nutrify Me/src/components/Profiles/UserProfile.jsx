@@ -33,13 +33,14 @@ function UserProfile() {
         privilege: loggedInUser.privilege,
         email: loggedInUser.email,
         active: 0,
-        image: data.image,
+        image: loggedInUser.image,
       }).then((res) => {
         console.log(res, res.data);
+  
         handleOpen()
       });
     } catch (error) {
-      console.log(error.response);
+      console.log(error);
     }
     
   }
@@ -1454,14 +1455,27 @@ function UserProfile() {
                 aria-describedby="modal-description"
               >
                 <Box sx={style}>
-                  <Typography sx = {{color: "#000000"}}>
-                    Your account has been deactivated please.
-                    Please Log In to activate again
+                  <Typography sx = {{color: "#ffffff"}}>
+                    Your account has been deactivated.
+                   
                   </Typography>
-
-                  <Button onClick={leave}>
+                  <br/>
+                  <center>
+                  <Button onClick={leave}   sx={{
+                        background: "#ffffff",
+                        color: "#E66253",
+                        float: "center",
+                        ml: 0,
+                        px: 3,
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}>
                     Okay</Button>
-
+                    </center>
                   </Box>
                   </Modal>
       {" "}
