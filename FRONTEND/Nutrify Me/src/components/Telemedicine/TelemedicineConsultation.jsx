@@ -33,7 +33,7 @@ import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
-
+  const [meetingId, setMeetingId] = useState("hykm-ec71-maf8");
   const authToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
 
@@ -970,7 +970,7 @@ function TelemedicineConsultation() {
     );
   }
 
-  const [meetingId, setMeetingId] = useState("hykm-ec71-maf8");
+ 
 
   //Getting the meeting id by calling the api we just wrote
   const getMeetingAndToken = async (id) => {
