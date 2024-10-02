@@ -997,15 +997,13 @@ function MealPlanShopMealPlans() {
               )
               .map((plan, index) => (
                 <Grid
-                  item
+                //  item
                   xs={8}
                   sm={8}
                   md={6}
                  // key={index}
                  //!
                   key={plan.shop_mealplan_id}
-
-                  
                   sx={{
                     mb: {
                       xs: "45%", // For extra small screens
@@ -1056,7 +1054,6 @@ function MealPlanShopMealPlans() {
                       background: "#D9D9D9",
                       color: "#000000",
                       ml: 2,
-
                       px: 2,
                       py: 1,
                       fontSize: {
