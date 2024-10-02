@@ -730,10 +730,10 @@ function TelemedicineConsultation() {
     return (
       <div className="container">
         {/* <h3>Meeting Id: {props.meetingId}</h3> */}
-        {/* {joined && joined == "JOINED" ? ( */}
+    
 
-        {[...participants.entries()].length > 0 ? (
-
+        {/* {[...participants.entries()].length > 0 ? ( */}
+        {joined && joined == "JOINED" ? (
           <div>
             {/* <Controls /> */}
             {/* //For rendering all the participants in the meeting */}
