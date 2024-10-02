@@ -723,12 +723,17 @@ function TelemedicineConsultation() {
     //     join();  // Only call join if the meeting hasn't been joined already
     //   }
     // }, [joined, join]);
-    const participantEntries = [...participants.entries()]; // Extract participant entries once
 
+    const participantEntries = useMemo(() => [...participants.entries()], [participants]);
+
+      
     return (
       <div className="container">
         {/* <h3>Meeting Id: {props.meetingId}</h3> */}
-        {joined && joined == "JOINED" ? (
+        {/* {joined && joined == "JOINED" ? ( */}
+
+        {[...participants.entries()].length > 0 ? (
+
           <div>
             {/* <Controls /> */}
             {/* //For rendering all the participants in the meeting */}
@@ -801,7 +806,7 @@ function TelemedicineConsultation() {
               <br />
 
               {/* {[...participants.entries()].length === 1 ? ( */}
-              {participantEntries.length <= 1 ? (
+              {[...participants.entries()].length <= 1 ? (
 
                 <>
                   {console.log(participants, "hi")}
@@ -810,9 +815,7 @@ function TelemedicineConsultation() {
                     key={[...participants.entries()][0][0]}
                   />
                 </>
-              // ) : [...participants.entries()].length > 1 ? (
-              ) : participantEntries.length > 1 ? (
-
+              ) : [...participants.entries()].length > 1 ? (
                 <Box>
                   {" "}
                   <Grid container spacing={2}>
