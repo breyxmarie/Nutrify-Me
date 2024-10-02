@@ -24,7 +24,26 @@ import { ToastContainer, toast } from "react-toastify";
 
 function MealPlanShopMealPlans() {
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
-
+  const [shopMealPlan, setShopMealPlan] = useState([
+    // {
+    //   name: "High Protein",
+    //   description: "lorem ipsum",
+    //   image: "/images/plan food.png",
+    //   price: 50,
+    //   quantity: 1,
+    //   subtotal: 6,
+    //   product: "High Protein",
+    // },
+    // {
+    //   name: "Vegetarian",
+    //   description: "lorem ipsum",
+    //   image: "/images/plan food.png",
+    //   price: 50,
+    //   quantity: 1,
+    //   subtotal: 6,
+    //   product: "Vegetarian",
+    // },
+  ]);
   //? sliders
   const sliderRefs = useRef([]);
   const [slidersReady, setSlidersReady] = useState(false);
@@ -51,10 +70,13 @@ function MealPlanShopMealPlans() {
   };
 
   const settings = {
-    dots: true, // Enable pagination dots
-    infinite: true, // Enable infinite looping
+    dots: true, // Enable pagination dots shopMealPlan.length > 1
+   // infinite: true, // Enable infinite looping 
+    infinite: shopMealPlan.length > 1, // Enable infinite looping 
+
     slidesToShow: 1, // Number of slides visible at once
     slidesToScroll: 1, // Number of slides to scroll per click
+    arrows: shopMealPlan.length > 1,
   };
 
   //?
@@ -215,26 +237,7 @@ function MealPlanShopMealPlans() {
   const currentWeekStart = dayjs(value).startOf("week").format("YYYY-MM-DD");
   const currentWeekEnd = dayjs(value).endOf("week").format("YYYY-MM-DD");
   // console.log(value, currentWeekStart, currentWeekEnd);
-  const [shopMealPlan, setShopMealPlan] = useState([
-    // {
-    //   name: "High Protein",
-    //   description: "lorem ipsum",
-    //   image: "/images/plan food.png",
-    //   price: 50,
-    //   quantity: 1,
-    //   subtotal: 6,
-    //   product: "High Protein",
-    // },
-    // {
-    //   name: "Vegetarian",
-    //   description: "lorem ipsum",
-    //   image: "/images/plan food.png",
-    //   price: 50,
-    //   quantity: 1,
-    //   subtotal: 6,
-    //   product: "Vegetarian",
-    // },
-  ]);
+ 
   const [shopMeal, setShopMeal] = useState();
 
   const getMealPlanData = () => {
@@ -992,7 +995,7 @@ function MealPlanShopMealPlans() {
             > {shopMealPlan
               .filter(
                 (item) =>
-                  item.start_week ==
+                  item.start_week ===
                   dayjs(value).startOf("week").format("YYYY-MM-DD")
               )
               .map((plan, index) => (
@@ -1001,9 +1004,9 @@ function MealPlanShopMealPlans() {
                   xs={8}
                   sm={8}
                   md={6}
-                 key={index}
-                 //!
-                 // key={plan.shop_mealplan_id}
+               //  key={index}
+                 //! shop_mealplan_id
+                 key={plan.shop_mealplan_id || index}
                   sx={{
                     mb: {
                       xs: "45%", // For extra small screens
@@ -1014,6 +1017,7 @@ function MealPlanShopMealPlans() {
                     },
                   }}
                 >
+                  {console.log(plan)}
                   <center>
                   <img src={plan.image} width="60%" height="30%" />
                   </center>
