@@ -809,7 +809,7 @@ function TelemedicineConsultation() {
               {[...participants.entries()].length === 1 ? (
 
                 <>
-                  {console.log(participants,, "hi")}
+                  {console.log(participants, "hi")}
                   <ParticipantView
                     participantId={[...participants.entries()][0][0]}
                     key={[...participants.entries()][0][0]}
