@@ -954,17 +954,17 @@ function NutritionistHome() {
   //     clients.unpublish(localTracks).then(() => clients.leave());
   //   };
   // }, []);
-//   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
-//   useEffect(() => {
+  useEffect(() => {
  
-//     // Trigger any logic here
-//     console.log("authToken and meetingId are available");
+    // Trigger any logic here
+    console.log("authToken and meetingId are available");
 
-//     // Update the forceRender state to trigger a re-render
-//     setForceRender(forceRender => forceRender + 1);
+    // Update the forceRender state to trigger a re-render
+    setForceRender(forceRender => forceRender + 1);
  
-// }, [authToken, meetingId]);
+}, [authToken, meetingId]);
 
   return (
     <div
