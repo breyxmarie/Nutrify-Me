@@ -806,7 +806,7 @@ function TelemedicineConsultation() {
               <br />
 
               {/* {[...participants.entries()].length === 1 ? ( */}
-              {[...participants.entries()].length > 0 &&  [...participants.entries()].length < 2? (
+              {[...participants.entries()].length === 1 ? (
 
                 <>
                   {console.log(participants, "hi")}
