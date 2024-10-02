@@ -649,7 +649,7 @@ function TelemedicineConsultation() {
       </Button>
     );
   }
-
+  const [hasJoined, setHasJoined] = useState(false);
   function MeetingView(props) {
     const [joined, setJoined] = useState(null);
     const { leave, toggleMic, toggleWebcam } = useMeeting();
@@ -706,7 +706,7 @@ function TelemedicineConsultation() {
 
     // //!
     
-    const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
+     // Track if the meeting is already joined
     useEffect(() => {
       if (authToken && meetingId && !hasJoined) {
         console.log("Joining the meeting for the first time");
