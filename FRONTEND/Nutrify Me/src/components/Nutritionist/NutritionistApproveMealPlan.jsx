@@ -130,9 +130,10 @@ function NutritionistApproveMealPlan() {
                   mt: 2,
                 }}
               >
-                {items.name} <br />
-                {items.description}
-                {items.start_week}
+                Name: {" "}{items.name} <br />
+                Description: {" "}{items.description}
+                <br/>
+                Start Week: {" "}{dayjs(items.start_week).format("MMMM DD, YYYY")}
                 <br />
                 <Button
                   onClick={() => handleOpenRecommend(items.shop_mealplan_id)}

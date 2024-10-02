@@ -1057,7 +1057,7 @@ let tempCheck = filteredData?.find((data) =>
             >
               Approve Appointments
             </Typography>
-            {pendingAppointmentList.filter((item) => item.status === "Approved" && dayjs().isSameOrBefore(dayjs(item.date)))
+            {pendingAppointmentList.filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
               .length > 0 ? (
               <>
                 {pendingAppointmentList
@@ -1066,7 +1066,7 @@ let tempCheck = filteredData?.find((data) =>
                   const dateB = dayjs(b.date);
                   return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
                 })
-                  .filter((item) => item.status === "Approved" && dayjs().isSameOrBefore(dayjs(item.date)))
+                  .filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
                   ?.map((items) => (
                     <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 , mt: 3}}>
                       <Grid container spacing={2}>
@@ -1148,7 +1148,7 @@ let tempCheck = filteredData?.find((data) =>
             >
               Pending Appointments
             </Typography>
-            {pendingAppointmentList.filter((item) => item.status === "pending" && dayjs().isSameOrBefore(dayjs(item.date)))
+            {pendingAppointmentList.filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
               .length > 0 ? (
               <>
                 {pendingAppointmentList
@@ -1157,7 +1157,7 @@ let tempCheck = filteredData?.find((data) =>
                   const dateB = dayjs(b.date);
                   return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
                 })
-                  .filter((item) => item.status === "pending" && dayjs().isSameOrBefore(dayjs(item.date)))
+                  .filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
                   ?.map((items) => (
                     <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10, mt: 3 }}>
                       <Grid container spacing={2}>

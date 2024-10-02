@@ -7,6 +7,7 @@ import { Tab, Tabs } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
+
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
 import dayjs from "dayjs";
@@ -3109,11 +3110,11 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                   >
                     Approve Appointments
                   </Typography>
-                  {appointmentList.filter((item) => item.status === "Approved")
+                  {appointmentList.filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
                     .length > 0 ? (
                     <>
                       {appointmentList
-                        .filter((item) => item.status === "Approved")
+                        .filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
                         ?.map((items) => (
                           <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
                             <Typography
@@ -3165,11 +3166,11 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                   >
                     Pending Appointments
                   </Typography>
-                  {appointmentList.filter((item) => item.status === "pending")
+                  {appointmentList.filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
                     .length > 0 ? (
                     <>
                       {appointmentList
-                        .filter((item) => item.status === "pending")
+                        .filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
                         ?.map((items) => (
                           <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
                             <Typography

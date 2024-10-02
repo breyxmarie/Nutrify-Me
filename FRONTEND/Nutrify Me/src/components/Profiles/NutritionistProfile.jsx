@@ -2146,7 +2146,7 @@ function NutritionistProfile() {
                     </DemoContainer>
                   </LocalizationProvider>
                 </Grid>
-                <Grid xs = {3}>
+                <Grid xs = {2}>
                 <Button onClick={handleAddSchedule}   
               sx={{
                 background: "#E66253",
@@ -2286,7 +2286,7 @@ function NutritionistProfile() {
                       </DemoContainer>
                     </LocalizationProvider>
                   </Grid>
-                  <Grid xs = {3}>
+                  <Grid xs = {2}>
                     {" "}
                     <Button
                       sx={{
@@ -2294,6 +2294,7 @@ function NutritionistProfile() {
                         color: "#ffffff",
                         float: "center",
                         ml: 0,
+                        mt: 5,
                         px: 3,
                         "&:hover": {
                           backgroundColor: "#ffffff",
