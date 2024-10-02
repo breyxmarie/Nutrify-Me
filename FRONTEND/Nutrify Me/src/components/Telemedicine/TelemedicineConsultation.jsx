@@ -650,43 +650,118 @@ function TelemedicineConsultation() {
     );
   }
 
- 
   function MeetingView(props) {
     const [joined, setJoined] = useState(null);
     const { leave, toggleMic, toggleWebcam } = useMeeting();
+    //Get the method which will be used to join the meeting.
+    //We will also get the participants list to display all participants
     const { join, participants } = useMeeting({
-      onMeetingJoined: () => setJoined("JOINED"),
-      onMeetingLeft: props.onMeetingLeave,
+      //callback for when meeting is joined successfully
+      onMeetingJoined: () => {
+        setJoined("JOINED");
+      },
+      //callback for when meeting is left
+      onMeetingLeft: () => {
+        props.onMeetingLeave();
+      },
     });
     
-    const [hasJoined, setHasJoined] = useState(false); // Track if the meeting is already joined
-  
+    console.log([...participants.entries()].length);
+    const joinMeeting = () => {
+      setJoined("JOINING");
+      join();
+    };
+
+    // //! participant view
+
+    // const micRef = useRef(null);
+    // const { webcamStream, micStream, webcamOn, micOn, isLocal, displayName } =
+    //   useParticipant(props.participantId);
+
+    // const videoStream = useMemo(() => {
+    //   if (webcamOn && webcamStream) {
+    //     const mediaStream = new MediaStream();
+    //     mediaStream.addTrack(webcamStream.track);
+    //     return mediaStream;
+    //   }
+    // }, [webcamStream, webcamOn]);
+
+    // useEffect(() => {
+    //   if (micRef.current) {
+    //     if (micOn && micStream) {
+    //       const mediaStream = new MediaStream();
+    //       mediaStream.addTrack(micStream.track);
+
+    //       micRef.current.srcObject = mediaStream;
+    //       micRef.current
+    //         .play()
+    //         .catch((error) =>
+    //           console.error("videoElem.current.play() failed", error)
+    //         );
+    //     } else {
+    //       micRef.current.srcObject = null;
+    //     }
+    //   }
+    // }, [micStream, micOn]);
+
+    // //!
+    
+    const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
     useEffect(() => {
-      if (props.authToken && props.meetingId && !hasJoined) {
+      if (authToken && meetingId && !hasJoined) {
         console.log("authToken and meetingId are available");
-        join(); // Join the meeting
-        setHasJoined(true); // Ensure we don't join multiple times
+    
+        // Call the join function only if the meeting has not been joined yet
+        join();
+        setHasJoined(true);  // Prevent future join calls
       }
-    }, [props.authToken, props.meetingId, hasJoined, join]);
-  
+    //}, [authToken, meetingId, hasJoined]); 
+  }, [authToken, meetingId, hasJoined]); 
+
+    // useEffect(() => {
+    //   if (joined !== "JOINED") {
+    //     join();  // Only call join if the meeting hasn't been joined already
+    //   }
+    // }, [joined, join]);
+
     const participantEntries = useMemo(() => [...participants.entries()], [participants]);
-  
+
+      
     return (
       <div className="container">
-        {participantEntries.length > 0 ? (
+        {/* <h3>Meeting Id: {props.meetingId}</h3> */}
+        {/* {joined && joined == "JOINED" ? ( */}
+
+        {[...participants.entries()].length > 1 ? (
+
           <div>
+            {/* <Controls /> */}
+            {/* //For rendering all the participants in the meeting */}
+            {/* {[...participants.keys()].map((participantId) => (
+              <ParticipantView
+                participantId={participantId}
+                key={participantId}
+              />
+            ))} */}
+
             <Box sx={{ mx: 5 }}>
-              <Grid container spacing={2} sx={{ textAlign: "none", pt: 1, border: 1 }}>
+              <Grid
+                container
+                spacing={2}
+                sx={{ textAlign: "none", pt: 1, border: 1 }}
+              >
                 <Grid xs={12} md={2}>
                   <img
                     src={location?.state?.image}
                     width="60px"
                     height="60px"
+                    style={{}}
                   />
                 </Grid>
                 <Grid xs={12} md={3} sx={{ textAlign: "left" }}>
                   <Box sx={{ ml: 5, mr: 5 }}>
-                    Name: {location?.state?.first_name} {location?.state?.last_name}
+                    Name: {location?.state?.first_name} {""}
+                    {location?.state?.last_name}
                     <br />
                     <Grid container spacing={2} sx={{ mt: "5px" }}>
                       <Grid xs={2}>
@@ -698,53 +773,212 @@ function TelemedicineConsultation() {
                 </Grid>
                 <Grid xs={12} md={7}>
                   <Box sx={{ float: "right", mr: "10%" }}>
+                    {/* 11:11 */}
+                    {/* <Button
+                      sx={{
+                        background: "#E66253",
+                        color: "#ffffff",
+                        px: 3,
+                        ml: 3,
+                      }}
+                    >
+                      <img
+                        src="/images/end-call.png"
+                        width="30px"
+                        height="30px"
+                        style={{ margin: 5 }}
+                      />
+                      Leave
+                    </Button> */}
+
                     <Leave />
                   </Box>
                 </Grid>
+
+                <hr />
               </Grid>
-  
-              {/* Render participants */}
-              <br />
-              {participantEntries.map(([participantId], index) => (
+              {/* {[...participants.keys()].map((participantId) => (
                 <ParticipantView
                   participantId={participantId}
                   key={participantId}
                 />
-              ))}
-  
-              {participantEntries.length === 0 && (
+              ))} */}
+              <br />
+
+              {/* {[...participants.entries()].length === 1 ? ( */}
+              {[...participants.entries()].length === 1 ? (
+
+                <>
+                  {console.log(participants, "hi")}
+                  <ParticipantView
+                    participantId={[...participants.entries()][0][0]}
+                    key={[...participants.entries()][0][0]}
+                  />
+                </>
+              ) : [...participants.entries()].length > 1 ? (
+                <Box>
+                  {" "}
+                  <Grid container spacing={2}>
+                    <Grid md={8}>
+                      {" "}
+                      <Box>
+                        <ParticipantView
+                          participantId={[...participants.entries()][1][0]}
+                          key={[...participants.entries()][1][0]}
+                        />
+                      </Box>
+                    </Grid>
+                    <Grid xs={4} sx={{ mt: "25%" }}>
+                      {" "}
+                      <Box>
+                        <ParticipantView2
+                          height="300px"
+                          width="100px"
+                          participantId={[...participants.entries()][0][0]}
+                          key={[...participants.entries()][0][0]}
+                          style={{
+                            maxWidth: "300px",
+                            height: "10%",
+                            mr: "50%",
+                          }}
+                        />
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  {console.log(participants, "hi23", [
+                    ...participants.entries(),
+                  ])}
+                  <br />
+                </Box>
+              ) : (
                 <div>
                   <img src="/images/pacman.gif" width="23%" />
                   <Typography>Loading....</Typography>
-                </div>
+                   </div>
               )}
-  
-              {/* Footer controls */}
-              <Grid container spacing={2} justify="center" alignItems="center" sx={{ background: "#E66253", borderRadius: 5 }}>
+              <Grid
+                container
+                spacing={2}
+                justify="center"
+                alignItems="center"
+                sx={{
+                  background: "#E66253",
+                  borderRadius: 5,
+                  // mx: "35%",
+                  //mt: "600px",
+                  alignItems: "center",
+                }}
+              >
                 <Grid xs={4}>
+                  {/* <Button onClick={() => toggleMic()}>
+                          <img
+                            src="/images/microphone.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button> */}
                   <Mute />
                 </Grid>
-                <Grid xs={4}></Grid>
+
                 <Grid xs={4}>
+                  {/* <Button sx={{ background: "#ffffff" }}>
+                    <img
+                      src="/images/comment.png"
+                      width="30px"
+                      height="30px"
+                      style={{ margin: 5 }}
+                    />
+                  </Button> */}
+                </Grid>
+
+                <Grid xs={4}>
+                  {/* <Button onClick={() => toggleWebcam()}>
+                          <img
+                            src="/images/video.png"
+                            width="30px"
+                            height="30px"
+                            style={{ margin: 5 }}
+                          />
+                        </Button> */}
                   <Webcam />
                 </Grid>
               </Grid>
+              {/* <Grid container spacing={2} sx={{ mt: 0, border: 1 }}>
+                <Grid xs={8}>
+                  <Box
+                    sx={{
+                      //  backgroundImage: "url('/images/telemedPic.png')",
+                      width: "100%",
+                      height: "500px",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      px: "0",
+                      justifyContent: "center",
+                      objectFit: "cover",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <br />
+                    <br />
+                    <br />
+                  </Box>
+                </Grid>
+
+                <Grid xs={4}>
+                  <Grid container spacing={2} sx={{ mt: "450px", ml: "0px" }}>
+                    <Grid xs={2}>
+                      {" "}
+                      <Button>
+                        <img
+                          src="/images/clip 1.png"
+                          width="30px"
+                          height="30px"
+                          style={{ margin: 5 }}
+                        />
+                      </Button>
+                    </Grid>
+                    <Grid xs={8}>
+                      <TextField
+                        id="outlined-multiline-flexible"
+                        sx={{
+                          width: "100%",
+                          background: "#ffffff",
+                          borderRadius: 2,
+                        }}
+                        multiline
+                        rows={1}
+                        placeholder="Type message here"
+                      />
+                    </Grid>
+                    <Grid xs={2}>
+                      {" "}
+                      <Button>
+                        <img
+                          src="/images/paper-plane (1) 1.png"
+                          width="30px"
+                          height="35px"
+                          style={{ margin: 5 }}
+                        />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Grid> */}
             </Box>
           </div>
-        ) : joined === "JOINING" ? (
+        ) : joined && joined == "JOINING" ? (
           <p>Joining the meeting...</p>
         ) : (
-          <div>
-            <img src="/images/pacman.gif" width="23%" />
-            <Typography>Loading....</Typography>
+          // <button onClick={joinMeeting}>Join</button>
+          <div> <img src="/images/pacman.gif" width="23%" />
+          <Typography>Loading.... </Typography>
           </div>
         )}
       </div>
     );
   }
-  
-
-  
 
  
 
