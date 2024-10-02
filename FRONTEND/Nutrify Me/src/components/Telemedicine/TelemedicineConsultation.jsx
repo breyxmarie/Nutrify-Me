@@ -33,7 +33,7 @@ import ReactPlayer from "react-player";
 import AxiosInstance from "../forms/AxiosInstance";
 
 function TelemedicineConsultation() {
-  const [meetingId, setMeetingId] = useState("hykm-ec71-maf8");
+
   const authToken =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlrZXkiOiIxZWRlNjlmZC04MzQ4LTRlMmYtOGRiMi1kZTgzZjJhOGM5MDEiLCJwZXJtaXNzaW9ucyI6WyJhbGxvd19qb2luIl0sImlhdCI6MTcyNDkwODc1NSwiZXhwIjoxNzQwNDYwNzU1fQ.LuxRhCUMEMKXuLkyYyOZ-wrTAQ01JxMcvgyBpTUD7hg";
 
@@ -57,7 +57,6 @@ function TelemedicineConsultation() {
 
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location)
   // const apiKey = "mmhfdzb5evj2"; // the API key can be found in the "Credentials" section
   // const token =
   //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQXNhampfVmVudHJlc3MiLCJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL0FzYWpqX1ZlbnRyZXNzIiwiaWF0IjoxNzE0MTkyMjA3LCJleHAiOjE3MTQ3OTcwMTJ9.vKJ4B-RyN3BH2sK5uuIrNB18JhwuCyiaTH07pBvVM3g"; // the token can be found in the "Credentials" section
@@ -706,33 +705,13 @@ function TelemedicineConsultation() {
 
     // //!
     
-    const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
     useEffect(() => {
-      if (authToken && meetingId && !hasJoined) {
-        console.log("authToken and meetingId are available");
-    
-        // Call the join function only if the meeting has not been joined yet
-        join();
-        setHasJoined(true);  // Prevent future join calls
-      }
-    //}, [authToken, meetingId, hasJoined]); 
-  }, [authToken, meetingId, hasJoined]); 
+      join();
+    }, []);
 
-    // useEffect(() => {
-    //   if (joined !== "JOINED") {
-    //     join();  // Only call join if the meeting hasn't been joined already
-    //   }
-    // }, [joined, join]);
-
-    const participantEntries = useMemo(() => [...participants.entries()], [participants]);
-
-      
     return (
       <div className="container">
         {/* <h3>Meeting Id: {props.meetingId}</h3> */}
-    
-
-        {/* {[...participants.entries()].length > 0 ? ( */}
         {joined && joined == "JOINED" ? (
           <div>
             {/* <Controls /> */}
@@ -752,7 +731,7 @@ function TelemedicineConsultation() {
               >
                 <Grid xs={12} md={2}>
                   <img
-                    src={location?.state?.image}
+                    src={location?.state?.tempN?.image}
                     width="60px"
                     height="60px"
                     style={{}}
@@ -760,8 +739,8 @@ function TelemedicineConsultation() {
                 </Grid>
                 <Grid xs={12} md={3} sx={{ textAlign: "left" }}>
                   <Box sx={{ ml: 5, mr: 5 }}>
-                    Name: {location?.state?.first_name} {""}
-                    {location?.state?.last_name}
+                    Name: {location?.state?.tempN?.first_name} {""}
+                    {location?.state?.tempN?.last_name}
                     <br />
                     <Grid container spacing={2} sx={{ mt: "5px" }}>
                       <Grid xs={2}>
@@ -805,11 +784,9 @@ function TelemedicineConsultation() {
               ))} */}
               <br />
 
-              {/* {[...participants.entries()].length === 1 ? ( */}
               {[...participants.entries()].length === 1 ? (
-
                 <>
-                  {console.log(participants,[...participants.entries()][0][0], "hi")}
+                  {console.log(participants, "hi")}
                   <ParticipantView
                     participantId={[...participants.entries()][0][0]}
                     key={[...participants.entries()][0][0]}
@@ -980,7 +957,7 @@ function TelemedicineConsultation() {
     );
   }
 
- 
+  const [meetingId, setMeetingId] = useState("hykm-ec71-maf8");
 
   //Getting the meeting id by calling the api we just wrote
   const getMeetingAndToken = async (id) => {
@@ -1058,14 +1035,13 @@ function TelemedicineConsultation() {
   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
 useEffect(() => {
-  if (authToken && meetingId) {
-    // Trigger any logic here related to the meeting setup, ensuring it runs only once.
+ 
+    // Trigger any logic here
     console.log("authToken and meetingId are available");
 
-    // You can still use a forceRender if absolutely necessary, but
-    // it's better to avoid forcing renders unless required.
+    // Update the forceRender state to trigger a re-render
     setForceRender(forceRender => forceRender + 1);
-  }
+ 
 }, [authToken, meetingId]);
   return (
     <div
