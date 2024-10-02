@@ -799,7 +799,9 @@ function TelemedicineConsultation() {
               ))} */}
               <br />
 
-              {[...participants.entries()].length === 1 ? (
+              {/* {[...participants.entries()].length === 1 ? ( */}
+              {[...participants.entries()].length <= 1 ? (
+
                 <>
                   {console.log(participants, "hi")}
                   <ParticipantView
