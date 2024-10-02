@@ -732,8 +732,9 @@ function TelemedicineConsultation() {
         {/* <h3>Meeting Id: {props.meetingId}</h3> */}
     
 
-        {/* {[...participants.entries()].length > 0 ? ( */}
-        {joined && joined == "JOINED" ? (
+       
+        {/* {joined && joined == "JOINED" ? ( */}
+        {[...participants.entries()].length > 0 ? (
           <div>
             {/* <Controls /> */}
             {/* //For rendering all the participants in the meeting */}
@@ -1055,18 +1056,18 @@ function TelemedicineConsultation() {
   }, [authToken, meetingId]);
 
 
-  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+//   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
-useEffect(() => {
-  if (authToken && meetingId) {
-    // Trigger any logic here related to the meeting setup, ensuring it runs only once.
-    console.log("authToken and meetingId are available");
+// useEffect(() => {
+//   if (authToken && meetingId) {
+//     // Trigger any logic here related to the meeting setup, ensuring it runs only once.
+//     console.log("authToken and meetingId are available");
 
-    // You can still use a forceRender if absolutely necessary, but
-    // it's better to avoid forcing renders unless required.
-    setForceRender(forceRender => forceRender + 1);
-  }
-}, [authToken, meetingId]);
+//     // You can still use a forceRender if absolutely necessary, but
+//     // it's better to avoid forcing renders unless required.
+//     setForceRender(forceRender => forceRender + 1);
+//   }
+// }, [authToken, meetingId]);
   return (
     <div
       className="content"
