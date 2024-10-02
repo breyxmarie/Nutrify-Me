@@ -954,9 +954,7 @@ function NutritionistHome() {
   //     clients.unpublish(localTracks).then(() => clients.leave());
   //   };
   // }, []);
-
-
-  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+//   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
 //   useEffect(() => {
  
@@ -966,7 +964,7 @@ function NutritionistHome() {
 //     // Update the forceRender state to trigger a re-render
 //     setForceRender(forceRender => forceRender + 1);
  
-//  }, [authToken, meetingId]);
+// }, [authToken, meetingId]);
 
   return (
     <div

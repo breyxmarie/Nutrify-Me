@@ -649,7 +649,7 @@ function TelemedicineConsultation() {
       </Button>
     );
   }
-  const [hasJoined, setHasJoined] = useState(false);
+
   function MeetingView(props) {
     const [joined, setJoined] = useState(null);
     const { leave, toggleMic, toggleWebcam } = useMeeting();
@@ -706,19 +706,16 @@ function TelemedicineConsultation() {
 
     // //!
     
-     // Track if the meeting is already joined
+    const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
     useEffect(() => {
       if (authToken && meetingId && !hasJoined) {
-        console.log("Joining the meeting for the first time");
+        console.log("authToken and meetingId are available");
     
-        // Join the meeting only once
+        // Call the join function only if the meeting has not been joined yet
         join();
-        setHasJoined(true);  // Prevent future joins
-        setForceRender(forceRender => forceRender + 1);  // Trigger re-render once
-    
-        // Only set this to true after the first successful join
+        setHasJoined(true);  // Prevent future join calls
       }
-    }, [authToken, meetingId, hasJoined, join]);
+    }, [authToken, meetingId, hasJoined]); 
     // useEffect(() => {
     //   if (joined !== "JOINED") {
     //     join();  // Only call join if the meeting hasn't been joined already
@@ -1048,7 +1045,7 @@ function TelemedicineConsultation() {
   }, [authToken, meetingId]);
 
 
-  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+//   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
 // useEffect(() => {
 //   if (authToken && meetingId) {
@@ -1060,8 +1057,6 @@ function TelemedicineConsultation() {
 //     setForceRender(forceRender => forceRender + 1);
 //   }
 // }, [authToken, meetingId]);
-
-
   return (
     <div
       className="content"

@@ -1001,9 +1001,9 @@ function MealPlanShopMealPlans() {
                   xs={8}
                   sm={8}
                   md={6}
-                 // key={index}
+                 key={index}
                  //!
-                  key={plan.shop_mealplan_id}
+                 // key={plan.shop_mealplan_id}
                   sx={{
                     mb: {
                       xs: "45%", // For extra small screens
