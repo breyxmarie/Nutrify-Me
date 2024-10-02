@@ -732,7 +732,7 @@ function TelemedicineConsultation() {
         {/* <h3>Meeting Id: {props.meetingId}</h3> */}
         {/* {joined && joined == "JOINED" ? ( */}
 
-        {[...participants.entries()].length > 1 ? (
+        {[...participants.entries()].length > 0 ? (
 
           <div>
             {/* <Controls /> */}
