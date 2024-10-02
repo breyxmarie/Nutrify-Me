@@ -709,13 +709,16 @@ function TelemedicineConsultation() {
     const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
     useEffect(() => {
       if (authToken && meetingId && !hasJoined) {
-        console.log("authToken and meetingId are available");
+        console.log("Joining the meeting for the first time");
     
-        // Call the join function only if the meeting has not been joined yet
+        // Join the meeting only once
         join();
-        setHasJoined(true);  // Prevent future join calls
+        setHasJoined(true);  // Prevent future joins
+        setForceRender(forceRender => forceRender + 1);  // Trigger re-render once
+    
+        // Only set this to true after the first successful join
       }
-    }, [authToken, meetingId, hasJoined]); 
+    }, [authToken, meetingId, hasJoined, join]);
     // useEffect(() => {
     //   if (joined !== "JOINED") {
     //     join();  // Only call join if the meeting hasn't been joined already
