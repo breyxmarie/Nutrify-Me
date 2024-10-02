@@ -482,11 +482,12 @@ try{
   };
 
   const style = {
+    overflowY: "auto",
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: "50%",
+    width: "70%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -1532,8 +1533,19 @@ try{
       .then((res) => {
         // setAppointment(res.data);
 
+        console.log(res.data, res.data.filter(
+          (data) =>
+            data.user_id === loggedInUser.user_id 
+          &&
+            dayjs().isSameOrAfter(data.date)
+        ))
 
-        let tempCheck = res.data.find((data) => 
+        let tempCheck = res.data.filter(
+          (data) =>
+            data.user_id === loggedInUser.user_id 
+          && dayjs().isSameOrAfter(data.date)
+         )
+        .find((data) => 
           data.date === dayjs().format("YYYY-MM-DD")   
                && 
                dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
@@ -1546,13 +1558,12 @@ try{
           temp = res.data.find(
             (appoint) =>
               loggedInUser.user_id === appoint.user_id &&
-              Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
+              Dayjs(initialValue).format("YYYY-MM-DD") 
+
               && 
-              // dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
-              // === dayjs().format("hh:mm A") || 
-              dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
-              <=  dayjs().format("hh:mm A")
-          );
+              dayjs().isSameOrAfter(dayjs(`${appoint.date} ${appoint.time}`))
+             && dayjs().isSameOrBefore(dayjs(`${appoint.date} ${appoint.time}`).add(30, 'minute'))
+             )
         }
         else {
           temp =  res.data.find((data) => 
@@ -1645,14 +1656,14 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
        dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
       && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
       )) */}
-              
+              {console.log(designatedNutritionist)}
               { dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
 && dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')) ? (
                 <> <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
                 onClick={() =>
                   navigate("/telemedicine-consultation", {
-                    state: { tempN },
+                    state: { designatedNutritionist},
                   })
                 }
               >
@@ -2805,6 +2816,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <center>
           <Typography
             id="modal-modal-title"
             variant="h6"
@@ -2829,11 +2841,12 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
             />
           </LocalizationProvider>
 
-          {/* {selectedDates ? (<> <Typography sx={{ mb: 1 }}>Select Time</Typography>
-          */}
+         {freeTime ? (<> 
          
+         <Grid container spacing = {2} sx = {{mt: 2, mb: 0}}>
          <br/>
-          <Select
+          <Grid xs = {6}><Typography sx={{ mb: 1, float: "right"}}>Select Time</Typography></Grid>
+          <Grid xs = {2}> <Select
             labelId="demo-simple-select-filled-label"
             id="demo-simple-select-filled"
             // value={selectedNutritionist}
@@ -2848,10 +2861,16 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                 {option}
               </MenuItem>
             ))}
-          </Select>
-         {/*  </>)
+          </Select></Grid>
+         </Grid>
+         
+         
+         
+       
+         
+           </>)
        : (<></>)  
-        } */}
+        } 
 
          
 
@@ -2892,6 +2911,9 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
               <div></div>
             )}
           </LocalizationProvider>  */}
+          <br/>
+          <br/>
+
           <Button
             onClick={scheduleAppointment}
             sx={{
@@ -2912,6 +2934,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
           >
             Make Appointment
           </Button>
+          </center>
         </Box>
       </Modal>
       {/* //! with designated nutritionist */}

@@ -124,7 +124,7 @@ function NutritionistHome() {
             //
             url={videoStream}
             //
-            height={"100%"}
+            height={"80%"}
             width={"100%"}
             onError={(err) => {
               console.log(err, "participant video error");
@@ -533,9 +533,19 @@ function NutritionistHome() {
 
     // //!
 
+    const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
     useEffect(() => {
-      join();
-    }, []);
+      if (authToken && meetingId && !hasJoined) {
+        console.log("authToken and meetingId are available");
+    
+        // Call the join function only if the meeting has not been joined yet
+        join();
+        setHasJoined(true);  // Prevent future join calls
+      }
+    }, [authToken, meetingId, hasJoined]); 
+    // useEffect(() => {
+    //   join();
+    // }, [joined, join]);
 
 
     //? 
@@ -944,17 +954,17 @@ function NutritionistHome() {
   //     clients.unpublish(localTracks).then(() => clients.leave());
   //   };
   // }, []);
-  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+//   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
-  useEffect(() => {
+//   useEffect(() => {
  
-    // Trigger any logic here
-    console.log("authToken and meetingId are available");
+//     // Trigger any logic here
+//     console.log("authToken and meetingId are available");
 
-    // Update the forceRender state to trigger a re-render
-    setForceRender(forceRender => forceRender + 1);
+//     // Update the forceRender state to trigger a re-render
+//     setForceRender(forceRender => forceRender + 1);
  
-}, [authToken, meetingId]);
+// }, [authToken, meetingId]);
 
   return (
     <div

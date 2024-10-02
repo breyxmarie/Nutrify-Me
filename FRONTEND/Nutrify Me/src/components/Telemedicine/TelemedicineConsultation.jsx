@@ -57,6 +57,7 @@ function TelemedicineConsultation() {
 
   const navigate = useNavigate();
   const location = useLocation();
+  console.log(location)
   // const apiKey = "mmhfdzb5evj2"; // the API key can be found in the "Credentials" section
   // const token =
   //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQXNhampfVmVudHJlc3MiLCJpc3MiOiJodHRwczovL3Byb250by5nZXRzdHJlYW0uaW8iLCJzdWIiOiJ1c2VyL0FzYWpqX1ZlbnRyZXNzIiwiaWF0IjoxNzE0MTkyMjA3LCJleHAiOjE3MTQ3OTcwMTJ9.vKJ4B-RyN3BH2sK5uuIrNB18JhwuCyiaTH07pBvVM3g"; // the token can be found in the "Credentials" section
@@ -705,9 +706,21 @@ function TelemedicineConsultation() {
 
     // //!
     
+    const [hasJoined, setHasJoined] = useState(false);  // Track if the meeting is already joined
     useEffect(() => {
-      join();
-    }, []);
+      if (authToken && meetingId && !hasJoined) {
+        console.log("authToken and meetingId are available");
+    
+        // Call the join function only if the meeting has not been joined yet
+        join();
+        setHasJoined(true);  // Prevent future join calls
+      }
+    }, [authToken, meetingId, hasJoined]); 
+    // useEffect(() => {
+    //   if (joined !== "JOINED") {
+    //     join();  // Only call join if the meeting hasn't been joined already
+    //   }
+    // }, [joined, join]);
 
     return (
       <div className="container">
@@ -731,7 +744,7 @@ function TelemedicineConsultation() {
               >
                 <Grid xs={12} md={2}>
                   <img
-                    src={location?.state?.tempN?.image}
+                    src={location?.state?.image}
                     width="60px"
                     height="60px"
                     style={{}}
@@ -739,8 +752,8 @@ function TelemedicineConsultation() {
                 </Grid>
                 <Grid xs={12} md={3} sx={{ textAlign: "left" }}>
                   <Box sx={{ ml: 5, mr: 5 }}>
-                    Name: {location?.state?.tempN?.first_name} {""}
-                    {location?.state?.tempN?.last_name}
+                    Name: {location?.state?.first_name} {""}
+                    {location?.state?.last_name}
                     <br />
                     <Grid container spacing={2} sx={{ mt: "5px" }}>
                       <Grid xs={2}>
@@ -1032,17 +1045,18 @@ function TelemedicineConsultation() {
   }, [authToken, meetingId]);
 
 
-  const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
+//   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
 
-useEffect(() => {
- 
-    // Trigger any logic here
-    console.log("authToken and meetingId are available");
+// useEffect(() => {
+//   if (authToken && meetingId) {
+//     // Trigger any logic here related to the meeting setup, ensuring it runs only once.
+//     console.log("authToken and meetingId are available");
 
-    // Update the forceRender state to trigger a re-render
-    setForceRender(forceRender => forceRender + 1);
- 
-}, [authToken, meetingId]);
+//     // You can still use a forceRender if absolutely necessary, but
+//     // it's better to avoid forcing renders unless required.
+//     setForceRender(forceRender => forceRender + 1);
+//   }
+// }, [authToken, meetingId]);
   return (
     <div
       className="content"
