@@ -723,6 +723,7 @@ function TelemedicineConsultation() {
     //     join();  // Only call join if the meeting hasn't been joined already
     //   }
     // }, [joined, join]);
+    const participantEntries = [...participants.entries()]; // Extract participant entries once
 
     return (
       <div className="container">
@@ -800,7 +801,7 @@ function TelemedicineConsultation() {
               <br />
 
               {/* {[...participants.entries()].length === 1 ? ( */}
-              {[...participants.entries()].length <= 1 ? (
+              {participantEntries.length <= 1 ? (
 
                 <>
                   {console.log(participants, "hi")}
@@ -809,7 +810,9 @@ function TelemedicineConsultation() {
                     key={[...participants.entries()][0][0]}
                   />
                 </>
-              ) : [...participants.entries()].length > 1 ? (
+              // ) : [...participants.entries()].length > 1 ? (
+              ) : participantEntries.length > 1 ? (
+
                 <Box>
                   {" "}
                   <Grid container spacing={2}>
