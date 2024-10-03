@@ -44,6 +44,27 @@ function Registration() {
     GetData();
   }, []);
 
+
+
+  //?
+
+  const style = {
+    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
+    overflowY: "auto", // Enable vertical scrolling
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 500,
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 5,
+    color: "#ffffff",
+  };
+  //?
     //?
     const [openLoading, setOpenLoading] = useState(false);
     const handleOpenLoading = () => {
