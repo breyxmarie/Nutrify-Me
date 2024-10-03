@@ -125,6 +125,7 @@ function Registration() {
   });
 
   const onSubmitHandler = async (data) => {
+    handleOpenLoading();
     console.log({ data });
     console.log("hi");
 
@@ -184,6 +185,7 @@ function Registration() {
                   },
                 });
                 reset();
+                handleCloseLoading()
               });
             } catch (error) {
               console.log(error.response);

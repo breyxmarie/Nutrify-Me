@@ -147,7 +147,7 @@ function Profiling() {
   });
 
   const onSubmitHandlerNoHypertension = (data) => {
-    handleOpenLoading()
+    handleOpenLoading();
     try {
       AxiosInstance.post(`profiling/`, {
         user_id: location.state.userId,
