@@ -7,7 +7,6 @@ import { Tab, Tabs } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
-
 import Button from "@mui/material/Button";
 import { ToastContainer, toast } from "react-toastify";
 import dayjs from "dayjs";
@@ -1567,6 +1566,7 @@ try{
         }
         else {
           temp =  res.data.find((data) => 
+            loggedInUser.user_id === data.user_id &&
             data.date === dayjs().format("YYYY-MM-DD")   
                  && 
                  dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
@@ -1611,6 +1611,11 @@ try{
             >
               {" "}
               {/* //! ayusin toh */}
+
+              {dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
+&& dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')) ? (
+                <> <Typography>Your Current Appointment</Typography>
+              </>): (<> <Typography>Your Upcoming Appointment</Typography></>)}
 
               {/* { (<></>): (<></>)} */}
               {console.log(temp)}
@@ -1657,7 +1662,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
       && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
       )) */}
               {console.log(designatedNutritionist)}
-              { dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
+              {dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
 && dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')) ? (
                 <> <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}

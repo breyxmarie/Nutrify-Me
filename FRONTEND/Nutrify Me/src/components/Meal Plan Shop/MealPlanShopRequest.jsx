@@ -271,10 +271,10 @@ function MealPlanShopRequest() {
         color: "#000000",
       }}
     >
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx = {{mt: 5}}>
         {" "}
         {buttons.map((buttonLabel, index) => (
-          <Grid item xs={6} sm={4} md={4} key={index}>
+          <Grid xs={12} sm={4} md={4} key={index}>
             <Button
               key={index}
               variant="contained" // Adjust variant as needed
@@ -283,8 +283,14 @@ function MealPlanShopRequest() {
                 borderColor: "#ffffff",
                 fontWeight: "bold",
                 boxShadow: 1,
+                mt:2,
                 mx: 1,
-                fontSize: "20px",
+                fontSize: {
+                  xs: "1em", // For extra small screens
+                  sm: "1em", // For small screens
+                  md: "1em", // For medium screens
+                  lg: "1em", // For large screens
+                },
                 background: "#ffffff",
                 color: activeButton === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
                 "&:hover": {
@@ -317,7 +323,7 @@ function MealPlanShopRequest() {
             Pending Orders
           </Typography>
           <Grid container spacing={2}>
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{
                   color: "#99756E",
@@ -389,7 +395,7 @@ function MealPlanShopRequest() {
               )}
             </Grid>
 
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{
                   color: "#99756E",
@@ -477,7 +483,7 @@ function MealPlanShopRequest() {
             Approved Orders
           </Typography>
           <Grid container spacing={2}>
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{
                   color: "#99756E",
@@ -565,7 +571,7 @@ function MealPlanShopRequest() {
                 </>
               )}
             </Grid>
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{
                   color: "#99756E",
@@ -672,7 +678,7 @@ function MealPlanShopRequest() {
           </Typography>
 
           <Grid container spacing={2}>
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{
                   color: "#99756E",
@@ -741,7 +747,7 @@ function MealPlanShopRequest() {
                 </>
               )}
             </Grid>
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{
                   color: "#99756E",

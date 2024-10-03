@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import * as React from "react";
 import Box from "@mui/material/Box";
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -23,6 +25,8 @@ import { ToastContainer, toast } from "react-toastify";
 
 
 function MealPlanShopMealPlans() {
+  dayjs.extend(isSameOrBefore);
+  dayjs.extend(isSameOrAfter);
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
   const [shopMealPlan, setShopMealPlan] = useState([
     // {
@@ -1052,7 +1056,10 @@ function MealPlanShopMealPlans() {
                   <Typography variant="body1">
                     PHP {plan.price}
                   </Typography>
-                  <Button
+
+
+                    {dayjs().startOf('week').isSameOrBefore(dayjs(plan.start_week)) ? (<>
+                      <Button
                     sx={{
                       borderRadius: 4,
                       background: "#D9D9D9",
@@ -1076,6 +1083,11 @@ function MealPlanShopMealPlans() {
                   >
                     ADD TO CART
                   </Button>
+                    </>)
+                    : (<></>)}
+
+
+                 
                   <Button
                     sx={{
                       borderRadius: 4,
