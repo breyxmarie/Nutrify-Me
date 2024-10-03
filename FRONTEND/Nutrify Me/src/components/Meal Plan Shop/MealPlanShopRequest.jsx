@@ -314,7 +314,12 @@ function MealPlanShopRequest() {
             sx={{
               color: "#99756E",
               fontWeight: "bold",
-              fontSize: "1.6em",
+              fontSize: {
+                xs: "1.5em", // For extra small screens
+                sm: "1.5em", // For small screens
+                md: "1.5em", // For medium screens
+                lg: "1.5em", // For large screens
+              },
               mt: 5,
               mb: 3,
             }}
@@ -328,7 +333,12 @@ function MealPlanShopRequest() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  fontSize: "1.5em",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
                   mb: 1,
                 }}
               >
@@ -400,7 +410,12 @@ function MealPlanShopRequest() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  fontSize: "1.5em",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
                   mb: 1,
                 }}
               >
@@ -474,7 +489,12 @@ function MealPlanShopRequest() {
             sx={{
               color: "#99756E",
               fontWeight: "bold",
-              fontSize: "1.6em",
+              fontSize: {
+                xs: "1.5em", // For extra small screens
+                sm: "1.5em", // For small screens
+                md: "1.5em", // For medium screens
+                lg: "1.5em", // For large screens
+              },
               mt: 3,
               mb: 3,
             }}
@@ -488,7 +508,12 @@ function MealPlanShopRequest() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  fontSize: "1.5em",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
                   mb: 1,
                 }}
               >
@@ -576,7 +601,12 @@ function MealPlanShopRequest() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  fontSize: "1.5em",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
                   mb: 1,
                 }}
               >
@@ -668,7 +698,12 @@ function MealPlanShopRequest() {
             sx={{
               color: "#99756E",
               fontWeight: "bold",
-              fontSize: "1.6em",
+              fontSize: {
+                xs: "1.5em", // For extra small screens
+                sm: "1.5em", // For small screens
+                md: "1.5em", // For medium screens
+                lg: "1.5em", // For large screens
+              },
               mt: 5,
               mb: 5,
             }}
@@ -683,7 +718,12 @@ function MealPlanShopRequest() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  fontSize: "1.5em",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
                   mb: 1,
                 }}
               >
@@ -752,7 +792,12 @@ function MealPlanShopRequest() {
                 sx={{
                   color: "#99756E",
                   fontWeight: "bold",
-                  fontSize: "1.5em",
+                  fonfontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
                   mb: 1,
                 }}
               >

@@ -230,7 +230,7 @@ function MealPlanShopTrackOrders() {
       <center>
         <Grid container spacing={2}>
           {buttons.map((buttonLabel, index) => (
-            <Grid item xs={6} sm={4} md={4} key={index}>
+            <Grid item xs={12} sm={4} md={4} key={index}>
               <Button
                 key={index}
                 variant="contained" // Adjust variant as needed

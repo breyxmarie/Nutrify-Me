@@ -7,7 +7,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import Button from "@mui/material/Button";
-
+import Calendar from "react-calendar";
+import Modal from "@mui/material/Modal";
 import { NavLink, Link, useLocation, useNavigate } from "react-router-dom";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
@@ -17,17 +18,19 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import dayjs from "dayjs";
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import Dayjs from "dayjs";
 import { Tab, Tabs } from "@mui/material";
 import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 
 function NutritionistAppointment() {
+  const [activeButton, setActiveButton] = useState(0);
   const [todayApp, setTodayApp] = useState();
-
+  const buttons = ["Approved", "Pending", "Disapproved"];
   //! tabs
+
   const [appointmentList, setAppointmentList] = useState([]);
   const [pendingAppointmentList, setPendingAppointmentList] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
@@ -52,6 +55,196 @@ function NutritionistAppointment() {
   ];
 
   //!
+
+  //? calendar pop up
+
+  const getAppointmentData = () => {
+    console.log(nutritionist, loggedInUser);
+    AxiosInstance.get(`nutritionist/`)
+      .then((res) => {
+        //  setNutritionists(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+
+    AxiosInstance.get(`user/`)
+      .then((res) => {
+        setUserData(res.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+
+    AxiosInstance.get(`appointment`)
+      .then((res) => {
+        //  setNutritionist(res.data);
+
+        console.log(
+          res.data.filter((data) => data.user_id === loggedInUser.user_id)
+        );
+        setAppointdata(
+          res.data.filter(
+            (data) => data.nutritionist_id === nutritionist.nutritionist_id
+          )
+        );
+
+        console.log(
+          res.data.filter(
+            (data) =>
+              data.nutritionist_id === nutritionist.nutritionist_id &&
+              data.date === dayjs().format("YYYY-MM-DD")
+          )
+        );
+        setAppToday(
+          res.data.filter(
+            (data) =>
+              data.nutritionist_id === nutritionist.nutritionist_id &&
+              data.date === dayjs().format("YYYY-MM-DD")
+          ).length
+        );
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        // Optionally display an error message to the user
+        //setNutritionist(options);
+        // console.log("test", nutritionist);
+      });
+    // AxiosInstance.get(`appointment`).then((res) => {
+    //   {
+    //     res.data.map((item, index) =>
+    //       console.log(item.username, item.password)
+    //     );
+    //   }
+    //   console.log(res.data);
+
+    //   const condition = (item) => item.id > 1;
+    //   const filteredData = res.data.filter(
+    //     (item) =>
+    //       item.nutritionist_id === loggedInUser.user_id &&
+    //       //  moment(item.date).isSameOrAfter(moment(), "day")
+    //       moment(item.date).isSame(moment(), "day")
+
+    //     //new Date(item.date) >= new Date()
+    //   );
+
+    //   console.log("try try", filteredData, loggedInUser.user_id);
+    //   setAppointmentData(filteredData);
+    // });
+
+    // AxiosInstance.get(`user`).then((res) => {
+    //   setUsers(res.data);
+    // });
+  };
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [appointData, setAppointdata] = useState([]);
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [date, setDate] = useState();
+  const onChange = async (newDate) => {
+    setIsLoading(true);
+    // Fetch or update dates based on newDate
+    // ...
+
+    // Simulate loading delay (optional)
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 500ms delay
+
+    setIsLoading(false);
+    setDate(newDate);
+    handleOpenDay();
+    setIsPopupVisible(true);
+    console.log(appointData);
+    const temp = appointData.find(
+      (data) => data.date === dayjs(newDate).format("YYYY-MM-DD")
+    );
+    console.log(temp);
+    if (temp) {
+      console.log(nutritionist);
+      // const nutrition = nutritionist.find(
+      //   (data) => data.nutritionist_id === temp.nutritionist_id
+      // );
+
+      const user = userData.find((data) => data.user_id === temp.user_id);
+
+      setModalDayContent(
+        <Box sx={{ mt: 4 }}>
+          <Grid container spacing={2}>
+            <Grid xs={6}>
+              <center>
+                <br />
+                <br />
+
+                <Typography>
+                  Date: {dayjs(newDate).format("MMMM DD YYYY")}
+                </Typography>
+                <Typography>Time: {temp.time}</Typography>
+              </center>
+            </Grid>
+            <Grid xs={6}>
+              {" "}
+              <center>
+                <img src={user.image} width="100" />
+
+                <br />
+                <Typography>
+                  <b>User:</b> {user.first_name} {user.last_name}
+                </Typography>
+              </center>{" "}
+            </Grid>
+          </Grid>
+
+          <br />
+
+          <br />
+        </Box>
+      );
+    } else {
+      console.log("No Appointment");
+      setModalDayContent(
+        <Box sx={{ m: 4 }}>
+          <center>
+            {dayjs(newDate).format("MMMM DD YYYY")} <br />
+            <b>No Appointment</b>
+          </center>
+        </Box>
+      );
+    }
+  };
+
+  const [openDay, setOpenDay] = useState(false);
+
+  const handleOpenDay = (selectedDate) => {
+    // Optional: Do something with the selected date before opening the modal
+    setOpenDay(true);
+  };
+
+  const handleCloseDay = () => {
+    setOpenDay(false);
+  };
+
+  const [modalDayContent, setModalDayContent] = useState(<div>try</div>);
+  const style = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "50%",
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 5,
+    color: "#ffffff",
+  };
+
+  //?
 
   //! approve and declien appointment
   const approveAppointment = (data) => {
@@ -80,7 +273,7 @@ function NutritionistAppointment() {
         time: data.time,
         user_id: data.user_id,
         nutritionist_id: data.nutritionist_id,
-        kind: "Follow-Up"
+        kind: "Follow-Up",
       }).then((res) => {
         console.log(res);
         // navigate(`/`);
@@ -146,7 +339,7 @@ function NutritionistAppointment() {
   //   (item) => item.date === Dayjs(initialValue).format("YYYY-MM-DD")
   // );
   dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
+  dayjs.extend(isSameOrAfter);
 
   function formatTime12Hour(date) {
     const hours = date.getHours() % 12 || 12;
@@ -212,82 +405,90 @@ dayjs.extend(isSameOrAfter);
       console.log("try try", filteredData);
 
       dayjs.extend(isSameOrBefore);
-dayjs.extend(isSameOrAfter);
+      dayjs.extend(isSameOrAfter);
       setTodayAppointment(
         filteredData.filter(
           (data) => data.date === dayjs().format("YYYY-MM-DD")
         )
       );
 
+      //     const appointmentStart = dayjs(`${data.date} ${data.time}`, "YYYY-MM-DD HH:mm:ss"); // Appointment start time
+      // const appointmentEnd = appointmentStart.add(30, 'minute'); // Appointment lasts for 30 minutes
+      // const currentTime = dayjs(); // Current time
 
-  //     const appointmentStart = dayjs(`${data.date} ${data.time}`, "YYYY-MM-DD HH:mm:ss"); // Appointment start time
-  // const appointmentEnd = appointmentStart.add(30, 'minute'); // Appointment lasts for 30 minutes
-  // const currentTime = dayjs(); // Current time
-
-
-      console.log(filteredData, dayjs().format("hh:mm:ss"))
-      console.log(filteredData.map((item) => (
-        console.log(item.time, dayjs(item.date + "" + item.time).format("hh:mm A"))
-      )))
-  //     console.log( filteredData?.find((data) => 
-  //      // data.date === dayjs().format("YYYY-MM-DD") && 
-  //     dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
-  //   ).time)
-  //  // console.log(dayjs().isSameOrBefore(dayjs(data.date + "" + data.time)))
-  //     console.log(
-  //       filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD") 
-  //       &&   dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`, "YYYY-MM-DD HH:mm:ss")) === true
-  //                dayjs(`${data.date} ${data.time}`).add(30, 'minute')     
-  //                        //dayjs().format("hh:mm A") >= dayjs(data.date + "" + data.time).format("hh:mm A")
-  //                       )
-  //     );
-console.log(filteredData?.find((data) => 
-  data.date === dayjs().format("YYYY-MM-DD")   
-       && 
-       dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
-      && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
-      ))
-      
-
+      console.log(filteredData, dayjs().format("hh:mm:ss"));
+      console.log(
+        filteredData.map((item) =>
+          console.log(
+            item.time,
+            dayjs(item.date + "" + item.time).format("hh:mm A")
+          )
+        )
+      );
+      //     console.log( filteredData?.find((data) =>
+      //      // data.date === dayjs().format("YYYY-MM-DD") &&
+      //     dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
+      //   ).time)
+      //  // console.log(dayjs().isSameOrBefore(dayjs(data.date + "" + data.time)))
+      //     console.log(
+      //       filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD")
+      //       &&   dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`, "YYYY-MM-DD HH:mm:ss")) === true
+      //                dayjs(`${data.date} ${data.time}`).add(30, 'minute')
+      //                        //dayjs().format("hh:mm A") >= dayjs(data.date + "" + data.time).format("hh:mm A")
+      //                       )
+      //     );
+      console.log(
+        filteredData?.find(
+          (data) =>
+            data.date === dayjs().format("YYYY-MM-DD") &&
+            dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`)) &&
+            dayjs().isSameOrBefore(
+              dayjs(`${data.date} ${data.time}`).add(30, "minute")
+            )
+        )
+      );
 
       setAppointmentData(filteredData);
 
-    //   const te = filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD") 
-    //   && dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
-    //  );
+      //   const te = filteredData?.find((data) => data.date === dayjs().format("YYYY-MM-DD")
+      //   && dayjs().format("hh:mm A") <= dayjs(data.date + "" + data.time).format("hh:mm A")
+      //  );
 
-let tempCheck = filteredData?.find((data) => 
-  data.date === dayjs().format("YYYY-MM-DD")   
-       && 
-       dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
-      && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
-      )
+      let tempCheck = filteredData?.find(
+        (data) =>
+          data.date === dayjs().format("YYYY-MM-DD") &&
+          dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`)) &&
+          dayjs().isSameOrBefore(
+            dayjs(`${data.date} ${data.time}`).add(30, "minute")
+          )
+      );
 
       let te;
-    if (tempCheck) {
-      te = filteredData?.find((data) => 
-        data.date === dayjs().format("YYYY-MM-DD")   
-             && 
-             dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
-            && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+      if (tempCheck) {
+        te = filteredData?.find(
+          (data) =>
+            data.date === dayjs().format("YYYY-MM-DD") &&
+            dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`)) &&
+            dayjs().isSameOrBefore(
+              dayjs(`${data.date} ${data.time}`).add(30, "minute")
             )
-    }
-    else {
-      te =  filteredData?.find((data) => 
-        data.date === dayjs().format("YYYY-MM-DD")   
-             && 
-             dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
-            )
-    }
+        );
+      } else {
+        te = filteredData?.find(
+          (data) =>
+            data.date === dayjs().format("YYYY-MM-DD") &&
+            dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
+        );
+      }
 
-    //let te;
-    
-    // const te = filteredData?.find((data) => 
-    //   data.date === dayjs().format("YYYY-MM-DD")   
-    //        && 
-    //        dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
-    //       && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
-    //       )
+      //let te;
+
+      // const te = filteredData?.find((data) =>
+      //   data.date === dayjs().format("YYYY-MM-DD")
+      //        &&
+      //        dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
+      //       && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+      //       )
       console.log(te);
 
       const formattedTime = filteredData?.find(
@@ -298,43 +499,36 @@ let tempCheck = filteredData?.find((data) =>
         (data) => data.date === dayjs().format("YYYY-MM-DD")
       )?.date;
 
-      
       if (te) {
         console.log("console console", te);
         setTodayAppointment(
-          <Box sx={{ mx: 10 }}>
-            
+          <Box sx={{ mx: "10%" }}>
             {" "}
             <Grid container spacing={2}>
-              <Grid xs={4}>
+              <Grid xs={12} md={4}>
                 <img
-                  width="100"
-                  height="100"
+                  width="80%"
+                  height="90%"
                   src={
-                    user?.data.find(
-                      (user) => user.user_id === te.user_id
-                    
-                    )?.image
+                    user?.data.find((user) => user.user_id === te.user_id)
+                      ?.image
                   }
                 />
               </Grid>
-              <Grid xs={6}>
+              <Grid xs={12} md={6}>
                 {" "}
                 <p>
                   User: {console.log(user.data)}
                   {
-                    user?.data.find(
-                      (user) => user.user_id === te.user_id
-                    )?.first_name
+                    user?.data.find((user) => user.user_id === te.user_id)
+                      ?.first_name
                   }
                 </p>
               </Grid>
             </Grid>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
               Date:{"     "}
-              {dayjs(
-                te?.date
-              ).format("MMMM DD, YYYY")}
+              {dayjs(te?.date).format("MMMM DD, YYYY")}
             </Typography>
             <Typography sx={{ display: "flex", justifyContent: "flex-start" }}>
               Time:
@@ -357,29 +551,31 @@ let tempCheck = filteredData?.find((data) =>
                 }}
               > */}
 
-              {console.log(user?.data.find(
-                        (user) => user.user_id === te.user_id
-                      ).user_id)}
+              {console.log(
+                user?.data.find((user) => user.user_id === te.user_id).user_id
+              )}
 
+              {tempCheck ? (
+                <>
+                  <Button
+                    sx={{ background: "#E66253", color: "#ffffff" }}
+                    onClick={() =>
+                      navigate("/nutritionist-consultation", {
+                        state: {
+                          tempN: user?.data.find(
+                            (user) => user.user_id === te.user_id
+                          ),
+                        },
+                      })
+                    }
+                  >
+                    Call
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
 
-              {tempCheck ? (<><Button
-                sx={{ background: "#E66253", color: "#ffffff" }}
-                onClick={() =>
-                  navigate("/nutritionist-consultation", {
-                    state: {
-                      tempN:  user?.data.find(
-                        (user) => user.user_id === te.user_id
-                      )
-                      
-                    },
-                  })
-                }
-              >
-                Call
-              </Button></>)
-            : (<></>)  
-            }
-              
               {/* </Link> */}
             </center>
             {/* <Link
@@ -396,8 +592,10 @@ let tempCheck = filteredData?.find((data) =>
         );
       } else {
         setTodayAppointment(
-          <Box sx = {{pb: "30%"}}>
-            <Typography sx={{color: "#99756E", fontWeight: "bold", fontSize: "30px"}}>
+          <Box sx={{ pb: "30%" }}>
+            <Typography
+              sx={{ color: "#99756E", fontWeight: "bold", fontSize: "30px" }}
+            >
               No Scheduled Consultation{" "}
             </Typography>
           </Box>
@@ -465,6 +663,7 @@ let tempCheck = filteredData?.find((data) =>
 
   useEffect(() => {
     GetData();
+    getAppointmentData();
   }, []);
   //!
 
@@ -824,15 +1023,62 @@ let tempCheck = filteredData?.find((data) =>
       }}
     >
       <ToastContainer />
-      
-      <Grid container spacing={2}>
-        <Grid xs={6}>
-        <Typography>Today's Appointment</Typography>
-          <Box sx={{ border: 1 }}>
-            <br />
-            <br />
 
-            {/* <Grid container spacing={2}>
+      <Modal
+        open={openDay}
+        onClose={handleCloseDay}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Grid container spacing={2}>
+            <Grid xs={2}>
+              {" "}
+              <img
+                src="/images/consultation icon.png"
+                height="25"
+                weight="25"
+              />
+            </Grid>
+            <Grid xs={8}>Consultation Schedule]</Grid>
+            <Grid xs={2}>
+              <Button
+                //key={index}
+                sx={{ float: "right" }}
+                onClick={handleCloseDay}
+              >
+                <img src="/images/close.png" height="10" weight="10" />
+              </Button>
+            </Grid>
+          </Grid>
+          {modalDayContent}
+        </Box>
+      </Modal>
+
+      <Box
+        sx={{
+          mr: {
+            xs: "30%", // For extra small screens
+            sm: "20%", // For small screens
+            md: "15%", // For medium screens
+            lg: "15%", // For large screens
+          },
+          ml: {
+            xs: "1%", // For extra small screens
+            sm: "20%", // For small screens
+            md: "15%", // For medium screens
+            lg: "2%", // For large screens
+          },
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid xs={12} md={6}>
+            <Typography>Today's Appointment</Typography>
+            <Box sx={{ border: 1, borderRadius: 2, mr: "0%" }}>
+              <br />
+              <br />
+
+              {/* <Grid container spacing={2}>
               <Grid xs={4}>
                 <img src="/images/profile.png" />
               </Grid>
@@ -858,37 +1104,79 @@ let tempCheck = filteredData?.find((data) =>
               </Link>
             )}*/}
 
-            {/* <h2>No Scheduled Consultation </h2> */}
-            {todayAppointment}
-            {joined && <VideoRoom />}
-          </Box>
+              {/* <h2>No Scheduled Consultation </h2> */}
+              {todayAppointment}
+              {joined && <VideoRoom />}
+            </Box>
+          </Grid>
+          <Grid xs={12} md={6}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {/* <DateCalendar /> */}
+              <Calendar
+                onChange={onChange}
+                value={date}
+                className={isLoading ? "loading" : ""}
+                style={{
+                  border: "1px solid #898246",
+                  backgroundColor: "#f5f5f5",
+                }}
+              />
+            </LocalizationProvider>
+          </Grid>
         </Grid>
-        <Grid xs={2}>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DateCalendar />
-          </LocalizationProvider>
-        </Grid>
-      </Grid>
+      </Box>
 
-      <Box sx={{ border: 1, ml: "10px", mr: "10%" }}>
+      <Box
+        sx={{
+          border: 1,
+          mr: {
+            xs: "30%", // For extra small screens
+            sm: "20%", // For small screens
+            md: "5%", // For medium screens
+            lg: "15%", // For large screens
+          },
+          ml: {
+            xs: "1%", // For extra small screens
+            sm: "20%", // For small screens
+            md: "5%", // For medium screens
+            lg: "2%", // For large screens
+          },
+        }}
+      >
         <br />
         <br />
-      
-        <Grid container spacing={2} sx={{ ml: "10px", mr: "10%" }}>
+
+        {/* <Box sx = {{mr: {
+                        xs: "30%", // For extra small screens
+                        sm: "20%", // For small screens
+                        md: "5%", // For medium screens
+                        lg: "15%", // For large screens
+                      }, ml: {
+                        xs: "1%", // For extra small screens
+                        sm: "20%", // For small screens
+                        md: "5%", // For medium screens
+                        lg: "2%", // For large screens
+                      }}}> */}
+        <Grid container spacing={2} sx={{ ml: "0px", mr: "0%" }}>
           <Grid xs={12} sx={{ textAlign: "left" }}>
             <center>
-          <Typography
-                            sx={{
-                              // display: "flex",
-                              // justifyContent: "flex-start",
-                              // alignItems: "flex-start",
-                              color: "#99756E",
-                              fontWeight: "bold",
-                              fontSize: "1.5em",
-                            }}
-                          > 
-            Schedule of Appointments Log
-            </Typography>
+              <Typography
+                sx={{
+                  // display: "flex",
+                  // justifyContent: "flex-start",
+                  // alignItems: "flex-start",
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: {
+                    xs: "1em", // For extra small screens
+                    sm: "1em", // For small screens
+                    md: "1em", // For medium screens
+                    lg: "1em", // For large screens
+                  },
+                }}
+              >
+                Schedule of Appointments Log
+              </Typography>
             </center>
           </Grid>
           <Grid xs={0}>
@@ -903,7 +1191,7 @@ let tempCheck = filteredData?.find((data) =>
               EDIT
             </Button> */}
           </Grid>
-          <Grid xs={2}>
+          <Grid xs={12}>
             {/* <Button
               sx={{
                 background: "#E66253",
@@ -929,6 +1217,41 @@ let tempCheck = filteredData?.find((data) =>
               </IconButton>
             </Tooltip> */}
 
+            <Grid container spacing={2} sx={{ mt: 5 }}>
+              {" "}
+              {buttons.map((buttonLabel, index) => (
+                <Grid xs={12} sm={4} md={4} key={index}>
+                  <Button
+                    key={index}
+                    variant="contained" // Adjust variant as needed
+                    onClick={() => setActiveButton(index)}
+                    sx={{
+                      borderColor: "#ffffff",
+                      fontWeight: "bold",
+                      boxShadow: 1,
+                      mt: 2,
+                      mx: 5,
+                      fontSize: {
+                        xs: "1em", // For extra small screens
+                        sm: "1em", // For small screens
+                        md: "1em", // For medium screens
+                        lg: "1em", // For large screens
+                      },
+                      background: "#ffffff",
+                      color: activeButton === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                  >
+                    {buttonLabel}
+                  </Button>{" "}
+                </Grid>
+              ))}
+            </Grid>
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -959,6 +1282,7 @@ let tempCheck = filteredData?.find((data) =>
             </Menu>
           </Grid>
         </Grid>
+        {/* </Box> */}
 
         <br />
         <br />
@@ -1008,43 +1332,54 @@ let tempCheck = filteredData?.find((data) =>
           ))} */}
         {/* </Grid> */}
 
-        <Tabs
-          value={activeTab}
-          // sx={{
-          //   color: "#f00", // Change text color to red
-          //   fontSize: "18px", // Increase font size
-          //   fontWeight: "bold", // Make text bold
-          // }}
-          aria-label="basic tabs example"
-          onChange={handleTabChange}
-          // indicatorColor="primary"
-          centered
+        {/* <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center", // Center tabs
+            flexWrap: "wrap", // Allow tabs to wrap on small screens
+            gap: 2, // Space between tabs
+          }}
         >
-          {tabContent.map((tab, index) => (
-            <Tab
-              key={index}
-              label={tab.title}
-              sx={{
-                color: activeTab === index ? "#ffffff" : "#E66253", // Change text color to red
-                backgroundColor: activeTab === index ? "#ffffff" : "#ffffff",
-                fontSize: "14px", // Increase font size
-                border: 3,
-                fontWeight: "bold",
-                borderColor: "#E66253",
-                borderRadius: 2,
-                mr: 4,
-                //fontWeight: "bold", // Make text bold
-              }}
-            />
-          ))}
-        </Tabs>
+          <Tabs
+            value={activeTab}
+            // sx={{
+            //   color: "#f00", // Change text color to red
+            //   fontSize: "18px", // Increase font size
+            //   fontWeight: "bold", // Make text bold
+            // }}
+            aria-label="basic tabs example"
+            onChange={handleTabChange}
+            // indicatorColor="primary"
+            centered
+          >
+            {tabContent.map((tab, index) => (
+              <Tab
+                key={index}
+                label={tab.title}
+                sx={{
+                  color: activeTab === index ? "#ffffff" : "#E66253", // Change text color to red
+                  backgroundColor: activeTab === index ? "#ffffff" : "#ffffff",
+                  fontSize: "14px", // Increase font size
+                  border: 3,
+                  fontWeight: "bold",
+                  borderColor: "#E66253",
+                  borderRadius: 2,
+                  mr: 4,
+                  //fontWeight: "bold", // Make text bold
+                }}
+              />
+            ))}
+          </Tabs>
+        </Box>
+
         {tabContent.map((tab, index) => (
           <Box key={index} hidden={activeTab !== index}>
             {tab.content}
           </Box>
-        ))}
+        ))} */}
 
-        {activeTab === 0 ? (
+        {/* {activeTab === 0 ? ( */}
+        {activeButton === 0 ? (
           <Box>
             <Typography
               sx={{
@@ -1057,18 +1392,36 @@ let tempCheck = filteredData?.find((data) =>
             >
               Approve Appointments
             </Typography>
-            {pendingAppointmentList.filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
-              .length > 0 ? (
+            {pendingAppointmentList.filter(
+              (item) =>
+                item.status === "Approved" &&
+                dayjs()
+                  .startOf("day")
+                  .isSameOrBefore(dayjs(item.date).startOf("day"))
+            ).length > 0 ? (
               <>
                 {pendingAppointmentList
-                 .sort((a, b) => {
-                  const dateA = dayjs(a.date);
-                  const dateB = dayjs(b.date);
-                  return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
-                })
-                  .filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
+                  .sort((a, b) => {
+                    const dateA = dayjs(a.date);
+                    const dateB = dayjs(b.date);
+                    return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
+                  })
+                  .filter(
+                    (item) =>
+                      item.status === "Approved" &&
+                      dayjs()
+                        .startOf("day")
+                        .isSameOrBefore(dayjs(item.date).startOf("day"))
+                  )
                   ?.map((items) => (
-                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10 , mt: 3}}>
+                    <Box
+                      sx={{
+                        justifyContent: "flex-start",
+                        mb: 0.8,
+                        ml: 10,
+                        mt: 3,
+                      }}
+                    >
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           {" "}
@@ -1135,7 +1488,7 @@ let tempCheck = filteredData?.find((data) =>
               </>
             )}
           </Box>
-        ) : activeTab === 1 ? (
+        ) : activeButton === 1 ? (
           <Box>
             <Typography
               sx={{
@@ -1148,18 +1501,36 @@ let tempCheck = filteredData?.find((data) =>
             >
               Pending Appointments
             </Typography>
-            {pendingAppointmentList.filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
-              .length > 0 ? (
+            {pendingAppointmentList.filter(
+              (item) =>
+                item.status === "pending" &&
+                dayjs()
+                  .startOf("day")
+                  .isSameOrBefore(dayjs(item.date).startOf("day"))
+            ).length > 0 ? (
               <>
                 {pendingAppointmentList
-                .sort((a, b) => {
-                  const dateA = dayjs(a.date);
-                  const dateB = dayjs(b.date);
-                  return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
-                })
-                  .filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
+                  .sort((a, b) => {
+                    const dateA = dayjs(a.date);
+                    const dateB = dayjs(b.date);
+                    return dateB.isAfter(dateA) ? -1 : 1; // Reverse order for descending sort
+                  })
+                  .filter(
+                    (item) =>
+                      item.status === "pending" &&
+                      dayjs()
+                        .startOf("day")
+                        .isSameOrBefore(dayjs(item.date).startOf("day"))
+                  )
                   ?.map((items) => (
-                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10, mt: 3 }}>
+                    <Box
+                      sx={{
+                        justifyContent: "flex-start",
+                        mb: 0.8,
+                        ml: 10,
+                        mt: 3,
+                      }}
+                    >
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           {" "}
@@ -1215,7 +1586,7 @@ let tempCheck = filteredData?.find((data) =>
                       >
                         {dayjs(items.date + " " + items.time).format("hh:mm A")}
                       </Typography>
-                  
+
                       <Button
                         Button
                         sx={{
@@ -1289,7 +1660,14 @@ let tempCheck = filteredData?.find((data) =>
                 {pendingAppointmentList
                   .filter((item) => item.status === "Declined")
                   ?.map((items) => (
-                    <Box sx={{ justifyContent: "flex-start", mb: 0.8, ml: 10, mt: 3}}>
+                    <Box
+                      sx={{
+                        justifyContent: "flex-start",
+                        mb: 0.8,
+                        ml: 10,
+                        mt: 3,
+                      }}
+                    >
                       <Grid container spacing={2}>
                         <Grid xs={3}>
                           {" "}
