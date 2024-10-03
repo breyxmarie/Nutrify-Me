@@ -25,8 +25,8 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { FormHelperText } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 
 //import DatePicker from "react-date-picker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
@@ -110,6 +110,9 @@ function TelemedicineHome() {
   dayjs.extend(isSameOrBefore);
   dayjs.extend(isSameOrAfter);
   //! tabs
+
+  const [activeButton, setActiveButton] = useState(0);
+  const buttons = ["Approved", "Pending", "Disapproved"];
   const [appointmentList, setAppointmentList] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
   const handleTabChange = (event, newActiveTab) => {
@@ -208,109 +211,107 @@ function TelemedicineHome() {
   };
 
   const transferNutritionist = () => {
-    console.log(appointmentList)
-    console.log(appointData)
-    let toDelete = []
-
+    console.log(appointmentList);
+    console.log(appointData);
+    let toDelete = [];
 
     try {
-    AxiosInstance.get(`scheduledeck`).then((res) => {
-      //res.filter((item) => item.date === && item.time && item.nutritionist_id === designatedNutritionist.nutritionist_id)
-   
+      AxiosInstance.get(`scheduledeck`).then((res) => {
+        //res.filter((item) => item.date === && item.time && item.nutritionist_id === designatedNutritionist.nutritionist_id)
 
-      appointmentList.map((items) => (
-      console.log(items)
-      ))
-     
-      console.log(toDelete, "hi")
-      appointmentList.map((items) => (
-       res.data.filter((item) => item.date === items.date && 
-       item.time === items.time && item.nutritionist_id === designatedNutritionist.nutritionist_id).map
-       ((item1) => (toDelete.push(item1)))
-      ))
-      console.log(toDelete, "hi")
+        appointmentList.map((items) => console.log(items));
 
-    // console.log(appointmentList.map((items) => ( console.log(
-    //   res.filter((item) => item.date === items.date && 
-    //   item.time === items.time && 
-    //   item.nutritionist_id === designatedNutritionist.nutritionist_id)
-    // ))), "hi")
+        console.log(toDelete, "hi");
+        appointmentList.map((items) =>
+          res.data
+            .filter(
+              (item) =>
+                item.date === items.date &&
+                item.time === items.time &&
+                item.nutritionist_id === designatedNutritionist.nutritionist_id
+            )
+            .map((item1) => toDelete.push(item1))
+        );
+        console.log(toDelete, "hi");
 
-    console.log(appointmentList) //pending appointment
-    console.log(appointData) //appointment
-    // toDelete scheduledeck
-       try {
-      AxiosInstance.put(`patientnutritionistagreement/`, {
-        agree_id: agreeDetails.agree_id,
-        status: "Disagree",
-        nutritionist_id: designatedNutritionist.nutritionist_id,
-        user_id: loggedInUser.user_id,
-      }).then((res) => {
-        console.log(res.data);
-        
+        // console.log(appointmentList.map((items) => ( console.log(
+        //   res.filter((item) => item.date === items.date &&
+        //   item.time === items.time &&
+        //   item.nutritionist_id === designatedNutritionist.nutritionist_id)
+        // ))), "hi")
 
+        console.log(appointmentList); //pending appointment
+        console.log(appointData); //appointment
+        // toDelete scheduledeck
+        try {
+          AxiosInstance.put(`patientnutritionistagreement/`, {
+            agree_id: agreeDetails.agree_id,
+            status: "Disagree",
+            nutritionist_id: designatedNutritionist.nutritionist_id,
+            user_id: loggedInUser.user_id,
+          }).then((res) => {
+            console.log(res.data);
 
-try{
-          AxiosInstance.delete(`patientnutritionistagreement/${agreeDetails.agree_id}`)
-          .then((response) => {
-            console.log(response)
-          })
+            try {
+              AxiosInstance.delete(
+                `patientnutritionistagreement/${agreeDetails.agree_id}`
+              ).then((response) => {
+                console.log(response);
+              });
+            } catch (error) {
+              console.log(error);
+            }
+
+            appointmentList.map((item) =>
+              AxiosInstance.delete(
+                `pendingappointment/${item.pending_id}`
+              ).then((response) => {
+                console.log(response);
+              })
+            );
+
+            appointData.map((item) =>
+              AxiosInstance.delete(`appointment/${item.appointment_id}`).then(
+                (response) => {
+                  console.log(response);
+                }
+              )
+            );
+
+            toDelete.map((item) =>
+              AxiosInstance.delete(`scheduledeck/${item.schedule_id}`).then(
+                (response) => {
+                  console.log(response);
+                }
+              )
+            );
+
+            //!
+            toast.success("Nutritionist Removed");
+            GetData();
+            setDesignatedNutritionist(null);
+            handleCloseTransfer();
+
+            //!
+
+            // navigate("/?success=registered");
+            // AxiosInstance.delete(`appointment/${cartData[0].cart_id}`).then((respon) => {
+            //   AxiosInstance.delete(`scheduledeck/${cartData[0].cart_id}`).then((respons) => {
+            //     AxiosInstance.delete(`pendingappointment/${cartData[0].cart_id}`).then((response) => {
+
+            //     });
+            //   });
+            // });
+          });
+        } catch (error) {
+          console.log(error.response.data);
         }
-        catch (error) {
-          console.log(error)
-        }
-
-
-        appointmentList.map((item) => (
-          AxiosInstance.delete(`pendingappointment/${item.pending_id}`)
-          .then((response) => {
-            console.log(response)
-          })
-        ))
-
-        appointData.map((item) => (
-          AxiosInstance.delete(`appointment/${item.appointment_id}`)
-          .then((response) => {
-            console.log(response)
-          })
-        ))
-
-        toDelete.map((item) => (
-          AxiosInstance.delete(`scheduledeck/${item.schedule_id}`)
-          .then((response) => {
-            console.log(response)
-          })
-        ))
-        
-        //!
-        toast.success("Nutritionist Removed");
-        GetData();
-        setDesignatedNutritionist(null);
-        handleCloseTransfer();
-
-        //!
-
-
-        // navigate("/?success=registered");
-        // AxiosInstance.delete(`appointment/${cartData[0].cart_id}`).then((respon) => {
-        //   AxiosInstance.delete(`scheduledeck/${cartData[0].cart_id}`).then((respons) => {
-        //     AxiosInstance.delete(`pendingappointment/${cartData[0].cart_id}`).then((response) => {
-  
-        //     });
-        //   });
-        // });
       });
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
     }
 
-
-    }) }
-    catch (error) {
-      console.log(error)
-    }
-
-    console.log(toDelete)
+    console.log(toDelete);
     // try {
     //   AxiosInstance.put(`patientnutritionistagreement/`, {
     //     agree_id: agreeDetails.agree_id,
@@ -331,7 +332,7 @@ try{
     //     AxiosInstance.delete(`appointment/${cartData[0].cart_id}`).then((respon) => {
     //       AxiosInstance.delete(`scheduledeck/${cartData[0].cart_id}`).then((respons) => {
     //         AxiosInstance.delete(`pendingappointment/${cartData[0].cart_id}`).then((response) => {
-  
+
     //         });
     //       });
     //     });
@@ -695,7 +696,7 @@ try{
 
   const handleDateChanges = async (date) => {
     // Get the day of the week (e.g., "Tuesday")
-    setFreeTime()
+    setFreeTime();
     setTimeDiv(<div>nagbago na ba </div>);
     setSelectedDates(date);
     console.log(date);
@@ -983,7 +984,7 @@ try{
 
   const [tempNut, setTempNut] = useState();
   const handleChange = (event) => {
-    setFreeTime()
+    setFreeTime();
     setSelectedNutritionist(event.target.value);
     const tempNut = nutritionist.find(
       (nut) => nut.nutritionist_id === event.target.value
@@ -1527,68 +1528,62 @@ try{
   const getPendingList = () => {};
   const [todayAppointment, setTodayAppointment] = useState();
   // <h2>No Scheduled Consultation </h2>
-   const GetAppointmentData = async () => {
+  const GetAppointmentData = async () => {
     await AxiosInstance.get(`appointment`)
       .then((res) => {
         // setAppointment(res.data);
 
-        console.log(res.data, res.data.filter(
-          (data) =>
-            data.user_id === loggedInUser.user_id 
-          &&
-            dayjs().isSameOrAfter(data.date)
-        ))
+        console.log(
+          res.data,
+          res.data.filter(
+            (data) =>
+              data.user_id === loggedInUser.user_id &&
+              dayjs().isSameOrAfter(data.date)
+          )
+        );
 
-        let tempCheck = res.data.filter(
-          (data) =>
-            data.user_id === loggedInUser.user_id 
-          && dayjs().isSameOrAfter(data.date)
-         )
-        .find((data) => 
-          data.date === dayjs().format("YYYY-MM-DD")   
-               && 
-               dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`))
-              && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
+        let tempCheck = res.data
+          .filter(
+            (data) =>
+              data.user_id === loggedInUser.user_id &&
+              dayjs().isSameOrAfter(data.date)
+          )
+          .find(
+            (data) =>
+              data.date === dayjs().format("YYYY-MM-DD") &&
+              dayjs().isSameOrAfter(dayjs(`${data.date} ${data.time}`)) &&
+              dayjs().isSameOrBefore(
+                dayjs(`${data.date} ${data.time}`).add(30, "minute")
               )
-
+          );
 
         let temp;
         if (tempCheck) {
           temp = res.data.find(
             (appoint) =>
               loggedInUser.user_id === appoint.user_id &&
-              Dayjs(initialValue).format("YYYY-MM-DD") 
-
-              && 
-              dayjs().isSameOrAfter(dayjs(`${appoint.date} ${appoint.time}`))
-             && dayjs().isSameOrBefore(dayjs(`${appoint.date} ${appoint.time}`).add(30, 'minute'))
-             )
+              Dayjs(initialValue).format("YYYY-MM-DD") &&
+              dayjs().isSameOrAfter(dayjs(`${appoint.date} ${appoint.time}`)) &&
+              dayjs().isSameOrBefore(
+                dayjs(`${appoint.date} ${appoint.time}`).add(30, "minute")
+              )
+          );
+        } else {
+          temp = res.data.find(
+            (data) =>
+              loggedInUser.user_id === data.user_id &&
+              data.date === dayjs().format("YYYY-MM-DD") &&
+              dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
+          );
         }
-        else {
-          temp =  res.data.find((data) => 
-            loggedInUser.user_id === data.user_id &&
-            data.date === dayjs().format("YYYY-MM-DD")   
-                 && 
-                 dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`))
-                )
-        }
-
-
-
-
-
-
-
-
-
 
         // const temp = res.data.find(
         //   (appoint) =>
         //     loggedInUser.user_id === appoint.user_id &&
         //     Dayjs(initialValue).format("YYYY-MM-DD") === appoint.date
-        //     && 
+        //     &&
         //     // dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
-        //     // === dayjs().format("hh:mm A") || 
+        //     // === dayjs().format("hh:mm A") ||
         //     dayjs(appoint.date + "" + appoint.time).format("hh:mm A")
         //     <=  dayjs().format("hh:mm A")
         // );
@@ -1611,18 +1606,24 @@ try{
             >
               {" "}
               {/* //! ayusin toh */}
-
-              {dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
-&& dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')) ? (
-                <> <Typography>Your Current Appointment</Typography>
-              </>): (<> <Typography>Your Upcoming Appointment</Typography></>)}
-
+              {dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`)) &&
+              dayjs().isSameOrBefore(
+                dayjs(`${temp.date} ${temp.time}`).add(30, "minute")
+              ) ? (
+                <>
+                  {" "}
+                  <Typography>Your Current Appointment</Typography>
+                </>
+              ) : (
+                <>
+                  {" "}
+                  <Typography>Your Upcoming Appointment</Typography>
+                </>
+              )}
               {/* { (<></>): (<></>)} */}
               {console.log(temp)}
               <p>Date {dayjs(temp.date).format("MMMM DD, YYYY")}</p>
-              <p>
-                Time: {dayjs(temp.date + "" + temp.time).format("hh:mm A")}
-              </p>
+              <p>Time: {dayjs(temp.date + "" + temp.time).format("hh:mm A")}</p>
               {/* <p>
                 Nutritionist: {designatedNutritionist?.first_name} {"  "}
                 {designatedNutritionist?.last_name}
@@ -1649,12 +1650,17 @@ try{
                   color: "#ffffff",
                 }}
               > */}
-{console.log(dayjs().format("hh:mm A") === 
-dayjs(temp.date + "" + temp.time).format("hh:mm A"), 
-dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
-
-{console.log(dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
-&& dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')))}
+              {console.log(
+                dayjs().format("hh:mm A") ===
+                  dayjs(temp.date + "" + temp.time).format("hh:mm A"),
+                dayjs(temp.date + "" + temp.time).format("hh:mm A")
+              )}
+              {console.log(
+                dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`)) &&
+                  dayjs().isSameOrBefore(
+                    dayjs(`${temp.date} ${temp.time}`).add(30, "minute")
+                  )
+              )}
               {/* console.log(filteredData?.find((data) => 
   data.date === dayjs().format("YYYY-MM-DD")   
        && 
@@ -1662,20 +1668,26 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
       && dayjs().isSameOrBefore(dayjs(`${data.date} ${data.time}`).add(30, 'minute'))
       )) */}
               {console.log(designatedNutritionist)}
-              {dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`))
-&& dayjs().isSameOrBefore(dayjs(`${temp.date} ${temp.time}`).add(30, 'minute')) ? (
-                <> <Button
-                sx={{ background: "#E66253", color: "#ffffff" }}
-                onClick={() =>
-                  navigate("/telemedicine-consultation", {
-                    state: { designatedNutritionist},
-                  })
-                }
-              >
-                Go to Consultation
-              </Button>
-              </>): (<></>)}
-             
+              {dayjs().isSameOrAfter(dayjs(`${temp.date} ${temp.time}`)) &&
+              dayjs().isSameOrBefore(
+                dayjs(`${temp.date} ${temp.time}`).add(30, "minute")
+              ) ? (
+                <>
+                  {" "}
+                  <Button
+                    sx={{ background: "#E66253", color: "#ffffff" }}
+                    onClick={() =>
+                      navigate("/telemedicine-consultation", {
+                        state: { designatedNutritionist },
+                      })
+                    }
+                  >
+                    Go to Consultation
+                  </Button>
+                </>
+              ) : (
+                <></>
+              )}
               {/* </Link>{" "} */}
               {/* <Button
                 sx={{ background: "#E66253", color: "#ffffff" }}
@@ -2204,7 +2216,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
       }).then((res) => {
         console.log(res.data);
         handleScheduleClose();
-        GetData()
+        GetData();
         // navigate("/?success=registered");
       });
     } catch (error) {
@@ -2233,7 +2245,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
         paddingBottom: "5px",
         marginTop: "80px",
         fontFamily: "Poppins",
-        color: "#000000", 
+        color: "#000000",
       }}
     >
       {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -2396,7 +2408,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                   md: "2.0em", // For medium screens
                   lg: "2.5em", // For large screens
                 },
-               
+
                 fontWeight: "bold",
                 mt: 2,
                 mb: 0,
@@ -2441,7 +2453,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
             {/* {DateModal} */}
 
             {/* //! Calendar */}
-           
+
             <div
               className="calendar-app"
               style={{ backgroundColor: "#f5f5f5" }}
@@ -2450,7 +2462,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                 {/* Days of the week */}
               </div>
               <Calendar
-             className="my-calendar"
+                className="my-calendar"
                 onChange={onChange}
                 value={date}
                 //className={isLoading ? "loading" : ""}
@@ -2684,26 +2696,32 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                               //  open // Keep the calendar open
                             />
                             {console.log(selectedDates)}
-                            {freeTime ? (<>   <Typography sx={{ mb: 1 }}>Select Time</Typography>
-                            <Select
-                              labelId="demo-simple-select-filled-label"
-                              id="demo-simple-select-filled"
-                              // value={selectedNutritionist}
-                              onChange={handleChangeTime}
-                              name="type"
-                              width="full"
-                              //  {...register("type")}
-                              //  error={errors.type ? true : false}
-                            >
-                              {freeTime?.map((option) => (
-                                <MenuItem key={option} value={option}>
-                                  {option}
-                                </MenuItem>
-                              ))}
-                            </Select></>) 
-                            : (<></>)
-                            }
-                         
+                            {freeTime ? (
+                              <>
+                                {" "}
+                                <Typography sx={{ mb: 1 }}>
+                                  Select Time
+                                </Typography>
+                                <Select
+                                  labelId="demo-simple-select-filled-label"
+                                  id="demo-simple-select-filled"
+                                  // value={selectedNutritionist}
+                                  onChange={handleChangeTime}
+                                  name="type"
+                                  width="full"
+                                  //  {...register("type")}
+                                  //  error={errors.type ? true : false}
+                                >
+                                  {freeTime?.map((option) => (
+                                    <MenuItem key={option} value={option}>
+                                      {option}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </>
+                            ) : (
+                              <></>
+                            )}
                           </>
                         ) : (
                           <div></div>
@@ -2822,64 +2840,65 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
       >
         <Box sx={style}>
           <center>
-          <Typography
-            id="modal-modal-title"
-            variant="h6"
-            component="h2"
-            sx={{ mt: 3 }}
-          >
-            Book a Consultation with a Nutritionist
-          </Typography>
-          {console.log(selectedDates)}
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label="Select a date"
-              defaultValues={null}
-              value={selectedDates}
-              onChange={handleDateChangesSched}
-              renderInput={(params) => <TextField {...params} />}
-              shouldDisableDate={disableUnavailableFinal}
-              //    minDate={dayjs().add(7, "day")}
-              minDate={dayjs()}
+            <Typography
+              id="modal-modal-title"
+              variant="h6"
+              component="h2"
+              sx={{ mt: 3 }}
+            >
+              Book a Consultation with a Nutritionist
+            </Typography>
+            {console.log(selectedDates)}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Select a date"
+                defaultValues={null}
+                value={selectedDates}
+                onChange={handleDateChangesSched}
+                renderInput={(params) => <TextField {...params} />}
+                shouldDisableDate={disableUnavailableFinal}
+                //    minDate={dayjs().add(7, "day")}
+                minDate={dayjs()}
 
-              //  open // Keep the calendar open
-            />
-          </LocalizationProvider>
+                //  open // Keep the calendar open
+              />
+            </LocalizationProvider>
 
-         {freeTime ? (<> 
-         
-         <Grid container spacing = {2} sx = {{mt: 2, mb: 0}}>
-         <br/>
-          <Grid xs = {6}><Typography sx={{ mb: 1, float: "right"}}>Select Time</Typography></Grid>
-          <Grid xs = {2}> <Select
-            labelId="demo-simple-select-filled-label"
-            id="demo-simple-select-filled"
-            // value={selectedNutritionist}
-            onChange={handleChangeTime}
-            name="type"
-            width="full"
-            //  {...register("type")}
-            //  error={errors.type ? true : false}
-          >
-            {freeTime?.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </Select></Grid>
-         </Grid>
-         
-         
-         
-       
-         
-           </>)
-       : (<></>)  
-        } 
+            {freeTime ? (
+              <>
+                <Grid container spacing={2} sx={{ mt: 2, mb: 0 }}>
+                  <br />
+                  <Grid xs={6}>
+                    <Typography sx={{ mb: 1, float: "right" }}>
+                      Select Time
+                    </Typography>
+                  </Grid>
+                  <Grid xs={2}>
+                    {" "}
+                    <Select
+                      labelId="demo-simple-select-filled-label"
+                      id="demo-simple-select-filled"
+                      // value={selectedNutritionist}
+                      onChange={handleChangeTime}
+                      name="type"
+                      width="full"
+                      //  {...register("type")}
+                      //  error={errors.type ? true : false}
+                    >
+                      {freeTime?.map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </Grid>
+                </Grid>
+              </>
+            ) : (
+              <></>
+            )}
 
-         
-
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             {selectedDates ? (
               <>
                 <Typography sx={{ mb: 1 }}>Select a Date</Typography>
@@ -2916,29 +2935,29 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
               <div></div>
             )}
           </LocalizationProvider>  */}
-          <br/>
-          <br/>
+            <br />
+            <br />
 
-          <Button
-            onClick={scheduleAppointment}
-            sx={{
-              mx: "auto",
-              display: "block",
-              background: "#ffffff",
-              color: "#E66253",
-              fontSize: "20px",
-              borderRadius: 0,
-              mt: 0,
-              "&:hover": {
-                backgroundColor: "#E66253",
-                color: "#ffffff",
-                border: 1,
-                borderColor: "#ffffff",
-              },
-            }}
-          >
-            Make Appointment
-          </Button>
+            <Button
+              onClick={scheduleAppointment}
+              sx={{
+                mx: "auto",
+                display: "block",
+                background: "#ffffff",
+                color: "#E66253",
+                fontSize: "20px",
+                borderRadius: 0,
+                mt: 0,
+                "&:hover": {
+                  backgroundColor: "#E66253",
+                  color: "#ffffff",
+                  border: 1,
+                  borderColor: "#ffffff",
+                },
+              }}
+            >
+              Make Appointment
+            </Button>
           </center>
         </Box>
       </Modal>
@@ -2957,7 +2976,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
           }}
         >
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid xs={12} md ={6}>
+            <Grid xs={12} md={6}>
               <Typography
                 sx={{ color: "#99756E", fontWeight: "bold", fontSize: "2em" }}
               >
@@ -2985,7 +3004,11 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
         <br /> */}
 
               <center>
-                <Grid container spacing={2} sx={{ ml: "10%", mt: 1, color:"#000000" }}>
+                <Grid
+                  container
+                  spacing={2}
+                  sx={{ ml: "10%", mt: 1, color: "#000000" }}
+                >
                   <Grid xs={4} sx={{ float: "right" }}>
                     {designatedNutritionist?.schedule_day.map((item) => (
                       <>
@@ -2993,9 +3016,15 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                       </>
                     ))}
                   </Grid>
-                  <Grid xs={6} sx={{ float: "left" ,   display: "flex",
-                                justifyContent: "flex-start",
-                                alignItems: "flex-start", }}>
+                  <Grid
+                    xs={6}
+                    sx={{
+                      float: "left",
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "flex-start",
+                    }}
+                  >
                     {designatedNutritionist?.schedule_time.map((item) => (
                       <>
                         {item} <br />
@@ -3025,9 +3054,9 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                   Schedule an Appointment?
                 </Button>
               </center>
-              <Button sx={{ textDecoration: "underline", color: "#898246" }}>
+              {/* <Button sx={{ textDecoration: "underline", color: "#898246" }}>
                 Follow Up
-              </Button>
+              </Button> */}
               <Button
                 onClick={handleOpenTransfer}
                 sx={{ textDecoration: "underline", color: "#898246" }}
@@ -3088,8 +3117,43 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
               </Box>
             </Modal>
 
-            <Grid  xs={12} md ={6}>
-              <Tabs
+            <Grid xs={12} md={6}>
+              <Grid container spacing={2} sx={{ mt: 0 }}>
+                {" "}
+                {buttons.map((buttonLabel, index) => (
+                  <Grid xs={12} sm={4} md={4} key={index}>
+                    <Button
+                      key={index}
+                      variant="contained" // Adjust variant as needed
+                      onClick={() => setActiveButton(index)}
+                      sx={{
+                        borderColor: "#ffffff",
+                        fontWeight: "bold",
+                        boxShadow: 1,
+                        mt: 2,
+                        mx: 5,
+                        fontSize: {
+                          xs: "1em", // For extra small screens
+                          sm: "1em", // For small screens
+                          md: "1em", // For medium screens
+                          lg: "1em", // For large screens
+                        },
+                        background: "#ffffff",
+                        color: activeButton === index ? "#E66253" : "#E3ACA5", // Adjust colors as desired
+                        "&:hover": {
+                          backgroundColor: "#E66253",
+                          color: "#ffffff",
+                          border: 0.5,
+                          borderColor: "#ffffff",
+                        },
+                      }}
+                    >
+                      {buttonLabel}
+                    </Button>{" "}
+                  </Grid>
+                ))}
+              </Grid>
+              {/* <Tabs
                 value={activeTab}
                 // sx={{
                 //   color: "#f00", // Change text color to red
@@ -3114,7 +3178,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                       fontWeight: "bold",
                       borderColor: "#E66253",
                       borderRadius: 2,
-                      mr:2,
+                      mr: 2,
                       //fontWeight: "bold", // Make text bold
                     }}
                   />
@@ -3124,9 +3188,9 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                 <Box key={index} hidden={activeTab !== index}>
                   {tab.content}
                 </Box>
-              ))}
+              ))} */}
 
-              {activeTab === 0 ? (
+              {activeButton === 0 ? (
                 <Box>
                   <Typography
                     sx={{
@@ -3138,11 +3202,22 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                   >
                     Approve Appointments
                   </Typography>
-                  {appointmentList.filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
-                    .length > 0 ? (
+                  {appointmentList.filter(
+                    (item) =>
+                      item.status === "Approved" &&
+                      dayjs()
+                        .startOf("day")
+                        .isSameOrBefore(dayjs(item.date).startOf("day"))
+                  ).length > 0 ? (
                     <>
                       {appointmentList
-                        .filter((item) => item.status === "Approved" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
+                        .filter(
+                          (item) =>
+                            item.status === "Approved" &&
+                            dayjs()
+                              .startOf("day")
+                              .isSameOrBefore(dayjs(item.date).startOf("day"))
+                        )
                         ?.map((items) => (
                           <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
                             <Typography
@@ -3182,7 +3257,7 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                     </>
                   )}
                 </Box>
-              ) : activeTab === 1 ? (
+              ) : activeButton === 1 ? (
                 <Box>
                   <Typography
                     sx={{
@@ -3194,11 +3269,22 @@ dayjs(temp.date + "" + temp.time).format("hh:mm A"))}
                   >
                     Pending Appointments
                   </Typography>
-                  {appointmentList.filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
-                    .length > 0 ? (
+                  {appointmentList.filter(
+                    (item) =>
+                      item.status === "pending" &&
+                      dayjs()
+                        .startOf("day")
+                        .isSameOrBefore(dayjs(item.date).startOf("day"))
+                  ).length > 0 ? (
                     <>
                       {appointmentList
-                        .filter((item) => item.status === "pending" && dayjs().startOf('day').isSameOrBefore(dayjs(item.date).startOf('day')))
+                        .filter(
+                          (item) =>
+                            item.status === "pending" &&
+                            dayjs()
+                              .startOf("day")
+                              .isSameOrBefore(dayjs(item.date).startOf("day"))
+                        )
                         ?.map((items) => (
                           <Box sx={{ justifyContent: "flex-start", mb: 0.8 }}>
                             <Typography

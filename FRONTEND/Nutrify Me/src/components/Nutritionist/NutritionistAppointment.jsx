@@ -26,8 +26,9 @@ import moment from "moment";
 import { ToastContainer, toast } from "react-toastify";
 
 function NutritionistAppointment() {
-  const [activeButton, setActiveButton] = useState(0);
+  
   const [todayApp, setTodayApp] = useState();
+  const [activeButton, setActiveButton] = useState(0);
   const buttons = ["Approved", "Pending", "Disapproved"];
   //! tabs
 
@@ -1423,7 +1424,7 @@ function NutritionistAppointment() {
                       }}
                     >
                       <Grid container spacing={2}>
-                        <Grid xs={3}>
+                        <Grid xs={12} md={3}>
                           {" "}
                           <Typography
                             sx={{
@@ -1438,7 +1439,7 @@ function NutritionistAppointment() {
                             {dayjs(items.date).format("MMMM DD, YYYY")}
                           </Typography>
                         </Grid>
-                        <Grid xs={4}>
+                        <Grid xs={12} md={4}>
                           {" "}
                           <Typography
                             sx={{
@@ -1532,7 +1533,7 @@ function NutritionistAppointment() {
                       }}
                     >
                       <Grid container spacing={2}>
-                        <Grid xs={3}>
+                        <Grid xs={12} md={3}>
                           {" "}
                           <Typography
                             sx={{
@@ -1547,7 +1548,7 @@ function NutritionistAppointment() {
                             {dayjs(items.date).format("MMMM DD, YYYY")}
                           </Typography>
                         </Grid>
-                        <Grid xs={4}>
+                        <Grid xs={12} md={4}>
                           {" "}
                           <Typography
                             sx={{
@@ -1669,7 +1670,7 @@ function NutritionistAppointment() {
                       }}
                     >
                       <Grid container spacing={2}>
-                        <Grid xs={3}>
+                        <Grid xs={12} md={3}>
                           {" "}
                           <Typography
                             sx={{
@@ -1684,7 +1685,7 @@ function NutritionistAppointment() {
                             {dayjs(items.date).format("MMMM DD, YYYY")}
                           </Typography>
                         </Grid>
-                        <Grid xs={4}>
+                        <Grid xs={12} md={4}>
                           {" "}
                           <Typography
                             sx={{
