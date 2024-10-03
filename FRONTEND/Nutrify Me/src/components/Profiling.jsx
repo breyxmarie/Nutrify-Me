@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
+import Modal from "@mui/material/Modal";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import MenuItem from "@mui/material/MenuItem";
@@ -85,6 +86,7 @@ function Profiling() {
   });
 
   const onSubmitHandler = (data) => {
+    handleOpenLoading()
     console.log(location.state);
     let meds;
     switch (data.takingMeds) {
@@ -119,6 +121,7 @@ function Profiling() {
             name: location.state.name,
           },
         });
+        handleCloseLoading()
       });
     } catch (error) {
       console.log(error);
@@ -144,6 +147,7 @@ function Profiling() {
   });
 
   const onSubmitHandlerNoHypertension = (data) => {
+    handleOpenLoading()
     try {
       AxiosInstance.post(`profiling/`, {
         user_id: location.state.userId,
@@ -167,6 +171,7 @@ function Profiling() {
             name: location.state.name,
           },
         });
+        handleCloseLoading()
       });
     } catch (error) {
       console.log(error);
@@ -196,6 +201,16 @@ function Profiling() {
   };
   //!
 
+
+  //?
+  const [openLoading, setOpenLoading] = useState(false);
+  const handleOpenLoading = () => {
+    setOpenLoading(true),  
+    console.log("open")}
+  const handleCloseLoading = () => {setOpenLoading(false)}
+
+  //?
+
   return (
     <div
       className="content"
@@ -205,6 +220,20 @@ function Profiling() {
         fontFamily: "Poppins",
       }}
     >
+  <Modal
+        open={openLoading}
+        onClose={handleCloseLoading} 
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+        <center>  <img src="/images/pacman.gif" width="13%" />
+        <Typography>Capturing Data please wait...</Typography></center>
+
+        </Box>
+
+        </Modal>
+
       <img
         src="/images/transparentLogo.png"
         style={{ maxWidth: "15%", maxHeight: "10%" }}

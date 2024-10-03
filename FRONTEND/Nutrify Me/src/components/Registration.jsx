@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import AxiosInstance from "./forms/AxiosInstance";
 import { Link } from "react-router-dom";
@@ -42,6 +43,15 @@ function Registration() {
   useEffect(() => {
     GetData();
   }, []);
+
+    //?
+    const [openLoading, setOpenLoading] = useState(false);
+    const handleOpenLoading = () => {
+      setOpenLoading(true),  
+      console.log("open")}
+    const handleCloseLoading = () => {setOpenLoading(false)}
+  
+    //?
 
   //! form handling
   const schema = yup.object().shape({
@@ -293,6 +303,20 @@ function Registration() {
         color: "#99756E",
       }}
     >
+
+<Modal
+        open={openLoading}
+        onClose={handleCloseLoading} 
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+        <center>  <img src="/images/pacman.gif" width="13%" />
+        <Typography>Capturing Data please wait...</Typography></center>
+
+        </Box>
+
+        </Modal>
       <img
         src="/images/transparentLogo.png"
         style={{ maxWidth: "15%", maxHeight: "10%" }}
