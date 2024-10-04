@@ -406,11 +406,12 @@ console.log(recommendData.filter(
         paddingBottom: "40px",
         marginTop: "80px",
         fontFamily: "Poppins",
+        color:"#000000"
       }}
     >
       <Grid container spacing={2}>
  {buttons.map((buttonLabel, index) => (
-    <Grid item xs={6} sm={6} md={6} key={index}>
+    <Grid item xs={12} sm={6} md={6} key={index}>
     <Button
       key={index}
       variant="contained" // Adjust variant as needed
@@ -446,7 +447,7 @@ console.log(recommendData.filter(
       Pending Requests</Typography> 
 
       <Grid container spacing = {2}> 
-        <Grid xs = {6}> 
+        <Grid xs={12} sm = {6}> 
       Generated Meal Plans<br/>
       {console.log(pendingRequests)}
       {pendingRequests.length > 0 && loading === false ? 
@@ -531,7 +532,7 @@ console.log(recommendData.filter(
               <Typography>Loading...</Typography>
             </>
           ) }</Grid>
-        <Grid xs = {6}><Typography>Recommended Meal Plans</Typography>
+        <Grid xs={12} sm = {6}><Typography>Recommended Meal Plans</Typography>
 
 {recommendData.filter(
       (item) => item.status === "Pending"
@@ -630,7 +631,7 @@ console.log(recommendData.filter(
       >
       Approved Request </Typography>
 <Grid container spacing = {2}>
-  <Grid xs = {6}>
+  <Grid xs={12} sm = {6}>
       Generated Meal Plans <br/>
       { approveRequests.length > 0 && loading === false ? 
       (<>
@@ -691,7 +692,7 @@ console.log(recommendData.filter(
           <Typography>Loading...</Typography>
         </>
       ) }</Grid> 
-  <Grid xs = {6}><Typography>Recommended Meal Plans</Typography>
+  <Grid xs={12} sm = {6}><Typography>Recommended Meal Plans</Typography>
 { recommendData.filter(
       (item) => item.status === "Approved"
     ).length > 0 && loading === false ? 

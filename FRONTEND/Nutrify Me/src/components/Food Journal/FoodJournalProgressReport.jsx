@@ -178,13 +178,13 @@ function FoodJournalProgressReport() {
   };
 
   const [mealPlanDiv, setMealPlanDiv] = useState(
-    <Box sx={{ color: "#99756E", mx: 30, width: "70%" }}>
+    <Box sx={{ color: "#99756E", mx: "10%", width: "70%" }}>
       <Box>
         <Grid container spacing={2}>
           <Grid xs={3}>
             <img src="/images/breakfast.png" height="80" />
           </Grid>
-          <Grid xs={6}>[BREAKFAST]</Grid>
+          <Grid xs={6}>BREAKFAST</Grid>
           <Grid xs={3}>
             <Grid container spacing={2}>
               <Grid xs={6}>
@@ -389,14 +389,12 @@ function FoodJournalProgressReport() {
 
           data: months.map((item) => [item.fat]),
           backgroundColor: [
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
-          ], // Color palette (optional)
+          "#1f78b4",
+          "#b2df8a",
+"#33a02c",
+"#fb9a99","#e31a1c","#fdbf6f", "#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928",
+            "#a6cee3",
+        ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
           borderWidth: 1, // Border width for slices (optional)
@@ -426,13 +424,11 @@ function FoodJournalProgressReport() {
 
           data: months.map((item) => [item.protein]),
           backgroundColor: [
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
+            "#1f78b4",
+            "#b2df8a",
+  "#33a02c",
+  "#fb9a99","#e31a1c","#fdbf6f", "#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928",
+            
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -487,10 +483,10 @@ function FoodJournalProgressReport() {
 
     setBarGraph(
       <div
-        style={{ width: "100%", marginBottom: "100px", marginLeft: "100px" }}
+        style={{ width: "100%", marginBottom: "100px", marginLeft: "10%" }}
       >
         <Grid container spacing={2}>
-          <Grid xs={6}>
+          <Grid  xs={12} sm={6}>
             {" "}
             <BarChart
               layout="horizontal"
@@ -563,9 +559,9 @@ function FoodJournalProgressReport() {
               // }}
             />
           </Grid>
-          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+          <Grid  xs={12} sm={6} sx={{ height: "100vh", mt: 5 }}>
             <Box
-              sx={{ height: "45%", width: "100%", justifyContent: "center" }}
+              sx={{ height: "45%", width: "100%" }}
             >
               <Typography> FAT</Typography>
               <Doughnut
@@ -776,10 +772,10 @@ function FoodJournalProgressReport() {
 
     setBarGraph(
       <div
-        style={{ width: "100%", marginBottom: "100px", marginLeft: "100px" }}
+        style={{ width: "100%", marginBottom: "100px", marginLeft: "5%" }}
       >
         <Grid container spacing={2}>
-          <Grid xs={6}>
+          <Grid  xs={12} sm={6}>
             {" "}
             <BarChart
               layout="horizontal"
@@ -826,9 +822,9 @@ function FoodJournalProgressReport() {
               // }}
             />
           </Grid>
-          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+          <Grid  xs={12} sm={6} sx={{ height: "100vh", mt: 5 }}>
             <Box
-              sx={{ height: "45%", width: "100%", justifyContent: "center" }}
+              sx={{ height: "45%", width: "100%" }}
             >
               <Typography> FAT</Typography>
               <Doughnut
@@ -1426,13 +1422,12 @@ function FoodJournalProgressReport() {
 
           data: weeks.map((item) => [item.fat]),
           backgroundColor: [
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
+          "#a6cee3 ","#b2df8a"
+,"#fb9a99"
+,"#fdbf6f"
+, "#cab2d6",
+"#ffff99",
+"#b15928"
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -1458,13 +1453,12 @@ function FoodJournalProgressReport() {
 
           data: weeks.map((item) => [item.protein]),
           backgroundColor: [
-            primaryColor,
-            secondaryColor,
-            primaryColor,
-            secondaryColor,
-            primaryColor,
-            secondaryColor,
-            primaryColor,
+            "#a6cee3 ","#b2df8a"
+            ,"#fb9a99"
+            ,"#fdbf6f"
+            , "#cab2d6",
+            "#ffff99",
+            "#b15928"
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -1516,10 +1510,10 @@ function FoodJournalProgressReport() {
 
     setBarGraph(
       <div
-        style={{ width: "100%", marginBottom: "100px", marginLeft: "100px" }}
+        style={{ width: "100%", marginBottom: "100px", marginLeft: "5%" }}
       >
         <Grid container spacing={2}>
-          <Grid xs={6}>
+          <Grid xs={12} sm={6}>
             {" "}
             <BarChart
               layout="horizontal"
@@ -1582,7 +1576,7 @@ function FoodJournalProgressReport() {
               // }}
             />
           </Grid>
-          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+          <Grid  xs={12} sm={6} sx={{ height: "100vh", mt: 5 }}>
             <Box
               sx={{ height: "45%", width: "100%", justifyContent: "center" }}
             >
@@ -1779,13 +1773,13 @@ function FoodJournalProgressReport() {
     }
 
     setMealPlanDiv(
-      <Box sx={{ color: "#99756E", mx: 30, width: "70%" }}>
+      <Box sx={{ color: "#99756E", mx: "10%", width: "70%" }}>
         <Box>
           <Grid container spacing={2}>
             <Grid xs={3}>
               <img src="/images/breakfast.png" height="80" />
             </Grid>
-            <Grid xs={6}>[BREAKFAST]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>BREAKFAST</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -1810,7 +1804,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/lunch.png" height="80" />
             </Grid>
-            <Grid xs={6}>[LUNCH]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>LUNCH</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -1834,7 +1828,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/snacks.png" height="80" />
             </Grid>
-            <Grid xs={6}>[SNACK]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>SNACK</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -1858,7 +1852,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/dinner.png" height="80" />
             </Grid>
-            <Grid xs={6}>[DINNER]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>DINNER</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2047,13 +2041,13 @@ function FoodJournalProgressReport() {
     // }
 
     setMealPlanDiv(
-      <Box sx={{ color: "#99756E", mx: 30, width: "70%" }}>
+      <Box sx={{ color: "#99756E",mx: "10%", width: "70%" }}>
         <Box>
           <Grid container spacing={2}>
             <Grid xs={3}>
               <img src="/images/breakfast.png" height="80" />
             </Grid>
-            <Grid xs={6}>[BREAKFAST]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>BREAKFAST</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2078,7 +2072,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/lunch.png" height="80" />
             </Grid>
-            <Grid xs={6}>[LUNCH]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>LUNCH</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2102,7 +2096,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/snacks.png" height="80" />
             </Grid>
-            <Grid xs={6}>[SNACK]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>SNACK</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2126,7 +2120,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/dinner.png" height="80" />
             </Grid>
-            <Grid xs={6}>[DINNER]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>DINNER</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2314,13 +2308,13 @@ function FoodJournalProgressReport() {
     }
 
     setMealPlanDiv(
-      <Box sx={{ color: "#99756E", mx: 30, width: "70%" }}>
+      <Box sx={{ color: "#99756E", mx: "10%", width: "70%" }}>
         <Box>
           <Grid container spacing={2}>
             <Grid xs={3}>
               <img src="/images/breakfast.png" height="80" />
             </Grid>
-            <Grid xs={6}>[BREAKFAST]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>BREAKFAST</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2345,7 +2339,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/lunch.png" height="80" />
             </Grid>
-            <Grid xs={6}>[LUNCH]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>LUNCH</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2369,7 +2363,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/snacks.png" height="80" />
             </Grid>
-            <Grid xs={6}>[SNACK]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>SNACK</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>
@@ -2393,7 +2387,7 @@ function FoodJournalProgressReport() {
             <Grid xs={3}>
               <img src="/images/dinner.png" height="80" />
             </Grid>
-            <Grid xs={6}>[DINNER]</Grid>
+            <Grid xs={6}><Typography sx = {{fontWeight:"bold"}}>DINNER</Typography></Grid>
             <Grid xs={3}>
               <Grid container spacing={2}>
                 <Grid xs={6}>

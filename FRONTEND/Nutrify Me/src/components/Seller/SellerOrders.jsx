@@ -422,7 +422,7 @@ function SellerOrders() {
       <ChatBox forceUpdate={forceRender}/>
       <Grid container spacing={2}>
  {buttons.map((buttonLabel, index) => (
-    <Grid item xs={6} sm={6} md={6} key={index}>
+    <Grid item xs={12} sm={6} md={6} key={index}>
     <Button
       key={index}
       variant="contained" // Adjust variant as needed
@@ -458,7 +458,7 @@ function SellerOrders() {
       <Grid container spacing={2}>
         
         {orderedOrder.map((item, index) => (
-          <Grid item xs={3} sm={4} md={6} key={index}>
+          <Grid item xs={12} sm={6} md={6} key={index}>
             <Box
               sx={{
                 py: 3,

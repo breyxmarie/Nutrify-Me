@@ -908,7 +908,7 @@ function SellerCreateMealPlan() {
     setActiveButtonIndex(index);
 
     setDivContent(
-      <Box sx={{ mx: 7 }}>
+      <Box sx={{ mx: "5%" }}>
         {Object.keys(tempMeal[index].meals).map((mealName) => (
           <Box>
             {" "}
@@ -918,26 +918,26 @@ function SellerCreateMealPlan() {
                 fontWeight: "bold",
                 fontSize: "200%",
                 textAlign: "left",
-                ml: 5,
+                ml: 0,
                 mt: 3,
               }}
             >
               {mealName}
             </Typography>
-            <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
+            <Box sx={{ my: 3, mx: 0, border: 2, borderRadius: 5, px: 3 }}>
               <Grid container spacing={2} sx={{ my: 2 }}>
-                <Grid xs={3}>
+                <Grid xs={12} sm={3}>
                   <img
                     src={
                       tempMeal[index]?.meals?.[mealName]?.image ||
                       "/images/food.png"
                     }
-                    height="150px"
-                    width="200px"
+                    height="80%"
+                    width="80%"
                     alt="Meal Image" // Add an alt attribute for accessibility
                   />
                 </Grid>
-                <Grid xs={7} sx={{ mx: 4, mt: 5 }}>
+                <Grid xs={12} sm={7} sx={{ mx: 0, mt: 5 }}>
                   <Typography
                     sx={{
                       color: "#99756E",
@@ -950,30 +950,30 @@ function SellerCreateMealPlan() {
                   </Typography>
 
                   <Grid container spacing={2}>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/calories.png" />
-                      {tempMeal[index].meals[mealName].calories} calories |
+                      {tempMeal[index].meals[mealName].calories} calories 
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/fat.png" />
-                      {tempMeal[index].meals[mealName].fat}g fat |
+                      {tempMeal[index].meals[mealName].fat}g fat 
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/carbs.png" />
-                      {tempMeal[index].meals[mealName].carbs}g carbs |
+                      {tempMeal[index].meals[mealName].carbs}g carbs 
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/protein.png" />
                       {tempMeal[index].meals[mealName].protein}g protein
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid xs={1}>
+                <Grid xs={12} sm={2}>
                   <Button
                     sx={{
                       background: "#E66253",
                       color: "#ffffff",
-                      mt: 8,
+                      mt: 5,
                       "&:hover": {
                         backgroundColor: "#ffffff",
                         color: "#E66253",
@@ -1430,11 +1430,12 @@ function SellerCreateMealPlan() {
         CREATE MEAL PLAN
       </Typography>
 
+      <Box sx = {{ml: "5%", mr: "10%"}}>
       <Grid container spacing={2}>
-        <Grid xs={8}>
+        <Grid xs={12} md={7}>
           <Grid container spacing={2}>
             {buttons.map((buttonLabel, index) => (
-              <Grid item xs={6} sm={4} md={2} key={index}>
+              <Grid item xs={6} sm={4} md={2.4} key={index}>
                 <Button
                   key={index}
                   variant="contained" // Adjust variant as needed
@@ -1463,10 +1464,13 @@ function SellerCreateMealPlan() {
 
           <div>{divContent}</div>
         </Grid>
-        <Grid xs={4} sx={{ color: "#99756E" }}>
+        <Grid xs={12} md={5} sx={{ color: "#99756E" }}>
+        <Box sx = {{ml: "10%"}}>
           <form onSubmit={handleSubmit1(saveMealPlan)}>
-            <Grid container spacing={0}>
-              <Grid xs={4}>
+          
+            <Grid container spacing={2}>
+              <Grid xs={12} sm={4}>
+                
                 <Typography
                   sx={{
                     textAlign: "left",
@@ -1478,7 +1482,7 @@ function SellerCreateMealPlan() {
                   Meal Plan:{" "}
                 </Typography>
               </Grid>
-              <Grid xs={8}>
+              <Grid xs={12} sm={8}>
                 <Select
                   labelId="demo-simple-select-filled-label"
                   id="demo-simple-select-filled"
@@ -1499,11 +1503,14 @@ function SellerCreateMealPlan() {
                 <Typography variant="inherit" color="textSecondary">
                   {errors1.mealtype?.message}
                 </Typography>
+             
               </Grid>
+             
             </Grid>
+           
 
-            <Grid container spacing={0}>
-              <Grid xs={3}>
+            <Grid container spacing={2}>
+              <Grid xs={12} sm={3}>
                 <Typography
                   sx={{
                     textAlign: "left",
@@ -1515,7 +1522,7 @@ function SellerCreateMealPlan() {
                   Week:
                 </Typography>
               </Grid>
-              <Grid xs={8}>
+              <Grid xs={12} sm={8}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateCalendar
                     value={value}
@@ -1700,8 +1707,11 @@ function SellerCreateMealPlan() {
                 borderRadius: 10,
                 fontWeight: "bold",
                 px: 10,
-                fontSize: "20px",
-                my: 1.5,
+                fontSize:{
+                  xs: "0.8em",
+                  sm: "1em",
+                },
+                my: 0,
                 "&:hover": {
                   backgroundColor: "#ffffff",
                   color: "#E66253",
@@ -1724,7 +1734,10 @@ function SellerCreateMealPlan() {
                 borderRadius: 10,
                 fontWeight: "bold",
                 px: 13,
-                fontSize: "20px",
+                fontSize:{
+                  xs: "0.8em",
+                  sm: "1em",
+                },
                 my: 1.5,
                 "&:hover": {
                   backgroundColor: "#E66253",
@@ -1737,8 +1750,11 @@ function SellerCreateMealPlan() {
               START OVER
             </Button>
           </form>
+          </Box>
         </Grid>
+       
       </Grid>
+      </Box>
     </div>
   );
 }
