@@ -1058,11 +1058,12 @@ function NutritionistAppointment() {
 
       <Box
         sx={{
+          mt: 3,
           mr: {
             xs: "30%", // For extra small screens
             sm: "20%", // For small screens
-            md: "15%", // For medium screens
-            lg: "15%", // For large screens
+            md: "10%", // For medium screens
+            lg: "10%", // For large screens
           },
           ml: {
             xs: "1%", // For extra small screens
@@ -1111,6 +1112,7 @@ function NutritionistAppointment() {
             </Box>
           </Grid>
           <Grid xs={12} md={6}>
+          <Box sx = {{ml: "10%"}}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               {/* <DateCalendar /> */}
               <Calendar
@@ -1123,12 +1125,15 @@ function NutritionistAppointment() {
                 }}
               />
             </LocalizationProvider>
+            </Box>
           </Grid>
         </Grid>
       </Box>
 
       <Box
+        
         sx={{
+          mt: 3, 
           border: 1,
           mr: {
             xs: "30%", // For extra small screens
@@ -1575,7 +1580,7 @@ function NutritionistAppointment() {
                         </Grid>
                       </Grid>
 
-                      <Typography></Typography>
+                     
                       <Typography
                         sx={{
                           display: "flex",
@@ -1614,7 +1619,7 @@ function NutritionistAppointment() {
                         sx={{
                           background: "#898246",
                           color: "#ffffff",
-                          my: 5,
+                          my: 0,
                           mx: 3,
                           px: 5,
                           py: 1,

@@ -899,12 +899,13 @@ function MealPlanShopMealPlans() {
            
                <Grid
                         xs={12}
-                        sm={12}
-                        md={6}
+                        sm={6}
+                        md={3}
                         key={index}
                         sx={{ my: 0 }}
                       >
                         <center>
+                          
             {items.type}<br/>
             <img src={items.image} width="30%" height="50%" />
             <br/>

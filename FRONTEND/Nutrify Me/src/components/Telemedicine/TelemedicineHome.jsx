@@ -27,7 +27,6 @@ import { FormHelperText } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
-
 //import DatePicker from "react-date-picker";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { renderTimeViewClock } from "@mui/x-date-pickers/timeViewRenderers";
@@ -3131,7 +3130,7 @@ function TelemedicineHome() {
                         fontWeight: "bold",
                         boxShadow: 1,
                         mt: 2,
-                        mx: 5,
+                        mr: 5,
                         fontSize: {
                           xs: "1em", // For extra small screens
                           sm: "1em", // For small screens

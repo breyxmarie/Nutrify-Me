@@ -5789,11 +5789,23 @@ function FoodJournalHome() {
                                         );
                                       })
 
-                                      .map((meal) => (
+                                      .map((meal, index) => (
+
+                                        <>
+                                      
+                                         
+                                          {(index + 1) % 4 === 1 ?  (<Box>
+                                          <center>
+                                          Day: {" "}{(index + 4) / 4 }
+                                          </center>
+                                          </Box>)
+                                        : (<></>)  
+                                        }
                                         <tr key={meal?.shop_meal_id}>
-                                          <td>{meal?.type}</td>
+                                          <td>{meal?.type}: {" "}</td>
                                           <td>{meal?.food}</td>
                                         </tr>
+                                        </>
                                       ))}
                                   </Box>
                                 ) : (
@@ -5906,13 +5918,22 @@ function FoodJournalHome() {
                                           order.indexOf(b.day)
                                         );
                                       })
-                                      .map((meal) => (
+                                      .map((meal, index) => (
+                                        <>
+                                          {(index + 1) % 4 === 1 ?  (<Box>
+                                          <center>
+                                          Day: {" "}{(index + 4) / 4 }
+                                          </center>
+                                          </Box>)
+                                        : (<></>)  
+                                        }
                                         <tr key={meal?.shop_meal_id}>
-                                          <td>{meal?.type}</td>
+                                          <td>{meal?.type}: {" "}</td>
                                           <td>{meal?.food}</td>
 
                                           {/* ... other table cells ... */}
                                         </tr>
+                                        </>
                                       ))}
                                   </Box>
                                 ) : (

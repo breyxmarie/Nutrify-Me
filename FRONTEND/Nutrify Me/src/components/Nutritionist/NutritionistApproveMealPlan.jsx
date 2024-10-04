@@ -22,7 +22,7 @@ function NutritionistApproveMealPlan() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 800,
+    width:"40%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -45,10 +45,124 @@ function NutritionistApproveMealPlan() {
   };
   const [shopMeal, setShopMeal] = useState([]);
   const [shopMealPlan, setShopMealPlan] = useState([]);
+
+  const [mealData, setMealData] = useState([])
   const getMealPlanData = () => {
+
+    let tempMeal = [];
+    let planDetails; 
+    let mealDetails;
+
+
+   AxiosInstance.get(`shopmealplan`).then((res) => {
+      planDetails = res.data.filter((item) => item.approve === false)
+    
+
+      AxiosInstance.get(`shopmeal`).then((respo) => {
+        mealDetails = respo.data
+        console.log(mealDetails)
+
+
+        planDetails.forEach((item1) => {
+          let tempDeets = [];
+          
+        for (let i=1; i<6; i++) {
+          let mealList = [];
+          mealDetails.map((item2) => {
+            
+            if (item2.mealplan_id === item1.shop_mealplan_id 
+              && item2.day === i.toString()
+            ){
+              mealList.push(item2)
+              
+            }
+          })
+    console.log(mealList)
+          tempDeets.push({Day: i, meals: mealList})
+       
+          console.log(i)
+        }
+        console.log(tempDeets)
+        tempMeal.push({plan: item1, details: tempDeets})
+        console.log(tempMeal)
+      })
+
+      console.log(tempMeal)
+      setMealData(tempMeal)
+      })
+    
+    
+    
+    
+    
+    
+    })
+
+
+
+
+
+
+    AxiosInstance.get(`shopmeal`).then((respo) => {
+      mealDetails = respo.data
+    })
+
+    // planDetails.map((item) => (
+    //     for (i=1; i<6; i++) {
+    //         console.log(i)
+    //       }
+    // ))
+
+  //   console.log(mealDetails)
+  //   planDetails.forEach((item1) => {
+  //     let tempDeets = [];
+  //     let mealList = [];
+  //   for (i=1; i<6; i++) {
+  //     mealDetails.map((item2) => {
+  //       if (item2.mealplan_id === item1.shop_mealplan_id 
+  //           && item2.day === i
+  //       ){
+  //         mealList.push(item1)
+  //       }
+  //     })
+
+  //     tempDeets.push ({Day: i, meals: tempDeets})
+  //     console.log(i)
+  //   }
+  // })
+
+    // for (i=1, i<6, i++) (
+    //   planDetails.map((item) => (
+    //   ))
+    //   console.log(i)
+    // )
+
+
     AxiosInstance.get(`shopmealplan`).then((res) => {
       setShopMealPlan(res.data);
-      console.log(res);
+      console.log(res.data.filter((item) => item.approve === false));
+
+
+    //   AxiosInstance.get(`shopmeal`).then((respo) => {
+    //     let mealList = [];
+
+    //     respo.data.forEach((item3) => {
+
+    //       for (i=1; i<6; i++) {
+    //         console.log(i)
+    //       }
+
+
+    //       res.data.filter((item) => item.approve === false).forEach((item1) => {
+    //         if (item3.mealplan_id === item1.shop_mealplan_id){
+    //           mealList.push(item1)
+    //         }
+    //     })
+
+
+    //     })
+    //     console.log(mealList)
+    //   });
     });
     AxiosInstance.get(`shopmeal`).then((res) => {
       setShopMeal(res.data);
@@ -112,13 +226,13 @@ function NutritionistApproveMealPlan() {
         fontFamily: "Poppins",
       }}
     >
-      {console.log(shopMealPlan.filter((item) => item.approve === true))}
+
       <Grid container={2} sx={{ mr: "5%", mt: "5%" }}>
         {shopMealPlan
           .filter((item, index) => item.approve === false)
           //.slice(0, 2)
           .map((items, index) => (
-            <Grid xs={6}>
+            <Grid xs={12} md={6}>
               <Box
                 sx={{
                   background: "#898246",
@@ -202,18 +316,39 @@ function NutritionistApproveMealPlan() {
         aria-describedby="modal-description"
       >
         <Box sx={style}>
-          {console.log(
+          <center>
+          {console.log(mealData.find((item) => item.plan.shop_mealplan_id === selectedOrderRecommend))}
+
+
+          {mealData?.find((item) => item.plan.shop_mealplan_id === selectedOrderRecommend).details.map(
+            (item1) => ( 
+              <Box>
+                Day {" "} {item1?.Day}<br/>
+                {item1?.meals.sort((a, b) => {
+              const order = ["Breakfast", "Lunch", "Snack", "Dinner"];
+              return order.indexOf(a.type) - order.indexOf(b.type);
+            }).map((item5) => (
+                  <Box>
+                  {item5?.type} : {item5.food}
+                  </Box>
+                ))}
+              </Box>
+            )
+          )}
+          {/* {console.log(
             shopMeal.filter(
               (item) => item.mealplan_id === selectedOrderRecommend
             )
-          )}
-          {shopMeal
+          )} */}
+
+         
+          {/* {shopMeal
             .filter((item) => item.mealplan_id === selectedOrderRecommend)
             .map((items) => (
               <Box>
                 {items.type}: {items.food}
               </Box>
-            ))}
+            ))} */}
           {/* {selectedOrderRecommend.name}
           {console.log(selectedOrderRecommend)}
           {selectedOrderRecommend?.map((item) => (
@@ -238,6 +373,7 @@ function NutritionistApproveMealPlan() {
               </Grid>
             </Box>
           ))} */}
+          </center>
         </Box>
       </Modal>
     </div>

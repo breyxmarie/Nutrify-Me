@@ -37,7 +37,7 @@ function MealPlanShopRequest() {
   const [selectedOrderRecommend, setSelectedOrderRecommend] = useState([]);
 
   const navigate = useNavigate();
-
+  const [recommendName, setRecommendName] = useState()
   const style = {
     maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
     display: "flex",
@@ -47,7 +47,7 @@ function MealPlanShopRequest() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 800,
+    width: "80%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -73,6 +73,7 @@ function MealPlanShopRequest() {
 
   const handleOpenRecommend = (data) => {
     console.log(data);
+    
     setSelectedOrderRecommend(data);
     setIsOpenRecommend(true);
   };
@@ -1357,7 +1358,7 @@ function MealPlanShopRequest() {
               {console.log(item.meals)}
               <Grid container spacing={2}>
                 {item.meals.map((items, index) => (
-                  <Grid item xs={3} sm={4} md={6} key={index}>
+                  <Grid item xs={3} sm={4} md={3} key={index}>
                     <center>
                       <Box>
                         <img src={items?.image} width="40%" />
@@ -1384,7 +1385,9 @@ function MealPlanShopRequest() {
         aria-describedby="modal-description"
       >
         <Box sx={style}>
-          {selectedOrderRecommend.name}
+          
+          Name: <Typography>{selectedOrderRecommend.name}</Typography>
+        
           {console.log(selectedOrderRecommend)}
           {selectedOrderRecommend?.map((item) => (
             <Box>
@@ -1396,10 +1399,11 @@ function MealPlanShopRequest() {
               {console.log(item.meals)}
               <Grid container spacing={2}>
                 {item.meals.map((items, index) => (
-                  <Grid item xs={3} sm={4} md={6} key={index}>
+                  <Grid item xs={12} sm={6} md={3} key={index}>
                     <center>
                       <Box>
-                        {items?.type} <br />
+                        <Typography sx = {{fontWeight: "bold"}}>{items?.type}</Typography>
+                       
                         {items?.food}
                       </Box>
                     </center>

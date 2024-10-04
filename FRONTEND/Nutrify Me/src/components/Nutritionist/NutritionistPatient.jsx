@@ -70,19 +70,22 @@ function NutritionistPatient() {
         <br />
 
         <Grid container spacing={2} sx={{ color: "#99756E" }}>
-          <Grid xs={3}>PATIENT ID</Grid>
-          <Grid xs={3}>Username</Grid>
+          <Grid xs ={12} sm={3}>PATIENT ID</Grid>
+          <Grid xs ={12} sm={3}>Username</Grid>
         </Grid>
 
         <hr />
         <br />
         {user?.map((item, index) => (
-          <Grid container spacing={2} sx={{ my: 5 }}>
-            <Grid xs={3}>{item.user_id}</Grid>
-            <Grid xs={3}>
+          <Grid container spacing={2} sx={{ my: {
+            xs: 1,
+            sm: 5
+          }, border: {xs: 1,sm: 0} }}>
+            <Grid xs = {12} sm={3}>{item.user_id}</Grid>
+            <Grid xs = {12} sm={3}>
               {item.first_name} {item.last_name}
             </Grid>
-            <Grid xs={3}>
+            <Grid xs = {12} sm={3}>
               <Button
                 sx={{ background: "#E66253", color: "#ffffff" }} 
                 onClick={() =>
@@ -94,7 +97,7 @@ function NutritionistPatient() {
                 VIEW RECORDS
               </Button>
             </Grid>
-            <Grid xs={3}>
+            <Grid xs = {12} sm={3}>
               <Button   onClick={() =>
                   navigate("/nutritionist-patient-create-meal-plan", {
                     state: { item },
