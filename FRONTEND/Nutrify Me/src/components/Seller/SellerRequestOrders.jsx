@@ -787,7 +787,7 @@ console.log(recommendData.filter(
           <br/> 
         
           Date: {dayjs(selectedOrder?.start_week).format("MMMM DD,YYYY")} -  {" "}
-          {dayjs(selectedOrder?.last_week).format("MMMM DD,YYYY")}
+          {dayjs(selectedOrder?.end_week).format("MMMM DD,YYYY")}
           {selectedOrder?.meal?.map((item) => (
             <Box>
               {item?.day}
@@ -886,7 +886,7 @@ console.log(recommendData.filter(
           {selectedOrder?.name}
           <br/>
           Date: {dayjs(selectedOrder?.start_week).format("MMMM DD,YYYY")} -  {" "}
-          {dayjs(selectedOrder?.last_week).format("MMMM DD,YYYY")}
+          {dayjs(selectedOrder?.end_week).format("MMMM DD,YYYY")}
           {selectedOrder?.meal?.map((item) => (
             <Box>
               {item?.Day}

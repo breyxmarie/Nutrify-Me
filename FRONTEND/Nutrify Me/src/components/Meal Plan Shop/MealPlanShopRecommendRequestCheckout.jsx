@@ -108,7 +108,7 @@ function MealPlanShopRecommendRequestCheckout() {
         (item) => item.user_id === loggedInUser.user_id
       );
       setAddressData(filteredData);
-      console.log(response);
+     
       // getMealData();
 
       setTimeout(async () => {
@@ -118,7 +118,7 @@ function MealPlanShopRecommendRequestCheckout() {
             filteredData[0].longi,
             filteredData[0].address
           );
-          console.log(quotationData);
+         
           setShippingPrice(
             quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
           );
@@ -206,7 +206,7 @@ function MealPlanShopRecommendRequestCheckout() {
       setValue(description, false);
       clearSuggestions();
 
-      console.log(description, false);
+     
 
       getGeocode({ address: description }).then((results) => {
         const { lat, lng } = getLatLng(results[0]);
@@ -217,7 +217,7 @@ function MealPlanShopRecommendRequestCheckout() {
     };
 
   useEffect(() => {
-    console.log(data);
+   
     if (searchOriginLatitude && searchOriginLongtitude) {
       console.log(
         `Retrieved ${searchOriginLatitude} and ${searchOriginLongtitude}`
@@ -226,7 +226,7 @@ function MealPlanShopRecommendRequestCheckout() {
   }, [searchOriginLatitude, searchOriginLongtitude]);
 
   useEffect(() => {
-    console.log(location.state, "hi");
+   
     getAddressData();
   }, []);
 
@@ -541,15 +541,23 @@ function MealPlanShopRecommendRequestCheckout() {
       //  navigate("/paypal-payment", { state: datas });
     } else {
       let orders;
+      console.log(location.state, recommendMeals.find(
+        (item) =>
+          item.recommend_mealplan_id === location.state.recommend_mealplan_id
+      ))
       try {
-        console.log(location.state.meal.meal);
+       
         AxiosInstance.post(`shopmealplan/`, {
-          name: location.state.meal.name,
-          image: location.state.meal.meal[0].meals[0].details.recipe.image,
+          name: recommendMeals.find(
+            (item) =>
+              item.recommend_mealplan_id === location.state.recommend_mealplan_id
+          ).name,
+          image: "/images/food.png",
           description: "Generated Meal",
           start_week: dayjs("2019-10-25").format("YYYY-MM-DD"),
           end_week: dayjs("2019-10-31").format("YYYY-MM-DD"),
-          price: location.state.request.price,
+          price: parseInt(totalOrderPrice) - shippingPrice,
+          approve: true,
           // shippingPrice
         }).then((res) => {
           console.log(res);
@@ -566,9 +574,7 @@ function MealPlanShopRecommendRequestCheckout() {
               totalprice: parseInt(totalOrderPrice),
               shipping_price: parseInt(shippingPrice),
               payment_details: ["Cash on Delivery", "Cash on Delivery"],
-              schedule_date: [
-                dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-                dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+              schedule_date: [location.state.start_week, location.state.end_week,
               ],
               // shippingPrice
             }).then((res) => {
@@ -587,29 +593,29 @@ function MealPlanShopRecommendRequestCheckout() {
               //   // setActiveTab(0);
             });
 
-            location.state.meal.meal.map((item) =>
+            location.state.meal.map((item) =>
               item.meals.map((items) =>
                 //console.log(item.Day.substring(4))
 
                 AxiosInstance.post(`shopmeal/`, {
                   mealplan_id: res.data.id,
-                  type: items.Meal,
-                  calories: Math.floor(items.details.recipe.calories),
-                  fat: Math.floor(items.details.recipe.digest[0].daily),
-                  protein: Math.floor(items.details.recipe.digest[2].daily),
-                  carbs: Math.floor(items.details.recipe.digest[1].daily),
-                  food: items.details.recipe.label,
-                  image: items.details.recipe.image,
-                  day: item.Day.substring(4),
+                  type: items.type,
+                  calories: items.calories,
+                  fat: items.fat,
+                  protein: items.protein,
+                  carbs: items.carbs,
+                  food: items.food,
+                  image:  "/images/food.png",
+                  day: items.day,
                   // shippingPrice
                 }).then((res) => {
                   console.log(res);
                 })
               )
             );
-            console.log(location.state.request.request_id);
+        
             AxiosInstance.delete(
-              `requestedmeals/${location.state.request.request_id}`
+              `requestedmeals/${location.state.recommend_mealplan_id}`
             ).then((res) => {
               console.log(res);
             });
@@ -1266,7 +1272,7 @@ function MealPlanShopRecommendRequestCheckout() {
           addressData[index].longi,
           addressData[index].address
         );
-        console.log(quotationData);
+       
         setShippingPrice(
           quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
         );
