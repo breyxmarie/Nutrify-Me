@@ -211,7 +211,16 @@ function NutritionistApproveMealPlan() {
         approve: 0,
       }).then((res) => {
         console.log(res);
-        getMealPlanData();
+          try {
+          AxiosInstance.delete(`shopmealplan/${temp.shop_mealplan_id}`).then((respo) => {
+            getMealPlanData();
+            console.log(respo);
+          });
+         
+        } catch (error) {
+          console.log(error);
+        }
+       
       });
     } catch (error) {
       console.log(error);
@@ -320,7 +329,7 @@ function NutritionistApproveMealPlan() {
           {console.log(mealData.find((item) => item.plan.shop_mealplan_id === selectedOrderRecommend))}
 
 
-          {mealData?.find((item) => item.plan.shop_mealplan_id === selectedOrderRecommend).details.map(
+          {mealData?.find((item) => item.plan.shop_mealplan_id === selectedOrderRecommend)?.details?.map(
             (item1) => ( 
               <Box>
                 Day {" "} {item1?.Day}<br/>
