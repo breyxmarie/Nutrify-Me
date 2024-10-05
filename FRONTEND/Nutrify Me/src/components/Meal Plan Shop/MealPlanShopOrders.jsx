@@ -287,8 +287,9 @@ function MealPlanShopOrders() {
             }}
           >
             <Grid container spacing={2} sx={{ mt: "2%", ml: "2%" }}>
-              <Grid xs={2}>
-                <img src={item.image} width="160px" height="160px" />
+              <Grid xs={2}> 
+              <img src={ item.image && /\.(jpg|jpeg|png|gif)$/i.test(item.image)  ? item.image : "/images/food.png"} width="160px" height="160px" />
+
               </Grid>
               <Grid xs={3} sx={{ mt: "6%" }}>
                 {item.name}{" "}
