@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -15,9 +15,21 @@ function Paypal() {
   const navigate = useNavigate();
   const location = useLocation();
   const receivedData = location.state;
+  console.log(location, receivedData)
+  
 
   const [paid, setPaid] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
+  const orders = location.state.orders;
+  const [mealData, setMealData] = useState([])
+  const getData = () => {
+    AxiosInstance.get(`shopmealplan`).then((res) => {
+      setMealData(res.data)
+    })
+  }
+  useEffect(() => {
+    getData();
+  }, []);
 
   const createOrder = async (data, actions) => {
    
@@ -28,51 +40,215 @@ function Paypal() {
             currency_code: "PHP",
            value: location.state.totalprice,
 
-          // value: 0.01,
+            //value: 0.01,
           },
         },
       ],
     });
   };
 
+  const press = () => {
+    for (let i=0; i < receivedData.orders.length; i++) {
+      console.log(i)
+      console.log("hi", mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]))
+      console.log(receivedData.orders[i])
+
+      try {
+        console.log("hi", mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]))
+        AxiosInstance.post(`order/`, {
+          user_id: location.state.user_id,
+          orders: [receivedData.orders[i]],
+          date: dayjs().format("YYYY-MM-DD"),
+          status: location.state.status,
+          address_id: location.state.address_id,
+          payment: location.state.payment,
+          shipping: "Lalamove",
+          notes: location.state.notes,
+          totalprice: location.state.totalprice,
+          shipping_price: location.state.shipping_price,
+          payment_details: "test",
+          schedule_date: [
+            mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]).start_week, 
+            mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]).end_week
+            // dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+            // dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+          ],
+          // shippingPrice
+        }).then((res) => {
+          console.log(res, res.data);
+          AxiosInstance.delete(`cart/${location.state.cart_id}`)
+          .then((resp) => {
+            console.log(resp);
+            setPaid(true);
+          setLoading(false)
+          });;
+          
+          
+        });
+      }
+      catch (error) {
+        console.log(error)
+      }
+
+    }
+  }
+
   const onApprove = async (data, actions) => {
-    const order = await actions.order.capture();
+    // order = await actions.order.capture();
   
-    setLoading(true)
-    setOrderDetails(order);
 
     try {
-      AxiosInstance.post(`order/`, {
-        user_id: location.state.user_id,
-        orders: location.state.orders,
-        date: dayjs().format("YYYY-MM-DD"),
-        status: location.state.status,
-        address_id: location.state.address_id,
-        payment: location.state.payment,
-        shipping: "Lalamove",
-        notes: location.state.notes,
-        totalprice: location.state.totalprice,
-        shipping_price: location.state.shipping_price,
-        payment_details: order,
-        schedule_date: [
-          dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-          dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
-        ],
-        // shippingPrice
-      }).then((res) => {
-        console.log(res, res.data);
-        AxiosInstance.delete(`cart/${location.state.cart_id}`)
-        .then((resp) => {
-          console.log(resp);
-          setPaid(true);
-        setLoading(false)
-        });;
-        
-        
-      });
+      const order = await actions.order.capture();
+      console.log("Order captured:", order);
+
+
+
+      AxiosInstance.get(`shopmealplan`).then((res) => {
+      for (let i=0; i < location.state.orders.length; i++) {
+      
+        console.log(location.state.orders.length, location.state)
+        try {
+          console.log("hi", location.state.orders[i],res.data, res.data.find((item1) => item1.shop_mealplan_id === location.state.orders[i]))
+          AxiosInstance.post(`order/`, {
+            user_id: location.state.user_id,
+            orders: [receivedData.orders[i]],
+            date: dayjs().format("YYYY-MM-DD"),
+            status: location.state.status,
+            address_id: location.state.address_id,
+            payment: location.state.payment,
+            shipping: "Lalamove",
+            notes: location.state.notes,
+            totalprice: location.state.totalprice,
+            shipping_price: location.state.shipping_price,
+            payment_details: order,
+            schedule_date: [
+              res.data.find((item1) => item1.shop_mealplan_id === location.state.orders[i]).start_week,
+              res.data.find((item1) => item1.shop_mealplan_id === location.state.orders[i]).end_week
+              // dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+              // dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+            ],
+            // shippingPrice
+          }).then((res) => {
+            console.log(res, res.data);
+            AxiosInstance.delete(`cart/${location.state.cart_id}`)
+            .then((resp) => {
+              console.log(resp);
+              setPaid(true);
+            setLoading(false)
+            });;
+            
+            
+          });
+        }
+        catch (error) {
+          console.log(error)
+        }
+      
+      }
+    })
+
+
+      setLoading(true);
+
+  
+      // Remove loops and Axios calls for now
+      setPaid(true);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
-    }
+      console.error("Error capturing order:", error);
+    
+  }
+
+    // setLoading(true)
+    // setOrderDetails(order);
+    // console.log(location.state.orders)
+
+    // receivedData.orders.forEach((item) => {
+    //   console.log(item)
+    // } )
+    // console.log(receivedData.orders.length)
+    // for (let i=0; i < receivedData.orders.length; i++) {
+    //   console.log(i)
+    //   console.log("hi", item, mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders.mealplan_id).start_week)
+
+
+    // }
+
+    
+    // for (let i=0; i < receivedData.orders.length; i++) {
+      
+   
+    //   try {
+    //     console.log("hi", mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]))
+    //     AxiosInstance.post(`order/`, {
+    //       user_id: location.state.user_id,
+    //       orders: [receivedData.orders[i]],
+    //       date: dayjs().format("YYYY-MM-DD"),
+    //       status: location.state.status,
+    //       address_id: location.state.address_id,
+    //       payment: location.state.payment,
+    //       shipping: "Lalamove",
+    //       notes: location.state.notes,
+    //       totalprice: location.state.totalprice,
+    //       shipping_price: location.state.shipping_price,
+    //       payment_details: order,
+    //       schedule_date: [
+    //         mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]).start_week, 
+    //         mealData.find((item1) => item1.shop_mealplan_id === receivedData.orders[i]).end_week
+    //         // dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+    //         // dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+    //       ],
+    //       // shippingPrice
+    //     }).then((res) => {
+    //       console.log(res, res.data);
+    //       AxiosInstance.delete(`cart/${location.state.cart_id}`)
+    //       .then((resp) => {
+    //         console.log(resp);
+    //         setPaid(true);
+    //       setLoading(false)
+    //       });;
+          
+          
+    //     });
+    //   }
+    //   catch (error) {
+    //     console.log(error)
+    //   }
+    
+    // }
+
+    // try {
+    //   AxiosInstance.post(`order/`, {
+    //     user_id: location.state.user_id,
+    //     orders: location.state.orders,
+    //     date: dayjs().format("YYYY-MM-DD"),
+    //     status: location.state.status,
+    //     address_id: location.state.address_id,
+    //     payment: location.state.payment,
+    //     shipping: "Lalamove",
+    //     notes: location.state.notes,
+    //     totalprice: location.state.totalprice,
+    //     shipping_price: location.state.shipping_price,
+    //     payment_details: order,
+    //     schedule_date: [
+    //       dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+    //       dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+    //     ],
+    //     // shippingPrice
+    //   }).then((res) => {
+    //     console.log(res, res.data);
+    //     AxiosInstance.delete(`cart/${location.state.cart_id}`)
+    //     .then((resp) => {
+    //       console.log(resp);
+    //       setPaid(true);
+    //     setLoading(false)
+    //     });;
+        
+        
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const initialOptions = {
@@ -97,6 +273,8 @@ function Paypal() {
         fontFamily: "Poppins",
       }}
     >
+
+    <Button onClick={press}>Click</Button>
   
       {paid === true && loading === false ? (
         <>

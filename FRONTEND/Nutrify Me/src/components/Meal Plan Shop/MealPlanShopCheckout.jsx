@@ -487,6 +487,7 @@ function MealPlanShopCheckout() {
   } = useForm({
     resolver: yupResolver(secondschema),
   });
+  console.log(cartData[0]?.orders)
   // console.log(addressData[selectedAddress].address_id);
   const onSubmitHandler1 = async (data) => {
 
@@ -522,11 +523,18 @@ function MealPlanShopCheckout() {
       console.log(datas);
       navigate("/paypal-payment", { state: datas });
     } else {
-      try {
+
+      for (let i=0; i < cartData[0].orders.length; i++) {
+        console.log(i)
+
+
+
+
+          try {
         console.log(addressData[selectedAddress].address_id);
         AxiosInstance.post(`order/`, {
           user_id: loggedInUser.user_id,
-          orders: cartData[0].orders,
+          orders: [cartData[0].orders[i]],
           date: dayjs().format("YYYY-MM-DD"),
           status: "Ordered",
           address_id: addressData[selectedAddress].address_id,
@@ -537,14 +545,17 @@ function MealPlanShopCheckout() {
           shipping_price: parseInt(shippingPrice),
           payment_details: ["Cash on Delivery", "Cash on Delivery"],
           schedule_date: [
-            dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-            dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+            shopMeal.find((item) => item.shop_mealplan_id === cartData[0].orders[i]).start_week,
+            shopMeal.find((item) => item.shop_mealplan_id === cartData[0].orders[i]).end_week,
           ],
           // shippingPrice
+
+
         }).then((res) => {
           console.log(res, res.data);
 
-          try {
+          if(i === cartData[0].orders.length - 1 ) {
+                     try {
             const response = AxiosInstance.delete(
               `cart/${cartData[0].cart_id}`
             );
@@ -554,13 +565,53 @@ function MealPlanShopCheckout() {
           } catch (error) {
             console.log(error);
           }
-          // getAddressData();
-          // handleReset();
-          // setActiveTab(0);
-        });
-      } catch (error) {
-        console.log(error);
+          }
+        })
       }
+      catch (error) {
+        console.log(error)
+      }
+
+      }
+      // try {
+      //   console.log(addressData[selectedAddress].address_id);
+      //   AxiosInstance.post(`order/`, {
+      //     user_id: loggedInUser.user_id,
+      //     orders: cartData[0].orders,
+      //     date: dayjs().format("YYYY-MM-DD"),
+      //     status: "Ordered",
+      //     address_id: addressData[selectedAddress].address_id,
+      //     payment: payment,
+      //     shipping: "Lalamove",
+      //     notes: notes,
+      //     totalprice: parseInt(totalOrderPrice),
+      //     shipping_price: parseInt(shippingPrice),
+      //     payment_details: ["Cash on Delivery", "Cash on Delivery"],
+      //     schedule_date: [
+      //       dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+      //       dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+      //     ],
+      //     // shippingPrice
+      //   }).then((res) => {
+      //     console.log(res, res.data);
+
+      //     try {
+      //       const response = AxiosInstance.delete(
+      //         `cart/${cartData[0].cart_id}`
+      //       );
+      //       console.log(response);
+
+      //       navigate("/meal-plan-shop-home");
+      //     } catch (error) {
+      //       console.log(error);
+      //     }
+      //     // getAddressData();
+      //     // handleReset();
+      //     // setActiveTab(0);
+      //   });
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
 
     // console.log(payment);
