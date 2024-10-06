@@ -41,15 +41,13 @@ function SellerOrders() {
   const [loading2, setLoading2] = useState();
   const [loading3, setLoading3] = useState();
   const style = {
-    maxHeight: "calc(100vh - 100px)", // Adjust padding as needed
-    display: "flex",
-    flexDirection: "column",
     overflowY: "auto",
     position: "absolute",
     top: "50%",
     left: "50%",
+    height: "40%",
     transform: "translate(-50%, -50%)",
-    width: 800,
+    width: "70%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,

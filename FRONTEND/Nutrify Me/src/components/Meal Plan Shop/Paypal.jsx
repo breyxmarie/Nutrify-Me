@@ -274,7 +274,7 @@ function Paypal() {
       }}
     >
 
-    <Button onClick={press}>Click</Button>
+    
   
       {paid === true && loading === false ? (
         <>

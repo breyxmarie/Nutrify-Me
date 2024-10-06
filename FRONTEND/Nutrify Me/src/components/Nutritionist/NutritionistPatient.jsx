@@ -87,7 +87,14 @@ function NutritionistPatient() {
             </Grid>
             <Grid xs = {12} sm={3}>
               <Button
-                sx={{ background: "#E66253", color: "#ffffff" }} 
+                sx={{ background: "#E66253", color: "#ffffff",
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 0.5,
+                    borderColor: "#E66253",
+                  }
+                 }} 
                 onClick={() =>
                   navigate("/nutritionist-patient-records", {
                     state: { item },
@@ -102,7 +109,13 @@ function NutritionistPatient() {
                   navigate("/nutritionist-patient-create-meal-plan", {
                     state: { item },
                   })
-                } sx={{ background: "#898246", color: "#ffffff" }}>
+                } sx={{ background: "#898246", color: "#ffffff" ,
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#898246",
+                    border: 0.5,
+                    borderColor: "#898246",
+                  },}}>
                 CREATE MEAL PLAN
               </Button>
             </Grid>

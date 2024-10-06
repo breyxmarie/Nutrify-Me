@@ -101,15 +101,15 @@ function MealPlanShopOrders() {
   //     totalPrices + parseInt(shippingPrice)
   // ); // Use calculated price if totalPrice is not available
 
-  console.log("try " + location.state.items);
+  console.log(location.state);
 
   const [color1, setColor1] = useState("#E66253");
   const [color2, setColor2] = useState("#E66253");
   const [color3, setColor3] = useState("#E66253");
-  const [phase1, setPhase1] = useState("ORDER PLACED");
-  const [phase2, setPhase2] = useState("SHIPPED");
+  const [phase1, setPhase1] = useState("Ordered");
+  const [phase2, setPhase2] = useState("On-Going");
 
-  const [phase3, setPhase3] = useState("ORDER DONE");
+  const [phase3, setPhase3] = useState("Delivered");
 
   function getStatus() {
     switch (location.state.status) {

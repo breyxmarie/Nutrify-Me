@@ -294,7 +294,7 @@ function NutritionistCreateMealPlan() {
     register: register1,
     formState: { errors: errors1 },
     handleSubmit: handleSubmit1,
-    reset1,
+    reset: reset1,
   } = useForm({
     resolver: yupResolver(mealPlanschema),
   });
@@ -305,6 +305,215 @@ function NutritionistCreateMealPlan() {
 
   const handleResetMealPlan = () => {
     reset1(); // Call reset function to clear form state and errors
+   setTempMeal([
+      {
+        day: "Day 1", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+      {
+        day: "Day 2", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+      {
+        day: "Day 3", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+  
+      {
+        day: "Day 4", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+  
+      {
+        day: "Day 5",
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+    ]);
   };
 
   const saveMealPlan = async (data) => {
@@ -927,7 +1136,7 @@ function NutritionistCreateMealPlan() {
     setActiveButtonIndex(index);
 
     setDivContent(
-      <Box sx={{ mx: 7 }}>
+      <Box sx={{ mx: "5%" }}>
         {Object.keys(tempMeal[index].meals).map((mealName) => (
           <Box>
             {" "}
@@ -937,26 +1146,26 @@ function NutritionistCreateMealPlan() {
                 fontWeight: "bold",
                 fontSize: "200%",
                 textAlign: "left",
-                ml: 5,
+                ml: 0,
                 mt: 3,
               }}
             >
               {mealName}
             </Typography>
-            <Box sx={{ my: 3, mx: 3, border: 2, borderRadius: 5, px: 3 }}>
+            <Box sx={{ my: 3, mx: 0, border: 2, borderRadius: 5, px: 3 }}>
               <Grid container spacing={2} sx={{ my: 2 }}>
-                <Grid xs={3}>
+                <Grid xs={12} sm={3}>
                   <img
                     src={
                       tempMeal[index]?.meals?.[mealName]?.image ||
                       "/images/food.png"
                     }
-                    height="150px"
-                    width="200px"
+                    height="80%"
+                    width="80%"
                     alt="Meal Image" // Add an alt attribute for accessibility
                   />
                 </Grid>
-                <Grid xs={7} sx={{ mx: 4, mt: 5 }}>
+                <Grid xs={12} sm={7} sx={{ mx: 0, mt: 5 }}>
                   <Typography
                     sx={{
                       color: "#99756E",
@@ -969,25 +1178,25 @@ function NutritionistCreateMealPlan() {
                   </Typography>
 
                   <Grid container spacing={2}>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/calories.png" />
                       {tempMeal[index].meals[mealName].calories} calories |
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/fat.png" />
                       {tempMeal[index].meals[mealName].fat}g fat |
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/carbs.png" />
                       {tempMeal[index].meals[mealName].carbs}g carbs |
                     </Grid>
-                    <Grid xs={3}>
+                    <Grid xs={6}>
                       <img src="/images/protein.png" />
                       {tempMeal[index].meals[mealName].protein}g protein
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid xs={1}>
+                <Grid xs={12} sm={2}>
                   <Button
                     sx={{
                       background: "#E66253",
@@ -1436,15 +1645,17 @@ function NutritionistCreateMealPlan() {
            </> )}
         </Box>
       </Modal>
+
       <Typography sx={{ my: 7, fontSize: "200%", fontWeight: "bold" }}>
         CREATE MEAL PLAN
       </Typography>
 
+      <Box sx = {{ml: "5%", mr: "5%"}}>
       <Grid container spacing={2}>
-        <Grid xs={8}>
+        <Grid xs={12} md={7}>
           <Grid container spacing={2}>
             {buttons.map((buttonLabel, index) => (
-              <Grid item xs={6} sm={4} md={2} key={index}>
+              <Grid item xs={6} sm={4} md={2.4} key={index}>
                 <Button
                   key={index}
                   variant="contained" // Adjust variant as needed
@@ -1474,9 +1685,10 @@ function NutritionistCreateMealPlan() {
           <div>{divContent}</div>
         </Grid>
 
-        <Grid xs={4} sx={{ color: "#99756E" }}>
+        <Grid xs={12} md={5} sx={{ color: "#99756E" }}>
+        <Box sx = {{ml: "10%"}}>
           <form onSubmit={handleSubmit1(saveMealPlan)}>
-            <Grid container spacing={0}>
+            <Grid container spacing={2}>
               <Grid xs={0}>
                 {/* <Typography
                   sx={{
@@ -1770,7 +1982,7 @@ function NutritionistCreateMealPlan() {
                   borderColor: "#ffffff",
                 },
               }}
-              onClick = {() => setOpenLoading(true)}
+               onClick = {handleResetMealPlan}
             >
               START OVER
             </Button>
@@ -1800,8 +2012,10 @@ function NutritionistCreateMealPlan() {
               SAVE MEAL PLAN
             </Button>
           </form>
+          </Box>
         </Grid>
       </Grid>
+  </Box>
     </div>
   );
 }
