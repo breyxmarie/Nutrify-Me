@@ -407,13 +407,11 @@ function NutritionistProgress() {
 
           data: months.map((item) => [item.fat]),
           backgroundColor: [
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
+            "#1f78b4",
+            "#b2df8a",
+  "#33a02c",
+  "#fb9a99","#e31a1c","#fdbf6f", "#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928",
+              "#a6cee3",
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -444,13 +442,11 @@ function NutritionistProgress() {
 
           data: months.map((item) => [item.protein]),
           backgroundColor: [
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
-            "#898246",
-            "#E66253",
+            "#1f78b4",
+          "#b2df8a",
+"#33a02c",
+"#fb9a99","#e31a1c","#fdbf6f", "#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928",
+            "#a6cee3",
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -1444,13 +1440,12 @@ function NutritionistProgress() {
 
           data: weeks.map((item) => [item.fat]),
           backgroundColor: [
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
-            "#898246",
-            primaryColor,
+            "#a6cee3 ","#b2df8a"
+            ,"#fb9a99"
+            ,"#fdbf6f"
+            , "#cab2d6",
+            "#ffff99",
+            "#b15928"
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
@@ -1476,13 +1471,12 @@ function NutritionistProgress() {
 
           data: weeks.map((item) => [item.protein]),
           backgroundColor: [
-            primaryColor,
-            secondaryColor,
-            primaryColor,
-            secondaryColor,
-            primaryColor,
-            secondaryColor,
-            primaryColor,
+            "#a6cee3 ","#b2df8a"
+,"#fb9a99"
+,"#fdbf6f"
+, "#cab2d6",
+"#ffff99",
+"#b15928"
           ], // Color palette (optional)
           hoverBackgroundColor: ["#FF8578", "#A7EE9C", "#43A047"], // Hover colors (optional)
           borderColor: "white", // Border color for slices (optional)
