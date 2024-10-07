@@ -298,8 +298,9 @@ function SellerOrders() {
                 orderData.data.data.shareLink,
                 tempAddress.name
               );
-              setLoading(false);
+              
               handleClose();
+              setLoading(false);
             //  setForceRender(forceRender => forceRender + 1);
              // this.forceUpdate();
               toast.success("Order Deployed!, Please check home page for progress.");
