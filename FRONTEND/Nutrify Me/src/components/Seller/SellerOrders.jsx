@@ -300,9 +300,9 @@ function SellerOrders() {
               );
               setLoading(false);
               handleClose();
-             setForceRender(forceRender => forceRender + 1);
-              this.forceUpdate();
-              toast.success("Order Deployed!");
+            //  setForceRender(forceRender => forceRender + 1);
+             // this.forceUpdate();
+              toast.success("Order Deployed!, Please check home page for progress.");
             });
           } catch (error) {
             console.log(error.response);
@@ -675,7 +675,7 @@ function SellerOrders() {
           ) : (
             <>
               {" "}
-              <img src="/images/magnify.gif" width="13%" />
+              <img src="/images/magnify.gif" width="8%" />
               <Typography>Loading...</Typography>
             </>
           ) }</>) : 
