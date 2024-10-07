@@ -86,7 +86,7 @@ function Home() {
             height: {
               xs: "100px", // For extra small screens
               sm: "200px", // For small screens
-              md: "450px", // For medium screens
+              md: "500px", // For medium screens
             },
 
             backgroundSize: "cover",
@@ -118,8 +118,8 @@ function Home() {
                     xs: "0.5em", // For extra small screens
                     sm: "1.0em", // For small screens
                     md: "2.5em", // For medium screens
-                    lg: "3.0em", // For large screens
-                    xl: "3.5em", // For extra large screens
+                    lg: "2.5em", // For large screens
+                 
                   },
                 }}
               >
