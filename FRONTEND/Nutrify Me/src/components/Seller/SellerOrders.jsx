@@ -229,8 +229,7 @@ function SellerOrders() {
 
   const createOrder = async (address_ids, user_id, orderId) => {
     setLoading(true);
-    console.log(loading)
-    console.log(address_ids, addressData);
+
     const foundAddress = addressData.find(
       (item) => item.address_id === address_ids
     );
