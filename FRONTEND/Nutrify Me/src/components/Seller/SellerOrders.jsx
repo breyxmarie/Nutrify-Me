@@ -63,10 +63,11 @@ function SellerOrders() {
 
   const [forceRender, setForceRender] = useState(0); 
 
-
-  const handleOpen = (addressId, userId, orderId) => {
+  const [details, setDetails] = useState()
+  const handleOpen = (addressId, userId, orderId, details) => {
     console.log(userId);
 
+    setDetails(details)
     setUserDetails(userData.find((item) => item.user_id === userId));
     setOrderDetails(allOrder.find((item) => item.order_id === orderId));
     setSelectedOrder(orderId);
@@ -544,7 +545,7 @@ function SellerOrders() {
                 <Grid xs={6}>Total Price:{item.totalprice}</Grid>
               </Grid>
 
-              <Modal
+              {/* <Modal
                 open={isOpen}
                 onClose={handleClose}
                 aria-labelledby="modal-title"
@@ -628,7 +629,7 @@ function SellerOrders() {
             )}
             </center>
                 </Box>
-              </Modal>
+              </Modal> */}
               <Button
                 sx={{
                   color: "#ffffff",
@@ -644,7 +645,7 @@ function SellerOrders() {
                   },
                 }}
                 onClick={() =>
-                  handleOpen(item.address_id, item.user_id, item.order_id)
+                  handleOpen(item.address_id, item.user_id, item.order_id, item)
                 }
               >
                 Deploy Order
@@ -987,6 +988,92 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
                     </Box>
                   </Modal>
      
+
+                  <Modal
+                open={isOpen}
+                onClose={handleClose}
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+              >
+                <Box sx={style}>
+                  <center>
+                {loading ? (
+              <>
+              <center>
+              <img src="/images/spin.gif" width="13%" />
+              <br/>
+              Deploying Please Wait...
+              </center>
+              </>
+            ) : (
+              <>
+                  {details?.date}
+                  <Grid container spacing={2} sx={{ my: 1, mx: 1 }}>
+                    <Grid xs={2}>
+                      {" "}
+                      <img src="/images/food journal icon.png" />
+                    </Grid>
+                    <Grid xs={8}>Edit Food Information</Grid>
+                    <Grid xs={2}>
+                      <Button sx={{ float: "right" }} onClick={handleClose}>
+                        <img src="/images/close.png" height="10" weight="10" />
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  
+                  Name: <br/>
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    sx={{
+                      width: "70%",
+                      background: "#ffffff",
+                      borderRadius: 0,
+                    }}
+                    // value={param.meals.Breakfast.food}
+                    name="name"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                  />
+                  <br/>
+                  Phone Number:
+                  <br/>
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    sx={{
+                      width: "70%",
+                      background: "#ffffff",
+                      borderRadius: 0,
+                    }}
+                    value={phone}
+                    onChange={(event) => setPhone(event.target.value)}
+                    // value={param.meals.Breakfast.food}
+                    name="name"
+                  />
+                  <br/>
+                  
+                  <Button
+                   sx={{
+                    background: "#ffffff",
+                    color: "#E66253",
+                    mt: 1,
+                    "&:hover": {
+                      backgroundColor: "#E66253",
+                      color: "#ffffff",
+                      border: 0.5,
+                      borderColor: "#ffffff",
+                    },
+                  }}
+                    onClick={() =>
+                      createOrder(selectedAddress, selectedUser, selectedOrder)
+                    }
+                  >
+                    Create Order
+                  </Button>
+                  </>
+            )}
+            </center>
+                </Box>
+              </Modal>
 
 
 
