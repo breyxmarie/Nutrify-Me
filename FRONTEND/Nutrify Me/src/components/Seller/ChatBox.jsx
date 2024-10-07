@@ -70,7 +70,7 @@ function ChatBox({ forceUpdate }) {
               Date: {item.date} <br /> Time:
               {dayjs(item.date + "" + item.time).format("hh:mm A")}
               <br />
-              Customer:
+              Customer: 
               <br />
               <br />
               Link:

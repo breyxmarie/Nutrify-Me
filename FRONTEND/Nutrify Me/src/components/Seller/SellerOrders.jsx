@@ -16,6 +16,7 @@ import TextField from "@mui/material/TextField";
 import LalamoveApi from "../Meal Plan Shop//LalamoveApi";
 import emailjs from "@emailjs/browser";
 
+
 function SellerOrders() {
   const buttons = ["New Orders", "Past Orders"];
   const [activeButton, setActiveButton] = useState(0);
@@ -40,22 +41,25 @@ function SellerOrders() {
   const [loading1, setLoading1] = useState();
   const [loading2, setLoading2] = useState();
   const [loading3, setLoading3] = useState();
-  const style = {
-    overflowY: "auto",
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    height: "40%",
-    transform: "translate(-50%, -50%)",
-    width: "70%",
-    bgcolor: "background.paper",
-    border: "0",
-    boxShadow: 24,
-    p: 4,
-    background: "#E66253",
-    borderRadius: 5,
-    color: "#ffffff",
-  };
+
+
+
+ const style = {
+  overflowY: "auto",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "70%",
+  maxHeight: "80%",  // Prevents the modal from growing too large vertically
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  background: "#E66253",
+  borderRadius: 5,
+  color: "#ffffff",
+};
+
 
   const [forceRender, setForceRender] = useState(0); 
 
@@ -72,6 +76,11 @@ function SellerOrders() {
   };
 
   const handleClose = () => {
+    setUserDetails(null);
+    setOrderDetails(null);
+    setSelectedOrder(null);
+    setSelectedAddress(null);
+    setSelectedUser(null);
     setIsOpen(false);
   };
 
@@ -81,11 +90,30 @@ function SellerOrders() {
   // {meal_plan: "plan",
   //  meals: ["joke", "joke"]
   // }
+
+
+  const [tempPlanData, setTempPlanData] = useState([])
+  const [tempMealsData, setTempMealsData] = useState([])
+
+ const getData = async () => {
+  await AxiosInstance.get(`shopmealplan`).then((res) => {
+    setTempPlanData(
+      res.data
+    );
+  });
+
+  await AxiosInstance.get(`shopmeal`).then((res) => {
+    setTempMealsData(
+      res.data
+    );
+  });
+ }
+
   const handleOpenDetails = async (orderId) => {
     setSelectedMealDetails([]);
-    console.log(orderId)
-    const tempPlanData = await AxiosInstance.get(`shopmealplan`);
-    const tempMealsData = await AxiosInstance.get(`shopmeal`);
+    console.log(tempPlanData)
+    //const tempPlanData = await AxiosInstance.get(`shopmealplan`);
+    // const tempMealsData = await AxiosInstance.get(`shopmeal`);
 
     const orderItems = allOrder.find((item) => item.order_id === orderId.order_id);
     console.log(orderItems);
@@ -102,13 +130,13 @@ function SellerOrders() {
     //  let tempMealArray = [];
     {
       orderItems.orders.forEach((items) => {
-        const planIds = tempPlanData.data.find(
+        const planIds = tempPlanData.find(
           (item) => item.shop_mealplan_id === items
         );
 
-        console.log(tempMealsData.data);
+       
 
-        const meals = tempMealsData.data.filter(
+        const meals = tempMealsData.filter(
           (item) => item.mealplan_id === planIds.shop_mealplan_id
         );
 
@@ -352,6 +380,7 @@ function SellerOrders() {
 
   useEffect(() => {
     getOrderData(); // Call getStatus only once on component mount
+    getData()
   }, []);
 
   const completeOrder = (deployedId) => {
@@ -417,7 +446,8 @@ function SellerOrders() {
         color: "#000000",
       }}
     >
-      <ChatBox forceUpdate={forceRender}/>
+          <ToastContainer />
+      {/* <ChatBox forceUpdate={forceRender}/> */}
       <Grid container spacing={2}>
  {buttons.map((buttonLabel, index) => (
     <Grid item xs={12} sm={6} md={6} key={index}>
@@ -505,61 +535,7 @@ function SellerOrders() {
                     Details
                   </Button>
 
-                  <Modal
-                    open={isOpenDetails}
-                    onClose={handleCloseDetails}
-                    aria-labelledby="modal-title"
-                    aria-describedby="modal-description"
-                  >
-                    <Box sx={style}>
-                      <Grid container spacing={2}>
-                        <Grid xs={2}>
-                          {" "}
-                          <img src="/images/food journal icon.png" />
-                        </Grid>
-                        <Grid xs={8}>Order Details</Grid>
-                        <Grid xs={2}>
-                          <Button
-                            key={index}
-                            sx={{ float: "right" }}
-                            onClick={() => handleCloseDetails()}
-                          >
-                            <img
-                              src="/images/close.png"
-                              height="10"
-                              weight="10"
-                            />
-                          </Button>
-                        </Grid>
-                      </Grid>
-                     
-                      Dates: {dayjs(selectedMealDetails[0]?.start_date).format("MMMM DD, YYYY")} 
-                      - {dayjs(selectedMealDetails[0]?.end_date).format("MMMM DD, YYYY")}
-                      {selectedMealDetails?.map((item) => (
-                        <>
-                          <Typography>{item.meal_plan.name}</Typography>
-                          {console.log(item.meals)}
-                          Orders: <br />
-                          <Grid container spacing={2} sx={{ m: 1.5 }}>
-                            {item.meals.map((items, index) => (
-                              <Box>
-                                Day {items.day}
-                                <Grid container spacing={2} sx={{ m: 1.5 }}>
-                                  {items.meals.map((i, index) => (
-                                    <Grid item xs={3} sm={3} md={3} key={index}>
-                                      <Box>
-                                        {i.type}:{i.food}
-                                      </Box>
-                                    </Grid>
-                                  ))}
-                                </Grid>
-                              </Box>
-                            ))}
-                          </Grid>
-                        </>
-                      ))}
-                    </Box>
-                  </Modal>
+                 
                 </Grid>
                 <Grid xs={6}>Shipping Price:{item.shipping_price}</Grid>
               </Grid>
@@ -575,6 +551,7 @@ function SellerOrders() {
                 aria-describedby="modal-description"
               >
                 <Box sx={style}>
+                  <center>
                 {loading ? (
               <>
               <center>
@@ -598,7 +575,8 @@ function SellerOrders() {
                       </Button>
                     </Grid>
                   </Grid>
-                  Name:
+                  
+                  Name: <br/>
                   <TextField
                     id="outlined-multiline-flexible"
                     sx={{
@@ -611,7 +589,9 @@ function SellerOrders() {
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                   />
+                  <br/>
                   Phone Number:
+                  <br/>
                   <TextField
                     id="outlined-multiline-flexible"
                     sx={{
@@ -624,6 +604,7 @@ function SellerOrders() {
                     // value={param.meals.Breakfast.food}
                     name="name"
                   />
+                  <br/>
                   
                   <Button
                    sx={{
@@ -645,6 +626,7 @@ function SellerOrders() {
                   </Button>
                   </>
             )}
+            </center>
                 </Box>
               </Modal>
               <Button
@@ -749,7 +731,7 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
               Details
             </Button>
 
-            <Modal
+            {/* <Modal
               open={isOpenDetails}
               onClose={handleCloseDetails}
               aria-labelledby="modal-title"
@@ -802,7 +784,7 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
                   </>
                 ))}
               </Box>
-            </Modal>
+            </Modal> */}
           </Grid>
           <Grid xs={6}>Shipping Price:{item.shipping_price}</Grid>
         </Grid>
@@ -811,7 +793,7 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
           <Grid xs={6}>Total Price:{item.totalprice}</Grid>
         </Grid>
 
-        <Modal
+        {/* <Modal
           open={isOpen}
           onClose={handleClose}
           aria-labelledby="modal-title"
@@ -897,7 +879,7 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
               </>
             )}
           </Box>
-        </Modal>
+        </Modal> */}
         {/* <Button
           sx={{
             color: "#ffffff",
@@ -949,11 +931,61 @@ activeButton === 1 ? (<> <Typography   sx={{ color: "#99756E", fontWeight: "bold
 
 
 
-      
-
-
-     
-
+       <Modal
+                    open={isOpenDetails}
+                    onClose={handleCloseDetails}
+                    aria-labelledby="modal-title"
+                    aria-describedby="modal-description"
+                  >
+                    <Box sx={style}>
+                      <Grid container spacing={2}>
+                        <Grid xs={2}>
+                          {" "}
+                          <img src="/images/food journal icon.png" />
+                        </Grid>
+                        <Grid xs={8}>Order Details</Grid>
+                        <Grid xs={2}>
+                          <Button
+                          
+                            sx={{ float: "right" }}
+                            onClick={() => handleCloseDetails()}
+                          >
+                            <img
+                              src="/images/close.png"
+                              height="10"
+                              weight="10"
+                            />
+                          </Button>
+                        </Grid>
+                      </Grid>
+                     
+                      Dates: {dayjs(selectedMealDetails[0]?.start_date).format("MMMM DD, YYYY")} 
+                      - {dayjs(selectedMealDetails[0]?.end_date).format("MMMM DD, YYYY")}
+                      {selectedMealDetails?.map((item) => (
+                        <>
+                          <Typography>{item.meal_plan.name}</Typography>
+                          {console.log(item.meals)}
+                          Orders: <br />
+                          <Grid container spacing={2} sx={{ m: 1.5 }}>
+                            {item.meals.map((items, index) => (
+                              <Box>
+                                Day {items.day}
+                                <Grid container spacing={2} sx={{ m: 1.5 }}>
+                                  {items.meals.map((i, index) => (
+                                    <Grid item xs={3} sm={3} md={3} key={index}>
+                                      <Box>
+                                        {i.type}:{i.food}
+                                      </Box>
+                                    </Grid>
+                                  ))}
+                                </Grid>
+                              </Box>
+                            ))}
+                          </Grid>
+                        </>
+                      ))}
+                    </Box>
+                  </Modal>
      
 
 

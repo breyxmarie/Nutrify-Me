@@ -17,6 +17,7 @@ import Slider from "react-slick";
 import ChatBox from "./ChatBox";
 import AxiosInstance from "../forms/AxiosInstance";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 
 function SellerHome() {
   const navigate = useNavigate();
@@ -27,6 +28,24 @@ function SellerHome() {
     //* add sa carousel to handle prev and next buttons
     sliderRefC.current.slickNext(); // Trigger next slide transition
   };
+
+  const [orders, setOrders] = useState([]);
+
+  const getData = () => {
+    try {
+      AxiosInstance.get(`deployedorder/`).then((res) => {
+        console.log(res, res.data);
+
+        const foundOrder = res.data.filter((item) => item.status !== "Done");
+
+        console.log(foundOrder);
+        setOrders(foundOrder);
+      });
+    } catch (error) {
+      console.log(error.response);
+    }
+  };
+
 
   const getOrderData = () => {
     AxiosInstance.get(`order/`).then((res) => {
@@ -46,6 +65,7 @@ function SellerHome() {
 
   useEffect(() => {
     getOrderData();
+    getData();
   }, []);
   const handlePrevC = () => {
     sliderRefC.current.slickPrev(); // Trigger previous slide transition
@@ -218,6 +238,16 @@ function SellerHome() {
     fetchHighlightedDays(date);
   };
 
+  const deleteOrder = async (id) => {
+    AxiosInstance.delete(
+      `deployedorder/${id}`
+    ).then((res) => {
+      console.log(res);
+      getData();
+      toast.success("Order Done!")
+    });
+  }
+
   // *
   return (
     <div
@@ -228,34 +258,47 @@ function SellerHome() {
         color: "#99756E",
       }}
     >
-      <ChatBox />
+          <ToastContainer />
+      {/* <ChatBox /> */}
       <Grid container spacing={2}>
-        <Grid xs={6} sx={{ color: "#99756E" }}>
+        <Grid xs = {12} sm={6} sx={{ color: "#99756E" }}>
           <Box
             sx={{
               border: 2,
               borderRadius: 3,
               mx: "10%",
               textAlign: "left",
-              py: 10,
+              py: "15%",
             }}
           >
             <Typography
               sx={{
                 fontWeight: "bold",
-                fontSize: "30px",
+                fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "1em", // For small screens
+                  md: "1.5em", // For medium screens
+                  lg: "1.5em", // For large screens
+             
+                },
                 mx: 5,
               }}
             >
               Good Morning, <br /> Project FIt!
             </Typography>
-            <Typography sx={{ mx: 5 }}>
+            <Typography sx={{ mx: 5,   fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.0em", // For large screens
+                  xl: "1,5em", // For extra large screens
+                }, }}>
               You have 2 meal plans to create today
             </Typography>
             {/*  //* put progress bar chuchuness here */}
           </Box>
         </Grid>
-        <Grid xs={6}>
+        <Grid xs = {12} sm={6}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateCalendar
               defaultValue={initialValue}
@@ -293,7 +336,11 @@ function SellerHome() {
           alignItems: "center",
           mx: "5%",
           my: 5,
-          height: "400px" /* Adjust height as per your requirement */,
+          height: {
+            xs: "100px", // For extra small screens
+            sm: "200px", // For small screens
+            md: "400px", // For medium screens
+          },
           backgroundSize: "cover",
           backgroundPosition: "center",
           borderRadius: 5,
@@ -312,6 +359,7 @@ function SellerHome() {
               marginLeft: "auto",
               float: "right",
               mr: "60px",
+              
             }}
           >
             <Typography
@@ -321,7 +369,13 @@ function SellerHome() {
                 color: "#898246",
                 fontWeight: "bold",
                 textAlign: "center",
-                fontSize: "45px",
+                fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "1.0em", // For small screens
+                  md: "1.5em", // For medium screens
+                  lg: "2em", // For large screens
+                
+                },
                 mx: "10%",
               }}
             >
@@ -337,8 +391,14 @@ function SellerHome() {
                 mx: "40%",
                 display: "block",
                 background: "#E66253",
-                fontSize: "20px",
-                px: "60px",
+                fontSize: {
+                  xs: "0.5em", // For extra small screens
+                  sm: "0.8em", // For small screens
+                  md: "1.0em", // For medium screens
+                  lg: "1.0em", // For large screens
+                  xl: "1,5em", // For extra large screens
+                },
+                px: "10%",
                 "&:hover": {
                   backgroundColor: "#ffffff",
                   color: "#E66253",
@@ -533,6 +593,74 @@ function SellerHome() {
       </Grid>
 
       */}
+
+      <Box sx = {{ml: "5%", mr: "5%"}}>
+        <Typography sx = {{fontWeight:"bold"}}>Deployed Orders</Typography>
+        <br/>
+
+        <Grid container spacing  ={2}>
+{orders.map((item) => (
+  <Grid xs = {12} sm={6} md = {4}>
+            <Box
+              sx={{
+                border: 1,
+                textOverflow: "ellipsis",
+                // width: "100px",
+                overflow: "show",
+                pb: 2
+              }}
+            >
+
+              
+                
+                
+             
+              Date: {item.date} <br /> Time:
+              {dayjs(item.date + "" + item.time).format("hh:mm A")}
+              <br />
+              Customer: {item.address.name}
+              <br />
+              <br />
+           <center>
+          
+              <a href={item.order_details.data.data.shareLink} target="_blank">
+                <Typography
+                  sx={{
+                    ml: "0%",
+                    mr: "0%",
+                    textOverflow: "ellipsis",
+                    width: "100px",
+                    overflow: "hide",
+                  }}
+                >
+                  View Details
+                </Typography>
+              </a>
+              <Button   onClick = {() => deleteOrder(item.deployed_id)} sx={{
+              px: 1, 
+          
+        fontWeight: "thin",
+      
+        mx: 0,
+      
+        background: "#ffffff",
+        color: "light-blue",
+        "&:hover": {
+          backgroundColor: "#fffffd",
+          color: "light-blue",
+          border: 0.5,
+          borderColor: "light-blue",
+        },
+
+       
+      }}> Order Done</Button>
+              </center>
+            
+            </Box>
+            </Grid>
+          ))}
+           </Grid>
+      </Box>
     </div>
   );
 }
