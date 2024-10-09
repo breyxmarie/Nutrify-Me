@@ -263,6 +263,19 @@ function NutritionistAppointment() {
         console.log(res.data);
         toast.success("Appointment Approved");
         GetData();
+
+        AxiosInstance.post(`notifications/`, {
+          'type': "PAppointment", 
+          'id': data.nutritionist_id, 
+          'user_id': data.user_id, 
+          'message': "Your appointment has been approved!", 
+          'link': "/telemedicine-home", 
+          'seen': 0, 
+          'other_id': data.nutritionist_id,
+        }).then((res) => {
+          console.log(res, res.data);
+      
+        });
       });
     } catch (error) {
       console.log(error);
