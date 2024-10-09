@@ -10,8 +10,11 @@ import { ToastContainer, toast } from "react-toastify";
 import Grid from "@mui/material/Grid";
 import emailjs from "@emailjs/browser";
 import { debounce } from "lodash"; // Install lodash if needed
+import { useLoggedInUser } from "../LoggedInUserContext";
+
 
 function SellerRequestOrders() {
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const buttons = ["Pending Orders", "Approved Orders"];
   const [requestData, setRequestData] = useState([]);
   const [mealData, setMealData] = useState([]);
@@ -242,6 +245,21 @@ console.log(recommendData.filter(
         setLoading5(false)
         handleClosePriceRecommend();
         toast.success("Request Approved!");
+
+        AxiosInstance.post(`notifications/`, {
+          'type': "RReqOrder", 
+          'id': loggedInUser.user_id, 
+          'user_id': tempData.user_id, 
+          'message': "Your Recommend Meal Plan Request has been approved!", 
+          'link': "/meal-plan-shop-request", 
+          'seen': 0, 
+          'other_id': loggedInUser.user_id,
+          'title': "Recommend Meal Plan Request",
+          'date': dayjs().format("YYYY-MM-DD"),
+        }).then((res) => {
+          console.log(res, res.data);
+      
+        });
         // try {
         //   AxiosInstance.delete(`requestedmeals/${id}`).then((res) => {
         //     getData();
@@ -317,8 +335,22 @@ console.log(recommendData.filter(
         getData();
        
         handleClosePrice();
-        setLoading5(true)
+        setLoading5(false)
         toast.success("Request Approved!");
+        AxiosInstance.post(`notifications/`, {
+          'type': "GReqOrder", 
+          'id': loggedInUser.user_id, 
+          'user_id': tempData.user_id, 
+          'message': "Your Generated Meal Plan Request has been approved!", 
+          'link': "/meal-plan-shop-request", 
+          'seen': 0, 
+          'other_id': loggedInUser.user_id,
+          'title': "Generated Meal Plan Request",
+          'date': dayjs().format("YYYY-MM-DD"),
+        }).then((res) => {
+          console.log(res, res.data);
+      
+        });
         sendEmail(
           tempUser.email,
           tempUser.first_name

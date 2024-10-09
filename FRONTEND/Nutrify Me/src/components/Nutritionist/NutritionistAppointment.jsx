@@ -268,10 +268,12 @@ function NutritionistAppointment() {
           'type': "PAppointment", 
           'id': data.nutritionist_id, 
           'user_id': data.user_id, 
-          'message': "Your appointment has been approved!", 
+          'message': `Your appointment for ${dayjs(data.date).format("MMMM DD, YYYY")} with your nutritionist has been approved!`, 
           'link': "/telemedicine-home", 
           'seen': 0, 
           'other_id': data.nutritionist_id,
+          'title': "Appointment Approved",
+          'date': dayjs().format("YYYY-MM-DD"),
         }).then((res) => {
           console.log(res, res.data);
       

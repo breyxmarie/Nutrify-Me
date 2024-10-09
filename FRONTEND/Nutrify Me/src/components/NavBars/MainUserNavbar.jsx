@@ -2,6 +2,7 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
+import dayjs from "dayjs";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
@@ -67,10 +68,39 @@ function MainUserNavbar() {
 
     const handleOpenNotifMenu = (event) => {
       setAnchorElNotif(event.currentTarget);
+
+
+      notifsData.forEach((item) => {
+        if(item.seen == false){
+          console.log(item)
+
+          AxiosInstance.put(`notifications/`, {
+            notif_id: item.notif_id, 
+            'type': item.type, 
+            'id': item.id, 
+            'user_id': item.user_id, 
+            'message': item.message, 
+            'link': item.link, 
+            'seen': 1, 
+            'other_id': item.other_id,
+            'title': item.title,
+            'date': item.date,
+          }).then((res) => {
+            console.log(res, res.data);
+            getNotifData()
+          });
+        }
+    })
     };
 
     const handleCloseNotifMenu = (event) => {
       setAnchorElNotif(null);
+      if(event != null){
+        navigate(event);
+        console.log("true")
+      }
+      
+      
     };
 
 
@@ -104,7 +134,7 @@ function MainUserNavbar() {
     AxiosInstance.get(`notifications`).then((res) => {
       console.log(res);
       setNotifsData(
-        res.data
+        res.data.reverse()
       );
     });
   }
@@ -116,8 +146,8 @@ function MainUserNavbar() {
   const getNotifsNumber = () => {
 
     const count = notifsData.filter((item) => item.seen === false);
-    console.log(count, notifsData)
-    switch (notifsData.length) {
+    console.log(count.length, notifsData)
+    switch (count.length) {
       case 0: 
       return "images/notification.png"
       break;
@@ -349,7 +379,7 @@ function MainUserNavbar() {
 
 
 <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
+            <Tooltip title="Open Notifications">
               <IconButton onClick={handleOpenNotifMenu} sx={{ p: 0 }}>
                 <Button
                   // variant="contained"
@@ -369,7 +399,7 @@ function MainUserNavbar() {
                  <img 
                  src = {getNotifsNumber()}
                  
-                 width = "50%" height = "50%"/>
+                 width = "70%" height = "70%"/>
                 </Button>
               </IconButton>
             </Tooltip>
@@ -391,7 +421,7 @@ function MainUserNavbar() {
                   width: {
                     xs: "40%",
                     sm: "60%",
-                    md: "30%",
+                    md: "33%",
                   }, // Ensure the width of the menu is set here
                   maxWidth: "100%", // Ensure responsiveness
                   padding: "0px", // Optional: padding inside the menu
@@ -406,40 +436,41 @@ function MainUserNavbar() {
                 </Box>
               <Box sx = {{pb:5, mt: 0}}>
                 
-              
+              {notifsData.map((not) => (
               <MenuItem
-              sx = {{color: "#E66253"}}
-                  // key={setting}
-                  // onClick={() => {
-                  //   handleCloseNotifMenu(setting);
-                  // }}
+              sx = {{color: "#E66253", background: not.seen === false ? "#E7E7E7" : "#ffffff"}}
+                  key={not.link}
+                  onClick={() => {
+                    handleCloseNotifMenu(not.link);
+                  }}
                 >
                   <Grid container spacing = {0} sx = {{mt: 1}}>
                     <Grid xs = {3}>
                     
                     <img 
-                    src = {getNotifsImage()}
-                    width = "50%" height = "70%"/></Grid>
+                    src = {getNotifsImage(not.type)}
+                    width = "60%" height = "90%"/></Grid>
                     <Grid xs = {8}>
                       <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: 
                         {xs: "0.5em",
                           sm: "1em",
                         }
-                      }}>Approval of Appointment</Typography>
+                      }}>{not.title}</Typography>
                       <Typography variant="body2"
                       sx = {{fontSize: {xs: "0.5em",
                         sm: "0.7em",
                         wordWrap: 'break-word', // Ensures long words break into the next line
           whiteSpace: 'normal',   // Ensures normal wrapping behavior
                       }}}
-                      >Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet Lorem ipsum dolor sit amet</Typography>
-                      
+                      >{not.message}</Typography>
+                      <Typography sx = {{fontSize: "0.7em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
                     </Grid>
                     <Grid xs = {1} sx = {{mt: "3%"}}><img src = "/images/rightNotif.png"  width = "60%" height = "40%"/></Grid>
                   </Grid>
 
                   {/* <Link to={navigate}></Link> */}
                 </MenuItem>
+                ))}
               </Box>
               
               {/* {settings.map((setting) => (
