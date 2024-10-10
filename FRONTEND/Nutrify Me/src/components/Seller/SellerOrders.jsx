@@ -15,10 +15,12 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import LalamoveApi from "../Meal Plan Shop//LalamoveApi";
 import emailjs from "@emailjs/browser";
+import { useLoggedInUser } from "../LoggedInUserContext";
 
 
 function SellerOrders() {
   const buttons = ["New Orders", "Past Orders"];
+  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
   const [activeButton, setActiveButton] = useState(0);
   const [orderData, setOrderData] = useState([]);
   const [userData, setUserData] = useState([]);
@@ -298,6 +300,23 @@ function SellerOrders() {
                 orderData.data.data.shareLink,
                 tempAddress.name
               );
+              AxiosInstance.post(`notifications/`, {
+                'type': "DepOrder", 
+                'id': loggedInUser.user_id, 
+                'user_id': tempUser.user_id, 
+                'message': 
+                `Your order for today has been deployed, 
+                please click here to see the live status 
+                of your order.`, 
+                'link': orderData.data.data.shareLink, 
+                'seen': 0, 
+                'other_id': loggedInUser.user_id,
+                'title': "Order Deployed",
+                'date': dayjs().format("YYYY-MM-DD"),
+              }).then((res) => {
+                console.log(res, res.data);
+            
+              });
               
               handleClose();
               setLoading(false);

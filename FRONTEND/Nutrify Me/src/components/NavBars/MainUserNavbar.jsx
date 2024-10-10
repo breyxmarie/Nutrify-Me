@@ -93,10 +93,18 @@ function MainUserNavbar() {
     })
     };
 
-    const handleCloseNotifMenu = (event) => {
+    const handleCloseNotifMenu = (event, type) => {
       setAnchorElNotif(null);
       if(event != null){
-        navigate(event);
+
+        if (type === "DepOrder") {
+          window.open(event, '_blank');
+        }
+        else {
+          navigate(event);
+        }
+
+        
         console.log("true")
       }
       
@@ -134,7 +142,7 @@ function MainUserNavbar() {
     AxiosInstance.get(`notifications`).then((res) => {
       console.log(res);
       setNotifsData(
-        res.data.reverse()
+        res.data.reverse().filter((item) => item.user_id === loggedInUser.user_id)
       );
     });
   }
@@ -441,7 +449,7 @@ function MainUserNavbar() {
               sx = {{color: "#E66253", background: not.seen === false ? "#E7E7E7" : "#ffffff"}}
                   key={not.link}
                   onClick={() => {
-                    handleCloseNotifMenu(not.link);
+                    handleCloseNotifMenu(not.link, not.type);
                   }}
                 >
                   <Grid container spacing = {0} sx = {{mt: 1}}>
