@@ -315,7 +315,6 @@ function SellerOrders() {
                 'date': dayjs().format("YYYY-MM-DD"),
               }).then((res) => {
                 console.log(res, res.data);
-            
               });
               
               handleClose();

@@ -183,10 +183,13 @@ function SellerNavBar() {
   const getNotifsImage = (type) => {
 
     switch (type) {
-      case "NewApp": 
+      case "NewOrder": 
       return "images/NewApp.png"
       break;
-      case "MakeApoointment": 
+      case "NewReqOrder": 
+      return "images/MakeApoointment.png"
+      break;
+      case "DecideRequestOrder": 
       return "images/MakeApoointment.png"
       break;
      
