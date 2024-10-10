@@ -10,6 +10,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import Typography from "@mui/material/Typography";
 import AxiosInstance from "./forms/AxiosInstance";
 import { Link } from "react-router-dom";
+
 import { useNavigate } from "react-router-dom";
 import { PhoneInput } from "react-international-phone";
 import Grid from "@mui/material/Grid";
@@ -70,7 +71,7 @@ function Profiling() {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 500,
+    width: "70%",
     bgcolor: "background.paper",
     border: "0",
     boxShadow: 24,
@@ -226,6 +227,27 @@ function Profiling() {
     console.log("open")}
   const handleCloseLoading = () => {setOpenLoading(false)}
 
+  const [openTerms, setOpenTerms] = useState(true);
+  const handleOpenTerms = () => {
+    setOpenTerms(true),  
+    console.log("open")}
+  const handleCloseTerms = () => {
+    
+    if (isChecked) {
+      setOpenTerms(false)
+    }
+    else {
+      alert("Please Agree to the Terms and Conditions")
+    }
+    
+  }
+  //?
+
+  //? handle agree
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChangeCheck = () => {
+    setIsChecked(!isChecked)
+  }
   //?
 
   return (
@@ -237,6 +259,83 @@ function Profiling() {
         fontFamily: "Poppins",
       }}
     >
+       <Modal
+        open={openTerms}
+        //onClose={handleCloseLoading} 
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <center>
+        <Typography sx = {{fontWeight: "bold"}}>Terms and Conditions</Typography>
+        </center>
+                <p><b>Welcome to NutrifyMe</b>
+                <br/>
+                 These Terms and Conditions govern your use of our meal planning services. By accessing or using our Site, you agree to these terms. 
+                  We are committed to promoting health and well-being in accordance with the Universal Health Care Act. 
+                  Our services are designed to support:
+                  <br/>
+-Nutritional education and meal planning that considers diverse dietary needs. <br/>
+-Access to resources that promote healthy eating habits for all users. <br/>
+-Collaboration with health professionals to provide accurate dietary information.
+<br/>
+
+Our meal planning services are available to individuals who are eligible under relevant health care guidelines. 
+Users are encouraged to consult with a healthcare professional before making significant dietary changes.
+We prioritize your privacy and data protection in compliance with the Data Privacy Act. We will: <br/>
+<ul>
+<li>Collect only the personal data necessary for providing meal planning services, 
+including dietary preferences, allergies, and health goals. </li>
+<li>Use your data solely for the purpose of enhancing your experience on our Site and 
+providing personalized meal plans. </li>
+<li>Implement robust security measures to protect your personal information from 
+unauthorized access or disclosure. </li>
+</ul>
+By using our Site, you agree to: <br/>
+<ul>
+<li>Provide accurate and complete information about your dietary needs and preferences. <br/> </li>
+<li>Regularly update your information to reflect any changes. <br/> </li>
+<li>Respect the privacy of other users and refrain from sharing their personal information. <br/> </li>
+</ul>
+You have the right to: <br/>
+<ul>
+<li>Access the personal data we hold about you. </li>
+<li>Request corrections to your information. </li>
+<li>Withdraw consent for data processing, subject to our need to retain some data for legal compliance. </li>
+</ul>
+While we strive to provide accurate meal planning resources, we cannot guarantee that all meal plans will meet your specific health needs. We shall not be liable for any adverse health outcomes resulting from the use of our meal planning services.
+</p>
+
+<input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleChangeCheck}
+                style={{ color: "#ffffff" }}
+              />
+              I Agree to the Terms and Conditions
+                
+                <br/>
+                <center>
+                <Button 
+                onClick={handleCloseTerms}
+                sx={{
+                      borderRadius: 4,
+                      background: "#ffffff",
+                      color: "#E66253",
+                      ml: 2,
+                      height: "100%",
+                      px: 4,
+                      py: 1,
+                      fontSize: "15px",
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 1,
+                      },
+                    }}>Submit</Button>
+                    </center>
+        </Box>
+        </Modal>
   <Modal
         open={openLoading}
         onClose={handleCloseLoading} 

@@ -497,6 +497,23 @@ function TelemedicineHome() {
   };
   //
 
+  const style1 = {
+    maxHeight: "calc(100vh - 100px)",
+    overflowY: "auto",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100%",
+    bgcolor: "background.paper",
+    border: "0",
+    boxShadow: 24,
+    p: 4,
+    background: "#E66253",
+    borderRadius: 5,
+    color: "#ffffff",
+  };
+
   const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
     ...theme.typography.body2,
@@ -1876,81 +1893,91 @@ function TelemedicineHome() {
   //
 
   const submitAppointment = () => {
-    console.log(
-      selectedDates.format("YYYY-MM-DD"),
-      " ",
-      selectedTime,
-      " ",
-      selectedNutritionist,
-      " ",
-      loggedInUser.user_id
-    );
 
-    try {
-      AxiosInstance.post(`pendingappointment/`, {
-        date: selectedDates.format("YYYY-MM-DD"),
-        status: "pending",
-        kind: "New",
-        nutritionist_id: selectedNutritionist,
-        user_id: loggedInUser.user_id,
-        time: selectedTime,
-      }).then((res) => {
-        console.log(res);
-        toast.success("Appointment Sent, Please wait for confirmation");
-        // handleScheduleClose();
-        // navigate("/?success=registered");
-      });
-    } catch (error) {
-      console.log(error);
-    }
-    try {
-      AxiosInstance.post(`patientnutritionistagreement/`, {
-        status: "Agree",
-        nutritionist_id: selectedNutritionist,
-        user_id: loggedInUser.user_id,
-      }).then((res) => {
-        console.log(res.data);
-        GetData();
-        handleClose();
-        // navigate("/?success=registered");
-      });
-    } catch (error) {
-      console.log(error.response.data);
+    if (isChecked === true) {
+      console.log(
+        selectedDates.format("YYYY-MM-DD"),
+        " ",
+        selectedTime,
+        " ",
+        selectedNutritionist,
+        " ",
+        loggedInUser.user_id
+      );
+  
+      try {
+        AxiosInstance.post(`pendingappointment/`, {
+          date: selectedDates.format("YYYY-MM-DD"),
+          status: "pending",
+          kind: "New",
+          nutritionist_id: selectedNutritionist,
+          user_id: loggedInUser.user_id,
+          time: selectedTime,
+        }).then((res) => {
+          console.log(res);
+          toast.success("Appointment Sent, Please wait for confirmation");
+          // handleScheduleClose();
+          // navigate("/?success=registered");
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      try {
+        AxiosInstance.post(`patientnutritionistagreement/`, {
+          status: "Agree",
+          nutritionist_id: selectedNutritionist,
+          user_id: loggedInUser.user_id,
+        }).then((res) => {
+          console.log(res.data);
+          GetData();
+          handleClose();
+          // navigate("/?success=registered");
+        });
+      } catch (error) {
+        console.log(error.response.data);
+      }
+  
+      // try {
+      //   AxiosInstance.post(`appointment/`, {
+      //     date: selectedDates.format("YYYY-MM-DD"),
+      //     time: selectedTime,
+      //     user_id: loggedInUser.user_id,
+      //     nutritionist_id: selectedNutritionist,
+      //   }).then((res) => {
+      //     console.log(res.data);
+      //     GetData();
+      //     handleClose();
+      //     // navigate("/?success=registered");
+      //   });
+      // } catch (error) {
+      //   console.log(error.response.data);
+      // }
+  
+      try {
+        AxiosInstance.post(`scheduledeck/`, {
+          nutritionist_id: selectedNutritionist,
+          time: selectedTime,
+          date: selectedDates.format("YYYY-MM-DD"),
+          type: "Follow-Up",
+        }).then((res) => {
+          console.log(res.data);
+          handleClose();
+          // navigate("/?success=registered");
+        });
+      } catch (error) {
+        console.log(error.response.data);
+      }
+      setTempNut(null);
+      setSelectedDates(null);
+      GetData();
     }
 
-    // try {
-    //   AxiosInstance.post(`appointment/`, {
-    //     date: selectedDates.format("YYYY-MM-DD"),
-    //     time: selectedTime,
-    //     user_id: loggedInUser.user_id,
-    //     nutritionist_id: selectedNutritionist,
-    //   }).then((res) => {
-    //     console.log(res.data);
-    //     GetData();
-    //     handleClose();
-    //     // navigate("/?success=registered");
-    //   });
-    // } catch (error) {
-    //   console.log(error.response.data);
-    // }
-
-    try {
-      AxiosInstance.post(`scheduledeck/`, {
-        nutritionist_id: selectedNutritionist,
-        time: selectedTime,
-        date: selectedDates.format("YYYY-MM-DD"),
-        type: "Follow-Up",
-      }).then((res) => {
-        console.log(res.data);
-        handleClose();
-        // navigate("/?success=registered");
-      });
-    } catch (error) {
-      console.log(error.response.data);
+    else {
+      alert('Please Accept Terms and Conditions');
     }
-    setTempNut(null);
-    setSelectedDates(null);
-    GetData();
+
+
+   
   };
 
   const handleChangeTime = (e) => {
@@ -2237,6 +2264,13 @@ function TelemedicineHome() {
       console.log(error.response.data);
     }
   };
+
+
+  const [isChecked, setIsChecked] = useState(false);
+  const handleChangeCheck = () => {
+    setIsChecked(!isChecked)
+  }
+
   return (
     <div
       className="content"
@@ -2503,9 +2537,9 @@ function TelemedicineHome() {
               aria-describedby="modal-modal-description"
             >
               <form onSubmit={handleSubmit(onSubmit)}>
-                <Box sx={style}>
+                <Box sx={style1}>
                   <Grid container spacing={2}>
-                    <Grid xs={7}>
+                    <Grid xs={3}>
                       <center>
                         <Typography
                           id="modal-modal-title"
@@ -2726,6 +2760,46 @@ function TelemedicineHome() {
                           <div></div>
                         )}
                       </LocalizationProvider>
+                    </Grid>
+
+                    <Grid xs={3}>
+                      <Typography>Patient-Nutritionist Agreement Terms and Conditions</Typography>
+
+                      <p>This agreement (“Agreement”) is between [Nutritionist’s Name] (“Nutritionist”) and [Patient’s Name] (“Patient”). This Agreement outlines the terms and conditions governing the provision of nutrition services by the Nutritionist to the Patient through telemedicine.
+
+Services: The Nutritionist will provide the Patient with personalized nutrition counseling, education, and support. This may include:
+
+Conducting nutritional assessments
+Developing personalized nutrition plans
+Providing dietary education and guidance
+Monitoring progress and making adjustments as needed
+Telemedicine: The services will be delivered through telemedicine, which may include video conferencing, phone calls, or other electronic means. The Patient is responsible for ensuring a reliable internet connection and appropriate technology for telemedicine consultations.
+
+Fees and Payments:
+
+{/* The Patient agrees to pay the Nutritionist a fee of [Amount] for [Frequency of sessions] sessions.
+Payment is due [Payment terms, e.g., in advance, after each session]. 
+If payment is not received by the due date, the Nutritionist reserves the right to suspend or terminate services. */}
+Confidentiality: The Nutritionist will maintain the confidentiality of all information provided by the Patient, except as required by law.
+
+Disclaimer: The Nutritionist is not a medical doctor. The information provided by the Nutritionist is for informational purposes only and is not a substitute for medical advice. The Patient should consult with a healthcare professional for any medical concerns.
+
+
+
+Governing Law: This Agreement shall be governed by and construed in accordance with the laws of [Jurisdiction].   
+
+Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes all prior or contemporaneous communications, representations, or agreements, whether oral or written.   
+
+</p>
+
+
+<input
+                type="checkbox"
+                checked={isChecked}
+                onChange={handleChangeCheck}
+                style={{ color: "#000000" }}
+              />
+              I Agree to the Terms and Conditions
                     </Grid>
                   </Grid>
                 </Box>

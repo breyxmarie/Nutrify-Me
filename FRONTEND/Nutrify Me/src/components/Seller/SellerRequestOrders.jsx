@@ -105,19 +105,21 @@ function SellerRequestOrders() {
   const [recommendData, setRecommendData] = useState([])
 
 
+  const [recommendName, setRecommendName] = useState([])
   const getData = useCallback(
     debounce(async () => {
       try {
-        const [mealResponse, requestResponse, recommendResponse, userResponse] = await Promise.all([
+        const [mealResponse, requestResponse, recommendResponse, userResponse, recommendD] = await Promise.all([
           AxiosInstance.get('generatedmeal'),
           AxiosInstance.get('requestedmeals'),
           AxiosInstance.get('requestedrecommendmeals'),
-          AxiosInstance.get('user')
+          AxiosInstance.get('user'),
+          AxiosInstance.get('recommendmealplan')
         ]);
 
         const reverseRequestData = requestResponse.data.reverse();
         const reverseRecommendData = recommendResponse.data.reverse();
-
+        setRecommendName(recommendD.data)
 
 
 
@@ -250,7 +252,8 @@ console.log(recommendData.filter(
           'type': "RReqOrder", 
           'id': loggedInUser.user_id, 
           'user_id': tempData.user_id, 
-          'message': "Your Recommend Meal Plan Request has been approved!", 
+          'message': 
+          `Your Recommend Meal Plan Request named: ${recommendName.find((item) => item.recommend_mealplan_id === tempData.recommend_mealplan_id).name} has been approved!`, 
           'link': "/meal-plan-shop-request", 
           'seen': 0, 
           'other_id': loggedInUser.user_id,
@@ -312,12 +315,15 @@ console.log(recommendData.filter(
   };
 
   const approveOrder = async () => {
-    setLoading5(true)
+    console.log(pendingRequests)
+     setLoading5(true)
     const response = await AxiosInstance.get(`requestedmeals`);
 
     const tempData = response.data.find(
       (item) => item.request_id === selectedOrder
     );
+
+    console.log(pendingRequests.find((item) => item.request.generatedMeal_id === tempData.generatedMeal_id).meal.name)
     console.log(price);
     const tempUser = userData.find((item) => item.user_id = tempData.user_id)
     try {
@@ -341,7 +347,8 @@ console.log(recommendData.filter(
           'type': "GReqOrder", 
           'id': loggedInUser.user_id, 
           'user_id': tempData.user_id, 
-          'message': "Your Generated Meal Plan Request has been approved!", 
+          'message': `Your Generated Meal Plan Request named: 
+          ${pendingRequests.find((item) => item.request.generatedMeal_id === tempData.generatedMeal_id).meal.name} has been approved!`, 
           'link': "/meal-plan-shop-request", 
           'seen': 0, 
           'other_id': loggedInUser.user_id,
