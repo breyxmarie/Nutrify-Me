@@ -5,6 +5,8 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
+import Grid from "@mui/material/Grid";
+import dayjs from "dayjs";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
@@ -46,7 +48,7 @@ const StyledLink = `
 const settings = ["Profile", "Logout"];
 
 function NutritionistNavBar() {
-  const { loggedInUser, setLoggedInUser } = useLoggedInUser();
+  const { loggedInUser, setLoggedInUser, nutritionist, setnNutritionist }  = useLoggedInUser();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const activeLink = " bg-blue-100 text-black";
@@ -138,7 +140,7 @@ function NutritionistNavBar() {
     AxiosInstance.get(`notifications`).then((res) => {
       console.log(res);
       setNotifsData(
-        res.data.reverse().filter((item) => item.user_id === loggedInUser.user_id)
+        res.data.reverse().filter((item) => item.user_id === nutritionist.nutritionist_id)
       );
     });
   }
@@ -181,15 +183,13 @@ function NutritionistNavBar() {
   const getNotifsImage = (type) => {
 
     switch (type) {
-      case "NewOrder": 
+      case "NewApp": 
       return "images/NewApp.png"
       break;
-      case "NewReqOrder": 
+      case "MakeApoointment": 
       return "images/MakeApoointment.png"
       break;
-      case "DecideRequestOrder": 
-      return "images/MakeApoointment.png"
-      break;
+    
      
  
     }
@@ -429,6 +429,9 @@ function NutritionistNavBar() {
                       <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: 
                         {xs: "0.5em",
                           sm: "1em",
+                          wordWrap: 'break-word', // Ensures long words break into the next line
+                          whiteSpace: 'normal',   // Ensures normal wrapping behavior
+                       
                         }
                       }}>{not.title}</Typography>
                       <Typography variant="body2"
@@ -438,7 +441,7 @@ function NutritionistNavBar() {
           whiteSpace: 'normal',   // Ensures normal wrapping behavior
                       }}}
                       >{not.message}</Typography>
-                      <Typography sx = {{fontSize: "0.7em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
+                      <Typography sx = {{fontSize: "0.5em", mt: 0.5, color: "#898246", fontWeight: "bold"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
                     </Grid>
                     <Grid xs = {1} sx = {{mt: "3%"}}><img src = "/images/rightNotif.png"  width = "60%" height = "40%"/></Grid>
                   </Grid>

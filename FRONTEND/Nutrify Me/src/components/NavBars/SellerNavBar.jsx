@@ -1,7 +1,9 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
 import Toolbar from "@mui/material/Toolbar";
+import dayjs from "dayjs";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
@@ -181,16 +183,16 @@ function SellerNavBar() {
 
 
   const getNotifsImage = (type) => {
-
+console.log(type)
     switch (type) {
       case "NewOrder": 
-      return "images/NewApp.png"
+      return "images/NewOrder.png"
       break;
       case "NewReqOrder": 
-      return "images/MakeApoointment.png"
+      return "images/NewReqOrder.png"
       break;
       case "DecideRequestOrder": 
-      return "images/MakeApoointment.png"
+      return "images/DecideRequestOrder.png"
       break;
      
  
@@ -304,7 +306,7 @@ function SellerNavBar() {
               justifyContent: "space-between",
               alignItems: "center",
               px: 7,
-              mx: "10%",
+              mx: "5%",
             }}
           >
             {pages.map((page) => (
@@ -443,16 +445,19 @@ function SellerNavBar() {
                       <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: 
                         {xs: "0.5em",
                           sm: "1em",
+                          wordWrap: 'break-word', // Ensures long words break into the next line
+                          whiteSpace: 'normal',   // Ensures normal wrapping behavior
+                       
                         }
                       }}>{not.title}</Typography>
                       <Typography variant="body2"
                       sx = {{fontSize: {xs: "0.5em",
                         sm: "0.7em",
                         wordWrap: 'break-word', // Ensures long words break into the next line
-          whiteSpace: 'normal',   // Ensures normal wrapping behavior
+                        whiteSpace: 'normal',   // Ensures normal wrapping behavior
                       }}}
                       >{not.message}</Typography>
-                      <Typography sx = {{fontSize: "0.7em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
+                      <Typography sx = {{fontSize: "0.5em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
                     </Grid>
                     <Grid xs = {1} sx = {{mt: "3%"}}><img src = "/images/rightNotif.png"  width = "60%" height = "40%"/></Grid>
                   </Grid>

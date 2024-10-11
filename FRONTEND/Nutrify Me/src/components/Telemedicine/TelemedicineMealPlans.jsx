@@ -285,6 +285,24 @@ const requestOrder = () => {
     }).then((res) => {
        console.log(res, res.data);
       toast.success("Request Sent");
+
+
+      AxiosInstance.post(`notifications/`, {
+        'type': "NewReqOrder", 
+        'id': loggedInUser.user_id, 
+        'user_id': 140, 
+        'message': 
+        `${loggedInUser.first_name + " " + loggedInUser.last_name} has made a request order, 
+        Please confirm it`, 
+        'link': "/meal-plan-shop-request", 
+        'seen': 0, 
+        'other_id': loggedInUser.user_id,
+        'title': "Recommend Meal Plan New Request",
+        'date': dayjs().format("YYYY-MM-DD"),
+      }).then((res) => {
+        console.log(res, res.data);
+    
+      });
       handleClose()
     });
   } catch (error) {

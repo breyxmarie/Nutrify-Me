@@ -288,6 +288,26 @@ function MealPlanHistory() {
     } catch (error) {
       console.log(error);
     }
+
+    try {
+      AxiosInstance.post(`notifications/`, {
+        'type': "NewReqOrder", 
+        'id': loggedInUser.user_id, 
+        'user_id': 140, 
+        'message': 
+        `${loggedInUser.first_name + " " + loggedInUser.last_name} has made a request order, 
+        Please confirm it`, 
+        'link': '/seller-request-meals', 
+        'seen': 0, 
+        'other_id': loggedInUser.user_id,
+        'title': "Generated Meal Plan Request",
+        'date': dayjs().format("YYYY-MM-DD"),
+      }).then((res) => {
+        console.log(res, res.data);
+      });
+      } catch (error) {
+        console.log(error.response.data);
+      }
   };
 
   function getRandomInRange(min, max) {

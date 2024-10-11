@@ -1967,6 +1967,28 @@ function TelemedicineHome() {
       } catch (error) {
         console.log(error.response.data);
       }
+
+      try {
+      AxiosInstance.post(`notifications/`, {
+        'type': "NewApp", 
+        'id': loggedInUser.user_id, 
+        'user_id': selectedNutritionist.nutritionist_id, 
+        'message': 
+        `Your Patient ${loggedInUser.first_name + " " + loggedInUser.last_name} has made an appointment to meet with you, 
+        Please confirm it`, 
+        'link': '/nutritionist-appointment', 
+        'seen': 0, 
+        'other_id': loggedInUser.user_id,
+        'title': "Order Deployed",
+        'date': dayjs().format("YYYY-MM-DD"),
+      }).then((res) => {
+        console.log(res, res.data);
+      });
+      } catch (error) {
+        console.log(error.response.data);
+      }
+
+
       setTempNut(null);
       setSelectedDates(null);
       GetData();
@@ -2263,6 +2285,26 @@ function TelemedicineHome() {
     } catch (error) {
       console.log(error.response.data);
     }
+
+    try {
+      AxiosInstance.post(`notifications/`, {
+        'type': "NewApp", 
+        'id': loggedInUser.user_id, 
+        'user_id': designatedNutritionist.nutritionist_id, 
+        'message': 
+        `Your Patient ${loggedInUser.first_name + " " + loggedInUser.last_name} has made an appointment to meet with you, 
+        Please confirm it`, 
+        'link': '/nutritionist-appointment', 
+        'seen': 0, 
+        'other_id': loggedInUser.user_id,
+        'title': "New Appointment",
+        'date': dayjs().format("YYYY-MM-DD"),
+      }).then((res) => {
+        console.log(res, res.data);
+      });
+      } catch (error) {
+        console.log(error.response.data);
+      }
   };
 
 

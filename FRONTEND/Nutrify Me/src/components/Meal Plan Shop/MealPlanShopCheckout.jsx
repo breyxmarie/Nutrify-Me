@@ -561,6 +561,24 @@ function MealPlanShopCheckout() {
             );
             console.log(response);
 
+            try {
+              AxiosInstance.post(`notifications/`, {
+                'type': "NewOrder", 
+                'id': loggedInUser.user_id, 
+                'user_id': 140, 
+                'message': 
+                `${loggedInUser.first_name + " " + loggedInUser.last_name} has made an order`,
+                'link': '/seller-orders', 
+                'seen': 0, 
+                'other_id': loggedInUser.user_id,
+                'title': "New Order",
+                'date': dayjs().format("YYYY-MM-DD"),
+              }).then((res) => {
+                console.log(res, res.data);
+              });
+              } catch (error) {
+                console.log(error.response.data);
+              }
             navigate("/meal-plan-shop-home");
           } catch (error) {
             console.log(error);

@@ -462,6 +462,8 @@ function MainUserNavbar() {
                       <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: 
                         {xs: "0.5em",
                           sm: "1em",
+                          wordWrap: 'break-word', // Ensures long words break into the next line
+                          whiteSpace: 'normal',   // Ensures normal wrapping behavior
                         }
                       }}>{not.title}</Typography>
                       <Typography variant="body2"
@@ -471,7 +473,7 @@ function MainUserNavbar() {
           whiteSpace: 'normal',   // Ensures normal wrapping behavior
                       }}}
                       >{not.message}</Typography>
-                      <Typography sx = {{fontSize: "0.7em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
+                      <Typography sx = {{fontSize: "0.5em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
                     </Grid>
                     <Grid xs = {1} sx = {{mt: "3%"}}><img src = "/images/rightNotif.png"  width = "60%" height = "40%"/></Grid>
                   </Grid>
