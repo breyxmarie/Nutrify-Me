@@ -22,15 +22,11 @@ function Paypal() {
   const [orderDetails, setOrderDetails] = useState([]);
   const orders = location.state.orders;
   const [mealData, setMealData] = useState([])
-  const [userData, setUserData] = useState()
+  //const [userData, setUserData] = useState([])
   const getData = () => {
     AxiosInstance.get(`shopmealplan`).then((res) => {
       setMealData(res.data)
     })
-    AxiosInstance.get(`user/${location.state.user_id}`).then((res) => {
-      setUserData(res.data)
-    })
-
 
   }
   useEffect(() => {
@@ -101,7 +97,7 @@ function Paypal() {
 
   const onApprove = async (data, actions) => {
     // order = await actions.order.capture();
-  
+    
 
     try {
       const order = await actions.order.capture();
@@ -136,28 +132,39 @@ function Paypal() {
             // shippingPrice
           }).then((res) => {
             console.log(res, res.data);
-            AxiosInstance.delete(`cart/${location.state.cart_id}`)
-            .then((resp) => {
-              console.log(resp);
+          
 
+
+            AxiosInstance.get(`user/${receivedData.user_id}`).then((res) => {
+              const userData = res.data;
+              console.log(userData)
               try {
                 AxiosInstance.post(`notifications/`, {
                   'type': "NewOrder", 
-                  'id': location.state.user_id, 
+                  'id': receivedData.user_id, 
                   'user_id': 140, 
                   'message': 
-                  `${userData.first_name + " " + userData.last_name} has made an order`,
+                  `${userData.first_name + " " + 
+                    userData.last_name} has made an order`,
                   'link': '/seller-orders', 
                   'seen': 0, 
-                  'other_id': loggedInUser.user_id,
+                  'other_id': location.state.user_id,
                   'title': "New Order",
                   'date': dayjs().format("YYYY-MM-DD"),
                 }).then((res) => {
                   console.log(res, res.data);
                 });
                 } catch (error) {
-                  console.log(error.response.data);
+                  console.log(error);
                 }
+            })
+
+            
+            AxiosInstance.delete(`cart/${location.state.cart_id}`)
+            .then((resp) => {
+              console.log(resp);
+
+            
               setPaid(true);
             setLoading(false)
             });;

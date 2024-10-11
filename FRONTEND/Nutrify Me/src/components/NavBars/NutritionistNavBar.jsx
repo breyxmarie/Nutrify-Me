@@ -143,6 +143,40 @@ function NutritionistNavBar() {
         res.data.reverse().filter((item) => item.user_id === nutritionist.nutritionist_id)
       );
     });
+
+
+    AxiosInstance.get(`notifications`).then((respo) => {
+      const tempNotif = respo.data.filter((item) => item.user_id === loggedInUser.user_id 
+                                      && item.date === dayjs().format("YYYY-MM-DD") && item.type === "DecideRequestOrder")
+      console.log(tempNotif.length, "hi")
+      if (tempNotif.length === 0) {
+        try {
+          AxiosInstance.post(`notifications/`, {
+          'type': "MakeApoointment", 
+          'id': loggedInUser.user_id, 
+          'user_id': nutritionist.nutritionist_id, 
+          'message': 
+          `You have pending Appointments please Approve/Disapprove it`, 
+          'link': '/nutritionist-patient', 
+          'seen': 0, 
+          'other_id': loggedInUser.user_id,
+          'title': "Pending Appointments",
+          'date': dayjs().format("YYYY-MM-DD"),
+        }).then((res) => {
+          console.log(res, res.data);
+        });
+        } catch (error) {
+          console.log(error.response.data);
+        }
+      }
+      // tempNotif.forEach((item1) => {
+      //   if (temp.length > 0){
+      //     if (item1.date === dayjs().format("YYYY-MM-DD")){
+
+      //     }
+      //   }
+      // })
+    })
   }
 
   useEffect(() => {

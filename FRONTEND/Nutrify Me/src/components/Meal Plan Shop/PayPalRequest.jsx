@@ -26,7 +26,7 @@ function PayPalRequest() {
         {
           amount: {
             currency_code: "PHP",
-           value: location.state.datas.totalprice,
+            value: location.state.datas.totalprice,
             //value: 0.01,
           },
         },
@@ -108,7 +108,29 @@ function PayPalRequest() {
               })
             )
           );
-
+          AxiosInstance.get(`user/${location.state.datas.user_id}`).then((res) => {
+            const userData = res.data;
+         
+            try {
+              AxiosInstance.post(`notifications/`, {
+                'type': "NewOrder", 
+                'id': location.state.datas.user_id, 
+                'user_id': 140, 
+                'message': 
+                `${userData.first_name + " " + 
+                  userData.last_name} has made an order`,
+                'link': '/seller-orders', 
+                'seen': 0, 
+                'other_id': location.state.datas.user_id,
+                'title': "New Order",
+                'date': dayjs().format("YYYY-MM-DD"),
+              }).then((res) => {
+                console.log(res, res.data);
+              });
+              } catch (error) {
+                console.log(error);
+              }
+          })
           AxiosInstance.delete(
             `requestedmeals/${location.state.state.request.request_id}`
           ).then((res) => {

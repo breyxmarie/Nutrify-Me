@@ -138,7 +138,95 @@ function SellerNavBar() {
   };
 
   const [notifsData, setNotifsData] = useState([])
-  const getNotifData = () => {
+  const getNotifData = async () => {
+
+    AxiosInstance.get(`requestedrecommendmeals`).then((res) => {
+      console.log(res.data);
+      let temp = []
+
+      console.log(temp.length)
+
+
+      res.data.forEach((item) => {
+        if (item.status === "Pending")
+          {
+            console.log(item)
+            temp.push(item)
+          }
+      })
+
+
+      AxiosInstance.get(`notifications`).then((respo) => {
+        const tempNotif = respo.data.filter((item) => item.user_id === loggedInUser.user_id 
+                                        && item.date === dayjs().format("YYYY-MM-DD") && item.type === "DecideRequestOrder")
+        console.log(tempNotif.length, "hi")
+        if (tempNotif.length === 0) {
+          try {
+            AxiosInstance.post(`notifications/`, {
+            'type': "DecideRequestOrder", 
+            'id': loggedInUser.user_id, 
+            'user_id': loggedInUser.user_id, 
+            'message': 
+            `You have pending Request Orders please Approve/Disapprove it`, 
+            'link': '/seller-request-meals', 
+            'seen': 0, 
+            'other_id': loggedInUser.user_id,
+            'title': "Pending Request Orders",
+            'date': dayjs().format("YYYY-MM-DD"),
+          }).then((res) => {
+            console.log(res, res.data);
+          });
+          } catch (error) {
+            console.log(error.response.data);
+          }
+        }
+        // tempNotif.forEach((item1) => {
+        //   if (temp.length > 0){
+        //     if (item1.date === dayjs().format("YYYY-MM-DD")){
+
+        //     }
+        //   }
+        // })
+      })
+
+
+
+
+      // if (temp.length > 0) {
+      //   try {
+      //     AxiosInstance.post(`notifications/`, {
+      //       'type': "DecideRequestOrder", 
+      //       'id': loggedInUser.user_id, 
+      //       'user_id': loggedInUser.user_id, 
+      //       'message': 
+      //       `You have pending Request Orders please Approve/Disapprove it`, 
+      //       'link': '/seller-request-meals', 
+      //       'seen': 0, 
+      //       'other_id': loggedInUser.user_id,
+      //       'title': "Pending Request Orders",
+      //       'date': dayjs().format("YYYY-MM-DD"),
+      //     }).then((res) => {
+      //       console.log(res, res.data);
+      //     });
+      //     } catch (error) {
+      //       console.log(error.response.data);
+      //     }
+      // }
+      
+    });
+
+    AxiosInstance.get(`requestedmeals`).then((res) => {
+      console.log(res.data);
+
+      res.data.forEach((item) => {
+        if (item.status === "Pending")
+          {
+            console.log(item)
+          }
+      })
+    });
+
+
     AxiosInstance.get(`notifications`).then((res) => {
       console.log(res);
       setNotifsData(

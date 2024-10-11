@@ -499,115 +499,128 @@ function MealPlanShopRequestCheckout() {
   });
 
   const onSubmitHandler1 = async (data) => {
-    if (payment === "Paypal") {
-      const datas = {
-        user_id: loggedInUser.user_id,
-        // orders: cartData[0].orders,
-        date: dayjs().format("YYYY-MM-DD"),
-        status: "Ordered",
-        address_id: addressData[selectedAddress].address_id,
-        payment: payment,
-        shipping: "Lalamove",
-        notes: notes,
-        totalprice: parseInt(totalOrderPrice),
-        shipping_price: shippingPrice,
-      };
 
-      try {
-        //  const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
-
-        const state = location.state;
-        navigate("/paypal-payment-request", {
-          state: { state, datas },
-        });
-      } catch (error) {
-        console.log(error);
-      }
-
-      //  navigate("/paypal-payment", { state: datas });
-    } else {
-      let orders;
-      try {
-        console.log(location.state.meal.meal);
-        AxiosInstance.post(`shopmealplan/`, {
-          name: location.state.meal.name,
-          image: location.state.meal.meal[0].meals[0].details.recipe.image,
-          description: "Generated Meal",
-          start_week: dayjs("2019-10-25").format("YYYY-MM-DD"),
-          end_week: dayjs("2019-10-31").format("YYYY-MM-DD"),
-          price: location.state.request.price,
-          // shippingPrice
-        }).then((res) => {
-          console.log(res);
+    if (shippingDetails?.data?.data?.priceBreakdown
+      ?.totalExcludePriorityFee) {
+        if (payment === "Paypal") {
+          const datas = {
+            user_id: loggedInUser.user_id,
+            // orders: cartData[0].orders,
+            date: dayjs().format("YYYY-MM-DD"),
+            status: "Ordered",
+            address_id: addressData[selectedAddress].address_id,
+            payment: payment,
+            shipping: "Lalamove",
+            notes: notes,
+            totalprice: parseInt(totalOrderPrice),
+            shipping_price: shippingPrice,
+          };
+    
           try {
-            AxiosInstance.post(`order/`, {
-              user_id: loggedInUser.user_id,
-              orders: [res.data.id],
-              date: dayjs().format("YYYY-MM-DD"),
-              status: "Ordered",
-              address_id: addressData[selectedAddress].address_id,
-              payment: payment,
-              shipping: "Lalamove",
-              notes: notes,
-              totalprice: parseInt(totalOrderPrice),
-              shipping_price: parseInt(shippingPrice),
-              payment_details: ["Cash on Delivery", "Cash on Delivery"],
-              schedule_date: [
-                dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
-                dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
-              ],
-              // shippingPrice
-            }).then((res) => {
-              //   try {
-              console.log(res);
-
-              // const response = AxiosInstance.delete(
-              //   `cart/${cartData[0].cart_id}`
-              // );//
-              // navigate("/meal-plan-shop-home");
-              //   } catch (error) {
-              //   console.log(error);
-              //    }
-              //   // getAddressData();
-              //   // handleReset();
-              //   // setActiveTab(0);
+            //  const response = AxiosInstance.delete(`cart/${cartData[0].cart_id}`);
+    
+            const state = location.state;
+            navigate("/paypal-payment-request", {
+              state: { state, datas },
             });
-
-            location.state.meal.meal.map((item) =>
-              item.meals.map((items) =>
-                //console.log(item.Day.substring(4))
-
-                AxiosInstance.post(`shopmeal/`, {
-                  mealplan_id: res.data.id,
-                  type: items.Meal,
-                  calories: Math.floor(items.details.recipe.calories),
-                  fat: Math.floor(items.details.recipe.digest[0].daily),
-                  protein: Math.floor(items.details.recipe.digest[2].daily),
-                  carbs: Math.floor(items.details.recipe.digest[1].daily),
-                  food: items.details.recipe.label,
-                  image: items.details.recipe.image,
-                  day: item.Day.substring(4),
-                  // shippingPrice
-                }).then((res) => {
-                  console.log(res);
-                })
-              )
-            );
-            console.log(location.state.request.request_id);
-            AxiosInstance.delete(
-              `requestedmeals/${location.state.request.request_id}`
-            ).then((res) => {
-              console.log(res);
-            });
-            navigate("/meal-plan-shop-home");
           } catch (error) {
             console.log(error);
           }
-        });
-      } catch (error) {
-        console.log(error);
-      }
+    
+          //  navigate("/paypal-payment", { state: datas });
+        } else {
+          let orders;
+          try {
+            console.log(location.state.meal.meal);
+            AxiosInstance.post(`shopmealplan/`, {
+              name: location.state.meal.name,
+              image: location.state.meal.meal[0].meals[0].details.recipe.image,
+              description: "Generated Meal",
+              start_week: dayjs("2019-10-25").format("YYYY-MM-DD"),
+              end_week: dayjs("2019-10-31").format("YYYY-MM-DD"),
+              price: location.state.request.price,
+              // shippingPrice
+            }).then((res) => {
+              console.log(res);
+              try {
+                AxiosInstance.post(`order/`, {
+                  user_id: loggedInUser.user_id,
+                  orders: [res.data.id],
+                  date: dayjs().format("YYYY-MM-DD"),
+                  status: "Ordered",
+                  address_id: addressData[selectedAddress].address_id,
+                  payment: payment,
+                  shipping: "Lalamove",
+                  notes: notes,
+                  totalprice: parseInt(totalOrderPrice),
+                  shipping_price: parseInt(shippingPrice),
+                  payment_details: ["Cash on Delivery", "Cash on Delivery"],
+                  schedule_date: [
+                    dayjs().startOf("week").add(1, "day").format("YYYY-MM-DD"),
+                    dayjs().startOf("week").add(5, "day").format("YYYY-MM-DD"),
+                  ],
+                  // shippingPrice
+                }).then((res) => {
+                  //   try {
+                  console.log(res);
+    
+                  // const response = AxiosInstance.delete(
+                  //   `cart/${cartData[0].cart_id}`
+                  // );//
+                  // navigate("/meal-plan-shop-home");
+                  //   } catch (error) {
+                  //   console.log(error);
+                  //    }
+                  //   // getAddressData();
+                  //   // handleReset();
+                  //   // setActiveTab(0);
+                });
+    
+                location.state.meal.meal.map((item) =>
+                  item.meals.map((items) =>
+                    //console.log(item.Day.substring(4))
+    
+                    AxiosInstance.post(`shopmeal/`, {
+                      mealplan_id: res.data.id,
+                      type: items.Meal,
+                      calories: Math.floor(items.details.recipe.calories),
+                      fat: Math.floor(items.details.recipe.digest[0].daily),
+                      protein: Math.floor(items.details.recipe.digest[2].daily),
+                      carbs: Math.floor(items.details.recipe.digest[1].daily),
+                      food: items.details.recipe.label,
+                      image: items.details.recipe.image,
+                      day: item.Day.substring(4),
+                      // shippingPrice
+                    }).then((res) => {
+                      console.log(res);
+                    })
+                  )
+                );
+                console.log(location.state.request.request_id);
+                AxiosInstance.delete(
+                  `requestedmeals/${location.state.request.request_id}`
+                ).then((res) => {
+                  console.log(res);
+                });
+                navigate("/meal-plan-shop-home");
+              } catch (error) {
+                console.log(error);
+              }
+            });
+          } catch (error) {
+            console.log(error);
+          }
+        }
+
     }
+    else {
+      console.log("no amount")
+      alert('Shipping Price still loading');
+    }
+
+
+
+  
 
     // console.log(payment);
     // navigate(

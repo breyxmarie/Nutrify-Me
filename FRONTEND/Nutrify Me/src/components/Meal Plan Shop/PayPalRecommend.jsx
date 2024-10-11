@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -14,10 +14,13 @@ function PayPalRecommend() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false)
   const location = useLocation();
-  console.log(location.state.datas.totalprice);
+
   const receivedData = location.state;
   const [paid, setPaid] = useState(false);
   const [orderDetails, setOrderDetails] = useState([]);
+
+  const [userData, setUserData] = useState()
+
 
   const createOrder = async (data, actions) => {
     // console.log(process.env.BASE_URL);
@@ -26,8 +29,8 @@ function PayPalRecommend() {
         {
           amount: {
             currency_code: "PHP",
-            value: location.state.datas.totalprice,
-           // value: 0.01,
+           value: location.state.datas.totalprice,
+            //value: 0.01,
           },
         },
       ],
@@ -37,7 +40,7 @@ function PayPalRecommend() {
   //!lagay loading here 
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
-    console.log(order);
+    console.log(userData);
     setLoading(true)
     setOrderDetails(order);
 
@@ -110,6 +113,30 @@ function PayPalRecommend() {
             )
           );
 
+          AxiosInstance.get(`user/${location.state.datas.user_id}`).then((res) => {
+            const userData = res.data;
+         
+            try {
+              AxiosInstance.post(`notifications/`, {
+                'type': "NewOrder", 
+                'id': location.state.datas.user_id, 
+                'user_id': 140, 
+                'message': 
+                `${userData.first_name + " " + 
+                  userData.last_name} has made an order`,
+                'link': '/seller-orders', 
+                'seen': 0, 
+                'other_id': location.state.datas.user_id,
+                'title': "New Order",
+                'date': dayjs().format("YYYY-MM-DD"),
+              }).then((res) => {
+                console.log(res, res.data);
+              });
+              } catch (error) {
+                console.log(error);
+              }
+          })
+
           //! pati ito domino effect tas dito close yun loading
           try {
             AxiosInstance.delete(
@@ -117,6 +144,15 @@ function PayPalRecommend() {
             ).then((res) => {
               console.log(res);
               setPaid(true);
+              
+
+             
+
+
+
+
+
+
               setLoading(false)
             });
           } catch (error) {
