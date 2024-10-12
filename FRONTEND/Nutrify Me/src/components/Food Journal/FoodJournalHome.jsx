@@ -245,7 +245,7 @@ function FoodJournalHome() {
         .filter((item) => item.journal_id == id)
         .reduce((acc, item) => acc + item.calories, 0);
       // console.log(temp);
-      setCalories((temp / 1200) * 100);
+      setCalories((temp / 2000) * 100);
     });
   };
 
