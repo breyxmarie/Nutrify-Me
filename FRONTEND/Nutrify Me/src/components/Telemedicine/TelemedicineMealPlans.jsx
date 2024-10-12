@@ -87,7 +87,7 @@ function TelemedicineMealPlans() {
   }
 
   const [hoveredDay, setHoveredDay] = useState(null);
-  const [value, setValue] = useState(dayjs());
+  const [value, setValue] = useState(dayjs().startOf("week").add(14, "day"));
 
   const [loading1, setLoading1] = useState()
   //! modal
@@ -575,7 +575,8 @@ const requestOrder = () => {
                   Choose your preferred week:
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateCalendar
-                  minDate={dayjs().startOf('week').endOf('week').add(1, 'day')}
+                  minDate={dayjs().startOf("week").add(14, "day")}
+                 // minDate={dayjs().add(7, 'day')}
                    value={value}
                    onChange={(newValue) => setValue(newValue)}
                     showDaysOutsideCurrentMonth

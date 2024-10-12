@@ -82,7 +82,7 @@ function MealPlanHistory() {
   }
 
   const [hoveredDay, setHoveredDay] = useState(null);
-  const [value, setValue] = useState(dayjs());
+  const [value, setValue] = useState(dayjs().startOf("week").add(14, "day"));
 
   //! modal
 
@@ -749,10 +749,8 @@ function MealPlanHistory() {
                       Choose your preferred week:
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DateCalendar
-                          minDate={dayjs()
-                            .startOf("week")
-                            .endOf("week")
-                            .add(1, "day")}
+                         minDate={dayjs().startOf("week").add(14, "day")} // Move to the Monday of the next week
+                        // maxDate={dayjs().startOf("week").add(14, "day")} // Set the end of the week (Sunday)
                           value={value}
                           onChange={(newValue) => setValue(newValue)}
                           showDaysOutsideCurrentMonth

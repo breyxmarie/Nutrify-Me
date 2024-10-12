@@ -146,8 +146,8 @@ function NutritionistNavBar() {
 
 
     AxiosInstance.get(`notifications`).then((respo) => {
-      const tempNotif = respo.data.filter((item) => item.user_id === loggedInUser.user_id 
-                                      && item.date === dayjs().format("YYYY-MM-DD") && item.type === "DecideRequestOrder")
+      const tempNotif = respo.data.filter((item) => item.user_id === nutritionist.nutritionist_id 
+                                      && item.date === dayjs().format("YYYY-MM-DD") && item.type === "MakeApoointment")
       console.log(tempNotif.length, "hi")
       if (tempNotif.length === 0) {
         try {

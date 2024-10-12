@@ -193,7 +193,7 @@ function MainUserNavbar() {
       return "images/recApprove.png"
       break;
       case "DepOrder": 
-      return "images/appointmentApprove.png"
+      return "images/deploy.png"
       break;
  
     }

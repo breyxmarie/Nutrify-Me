@@ -1076,7 +1076,7 @@ function SellerCreateMealPlan() {
   }
 
   const [hoveredDay, setHoveredDay] = React.useState(null);
-  const [value, setValue] = React.useState(dayjs());
+  const [value, setValue] = React.useState(dayjs().startOf("week").add(14, "day"));
 
   // !
   const [tempType, setTempType] = useState();
@@ -1525,6 +1525,7 @@ function SellerCreateMealPlan() {
               <Grid xs={12} sm={8}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DateCalendar
+                  minDate={dayjs().startOf("week").add(14, "day")}
                     value={value}
                     onChange={(newValue) => setValue(newValue)}
                     showDaysOutsideCurrentMonth

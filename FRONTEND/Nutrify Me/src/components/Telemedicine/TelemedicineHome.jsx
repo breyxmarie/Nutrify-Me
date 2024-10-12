@@ -1024,7 +1024,8 @@ function TelemedicineHome() {
             onChange={handleDateChanges}
             renderInput={(params) => <TextField {...params} />}
             // shouldDisableDate={disableUnavailableDates}
-            minDate={dayjs()}
+           // minDate={dayjs()}
+           minDate={dayjs().add(7, 'day')}
             //  open // Keep the calendar open
           />
         </LocalizationProvider>
@@ -2581,7 +2582,7 @@ function TelemedicineHome() {
               <form onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={style1}>
                   <Grid container spacing={2}>
-                    <Grid xs={3}>
+                    <Grid xs = {12} sm={3}>
                       <center>
                         <Typography
                           id="modal-modal-title"
@@ -2721,7 +2722,7 @@ function TelemedicineHome() {
 
                       {/* <Button onClick={submission}>Book</Button> */}
                     </Grid>
-                    <Grid xs={5}>
+                    <Grid xs = {12} sm ={5}>
                       {/* {nutritionistInformation} */}{" "}
                       <center>
                         <img
@@ -2766,7 +2767,8 @@ function TelemedicineHome() {
                                 <TextField {...params} />
                               )}
                               shouldDisableDate={disableUnavailableDates}
-                              minDate={dayjs()}
+                              //minDate={dayjs()}
+                              minDate={dayjs().add(7, 'day')}
                               //  minDate={dayjs().add(7, "day")}
                               //  open // Keep the calendar open
                             />
@@ -2804,34 +2806,38 @@ function TelemedicineHome() {
                       </LocalizationProvider>
                     </Grid>
 
-                    <Grid xs={3}>
-                      <Typography>Patient-Nutritionist Agreement Terms and Conditions</Typography>
+                    <Grid xs = {12} sm={4} >
+                      <Typography sx = {{fontWeight: "bold"}}>Patient-Nutritionist Agreement Terms and Conditions</Typography>
 
-                      <p>This agreement (“Agreement”) is between [Nutritionist’s Name] (“Nutritionist”) and [Patient’s Name] (“Patient”). This Agreement outlines the terms and conditions governing the provision of nutrition services by the Nutritionist to the Patient through telemedicine.
+                      <p>
+                      This Agreement outlines the terms and conditions governing the relationship between the Nutritionist and the Patient.
 
-Services: The Nutritionist will provide the Patient with personalized nutrition counseling, education, and support. This may include:
+Services
 
-Conducting nutritional assessments
-Developing personalized nutrition plans
-Providing dietary education and guidance
-Monitoring progress and making adjustments as needed
-Telemedicine: The services will be delivered through telemedicine, which may include video conferencing, phone calls, or other electronic means. The Patient is responsible for ensuring a reliable internet connection and appropriate technology for telemedicine consultations.
+The Nutritionist will provide the following services to the Patient:
 
-Fees and Payments:
+<ul>
+<li>
+Nutritional Assessment: Conduct a comprehensive assessment of the Patient's dietary habits, health history, and nutritional needs.
+Personalized Nutrition Plan: Develop a tailored nutrition plan based on the assessment, incorporating the Patient's goals, preferences, and lifestyle.
+Progress Monitoring: Regularly monitor the Patient's progress and make adjustments to the plan as needed.
+Delivery of Services
+</li>
 
-{/* The Patient agrees to pay the Nutritionist a fee of [Amount] for [Frequency of sessions] sessions.
-Payment is due [Payment terms, e.g., in advance, after each session]. 
-If payment is not received by the due date, the Nutritionist reserves the right to suspend or terminate services. */}
-Confidentiality: The Nutritionist will maintain the confidentiality of all information provided by the Patient, except as required by law.
+<li>
+Telemedicine: The services will be delivered primarily through telemedicine, which may include video conferencing, phone calls, or other electronic means.
+Technology Requirements: The Patient is responsible for ensuring a reliable internet connection and appropriate technology for telemedicine consultations.
+</li>
+<li>
+Confidentiality <br/>
 
-Disclaimer: The Nutritionist is not a medical doctor. The information provided by the Nutritionist is for informational purposes only and is not a substitute for medical advice. The Patient should consult with a healthcare professional for any medical concerns.
-
-
-
-Governing Law: This Agreement shall be governed by and construed in accordance with the laws of [Jurisdiction].   
-
-Entire Agreement: This Agreement constitutes the entire agreement between the parties and supersedes all prior or contemporaneous communications, representations, or agreements, whether oral or written.   
-
+The Nutritionist will maintain the confidentiality of all information provided by the Patient, except as required by law.
+</li>
+<li>Disclaimer <br/>
+Not a Medical Professional: The Nutritionist is not a medical doctor. The information provided by the Nutritionist is for informational purposes only and is not a substitute for medical advice.
+Consult a Healthcare Provider: The Patient should consult with a healthcare professional for any medical concerns or before making significant changes to their diet or lifestyle.
+</li>
+</ul>
 </p>
 
 
@@ -2973,8 +2979,9 @@ Entire Agreement: This Agreement constitutes the entire agreement between the pa
                 renderInput={(params) => <TextField {...params} />}
                 shouldDisableDate={disableUnavailableFinal}
                 //    minDate={dayjs().add(7, "day")}
-                minDate={dayjs()}
-
+                //minDate={dayjs()}
+              //  minDate={dayjs().add(7 - dayjs().day(), 'day')}
+                minDate={dayjs().add(7, 'day')}
                 //  open // Keep the calendar open
               />
             </LocalizationProvider>

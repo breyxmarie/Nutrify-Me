@@ -577,7 +577,7 @@ function NutritionistProgress() {
               // }}
             />
           </Grid>
-          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+          <Grid xs={6} sx={{ height: "100vh", mt: 5 }}>
             <Box
               sx={{ height: "45%", width: "100%", justifyContent: "center" }}
             >
@@ -840,7 +840,7 @@ function NutritionistProgress() {
               // }}
             />
           </Grid>
-          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+          <Grid xs={6} sx={{ height: "100vh", mt: 5 }}>
             <Box
               sx={{ height: "45%", width: "100%", justifyContent: "center" }}
             >
@@ -1594,7 +1594,7 @@ function NutritionistProgress() {
               // }}
             />
           </Grid>
-          <Grid xs={6} sx={{ height: "80vh", mt: 5 }}>
+          <Grid xs={6} sx={{ height: "100vh", mt: 5 }}>
             <Box
               sx={{ height: "45%", width: "100%", justifyContent: "center" }}
             >

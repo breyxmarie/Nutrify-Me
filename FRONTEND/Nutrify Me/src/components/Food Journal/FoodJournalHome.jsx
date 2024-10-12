@@ -349,7 +349,7 @@ function FoodJournalHome() {
   const renderDays = () => {
     const dateFormat = "EEE";
     const days = [];
-    let startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
+    let startDate = startOfWeek(currentMonth, { weekStartsOn: 0 });
     for (let i = 0; i < 7; i++) {
       days.push(
         <div className="col col-center" key={i}>
@@ -368,8 +368,8 @@ function FoodJournalHome() {
     return <div className="days row">{days}</div>;
   };
   const renderCells = () => {
-    const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
-    const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
+    const startDate = startOfWeek(currentMonth, { weekStartsOn: 0 });
+    const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 0 });
     const dateFormat = "d";
     const rows = [];
     let days = [];
