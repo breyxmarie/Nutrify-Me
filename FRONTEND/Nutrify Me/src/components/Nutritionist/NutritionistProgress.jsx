@@ -296,7 +296,7 @@ function NutritionistProgress() {
   const [profiling, setProfiling] = useState([])
   const getJournal = async () => {
     const res = await AxiosInstance.get(`journalentry`);
-    setOverallJournal(res.data);
+    setOverallJournal(res.data.filter((item) => item.user_id === location.state.item.user_id));
 
 
     const respo = await AxiosInstance.get(`profiling`);

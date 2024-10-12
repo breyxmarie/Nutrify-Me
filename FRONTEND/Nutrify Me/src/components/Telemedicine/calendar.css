@@ -56,11 +56,13 @@
   color: "#000000"
 }
  */
+
+ 
 /* Calendar container */
 .react-calendar {
   background-color: #ffffff;
   border-radius: 10px;
-  padding: 10px;
+  padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   font-family: Arial, sans-serif;
   border: 1px solid #ddd;
@@ -93,32 +95,34 @@
 
 /* Individual day tiles */
 .react-calendar__tile {
-  padding: 10px;
-  margin: 5px;
+  padding: 10px; 
+  margin-top: 10px;
+  margin-left: 0px;
+  /* margin: 0px;  */
   text-align: center;
   border-radius: 5px;
   background-color: #fff;
   border: 1px solid #ddd;
   cursor: pointer;
-  color: black; /* Ensures day text is black */
+  color: black; 
 }
 
 /* Highlight for the selected day */
 .react-calendar__tile--active {
   background-color: #007bff;
-  color: white; /* White text for active tile */
+  color: white; 
   font-weight: bold;
   border-radius: 50%;
 }
 
 /* Styling Saturdays (red color) */
 .react-calendar__month-view__days__day--saturday {
-  color: black; /* Ensure Saturday text is black */
+  color: black; 
 }
 
 /* Styling Sundays (red color) */
 .react-calendar__month-view__days__day--sunday {
-  color: black; /* Ensure Sunday text is black */
+  color: black; 
 }
 
 /* Styling a specific date like 30th (custom background) */
@@ -136,5 +140,5 @@
 
 /* Fix for weekends to ensure all day text is black */
 .react-calendar__tile--weekend {
-  color: black; /* Ensure weekend day text is black */
+  color: black; 
 }

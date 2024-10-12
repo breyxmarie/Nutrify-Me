@@ -283,7 +283,7 @@ function FoodJournalProgressReport() {
   const [overallFood, setOverallFood] = useState([]);
   const getJournal = async () => {
     const res = await AxiosInstance.get(`journalentry`);
-    setOverallJournal(res.data);
+    setOverallJournal(res.data.filter((item) => item.user_id === loggedInUser.user_id));
   };
 
   const getMeal = async () => {

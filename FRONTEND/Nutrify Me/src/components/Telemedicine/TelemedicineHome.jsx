@@ -477,6 +477,7 @@ function TelemedicineHome() {
     setSelectedNutritionist(null);
     setOpen(false);
     setSelectedDates(null);
+    setSelectedTime(null)
     setTempNut(null);
   };
 
@@ -608,7 +609,7 @@ function TelemedicineHome() {
   // }
   //?
 
-  const [selectedNutritionist, setSelectedNutritionist] = useState("");
+  const [selectedNutritionist, setSelectedNutritionist] = useState(null);
   const [appointData, setAppointdata] = useState();
   const [nutritionistInformation, setNutritionistInformation] = useState();
 
@@ -1895,6 +1896,11 @@ function TelemedicineHome() {
 
   const submitAppointment = () => {
 
+    if (selectedNutritionist === null || selectedDates === null || selectedTime === null ) {
+      alert("Please select a Nutritionist/Date/Time")
+    }
+    else {
+
     if (isChecked === true) {
       console.log(
         selectedDates.format("YYYY-MM-DD"),
@@ -1930,7 +1936,28 @@ function TelemedicineHome() {
           user_id: loggedInUser.user_id,
         }).then((res) => {
           console.log(res.data);
-          GetData();
+
+          
+    try {
+      AxiosInstance.post(`notifications/`, {
+        'type': "NewApp", 
+        'id': loggedInUser.user_id, 
+        'user_id': selectedNutritionist, 
+        'message': 
+        `Your Patient ${loggedInUser.first_name + " " + loggedInUser.last_name} has made an appointment to meet with you, 
+        Please confirm it`, 
+        'link': '/nutritionist-appointment', 
+        'seen': 0, 
+        'other_id': loggedInUser.user_id,
+        'title': "New Appointment",
+        'date': dayjs().format("YYYY-MM-DD"),
+      }).then((res) => {
+        console.log(res, res.data);
+      });
+      } catch (error) {
+        console.log(error.response.data);
+      }
+          //GetData();
           handleClose();
           // navigate("/?success=registered");
         });
@@ -1969,27 +1996,27 @@ function TelemedicineHome() {
         console.log(error.response.data);
       }
 
-      try {
-      AxiosInstance.post(`notifications/`, {
-        'type': "NewApp", 
-        'id': loggedInUser.user_id, 
-        'user_id': selectedNutritionist.nutritionist_id, 
-        'message': 
-        `Your Patient ${loggedInUser.first_name + " " + loggedInUser.last_name} has made an appointment to meet with you, 
-        Please confirm it`, 
-        'link': '/nutritionist-appointment', 
-        'seen': 0, 
-        'other_id': loggedInUser.user_id,
-        'title': "Order Deployed",
-        'date': dayjs().format("YYYY-MM-DD"),
-      }).then((res) => {
-        console.log(res, res.data);
-      });
-      } catch (error) {
-        console.log(error.response.data);
-      }
+      // try {
+      // AxiosInstance.post(`notifications/`, {
+      //   'type': "NewApp", 
+      //   'id': loggedInUser.user_id, 
+      //   'user_id': selectedNutritionist.nutritionist_id, 
+      //   'message': 
+      //   `Your Patient ${loggedInUser.first_name + " " + loggedInUser.last_name} has made an appointment to meet with you, 
+      //   Please confirm it`, 
+      //   'link': '/nutritionist-appointment', 
+      //   'seen': 0, 
+      //   'other_id': loggedInUser.user_id,
+      //   'title': "Order Deployed",
+      //   'date': dayjs().format("YYYY-MM-DD"),
+      // }).then((res) => {
+      //   console.log(res, res.data);
+      // });
+      // } catch (error) {
+      //   console.log(error.response.data);
+      // }
 
-
+      setIsChecked(false)
       setTempNut(null);
       setSelectedDates(null);
       GetData();
@@ -1999,7 +2026,7 @@ function TelemedicineHome() {
       alert('Please Accept Terms and Conditions');
     }
 
-
+  }
    
   };
 
@@ -2728,8 +2755,8 @@ function TelemedicineHome() {
                         <img
                           src={tempNut?.image || "/images/Rectangle 355.png"}
                           style={{ background: "#ffffff" }}
-                          width="50%"
-                          height="50%"
+                          width="30%"
+                          height="30%"
                         />{" "}
                         <br />
                         Name: {tempNut?.first_name} {tempNut?.last_name}
