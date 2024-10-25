@@ -1,11 +1,16 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
+import Accordion from "@mui/material/Accordion";
+import AccordionActions from "@mui/material/AccordionActions";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
 import LinearProgress, {
   linearProgressClasses,
 } from "@mui/material/LinearProgress";
@@ -47,9 +52,209 @@ import AxiosInstance from "../forms/AxiosInstance";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import dayjs from "dayjs";
 import ColorContext from "../ColorContext"; // Import the context
-import ImageContext from "../ImageContext";
+import axios from "axios";
+import _ from "lodash";
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function FoodJournalHome() {
+  dayjs.extend(isSameOrBefore);
+  dayjs.extend(isSameOrAfter);
+
+  //? random number generator
+  const generateRandomNumber = (max) => {
+    return Math.floor(Math.random() * (max + 1));
+  };
+  //?
+
+  //? api infor
+  const EDAMAM_APP_ID = "a91422a3";
+  const EDAMAM_APP_KEY = "98019bc3768ed14abc6be04432e9d8e3";
+
+  //?
+  //? blood pressure range
+
+  const [BPRange, setBPRange] = useState(["Normal Blood Pressure", "#4DDA5B"])
+  const getBPRange = (sys, dia) => {
+    let range; 
+    let num = generateRandomNumber(5)
+    console.log(sys, dia)
+    let normal = ["Maintain a Balanced Diet", 
+      "Stay Active",
+      "Manage Stress",
+      "Limit Alcohol",
+      "Maintain a Healthy Weight",
+    ]
+    let elevate = [
+      "Reduce Sodium Intake", 
+      "Exercise Regularly",
+      "Monitor Your Diet",
+      "Monitor Your Diet",
+      "Limit Caffeine",
+    ]
+    let stage1 = [
+      "Cut Down on Salt", 
+      "Adopt the DASH Diet",
+      "Get Active",
+      "Monitor Blood Pressure",
+      "Limit Alcohol and Quit Smoking",
+    ]
+    let stage2 = [
+      "Consult Your Healthcare Provider", 
+      "Follow a Strict Low-Sodium Diet",
+      "Follow Prescribed Treatment",
+      "Focus on Heart-Healthy Activities",
+      "Prioritize Stress Management",
+      "Quit Smoking and Limit Alcohol:",
+    ]
+    if (sys < 120 && dia < 80) {
+      setBPRange(["Normal Blood Pressure", "#4DDA5B", normal[num]]);
+      return ["Normal Blood Pressure", "#4DDA5B", normal[num]];
+    } 
+    else if (sys >= 120 && sys <= 129 && dia < 80) {
+      setBPRange(["Elevated Blood Pressure", "#F2CC01", elevate[num]]);
+      return ["Elevated Blood Pressure", "#F2CC01", elevate[num]];
+    } 
+    else if ((sys >= 130 && sys <= 139) || (dia >= 80 && dia <= 89)) {
+      setBPRange(["Stage 1 Hypertension", "#ED7014", stage1[num]]);
+      return ["Stage 1 Hypertension", "#ED7014", stage1[num]];
+    } 
+    else if (sys >= 140 || dia >= 90) {
+      setBPRange(["Stage 2 Hypertension", "#FF0000", stage2[num]]); 
+      return ["Stage 2 Hypertension", "#FF0000", stage2[num]];
+    }
+    
+
+  }
+
+  //?
+
+
+
+  //? BP recommendation algorithm
+
+  const getTips = () => {
+    
+    if (sys <= 120 && dia <= 80) {
+      return ["Normal Blood Pressure", "#4DDA5B"]
+     }
+ 
+     else if (sys <= 129 || sys >= 120 && dia <= 80) {
+       return  ["Elevated Blood Pressure", "#F2CC01"]
+     }
+ 
+     else if (sys <= 139 || sys >= 130 && dia <= 89 || dia >= 80) {
+       return  ["Stage 1 Hypertension", "#ED7014"]
+     }
+ 
+     else if (sys >= 140 && dia >= 90) {
+      return ["Stage 2 Hypertension", "#FF0000"]
+     }
+  }
+
+  //?
+
+// fetchMealSuggestionsBP
+
+//getBPRange(parseInt(journalEntry[0]?.systolic), parseInt(journalEntry[0]?.diastolic))[0]
+  //? meal recommendation for with BP
+
+  const [caloriesConsidered, setCaloriesConsidered] = useState(1600)
+  const [BPMealsLoading, setBPMealsLoading] = useState(false)
+  const [mealBPRecommendations, setMealBPRecommendations] = useState([])
+  let type = "breakfast"
+  let arrayType = ["breakfast", "lunch", "snack", "dinner"]
+  const fetchMealSuggestionsBP = useCallback(
+    _.debounce(async (category) => {
+      // if (!query) {
+      //  // setSuggestionsHypertension([]);
+      //   return;
+      // }
+
+      setBPMealsLoading(true);
+      try {
+
+        //q=&dishType=main&mealType=${type}&health=DASH&diet=low-sodium&calories=${caloriesConsidered}
+        //q=&dishType=main&mealType=${type}&diet=low-sodium&calories=${caloriesConsidered}
+        //q=&dishType=main&mealType=${type}&calories=${caloriesConsidered}
+        // API request to Edamam to search for recipes
+        let link;
+
+        switch (category) {
+          case "Normal Blood Pressure":
+            link = `q=&dishType=main&calories=${caloriesConsidered}&` 
+            break;
+          case "Elevated Blood Pressure":
+            link = `q=&dishType=main&diet=low-sodium&calories=${caloriesConsidered}&`
+            break;
+          case "Stage 1 Hypertension":
+            link = `q=&dishType=main&health=DASH&diet=low-sodium&calories=${caloriesConsidered}&`
+            break;
+          case "Stage 2 Hypertension":
+             link = `q=&dishType=main&health=DASH&diet=low-sodium&calories=${caloriesConsidered}&`
+            break;
+          }
+
+        let tempArr = []
+
+        // arrayType.map((item) => (
+        //   axios.get(`https://api.edamam.com/search?app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}&from=1&to=100&` + link + `&mealType=${item}`).then((res) => {
+            
+        //     tempArray.push({type: item, meals: res.data.hits.map((hit) => hit.recipe)})
+        //     console.log({type: item, meals: res.data.hits.map((hit) => hit.recipe)})
+        //   })
+
+        // ))
+
+        const requests = arrayType.map((item) =>
+          axios.get(
+            `https://api.edamam.com/search?app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}&from=1&to=100&` +
+            link +
+            `mealType=${item}`
+          )
+        );
+
+         // Wait for all promises to resolve
+         const responses = await Promise.all(requests);
+
+         // Process the responses and set state
+         const tempArray = responses.map((res, index) => ({
+           type: arrayType[index],
+           meals: res.data.hits.map((hit) => hit.recipe),
+         }));
+ 
+         setMealBPRecommendations(tempArray);
+
+      
+        
+        // const response = await axios.get(
+        //   `https://api.edamam.com/search?app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}&from=1&to=100&` + link
+          
+        // );
+
+
+        // Update the suggestions list with fetched data
+        //setTempDataHypertension(response.data.hits.map((hit) => hit.recipe))
+      //setMealBPRecommendations(response.data.hits.map((hit) => hit.recipe));
+      } catch (error) {
+        console.error("Error fetching meal suggestions:", error);
+      } finally {
+        setBPMealsLoading(false);
+      }
+    }, 500), // Debounce delay (500 ms)
+    []
+  );
+  //?
+
+
+
+  //? meal recommendation base on calories 
+
+  //?
   //! tabs
   const [forceRender, setForceRender] = useState(0);  // Initialize a dummy state
   const [selectedMealPlan, setSelectedMealPlan] = useState();
@@ -81,7 +286,7 @@ function FoodJournalHome() {
   ];
   //!
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
-  const { logo, setLogo } = useContext(ImageContext);
+  //const { logo, setLogo } = useContext(ImageContext);
   const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
     useContext(ColorContext);
 
@@ -141,7 +346,7 @@ function FoodJournalHome() {
                   .map((item1) => tempMealstalaga.push(item1))
                 //)
               );
-              console.log(tempMealstalaga);
+              // console.log(tempMealstalaga);
               setShopMeal(tempMealstalaga);
             });
           } catch (error) {
@@ -161,15 +366,15 @@ function FoodJournalHome() {
       try {
         AxiosInstance.get(`recommendmeal`).then((respo) => {
           let tempMealstalaga = [];
-          console.log(res.data);
+     
           res.data.map(
             (item1) => (
-              console.log(
-                respo.data?.filter(
-                  (items) =>
-                    items.recommend_mealplan_id === item1.recommend_mealplan_id
-                )
-              ),
+              // console.log(
+              //   respo.data?.filter(
+              //     (items) =>
+              //       items.recommend_mealplan_id === item1.recommend_mealplan_id
+              //   )
+              // ),
               //   tempMealstalaga.push(
               respo.data
                 ?.filter(
@@ -180,7 +385,7 @@ function FoodJournalHome() {
               // )
             )
           );
-          console.log(tempMealstalaga);
+         
           //setRecommendMeal(tempMealstalaga);
           setRecommendMeal(tempMealstalaga);
         });
@@ -189,16 +394,105 @@ function FoodJournalHome() {
       }
     });
   };
-  console.log(shopMeal);
+ 
 
-  const getJournalData = async (day) => {
+  const [currentJournalData, setCurrentJournalData] = useState()
+  const [currentFoodData, setCurrentFoodData] = useState([])
+  const [profilingData, setProfilingData] = useState()
+  const getCurrentData = async (day) => {
+    AxiosInstance.get(`profiling`).then((respon) => {
+      setProfilingData(respon.data.find((item) => item.user_id_id === loggedInUser.user_id))
+
+    }) 
+   
     await AxiosInstance.get(`journalentry`).then((res) => {
+
+      let journalData = res.data?.filter(
+        (item) => item.user_id == loggedInUser.user_id
+      )
+      let currentDate = res.data?.find(
+        (item) => item.date == day && item.user_id == loggedInUser.user_id
+      )
+      
+      if(currentDate){
+        setCurrentJournalData(currentDate)
+
+        AxiosInstance.get(`foodentry`).then((respo) => {
+          setCurrentFoodData(respo.data?.filter((item) => item.journal_id == currentDate.journal_id)); 
+
+          try {
+            AxiosInstance.get(`foodentry`).then((res) => {
+
+              setCurrentFoodData(res.data.filter((item) => item.journal_id_id === currentDate.journal_id))
+            })
+          } catch (error){
+           // setFoodEntry([]);
+           console.log(error)
+          }
+        })
+      }
+
+      else {
+        let entries = journalData.filter((item) => item.user_id === loggedInUser.user_id).sort((a, b) => new Date(b.date))
+        
+
+
+        if (entries) {
+          setCurrentJournalData(entries[0])
+          try {
+            AxiosInstance.get(`foodentry`).then((res) => {
+
+              setCurrentFoodData(res.data.filter((item) => item.journal_id_id === entries[0].journal_id))
+            })
+          } catch {
+           // setFoodEntry([]); 
+          }
+        }
+        else {
+          AxiosInstance.get(`profiling`).then((respon) => {
+            setCurrentJournalData(respon.data.find((item) => item.user_id_id === loggedInUser.user_id))
+      
+          })
+         
+
+        }
+      }
+
+
+     
+    })
+  }
+const [selectedDates, setSelectedDates] = useState()
+  const getJournalData = async (day) => {
+    setSelectedDates(day)
+    getCurrentData(day)
+    await AxiosInstance.get(`journalentry`).then((res) => {
+
+      
       setJournalEntry(
         res.data?.filter(
           (item) => item.date == day && item.user_id == loggedInUser.user_id
         )
       );
 
+      // console.log(res.data, res.data?.find(
+      //   (item) => item.date == day && item.user_id == loggedInUser.user_id
+      // ), getBPRange(parseInt(res.data?.find(
+      //   (item) => item.date == day && item.user_id == loggedInUser.user_id
+      // )?.systolic), parseInt(res.data?.find(
+      //   (item) => item.date == day && item.user_id == loggedInUser.user_id
+      // )?.diastolic)))
+
+      getBPRange(parseInt(res.data?.find(
+          (item) => item.date == day && item.user_id == loggedInUser.user_id
+        )?.systolic), parseInt(res.data?.find(
+          (item) => item.date == day && item.user_id == loggedInUser.user_id
+        )?.diastolic))
+      // fetchMealSuggestionsBP(getBPRange(parseInt(res.data?.find(
+      //   (item) => item.date == day && item.user_id == loggedInUser.user_id
+      // )?.systolic), parseInt(res.data?.find(
+      //   (item) => item.date == day && item.user_id == loggedInUser.user_id
+      // )?.diastolic))[0])
       // console.log(
       //   res.data.filter(
       //     (items) => items.date == day && items.user_id == loggedInUser.user_id
@@ -251,15 +545,31 @@ function FoodJournalHome() {
 
   useEffect(() => {
     getJournalData(dayjs().format("YYYY-MM-DD"));
+   // fetchMealSuggestionsBP(BPRange[0])
     //  console.log(journalEntry);
     getData();
+    getCurrentData()
+    getDietRecommendations(true)
+    generateWeeklyReport()
   }, []);
 
+  const [randomNumberbreakfast, setRandomNumberbreakfast] = useState(0)
+  const [randomNumberlunch, setRandomNumberlunch] = useState(0)
+  const [randomNumbersnack, setRandomNumbersnack] = useState(0)
+  const [randomNumberdinner, setRandomNumberdinner] = useState(0)
   useEffect(() => {
     //getfoodEntryData(journalEntry.journal_id);
-    // console.log(foodEntry);
+    console.log("slay");
+  //fetchMealSuggestionsBP(BPRange[0])
+  generateWeeklyReport(selectedDates)
+  setRandomNumberbreakfast(generateRandomNumber(30))
+  setRandomNumberlunch(generateRandomNumber(30))
+  setRandomNumbersnack(generateRandomNumber(30))
+  setRandomNumberdinner(generateRandomNumber(30))
+  getDietRecommendations(true)
   }, [journalEntry]);
   //!
+
 
   //! try
   const [date, setDate] = useState(new Date());
@@ -1185,32 +1495,51 @@ function FoodJournalHome() {
 
   // TODO slider
 
-  const [dinnerFood, setDinnerFood] = useState(null);
+  //const [dinnerFood, setDinnerFood] = useState(null);
   const Input = styled(MuiInput)`
     width: 42px;
   `;
 
   const [value, setValue] = React.useState(0);
 
+  const [breakfastFood, setBreakfastFood] = useState("")
+  const [lunchFood, setLunchFood] = useState("")
+  const [snackFood, setSnackFood] = useState("")
+  const [dinnerFood, setDinnerFood] = useState("")
+
+  const [breakfastFoodImage, setBreakfastFoodImage] = useState("/images/food.png")
+  const [lunchFoodImage, setLunchFoodImage] = useState("/images/food.png")
+  const [snackFoodImage, setSnackFoodImage] = useState("/images/food.png")
+  const [dinnerFoodImage, setDinnerFoodImage] = useState("/images/food.png")
+
+
   const [caloriesBvalue, setCaloriesBvalue] = React.useState(0);
   const [fatBvalue, setFatBvalue] = React.useState(0);
   const [proteinBvalue, setProteinBvalue] = React.useState(0);
   const [carbsBvalue, setCarbsBvalue] = React.useState(0);
+  const [sodiumBvalue, setSodiumBvalue] = React.useState(0);
+  const [potassiumBvalue, setPotassiumBvalue] = React.useState(0);
 
   const [caloriesLvalue, setCaloriesLvalue] = React.useState(0);
   const [fatLvalue, setFatLvalue] = React.useState(0);
   const [proteinLvalue, setProteinLvalue] = React.useState(0);
   const [carbsLvalue, setCarbsLvalue] = React.useState(0);
+  const [sodiumLvalue, setSodiumLvalue] = React.useState(0);
+  const [potassiumLvalue, setPotassiumLvalue] = React.useState(0);
 
   const [caloriesSvalue, setCaloriesSvalue] = React.useState(0);
   const [fatSvalue, setFatSvalue] = React.useState(0);
   const [proteinSvalue, setProteinSvalue] = React.useState(0);
   const [carbsSvalue, setCarbsSvalue] = React.useState(0);
+  const [sodiumSvalue, setSodiumSvalue] = React.useState(0);
+  const [potassiumSvalue, setPotassiumSvalue] = React.useState(0);
 
   const [caloriesDvalue, setCaloriesDvalue] = React.useState(0);
   const [fatDvalue, setFatDvalue] = React.useState(0);
   const [proteinDvalue, setProteinDvalue] = React.useState(0);
   const [carbsDvalue, setCarbsDvalue] = React.useState(0);
+  const [sodiumDvalue, setSodiumDvalue] = React.useState(0);
+  const [potassiumDvalue, setPotassiumDvalue] = React.useState(0);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
@@ -1252,6 +1581,18 @@ function FoodJournalHome() {
   const handleCarbsBInputChange = (event) => {
     setCarbsBvalue(event.target.value === "" ? 0 : Number(event.target.value));
   };
+  const handleSodiumBSliderChange = (event, newValue) => {
+    setSodiumBvalue(newValue);
+  };
+  const handleSodiumBInputChange = (event) => {
+    setSodiumBvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+  const handlePotassiumBSliderChange = (event, newValue) => {
+    setPotassiumBvalue(newValue);
+  };
+  const handlePotassiumBInputChange = (event) => {
+    setPotassiumBvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
 
   const handleBlur = () => {
     if (value < 0) {
@@ -1264,32 +1605,48 @@ function FoodJournalHome() {
   const handleCaloriesBBlur = () => {
     if (caloriesBvalue < 0) {
       setCaloriesBvalue(0);
-    } else if (caloriesBvalue > 1000) {
-      setCaloriesBvalue(1000);
+    } else if (caloriesBvalue > 10000) {
+      setCaloriesBvalue(10000);
     }
   };
 
   const handleFatBBlur = () => {
     if (fatBvalue < 0) {
       setFatBvalue(0);
-    } else if (fatBvalue > 1000) {
-      setFatBvalue(1000);
+    } else if (fatBvalue > 10000) {
+      setFatBvalue(10000);
     }
   };
 
   const handleProteinBBlur = () => {
     if (proteinBvalue < 0) {
       setProteinBvalue(0);
-    } else if (proteinBvalue > 1000) {
-      setProteinBvalue(1000);
+    } else if (proteinBvalue > 10000) {
+      setProteinBvalue(10000);
     }
   };
 
   const handleCarbsBBlur = () => {
     if (carbsBvalue < 0) {
       setCarbsBvalue(0);
-    } else if (carbsBvalue > 1000) {
-      setCarbsBvalue(1000);
+    } else if (carbsBvalue > 10000) {
+      setCarbsBvalue(10000);
+    }
+  };
+
+  const handleSodiumBBlur = () => {
+    if (sodiumBvalue < 0) {
+      setSodiumBvalue(0);
+    } else if (sodiumBvalue > 10000) {
+      setSodiumBvalue(10000);
+    }
+  };
+
+  const handlePotassiumBBlur = () => {
+    if (potassiumBvalue < 0) {
+      setPotassiumBvalue(0);
+    } else if (potassiumBvalue > 10000) {
+      setPotassiumBvalue(10000);
     }
   };
 
@@ -1325,6 +1682,19 @@ function FoodJournalHome() {
     setCarbsLvalue(event.target.value === "" ? 0 : Number(event.target.value));
   };
 
+  const handleSodiumLSliderChange = (event, newValue) => {
+    setSodiumLvalue(newValue);
+  };
+  const handleSodiumLInputChange = (event) => {
+    setSodiumLvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+  const handlePotassiumLSliderChange = (event, newValue) => {
+    setPotassiumLvalue(newValue);
+  };
+  const handlePotassiumLInputChange = (event) => {
+    setPotassiumLvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
   // const handleBlur = () => {
   //   if (value < 0) {
   //     setValue(0);
@@ -1336,32 +1706,49 @@ function FoodJournalHome() {
   const handleCaloriesLBlur = () => {
     if (caloriesLvalue < 0) {
       setCaloriesLvalue(0);
-    } else if (caloriesLvalue > 1000) {
-      setCaloriesLvalue(1000);
+    } else if (caloriesLvalue > 10000) {
+      setCaloriesLvalue(10000);
     }
   };
 
   const handleFatLBlur = () => {
     if (fatLvalue < 0) {
       setFatLvalue(0);
-    } else if (fatLvalue > 1000) {
-      setFatLvalue(1000);
+    } else if (fatLvalue > 10000) {
+      setFatLvalue(10000);
     }
   };
 
   const handleProteinLBlur = () => {
     if (proteinLvalue < 0) {
       setProteinLvalue(0);
-    } else if (proteinLvalue > 1000) {
-      setProteinLvalue(1000);
+    } else if (proteinLvalue > 10000) {
+      setProteinLvalue(10000);
     }
   };
 
   const handleCarbsLBlur = () => {
     if (carbsLvalue < 0) {
       setCarbsLvalue(0);
-    } else if (carbsLvalue > 1000) {
-      setCarbsLvalue(1000);
+    } else if (carbsLvalue > 10000) {
+      setCarbsLvalue(10000);
+    }
+  };
+
+
+  const handleSodiumLBlur = () => {
+    if (sodiumLvalue < 0) {
+      setSodiumLvalue(0);
+    } else if (sodiumLvalue > 10000) {
+      setSodiumLvalue(10000);
+    }
+  };
+
+  const handlePotassiumLBlur = () => {
+    if (potassiumLvalue < 0) {
+      setPotassiumLvalue(0);
+    } else if (potassiumLvalue > 10000) {
+      setPotassiumLvalue(10000);
     }
   };
 
@@ -1397,35 +1784,65 @@ function FoodJournalHome() {
     setCarbsSvalue(event.target.value === "" ? 0 : Number(event.target.value));
   };
 
+
+  const handleSodiumSSliderChange = (event, newValue) => {
+    setSodiumSvalue(newValue);
+  };
+  const handleSodiumSInputChange = (event) => {
+    setSodiumSvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+  const handlePotassiumSSliderChange = (event, newValue) => {
+    setPotassiumSvalue(newValue);
+  };
+  const handlePotassiumSInputChange = (event) => {
+    setPotassiumSvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
   const handleCaloriesSBlur = () => {
     if (caloriesSvalue < 0) {
       setCaloriesSvalue(0);
-    } else if (caloriesSvalue > 1000) {
-      setCaloriesSvalue(1000);
+    } else if (caloriesSvalue > 10000) {
+      setCaloriesSvalue(10000);
     }
   };
 
   const handleFatSBlur = () => {
     if (fatSvalue < 0) {
       setFatSvalue(0);
-    } else if (fatSvalue > 1000) {
-      setFatSvalue(1000);
+    } else if (fatSvalue > 10000) {
+      setFatSvalue(10000);
     }
   };
 
   const handleProteinSBlur = () => {
     if (proteinSvalue < 0) {
       setProteinSvalue(0);
-    } else if (proteinSvalue > 1000) {
-      setProteinSvalue(1000);
+    } else if (proteinSvalue > 10000) {
+      setProteinSvalue(10000);
     }
   };
 
   const handleCarbsSBlur = () => {
     if (carbsSvalue < 0) {
       setCarbsSvalue(0);
-    } else if (carbsSvalue > 1000) {
-      setCarbsSvalue(1000);
+    } else if (carbsSvalue > 10000) {
+      setCarbsSvalue(10000);
+    }
+  };
+
+  const handleSodiumSBlur = () => {
+    if (sodiumSvalue < 0) {
+      setSodiumSvalue(0);
+    } else if (sodiumSvalue > 10000) {
+      setSodiumSvalue(10000);
+    }
+  };
+
+  const handlePotassiumSBlur = () => {
+    if (potassiumSvalue < 0) {
+      setPotassiumSvalue(0);
+    } else if (potassiumSvalue > 10000) {
+      setPotassiumSvalue(10000);
     }
   };
 
@@ -1461,35 +1878,65 @@ function FoodJournalHome() {
     setCarbsDvalue(event.target.value === "" ? 0 : Number(event.target.value));
   };
 
+
+  const handleSodiumDSliderChange = (event, newValue) => {
+    setSodiumDvalue(newValue);
+  };
+  const handleSodiumDInputChange = (event) => {
+    setSodiumDvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+  const handlePotassiumDSliderChange = (event, newValue) => {
+    setPotassiumDvalue(newValue);
+  };
+  const handlePotassiumDInputChange = (event) => {
+    setPotassiumDvalue(event.target.value === "" ? 0 : Number(event.target.value));
+  };
+
   const handleCaloriesDBlur = () => {
     if (caloriesDvalue < 0) {
       setCaloriesDvalue(0);
-    } else if (caloriesDvalue > 1000) {
-      setCaloriesDvalue(1000);
+    } else if (caloriesDvalue > 10000) {
+      setCaloriesDvalue(10000);
     }
   };
 
   const handleFatDBlur = () => {
     if (fatDvalue < 0) {
       setFatDvalue(0);
-    } else if (fatDvalue > 1000) {
-      setFatDvalue(1000);
+    } else if (fatDvalue > 10000) {
+      setFatDvalue(10000);
     }
   };
 
   const handleProteinDBlur = () => {
     if (proteinDvalue < 0) {
       setProteinDvalue(0);
-    } else if (proteinDvalue > 1000) {
-      setProteinDvalue(100);
+    } else if (proteinDvalue > 10000) {
+      setProteinDvalue(10000);
     }
   };
 
   const handleCarbsDBlur = () => {
     if (carbsDvalue < 0) {
       setCarbsDvalue(0);
-    } else if (carbsDvalue > 1000) {
-      setCarbsDvalue(1000);
+    } else if (carbsDvalue > 10000) {
+      setCarbsDvalue(10000);
+    }
+  };
+
+  const handleSodiumDBlur = () => {
+    if (sodiumDvalue < 0) {
+      setSodiumDvalue(0);
+    } else if (sodiumDvalue > 10000) {
+      setSodiumDvalue(10000);
+    }
+  };
+
+  const handlePotassiumDBlur = () => {
+    if (potassiumDvalue < 0) {
+      setPotassiumDvalue(0);
+    } else if (potassiumDvalue > 10000) {
+      setPotassiumDvalue(10000);
     }
   };
   //?
@@ -1515,29 +1962,37 @@ function FoodJournalHome() {
     diastolic: yup.string(),
     meal_plan: yup.string(),
 
-    breakfast_food: yup.string(),
-    breakfast_calories: yup.string(),
-    breakfast_fat: yup.string(),
-    breakfast_protein: yup.string(),
-    breakfast_carbs: yup.string(),
+    // breakfast_food: yup.string(),
+    // breakfast_calories: yup.string(),
+    // breakfast_fat: yup.string(),
+    // breakfast_protein: yup.string(),
+    // breakfast_carbs: yup.string(),
+    // breakfast_sodium: yup.string(),
+    // breakfast_potassium: yup.string(),
 
-    lunch_food: yup.string(),
-    lunch_calories: yup.string(),
-    lunch_fat: yup.string(),
-    lunch_protein: yup.string(),
-    lunch_carbs: yup.string(),
+    // lunch_food: yup.string(),
+    // lunch_calories: yup.string(),
+    // lunch_fat: yup.string(),
+    // lunch_protein: yup.string(),
+    // lunch_carbs: yup.string(),
+    // lunch_sodium: yup.string(),
+    // lunch_potassium: yup.string(),
 
-    snack_food: yup.string(),
-    snack_calories: yup.string(),
-    snack_fat: yup.string(),
-    snack_protein: yup.string(),
-    snack_carbs: yup.string(),
+    // snack_food: yup.string(),
+    // snack_calories: yup.string(),
+    // snack_fat: yup.string(),
+    // snack_protein: yup.string(),
+    // snack_carbs: yup.string(),
+    // snack_sodium: yup.string(),
+    // snack_potassium: yup.string(),
 
-    dinner_food: yup.string(),
-    dinner_calories: yup.string(),
-    dinner_fat: yup.string(),
-    dinner_protein: yup.string(),
-    dinner_carbs: yup.string(),
+    // dinner_food: yup.string(),
+    // dinner_calories: yup.string(),
+    // dinner_fat: yup.string(),
+    // dinner_protein: yup.string(),
+    // dinner_carbs: yup.string(),
+    // dinner_sodium: yup.string(),
+    // dinner_potassium: yup.string(),
   });
 
   const {
@@ -1626,6 +2081,8 @@ function FoodJournalHome() {
                     protein: meals[0].protein,
                     carbs: meals[0].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1642,6 +2099,8 @@ function FoodJournalHome() {
                     protein: meals[1].protein,
                     carbs: meals[1].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1658,6 +2117,8 @@ function FoodJournalHome() {
                     protein: meals[2].protein,
                     carbs: meals[2].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1674,6 +2135,8 @@ function FoodJournalHome() {
                     protein: meals[3].protein,
                     carbs: meals[3].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1704,6 +2167,8 @@ function FoodJournalHome() {
                     protein: meals[0].protein,
                     carbs: meals[0].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1720,6 +2185,8 @@ function FoodJournalHome() {
                     protein: meals[1].protein,
                     carbs: meals[1].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1736,6 +2203,8 @@ function FoodJournalHome() {
                     protein: meals[2].protein,
                     carbs: meals[2].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1752,6 +2221,8 @@ function FoodJournalHome() {
                     protein: meals[3].protein,
                     carbs: meals[3].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                     if (i === 5) {
@@ -1937,6 +2408,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1967,6 +2440,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -1997,6 +2472,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2027,6 +2504,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                     if (i === 5) {
@@ -2082,6 +2561,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2112,6 +2593,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2143,6 +2626,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2173,6 +2658,8 @@ function FoodJournalHome() {
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
 
@@ -2250,6 +2737,8 @@ function FoodJournalHome() {
                     protein: meals[0].protein,
                     carbs: meals[0].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2266,6 +2755,8 @@ function FoodJournalHome() {
                     protein: meals[1].protein,
                     carbs: meals[1].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2282,6 +2773,8 @@ function FoodJournalHome() {
                     protein: meals[2].protein,
                     carbs: meals[2].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2298,6 +2791,8 @@ function FoodJournalHome() {
                     protein: meals[3].protein,
                     carbs: meals[3].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2328,6 +2823,8 @@ function FoodJournalHome() {
                     protein: meals[0].protein,
                     carbs: meals[0].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2344,6 +2841,8 @@ function FoodJournalHome() {
                     protein: meals[1].protein,
                     carbs: meals[1].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2360,6 +2859,8 @@ function FoodJournalHome() {
                     protein: meals[2].protein,
                     carbs: meals[2].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2376,6 +2877,8 @@ function FoodJournalHome() {
                     protein: meals[3].protein,
                     carbs: meals[3].carbs,
                     journal_id: res.data.id,
+                    sodium: 0,
+                    potassium: 0,
                   }).then((res) => {
                     console.log(res, res.data);
                     if (i === 5) {
@@ -2515,12 +3018,14 @@ function FoodJournalHome() {
           try {
             AxiosInstance.post(`foodentry/`, {
               type: "Breakfast",
-              food: data.breakfast_food,
-              calories: data.breakfast_calories,
-              fat: data.breakfast_fat,
-              protein: data.breakfast_protein,
-              carbs: data.breakfast_carbs,
+              food: breakfastFood,
+              calories: caloriesBvalue,
+              fat: fatBvalue,
+              protein: proteinBvalue,
+              carbs: carbsBvalue,
               journal_id: res.data.id,
+              sodium: sodiumBvalue,
+              potassium: potassiumBvalue,
             }).then((res) => {
               console.log(res, res.data);
             });
@@ -2531,12 +3036,14 @@ function FoodJournalHome() {
           try {
             AxiosInstance.post(`foodentry/`, {
               type: "Lunch",
-              food: data.lunch_food,
-              calories: data.lunch_calories,
-              fat: data.lunch_fat,
-              protein: data.lunch_protein,
-              carbs: data.lunch_carbs,
+              food: lunchFood,
+              calories: caloriesLvalue,
+              fat: fatLvalue,
+              protein: proteinLvalue,
+              carbs: carbsLvalue,
               journal_id: res.data.id,
+              sodium: sodiumLvalue,
+              potassium: potassiumLvalue,
             }).then((res) => {
               console.log(res, res.data);
             });
@@ -2547,12 +3054,14 @@ function FoodJournalHome() {
           try {
             AxiosInstance.post(`foodentry/`, {
               type: "Snack",
-              food: data.snack_food,
-              calories: data.snack_calories,
-              fat: data.snack_fat,
-              protein: data.snack_protein,
-              carbs: data.snack_carbs,
+              food: snackFood,
+              calories: caloriesSvalue,
+              fat: fatSvalue,
+              protein: proteinSvalue,
+              carbs: carbsSvalue,
               journal_id: res.data.id,
+              sodium: sodiumSvalue,
+              potassium: potassiumSvalue,
             }).then((res) => {
               console.log(res, res.data);
             });
@@ -2563,12 +3072,14 @@ function FoodJournalHome() {
           try {
             AxiosInstance.post(`foodentry/`, {
               type: "Dinner",
-              food: data.dinner_food,
-              calories: data.dinner_calories,
-              fat: data.dinner_fat,
-              protein: data.dinner_protein,
-              carbs: data.dinner_carbs,
+              food: dinnerFood,
+              calories: caloriesDvalue,
+              fat: fatDvalue,
+              protein: proteinDvalue,
+              carbs: carbsDvalue,
               journal_id: res.data.id,
+              sodium: sodiumDvalue,
+              potassium: potassiumDvalue,
             }).then((res) => {
               console.log(res, res.data);
 
@@ -2800,6 +3311,641 @@ function FoodJournalHome() {
     setFinalMealPlan();
   };
   //?
+
+
+  //? food recommendations breakfast
+  // State to hold the user input and suggestions
+  const [inputValue, setInputValue] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [tempData , setTempData] = useState([])
+
+  // Edamam API credentials (Replace with your actual credentials)
+ 
+
+  // Debounced function to fetch meal suggestions from Edamam API
+  const fetchMealSuggestions = useCallback(
+    _.debounce(async (query) => {
+      if (!query) {
+        setSuggestions([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // API request to Edamam to search for recipes
+        const response = await axios.get(
+          `https://api.edamam.com/search?q=${query}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
+        );
+
+        // Update the suggestions list with fetched data
+        setTempData(response.data.hits.map((hit) => hit.recipe))
+        setSuggestions(response.data.hits.map((hit) => hit.recipe.label));
+      } catch (error) {
+        console.error("Error fetching meal suggestions:", error);
+      } finally {
+        setLoading(false);
+      }
+    }, 500), // Debounce delay (500 ms)
+    []
+  );
+
+  // Handle input changes and trigger API request
+  const handleInputChanges = (e, type) => {
+    const value = e.target.value;
+ //   setInputValue(value);
+    fetchMealSuggestions(value);
+
+    if (type === "breakfast") {
+      setBreakfastFood(value)
+    }
+    if (type === "lunch") {
+      setLunchFood(value)
+    }
+    
+  };
+
+  const [ foods, setFoods] = useState()
+  // Handle selecting a suggestion
+  const handleSuggestionClick = (suggestion, index, type) => {
+
+
+    if (type === "breakfast") {
+      setBreakfastFood(suggestion)
+      setBreakfastFoodImage(tempData[index].image)
+      setCaloriesBvalue(parseInt(tempData[index].calories / tempData[index].yield))
+      setProteinBvalue(parseInt(tempData[index].digest[2].total))
+      setCarbsBvalue(parseInt(tempData[index].digest[1].total))
+      setFatBvalue(parseInt(tempData[index].digest[0].total))
+      setPotassiumBvalue(parseInt(tempData[index].digest[7].total))
+      setSodiumBvalue(parseInt(tempData[index].digest[4].total))
+    }
+    else if ( type === "lunch") {
+      setLunchFood(suggestion)
+    }
+
+
+   // setInputValue(suggestion);
+    console.log(suggestion, tempData[index])
+    setSuggestions([]);
+    setTempData([])
+    
+  };
+  //?
+
+//? food recommendations lunch Lunch
+  // State to hold the user input and suggestions
+  const [inputValueLunch, setInputValueLunch] = useState("");
+  const [suggestionsLunch, setSuggestionsLunch] = useState([]);
+  const [loadingLunch, setLoadingLunch] = useState(false);
+  const [tempDataLunch , setTempDataLunch] = useState([])
+
+  // Edamam API credentials (Replace with your actual credentials)
+ 
+
+  // Debounced function to fetch meal suggestions from Edamam API
+  const fetchMealSuggestionsLunch = useCallback(
+    _.debounce(async (query) => {
+      if (!query) {
+        setSuggestionsLunch([]);
+        return;
+      }
+
+      setLoadingLunch(true);
+      try {
+        // API request to Edamam to search for recipes
+        const response = await axios.get(
+          `https://api.edamam.com/search?q=${query}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
+        );
+
+        // Update the suggestions list with fetched data
+        setTempDataLunch(response.data.hits.map((hit) => hit.recipe))
+        setSuggestionsLunch(response.data.hits.map((hit) => hit.recipe.label));
+      } catch (error) {
+        console.error("Error fetching meal suggestions:", error);
+      } finally {
+        setLoadingLunch(false);
+      }
+    }, 500), // Debounce delay (500 ms)
+    []
+  );
+
+  // Handle input changes and trigger API request
+  const handleInputChangesLunch = (e, type) => {
+    const value = e.target.value;
+ //   setInputValue(value);
+    fetchMealSuggestionsLunch(value);
+    setLunchFood(value)
+    // if (type === "breakfast") {
+    //   setBreakfastFood(value)
+    // }
+    // else if (type === "lunch") {
+    //   setLunchFood(value)
+    // }
+    
+  };
+
+ // const [ foods, setFoods] = useState()
+  // Handle selecting a suggestion
+  const handleSuggestionClickLunch = (suggestion, index, type) => {
+
+
+    // if (type === "breakfast") {
+    //   setBreakfastFood(suggestion)
+    //   setCaloriesBvalue(tempData[index].calories / tempData[index].yield)
+    //   setProteinBvalue(parseInt(tempData[index].digest[2].total))
+    //   setCarbsBvalue(parseInt(tempData[index].digest[1].total))
+    //   setFatBvalue(parseInt(tempData[index].digest[0].total))
+    //   setPotassiumBvalue(parseInt(tempData[index].digest[7].total))
+    //   setSodiumBvalue(parseInt(tempData[index].digest[4].total))
+    // }
+    if ( type === "lunch") {
+      setLunchFood(suggestion)
+    }
+
+
+   // setInputValue(suggestion);
+
+      setLunchFood(suggestion)
+      setLunchFoodImage(tempDataLunch[index].image)
+      setCaloriesLvalue(parseInt(tempDataLunch[index].calories / tempDataLunch[index].yield))
+      setProteinLvalue(parseInt(tempDataLunch[index].digest[2].total))
+      setCarbsLvalue(parseInt(tempDataLunch[index].digest[1].total))
+      setFatLvalue(parseInt(tempDataLunch[index].digest[0].total))
+      setPotassiumLvalue(parseInt(tempDataLunch[index].digest[7].total))
+      setSodiumLvalue(parseInt(tempDataLunch[index].digest[4].total))
+    console.log(suggestion, tempDataLunch[index])
+    setSuggestionsLunch([]);
+    setTempDataLunch([])
+    
+  };
+  //?
+
+  //? food recommendations Snack
+  // State to hold the user input and suggestions
+  const [inputValueSnack, setInputValueSnack] = useState("");
+  const [suggestionsSnack, setSuggestionsSnack] = useState([]);
+  const [loadingSnack, setLoadingSnack] = useState(false);
+  const [tempDataSnack , setTempDataSnack] = useState([])
+
+  // Edamam API credentials (Replace with your actual credentials)
+ 
+
+  // Debounced function to fetch meal suggestions from Edamam API
+  const fetchMealSuggestionsSnack = useCallback(
+    _.debounce(async (query) => {
+      if (!query) {
+        setSuggestionsSnack([]);
+        return;
+      }
+
+      setLoadingSnack(true);
+      try {
+        // API request to Edamam to search for recipes
+        const response = await axios.get(
+          `https://api.edamam.com/search?q=${query}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
+        );
+
+        // Update the suggestions list with fetched data
+        setTempDataSnack(response.data.hits.map((hit) => hit.recipe))
+        setSuggestionsSnack(response.data.hits.map((hit) => hit.recipe.label));
+      } catch (error) {
+        console.error("Error fetching meal suggestions:", error);
+      } finally {
+        setLoadingSnack(false);
+      }
+    }, 500), // Debounce delay (500 ms)
+    []
+  );
+
+  // Handle input changes and trigger API request
+  const handleInputChangesSnack = (e, type) => {
+    const value = e.target.value;
+ //   setInputValue(value);
+    fetchMealSuggestionsSnack(value);
+    setSnackFood(value)
+    // if (type === "breakfast") {
+    //   setBreakfastFood(value)
+    // }
+    // else if (type === "lunch") {
+    //   setLunchFood(value)
+    // }
+    
+  };
+
+ // const [ foods, setFoods] = useState()
+  // Handle selecting a suggestion
+  const handleSuggestionClickSnack = (suggestion, index, type) => {
+
+
+    // if (type === "breakfast") {
+    //   setBreakfastFood(suggestion)
+    //   setCaloriesBvalue(tempData[index].calories / tempData[index].yield)
+    //   setProteinBvalue(parseInt(tempData[index].digest[2].total))
+    //   setCarbsBvalue(parseInt(tempData[index].digest[1].total))
+    //   setFatBvalue(parseInt(tempData[index].digest[0].total))
+    //   setPotassiumBvalue(parseInt(tempData[index].digest[7].total))
+    //   setSodiumBvalue(parseInt(tempData[index].digest[4].total))
+    // }
+ 
+      setSnackFood(suggestion)
+      setSnackFood(suggestion)
+      setSnackFoodImage(tempDataSnack[index].image)
+      setCaloriesSvalue(parseInt(tempDataSnack[index].calories / tempDataSnack[index].yield))
+      setProteinSvalue(parseInt(tempDataSnack[index].digest[2].total))
+      setCarbsSvalue(parseInt(tempDataSnack[index].digest[1].total))
+      setFatSvalue(parseInt(tempDataSnack[index].digest[0].total))
+      setPotassiumSvalue(parseInt(tempDataSnack[index].digest[7].total))
+      setSodiumSvalue(parseInt(tempDataSnack[index].digest[4].total))
+
+
+   // setInputValue(suggestion);
+    console.log(suggestion, tempDataSnack[index])
+    setSuggestionsSnack([]);
+    setTempDataSnack([])
+    
+  };
+  //?
+
+    //? food recommendations Dinner
+  // State to hold the user input and suggestions
+  const [inputValueDinner, setInputValueDinner] = useState("");
+  const [suggestionsDinner, setSuggestionsDinner] = useState([]);
+  const [loadingDinner, setLoadingDinner] = useState(false);
+  const [tempDataDinner , setTempDataDinner] = useState([])
+
+  // Edamam API credentials (Replace with your actual credentials)
+ 
+
+  // Debounced function to fetch meal suggestions from Edamam API
+  const fetchMealSuggestionsDinner = useCallback(
+    _.debounce(async (query) => {
+      if (!query) {
+        setSuggestionsDinner([]);
+        return;
+      }
+
+      setLoadingDinner(true);
+      try {
+        // API request to Edamam to search for recipes
+        const response = await axios.get(
+          `https://api.edamam.com/search?q=${query}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
+        );
+
+        // Update the suggestions list with fetched data
+        setTempDataDinner(response.data.hits.map((hit) => hit.recipe))
+        setSuggestionsDinner(response.data.hits.map((hit) => hit.recipe.label));
+      } catch (error) {
+        console.error("Error fetching meal suggestions:", error);
+      } finally {
+        setLoadingDinner(false);
+      }
+    }, 500), // Debounce delay (500 ms)
+    []
+  );
+
+  // Handle input changes and trigger API request
+  const handleInputChangesDinner = (e, type) => {
+    const value = e.target.value;
+ //   setInputValue(value);
+    fetchMealSuggestionsDinner(value);
+    setDinnerFood(value)
+    // if (type === "breakfast") {
+    //   setBreakfastFood(value)
+    // }
+    // else if (type === "lunch") {
+    //   setLunchFood(value)
+    // }
+    
+  };
+
+ // const [ foods, setFoods] = useState()
+  // Handle selecting a suggestion
+  const handleSuggestionClickDinner = (suggestion, index, type) => {
+
+
+    // if (type === "breakfast") {
+    //   setBreakfastFood(suggestion)
+    //   setCaloriesBvalue(tempData[index].calories / tempData[index].yield)
+    //   setProteinBvalue(parseInt(tempData[index].digest[2].total))
+    //   setCarbsBvalue(parseInt(tempData[index].digest[1].total))
+    //   setFatBvalue(parseInt(tempData[index].digest[0].total))
+    //   setPotassiumBvalue(parseInt(tempData[index].digest[7].total))
+    //   setSodiumBvalue(parseInt(tempData[index].digest[4].total))
+    // }
+ 
+      setDinnerFood(suggestion)
+   
+      setDinnerFoodImage(tempDataDinner[index].image)
+      setCaloriesDvalue(parseInt(tempDataDinner[index].calories / tempDataDinner[index].yield))
+      setProteinDvalue(parseInt(tempDataDinner[index].digest[2].total))
+      setCarbsDvalue(parseInt(tempDataDinner[index].digest[1].total))
+      setFatDvalue(parseInt(tempDataDinner[index].digest[0].total))
+      setPotassiumDvalue(parseInt(tempDataDinner[index].digest[7].total))
+      setSodiumDvalue(parseInt(tempDataDinner[index].digest[4].total))
+
+
+   // setInputValue(suggestion);
+    console.log(suggestion, tempDataDinner[index])
+    setSuggestionsDinner([]);
+    setTempDataDinner([])
+    
+  };
+  //?
+
+  // ? with hypertension sugestion meals
+
+    // State to hold the user input and suggestions
+    const [inputHypertensionValue, setInputHypertensionValue] = useState("");
+    const [suggestionsHypertension, setSuggestionsHypertension] = useState([]);
+    const [loadingHypertension, setLoadingHypertension] = useState(false);
+    const [tempDataHypertension , setTempDataHypertension] = useState([])
+  
+    // Edamam API credentials (Replace with your actual credentials)
+   
+    // Debounced function to fetch meal suggestions from Edamam API
+    const fetchMealSuggestionsHypertension = useCallback(
+      _.debounce(async (query) => {
+        if (!query) {
+          setSuggestionsHypertension([]);
+          return;
+        }
+  
+        setLoadingHypertension(true);
+        try {
+          // API request to Edamam to search for recipes
+          const response = await axios.get(
+            `https://api.edamam.com/search?q=${query}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
+          );
+  
+          // Update the suggestions list with fetched data
+          setTempDataHypertension(response.data.hits.map((hit) => hit.recipe))
+          setSuggestionsHypertension(response.data.hits.map((hit) => hit.recipe.label));
+        } catch (error) {
+          console.error("Error fetching meal suggestions:", error);
+        } finally {
+          setLoadingHypertension(false);
+        }
+      }, 500), // Debounce delay (500 ms)
+      []
+    );
+  
+    // Handle input changes and trigger API request
+    const handleInputChangesHypertension = (e) => {
+      const value = e.target.value;
+      setInputHypertensionValue(value);
+      fetchMealSuggestionsHypertension(value);
+      
+    };
+  
+    // Handle selecting a suggestion
+    const handleSuggestionClickHypertension = (suggestion, index) => {
+      setInputHypertensionValue(suggestion);
+      console.log(suggestion, tempDataHypertension[index])
+      setSuggestionsHypertension([]);
+      setTempDataHypertension([])
+      
+    };
+
+    const [BPRecommendations, setBPRecommendations] = useState([])
+  //? BP algorithms
+    const getBPRecommendations = () => {
+      //! from previous entries
+
+      //! kapag walang previous entries dapat yun base sa profiling
+      
+      if (BPRange[0] === "Normal Blood Pressure") {
+        setBPRecommendations(["Maintain a Balanced Diet", 
+                              "Stay Active",
+                              "Manage Stress",
+                              "Limit Alcohol",
+                              "Maintain a Healthy Weight",
+                            ])
+        return ["Maintain a Balanced Diet", 
+          "Stay Active",
+          "Manage Stress",
+          "Limit Alcohol",
+          "Maintain a Healthy Weight",
+        ]
+      }
+      else if (BPRange[0] === "Elevated Blood Pressure") {
+        setBPRecommendations([
+          "Reduce Sodium Intake", 
+          "Exercise Regularly",
+          "Monitor Your Diet",
+          "Monitor Your Diet",
+          "Limit Caffeine",
+        ])
+
+        return [
+          "Reduce Sodium Intake", 
+          "Exercise Regularly",
+          "Monitor Your Diet",
+          "Monitor Your Diet",
+          "Limit Caffeine",
+        ]
+      }
+      else if (BPRange[0] === "Stage 1 Hypertension") {
+        setBPRecommendations([
+          "Cut Down on Salt", 
+          "Adopt the DASH Diet",
+          "Get Active",
+          "Monitor Blood Pressure",
+          "Limit Alcohol and Quit Smoking",
+        ])
+
+        return [
+          "Cut Down on Salt", 
+          "Adopt the DASH Diet",
+          "Get Active",
+          "Monitor Blood Pressure",
+          "Limit Alcohol and Quit Smoking",
+        ]
+      }
+      else if (BPRange[0] === "Stage 2 Hypertension") {
+        setBPRecommendations([
+          "Consult Your Healthcare Provider", 
+          "Strict Low-Sodium Diet",
+          "Follow Prescribed Treatment",
+          "Focus on Heart-Healthy Activities",
+          "Prioritize Stress Management",
+          "Quit Smoking and Limit Alcohol:",
+        ])
+
+        return [
+          "Consult Your Healthcare Provider", 
+          "Strict Low-Sodium Diet",
+          "Follow Prescribed Treatment",
+          "Focus on Heart-Healthy Activities",
+          "Prioritize Stress Management",
+          "Quit Smoking and Limit Alcohol:",
+        ]
+      }
+    }
+  //?
+
+  const [dayRecommendationDiv, setDayRecommendationDiv] = useState(<></>)
+  const [dietRecommendation, setDietRecommendation] = useState([])
+
+  //? 0 = bp tips, 1 = recommendation tips, 
+  // ? diet algorithms
+    const getDietRecommendations = (Hyper) => {
+      //? Hyper is boolean here 0 false 1 true
+      let pushData = []
+      if (Hyper) {
+       // getBPRecommendations() // may return na dito
+       console.log(BPRange, journalEntry)
+        pushData.push(BPRange)
+        fetchMealSuggestionsBP(BPRange[0])
+
+        let totalSodium = 0;
+        let totalPotassium = 0;
+        let totalCalories = 0;
+        let totalFat = 0;
+        let totalProtein = 0;
+        let totalCarbs = 0;
+
+        foodEntry.forEach((food) => {
+          totalSodium += food.sodium;
+          totalPotassium += food.potassium;
+          totalCalories += food.calories;
+          totalFat += food.fat;
+          totalProtein += food.protein;
+          totalCarbs += food.carbs;
+        });
+
+        if (BPRange[0] === "Stage 1 Hypertension" || BPRange[0] === "Stage 2 Hypertension" ) {
+          // User with Hypertension
+          if (totalSodium > 1500) {
+            pushData.push('Your sodium intake is too high. Consider reducing foods high in salt to help lower your blood pressure. ')
+            //dietMessage += 'Your sodium intake is too high. Consider reducing foods high in salt to help lower your blood pressure. ';
+          }
+          if (totalPotassium < 3500) {
+            pushData.push('Your potassium intake is low. Consider adding potassium-rich foods like bananas, leafy greens, and avocados to your diet. ')
+            //dietMessage += 'Your potassium intake is low. Consider adding potassium-rich foods like bananas, leafy greens, and avocados to your diet. ';
+          }
+        } else {
+          // User without Hypertension
+          pushData.push('Keep focusing on a balanced diet. Make sure to include enough protein, healthy fats, and complex carbs for overall well-being. ')
+          //dietMessage += 'Keep focusing on a balanced diet. Make sure to include enough protein, healthy fats, and complex carbs for overall well-being. ';
+        }
+      }
+
+      else {
+        fetchMealSuggestionsBP(BPRange[0])
+      }
+
+      setDietRecommendation(pushData)
+    }
+  //? 
+
+  //? get data kung from latest journal entry or kapag wala pa fresh
+    // ! journalEntry
+
+
+  //? weekly report
+    
+  const [weeklyReport, setWeeklyReport] = useState()
+    const generateWeeklyReport = async (day) => {
+      
+     
+   
+      console.log(journalEntry)
+        try {
+          const startDate = dayjs(day).subtract(7, 'day').format('YYYY-MM-DD');
+          const endDate = dayjs(day).format('YYYY-MM-DD');
+          console.log(day[0].date, startDate, endDate)
+          // Fetching journal data for the week
+          const journalResponse = await AxiosInstance.get(
+            `journalentry`
+          );
+          const journalData = journalResponse.data.filter(
+            (item) =>
+              dayjs(item.date).isAfter(startDate) &&
+              dayjs(item.date).isSameOrBefore(endDate) &&
+              item.user_id === loggedInUser.user_id
+          );
+
+          console.log(journalData)
+  
+          // Fetching food entry data for the week
+          const foodResponse = await AxiosInstance.get(
+            `foodentry`
+          );
+          let foodData = [];
+          journalData.forEach((journal) => {
+            const relatedFoodEntries = foodResponse.data.filter(
+              (food) => food.journal_id === journal.journal_id
+            );
+            console.log(relatedFoodEntries)
+            relatedFoodEntries.map((item) => (
+              foodData.push(item)
+            ))
+            //foodData = [...foodData, ...relatedFoodEntries];
+          });
+          
+          let avgSystolic = 0;
+          let avgDiastolic = 0;
+          let totalSodium = 0;
+          let totalPotassium = 0;
+          let totalCalories = 0;
+          let totalFat = 0;
+          let totalProtein = 0;
+          let totalCarbs = 0;
+      
+          // Aggregate blood pressure readings
+          journalData.forEach((entry) => {
+            avgSystolic += entry.systolic;
+            avgDiastolic += entry.diastolic;
+          });
+      
+          avgSystolic = avgSystolic / journalData.length;
+          avgDiastolic = avgDiastolic / journalData.length;
+          console.log(foodData)
+          // Aggregate macronutrients from food entries
+          foodData.forEach((food) => {
+            totalSodium += food.sodium;
+            totalPotassium += food.potassium;
+            totalCalories += food.calories;
+            totalFat += food.fat;
+            totalProtein += food.protein;
+            totalCarbs += food.carbs;
+          });
+      
+          // Generate the report message
+          let reportMessage = `**Weekly Report**: \n\n**Average Blood Pressure**: ${avgSystolic}/${avgDiastolic} mmHg\n`;
+      
+          if (avgSystolic >= 130 || avgDiastolic >= 80) {
+            reportMessage += 'Your average blood pressure this week is above normal. Please consider reducing sodium intake and consulting your healthcare provider. ';
+          } else {
+            reportMessage += 'Your average blood pressure is within normal range. Keep maintaining a healthy diet and staying active. ';
+          }
+      
+          reportMessage += `\n\n**Dietary Summary**:\n- Total Sodium: ${totalSodium} mg\n- Total Potassium: ${totalPotassium} mg\n- Total Calories: ${totalCalories} kcal\n- Total Fat: ${totalFat} g\n- Total Protein: ${totalProtein} g\n- Total Carbs: ${totalCarbs} g\n`;
+      
+          if (totalSodium > 10500) {
+            reportMessage += 'Your sodium intake this week has been high. Consider reducing the intake of processed and salty foods. ';
+          }
+      
+          if (totalPotassium < 24500) {
+            reportMessage += 'Consider adding more potassium-rich foods like bananas, spinach, and avocados to help maintain a healthy sodium-potassium balance. ';
+          }
+      
+          setWeeklyReport(reportMessage);
+      
+          console.log(reportMessage)
+          // Aggregate the weekly data
+        //  generateWeeklyReport(journalData, foodData);
+        } catch (error) {
+          console.error('Error fetching weekly data:', error);
+        }
+
+
+       
+      };
+   
+ 
+  //?
   return (
     <div
       className="content"
@@ -2812,6 +3958,55 @@ function FoodJournalHome() {
         color: "#000000",
       }}
     >
+
+    {/* //? test */}
+
+
+    <div className="meal-suggestion-input" style={{ position: "relative", width: "300px" }}>
+      <TextField
+        fullWidth
+        variant="outlined"
+        label="Search for meals"
+        value={inputValue}
+        onChange={handleInputChanges}
+        placeholder="Type to search for meals..."
+      />
+      {loading && (
+        <CircularProgress
+          size={24}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            marginTop: "-12px",
+          }}
+        />
+      )}
+      {suggestions.length > 0 && (
+        <List
+          style={{
+            position: "absolute",
+            top: "60px",
+            width: "100%",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff",
+            zIndex: 1000,
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
+        >
+          {suggestions.map((suggestion, index) => (
+            <ListItem
+              button
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion, index)}
+            >
+              <ListItemText primary={suggestion} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </div>
       {/* //! weekly */}
       {/* <div className="calendar">
         {renderHeader()}
@@ -3203,7 +4398,7 @@ function FoodJournalHome() {
                     {foodEntry !== 0 ? (
                       <Grid xs={7} sx={{ ml: 10 }}>
                         Meals
-                        {console.log(foodEntry[0])}
+                       
                         <Box>
                           <Typography>Breakfast</Typography>
                           <Grid container spacing={2} sx={{ my: 2 }}>
@@ -3275,7 +4470,7 @@ function FoodJournalHome() {
                                       name="breakfast_calories"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       fullWidth
                                       margin="dense"
@@ -3294,7 +4489,7 @@ function FoodJournalHome() {
                                     />
                                   </Grid>
                                   <Grid item>
-                                    {console.log(foodEntry)}
+                                    
                                     <Input
                                       // value={caloriesBvalue}
 
@@ -3309,7 +4504,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 0,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3334,7 +4529,7 @@ function FoodJournalHome() {
                                       name="breakfast_fat"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       fullWidth
                                       margin="dense"
@@ -3362,7 +4557,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3391,7 +4586,7 @@ function FoodJournalHome() {
                                       name="breakfast_protein"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       {...register1("breakfast_protein")}
                                       value={
@@ -3419,7 +4614,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3444,7 +4639,7 @@ function FoodJournalHome() {
                                       name="breakfast_carbs"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       {...register1("breakfast_carbs")}
                                       value={
@@ -3470,7 +4665,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3552,7 +4747,7 @@ function FoodJournalHome() {
                                       name="lunch_calories"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       {...register1("lunch_calories")}
                                       value={
@@ -3578,7 +4773,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3603,7 +4798,7 @@ function FoodJournalHome() {
                                       name="lunch_fat"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       {...register1("lunch_fat")}
                                       value={
@@ -3629,7 +4824,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3658,7 +4853,7 @@ function FoodJournalHome() {
                                       name="lunch_protein"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       {...register1("lunch_protein")}
                                       value={
@@ -3684,7 +4879,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3709,7 +4904,7 @@ function FoodJournalHome() {
                                       name="lunch_carbs"
                                       min={0}
                                       step={1}
-                                      max={1000}
+                                      max={10000}
                                       label=""
                                       {...register1("lunch_carbs")}
                                       value={
@@ -3735,7 +4930,7 @@ function FoodJournalHome() {
                                       inputProps={{
                                         step: 1,
                                         min: 0,
-                                        max: 1000,
+                                        max: 10000,
                                         type: "number",
                                         "aria-labelledby": "input-slider",
                                       }}
@@ -3819,7 +5014,7 @@ function FoodJournalHome() {
                                     name="snack_calories"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("snack_calories")}
                                     value={
@@ -3845,7 +5040,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -3867,7 +5062,7 @@ function FoodJournalHome() {
                                     name="snack_fat"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("snack_fat")}
                                     value={
@@ -3893,7 +5088,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -3922,7 +5117,7 @@ function FoodJournalHome() {
                                     name="snack_protein"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("snack_protein")}
                                     value={
@@ -3948,7 +5143,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -3973,7 +5168,7 @@ function FoodJournalHome() {
                                     name="snack_carbs"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("snack_carbs")}
                                     value={
@@ -3999,7 +5194,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -4104,7 +5299,7 @@ function FoodJournalHome() {
                                     name="dinner_calories"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("dinner_calories")}
                                     value={
@@ -4130,7 +5325,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -4152,7 +5347,7 @@ function FoodJournalHome() {
                                     name="dinner_fat"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("dinner_fat")}
                                     value={
@@ -4178,7 +5373,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -4207,7 +5402,7 @@ function FoodJournalHome() {
                                     name="dinner_protein"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("dinner_protein")}
                                     value={
@@ -4233,7 +5428,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -4258,7 +5453,7 @@ function FoodJournalHome() {
                                     name="dinner_carbs"
                                     min={0}
                                     step={1}
-                                    max={1000}
+                                    max={10000}
                                     label=""
                                     {...register1("dinner_carbs")}
                                     value={
@@ -4284,7 +5479,7 @@ function FoodJournalHome() {
                                     inputProps={{
                                       step: 1,
                                       min: 0,
-                                      max: 1000,
+                                      max: 10000,
                                       type: "number",
                                       "aria-labelledby": "input-slider",
                                     }}
@@ -4456,20 +5651,20 @@ function FoodJournalHome() {
                       >
                         Blood Pressure
                       </Typography>
-                      <Grid container spacing={2} sx={{ mx: "5%", mr: "10%" }}>
-                        <Grid xs={4}>
+                      <Grid container spacing={2} sx={{ mx: "0%", mr: "0%" }}>
+                        <Grid xs={3}>
                           {" "}
                           <TextField
                             id="systolic"
                             name="systolic"
-                            fullWidth
+                            //fullWidth
                             margin="dense"
                             {...register("systolic")}
                             // error={errors.systolic ? true : false}
                             label="Systolic"
                             variant="filled"
                             sx={{
-                              width: "100%",
+                              width: "60%",
                               mr: 4,
                               background: "#ffffff",
                               color: "#000000",
@@ -4481,7 +5676,7 @@ function FoodJournalHome() {
                             {errors.systolic?.message}
                           </Typography>
                         </Grid>
-                        <Grid xs={4}>
+                        <Grid xs={3}>
                           {" "}
                           <TextField
                             id="diastolic"
@@ -4493,7 +5688,7 @@ function FoodJournalHome() {
                             label="Diastolic"
                             variant="filled"
                             sx={{
-                              width: "100%",
+                              width: "60%",
                               mr: 2,
                               mx: 2,
                               background: "#ffffff",
@@ -4506,17 +5701,60 @@ function FoodJournalHome() {
                             {errors.diastolic?.message}
                           </Typography>
                         </Grid>
+                        <Grid xs = {6}> <center> Journal Entry</center>
+
+<TextField
+  id="journal_entry"
+  name="journal_entry"
+  label=""
+  fullWidth
+  margin="dense"
+  {...register("journal_entry")}
+  // error={errors.journal_entry ? true : false}
+  multiline
+  rows={6}
+  sx={{
+    //  width: "150%",
+    mr: 2,
+    background: "#ffffff",
+    color: "#000000",
+  }}
+  // value={idToCall}
+  // onChange={(e) => setIdToCall(e.target.value)}
+/>
+<Typography variant="inherit" color="textSecondary">
+  {errors.journal_entry?.message}
+</Typography></Grid>
                       </Grid>
                     </center>
+                    <center>
+                            <Button
+                              type="submit"
+                              sx={{
+                                fontWeight: "bold",
+                                background: "#ffffff",
+                                color: primaryColor,
+                                backgroundRadius: 10,
+                                "&:hover": {
+                                  backgroundColor: " #E66253",
+                                  color: "#ffffff",
+                                  border: 1,
+                                  borderColor: "#ffffff",
+                                },
+                              }}
+                            >
+                              SUBMIT
+                            </Button>
+                          </center>
                     <Grid container spacing={2} sx={{ m: 0 }}>
                       <Grid
                         xs={6}
-                        sx={{ mx: 0, mt: 1 }}
+                        sx={{ mx: 0, mt:0 }}
                         display="flex"
                         justifyContent="flex-start"
                       >
                         <Box sx={{ width: "80%" }}>
-                          <center> Journal Entry</center>
+                          {/* <center> Journal Entry</center>
 
                           <TextField
                             id="journal_entry"
@@ -4539,9 +5777,9 @@ function FoodJournalHome() {
                           />
                           <Typography variant="inherit" color="textSecondary">
                             {errors.journal_entry?.message}
-                          </Typography>
+                          </Typography> */}
                           <br />
-                          <center>
+                          {/* <center>
                             <Button
                               type="submit"
                               sx={{
@@ -4559,16 +5797,9 @@ function FoodJournalHome() {
                             >
                               SUBMIT
                             </Button>
-                          </center>
+                          </center> */}
                         </Box>
-                        <br />
-                        <br />
-
-                        <br />
-
-                        <br />
-                        <br />
-                        <br />
+                    
 
                         {/* Meal Plan: <br />
                       <Select
@@ -4583,7 +5814,7 @@ function FoodJournalHome() {
                         ))}
                       </Select> */}
                       </Grid>
-                      <Grid xs={6} sx={{ ml: 0 }}>
+                      <Grid xs={12} sx={{ ml: "5%" }}>
                         <center>
                           <Typography
                             sx={{
@@ -4629,11 +5860,74 @@ function FoodJournalHome() {
                             <Box>
                               <Typography>Breakfast</Typography>
                               <Grid container spacing={2} sx={{ my: 2 }}>
-                                <Grid xs={6}>
-                                  <TextField
+                                <Grid xs={4}>
+                                  <Box> 
+
+                                  <img src = {breakfastFoodImage} width="70%" height = "70%"/>
+                                  </Box>
+                                  <div className="meal-suggestion-input" style={{ position: "relative", width: "80%", color: "#000000" }}>
+      <TextField
+        //fullWidth
+        id="breakfast_food"
+        name="breakfast_food"
+        //fullWidth
+        margin="dense"
+        {...register("breakfast_food")}
+        error={errors.breakfast_food ? true : false}
+        label="Food Eaten:"
+        variant="filled"
+        size="small"
+       // label="Search for meals"
+        value={breakfastFood}
+        onChange={(e) => handleInputChanges(e, "breakfast")}
+        placeholder="Type to search for meals..."
+        sx={{
+        //  mr: 2,
+          background: "#ffffff",
+          color: "#000000",
+          width: "80%"
+        }}
+      />
+      {loading && (
+        <CircularProgress
+          size={24}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            marginTop: "-12px",
+          }}
+        />
+      )}
+      {suggestions.length > 0 && (
+        <List
+          style={{
+            position: "absolute",
+            top: "60px",
+            width: "100%",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff",
+            zIndex: 1000,
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
+        >
+          {suggestions.map((suggestion, index) => (
+            <ListItem
+              button
+              key={index}
+              onClick={() => handleSuggestionClick(suggestion, index, "breakfast")}
+            >
+              <ListItemText primary={suggestion} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </div>
+                                  {/* <TextField
                                     id="breakfast_food"
                                     name="breakfast_food"
-                                    fullWidth
+                                    //fullWidth
                                     margin="dense"
                                     {...register("breakfast_food")}
                                     error={errors.breakfast_food ? true : false}
@@ -4647,13 +5941,14 @@ function FoodJournalHome() {
                                       mr: 2,
                                       background: "#ffffff",
                                       color: "#000000",
+                                      width: "80%"
                                     }}
 
-                                    // value={idToCall}
+                                     value={foods}
                                     // onChange={(e) => setIdToCall(e.target.value)}
-                                  />
+                                  /> */}
                                 </Grid>
-                                <Grid xs={6}>
+                                {/* <Grid xs={6}> */}
                                   {" "}
                                   {/* <TextField
                               id="filled-basic"
@@ -4673,7 +5968,9 @@ function FoodJournalHome() {
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             /> */}
-                                </Grid>{" "}
+                                {/* </Grid>{" "} */}
+                                <Grid xs={8}> 
+                                
                                 <Grid container spacing={2}>
                                   <Grid xs={6}>
                                     {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
@@ -4688,7 +5985,7 @@ function FoodJournalHome() {
                                     >
                                       <br />
                                       <br />
-                                      <Grid item>
+                                      <Grid item >
                                         <img
                                           src="/images/calorieswhite.png"
                                           height="25"
@@ -4700,7 +5997,7 @@ function FoodJournalHome() {
                                           name="breakfast_calories"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           fullWidth
                                           margin="dense"
@@ -4733,7 +6030,7 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 0,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
@@ -4762,7 +6059,7 @@ function FoodJournalHome() {
                                           name="breakfast_fat"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("breakfast_fat")}
                                           value={
@@ -4784,7 +6081,59 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+
+                                    <center>
+                                      <Typography> Sodium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/fatwhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="breakfast_sodium"
+                                          name="breakfast_sodium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("breakfast_sodium")}
+                                          value={
+                                            typeof sodiumBvalue === "number"
+                                              ? sodiumBvalue
+                                              : 0
+                                          }
+                                          onChange={handleSodiumBSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={sodiumBvalue}
+                                          size="small"
+                                          onChange={handleSodiumBInputChange}
+                                          onBlur={handleSodiumBBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
@@ -4817,7 +6166,7 @@ function FoodJournalHome() {
                                           name="breakfast_protein"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("breakfast_protein")}
                                           value={
@@ -4839,7 +6188,7 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
@@ -4868,7 +6217,7 @@ function FoodJournalHome() {
                                           name="breakfast_carbs"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("breakfast_carbs")}
                                           value={
@@ -4890,22 +6239,135 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
                                         />
                                       </Grid>
                                     </Grid>
+                                    <center>
+                                      <Typography>Potassium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/carbswhite.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="breakfast_potassium"
+                                          name="breakfast_potassium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("breakfast_potassium")}
+                                          value={
+                                            typeof potassiumBvalue === "number"
+                                              ? potassiumBvalue
+                                              : 0
+                                          }
+                                          onChange={handlePotassiumBSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={potassiumBvalue}
+                                          size="small"
+                                          onChange={handlePotassiumBInputChange}
+                                          onBlur={handlePotassiumBBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                
                                   </Grid>
+                                </Grid>
                                 </Grid>
                               </Grid>
                             </Box>
                             <Box sx={{ mt: 2 }}>
                               Lunch
                               <Grid container spacing={2} sx={{ my: 2 }}>
-                                <Grid xs={6}>
-                                  <TextField
+                                <Grid xs={4}>
+                                  <img src = {lunchFoodImage} width="70%" height = "70%"/>
+                                <div className="meal-suggestion-input" style={{ position: "relative", width: "80%", color: "#000000" }}>
+      <TextField
+        //fullWidth
+        id="lunch_food"
+        name="lunch_food"
+        //fullWidth
+        margin="dense"
+        {...register("lunch_food")}
+        error={errors.lunch_food ? true : false}
+        label="Food Eaten:"
+        variant="filled"
+        size="small" 
+       // label="Search for meals"
+        value={lunchFood}
+        onChange={(e) => handleInputChangesLunch(e, "lunch")}
+        placeholder="Type to search for meals..."
+        sx={{
+        //  mr: 2,
+          background: "#ffffff",
+          color: "#000000",
+          width: "80%"
+        }}
+      />
+      {loadingLunch && (
+        <CircularProgress
+          size={24}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            marginTop: "-12px",
+          }}
+        />
+      )}
+      {suggestionsLunch.length > 0 && (
+        <List
+          style={{
+            position: "absolute",
+            top: "60px",
+            width: "100%",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff",
+            zIndex: 1000,
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
+        >
+          {suggestionsLunch.map((suggestion, index) => (
+            <ListItem
+              button
+              key={index}
+              onClick={() => handleSuggestionClickLunch(suggestion, index, "lunch")}
+            >
+              <ListItemText primary={suggestion} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </div>
+                                  {/* <TextField
                                     id="lunch_food"
                                     name="lunch_food"
                                     margin="dense"
@@ -4926,9 +6388,9 @@ function FoodJournalHome() {
 
                                     // value={idToCall}
                                     // onChange={(e) => setIdToCall(e.target.value)}
-                                  />
+                                  /> */}
                                 </Grid>
-                                <Grid xs={6}>
+                                <Grid xs={8}>
                                   {" "}
                                   {/* <TextField
                               id="filled-basic"
@@ -4948,7 +6410,7 @@ function FoodJournalHome() {
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             /> */}
-                                </Grid>
+                                
                                 <Grid container spacing={2}>
                                   <Grid xs={6}>
                                     {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
@@ -4975,7 +6437,7 @@ function FoodJournalHome() {
                                           name="lunch_calories"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("lunch_calories")}
                                           value={
@@ -4997,7 +6459,7 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
@@ -5026,7 +6488,7 @@ function FoodJournalHome() {
                                           name="lunch_fat"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("lunch_fat")}
                                           value={
@@ -5048,13 +6510,65 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid> 
+                                    <center>
+                                      <Typography> Sodium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/sodium white.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="lunch_sodium"
+                                          name="lunch_sodium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("lunch_sodium")}
+                                          value={
+                                            typeof sodiumLvalue === "number"
+                                              ? sodiumLvalue
+                                              : 0
+                                          }
+                                          onChange={handleSodiumLSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={sodiumLvalue}
+                                          size="small"
+                                          onChange={handleSodiumLInputChange}
+                                          onBlur={handleSodiumLBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
                                         />
                                       </Grid>
                                     </Grid>
+
                                     {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
                                   </Grid>
                                   <Grid xs={6}>
@@ -5081,7 +6595,7 @@ function FoodJournalHome() {
                                           name="lunch_protein"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("lunch_protein")}
                                           value={
@@ -5103,7 +6617,7 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
@@ -5132,7 +6646,7 @@ function FoodJournalHome() {
                                           name="lunch_carbs"
                                           min={0}
                                           step={1}
-                                          max={1000}
+                                          max={10000}
                                           label=""
                                           {...register("lunch_carbs")}
                                           value={
@@ -5154,7 +6668,58 @@ function FoodJournalHome() {
                                           inputProps={{
                                             step: 1,
                                             min: 0,
-                                            max: 1000,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                    <center>
+                                      <Typography>Potassium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/potassium white.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="lunch_potassium"
+                                          name="lunch_potassium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("lunch_potassium")}
+                                          value={
+                                            typeof potassiumLvalue === "number"
+                                              ? potassiumLvalue
+                                              : 0
+                                          }
+                                          onChange={handlePotassiumLSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={potassiumLvalue}
+                                          size="small"
+                                          onChange={handlePotassiumLInputChange}
+                                          onBlur={handlePotassiumLBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
                                             type: "number",
                                             "aria-labelledby": "input-slider",
                                           }}
@@ -5162,15 +6727,81 @@ function FoodJournalHome() {
                                       </Grid>
                                     </Grid>
                                   </Grid>
+                                  
                                 </Grid>
+                                
+                                </Grid>
+
+                                
                               </Grid>
                             </Box>
                             Meals
                             <Box>
                               Snack
                               <Grid container spacing={2} sx={{ my: 2 }}>
-                                <Grid xs={6}>
-                                  <TextField
+                                <Grid xs={4}>
+
+                                <img src = {snackFoodImage} width="70%" height = "70%"/>
+                                <div className="meal-suggestion-input" style={{ position: "relative", width: "80%", color: "#000000" }}>
+      <TextField
+        //fullWidth
+        id="snack_food"
+        name="snack_food"
+        //fullWidth
+        margin="dense"
+        {...register("snack_food")}
+        error={errors.snack_food ? true : false}
+        label="Food Eaten:"
+        variant="filled"
+        size="small" 
+       // label="Search for meals"
+        value={snackFood}
+        onChange={(e) => handleInputChangesSnack(e, "lunch")}
+        placeholder="Type to search for meals..."
+        sx={{
+        //  mr: 2,
+          background: "#ffffff",
+          color: "#000000",
+          width: "80%"
+        }}
+      />
+      {loadingSnack && (
+        <CircularProgress
+          size={24}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            marginTop: "-12px",
+          }}
+        />
+      )}
+      {suggestionsSnack.length > 0 && (
+        <List
+          style={{
+            position: "absolute",
+            top: "60px",
+            width: "100%",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff",
+            zIndex: 1000,
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
+        >
+          {suggestionsSnack.map((suggestion, index) => (
+            <ListItem
+              button
+              key={index}
+              onClick={() => handleSuggestionClickSnack(suggestion, index, "lunch")}
+            >
+              <ListItemText primary={suggestion} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </div>
+                                  {/* <TextField
                                     id="snack_food"
                                     name="title"
                                     fullWidth
@@ -5191,9 +6822,9 @@ function FoodJournalHome() {
 
                                     // value={idToCall}
                                     // onChange={(e) => setIdToCall(e.target.value)}
-                                  />
+                                  /> */}
                                 </Grid>
-                                <Grid xs={6}>
+                                <Grid xs={8}>
                                   {" "}
                                   {/* <TextField
                               id="filled-basic"
@@ -5213,8 +6844,8 @@ function FoodJournalHome() {
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             /> */}
-                                </Grid>
-                              </Grid>
+                              
+                              
                               <Grid container spacing={2}>
                                 <Grid xs={6}>
                                   {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
@@ -5241,7 +6872,7 @@ function FoodJournalHome() {
                                         name="snack_calories"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("snack_calories")}
                                         value={
@@ -5263,7 +6894,7 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
@@ -5292,7 +6923,7 @@ function FoodJournalHome() {
                                         name="snack_fat"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("snack_fat")}
                                         value={
@@ -5314,13 +6945,64 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
                                       />
                                     </Grid>
                                   </Grid>
+                                  <center>
+                                      <Typography> Sodium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/sodium white.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="snack_sodium"
+                                          name="snack_sodium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("snack_sodium")}
+                                          value={
+                                            typeof sodiumSvalue === "number"
+                                              ? sodiumSvalue
+                                              : 0
+                                          }
+                                          onChange={handleSodiumSSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={sodiumSvalue}
+                                          size="small"
+                                          onChange={handleSodiumSInputChange}
+                                          onBlur={handleSodiumSBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
                                   {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
                                 </Grid>
                                 <Grid xs={6}>
@@ -5347,7 +7029,7 @@ function FoodJournalHome() {
                                         name="snack_protein"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("snack_protein")}
                                         value={
@@ -5369,7 +7051,7 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
@@ -5398,7 +7080,7 @@ function FoodJournalHome() {
                                         name="snack_carbs"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("snack_carbs")}
                                         value={
@@ -5420,21 +7102,135 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
                                       />
                                     </Grid>
                                   </Grid>
-                                </Grid>
+                                  <center>
+                                      <Typography>Potassium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/potassium white.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="snack_potassium"
+                                          name="snack_potassium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("snack_potassium")}
+                                          value={
+                                            typeof potassiumSvalue === "number"
+                                              ? potassiumSvalue
+                                              : 0
+                                          }
+                                          onChange={handlePotassiumSSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={potassiumSvalue}
+                                          size="small"
+                                          onChange={handlePotassiumSInputChange}
+                                          onBlur={handlePotassiumSBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
+                                  </Grid>
+                                  </Grid>
+                                  </Grid>
+                              
                               </Grid>
                             </Box>
                             <Box>
                               Dinner
                               <Grid container spacing={2} sx={{ my: 2 }}>
-                                <Grid xs={6}>
-                                  <TextField
+                                <Grid xs={4}>
+                                <img src = {dinnerFoodImage} width="70%" height = "70%"/>
+                                <div className="meal-suggestion-input" style={{ position: "relative", width: "80%", color: "#000000" }}>
+      <TextField
+        //fullWidth
+        id="dinner_food"
+        name="dinner_food"
+        //fullWidth
+        margin="dense"
+        {...register("dinner_food")}
+        error={errors.dinner_food ? true : false}
+        label="Food Eaten:"
+        variant="filled"
+        size="small" 
+       // label="Search for meals"
+        value={dinnerFood}
+        onChange={(e) => handleInputChangesDinner(e, "lunch")}
+        placeholder="Type to search for meals..."
+        sx={{
+        //  mr: 2,
+          background: "#ffffff",
+          color: "#000000",
+          width: "80%"
+        }}
+      />
+      {loadingDinner && (
+        <CircularProgress
+          size={24}
+          style={{
+            position: "absolute",
+            top: "50%",
+            right: "10px",
+            marginTop: "-12px",
+          }}
+        />
+      )}
+      {suggestionsDinner.length > 0 && (
+        <List
+          style={{
+            position: "absolute",
+            top: "60px",
+            width: "100%",
+            border: "1px solid #ccc",
+            backgroundColor: "#fff",
+            zIndex: 1000,
+            maxHeight: "200px",
+            overflowY: "auto",
+          }}
+        >
+          {suggestionsDinner.map((suggestion, index) => (
+            <ListItem
+              button
+              key={index}
+              onClick={() => handleSuggestionClickDinner(suggestion, index, "lunch")}
+            >
+              <ListItemText primary={suggestion} />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </div>
+                                  {/* <TextField
                                     id="dinner_food"
                                     name="dinner_food"
                                     margin="dense"
@@ -5455,9 +7251,9 @@ function FoodJournalHome() {
 
                                     // value={idToCall}
                                     // onChange={(e) => setIdToCall(e.target.value)}
-                                  />
+                                  /> */}
                                 </Grid>
-                                <Grid xs={6}>
+                                <Grid xs={8}>
                                   {" "}
                                   {/* <TextField
                               id="filled-basic"
@@ -5477,8 +7273,8 @@ function FoodJournalHome() {
                               // value={idToCall}
                               // onChange={(e) => setIdToCall(e.target.value)}
                             /> */}
-                                </Grid>
-                              </Grid>
+                                
+                              
                               <Grid container spacing={2}>
                                 <Grid xs={6}>
                                   {/* <Typography sx={{ ml: 2 }}>Calories</Typography> */}
@@ -5505,7 +7301,7 @@ function FoodJournalHome() {
                                         name="dinner_calories"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("dinner_calories")}
                                         value={
@@ -5527,7 +7323,7 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
@@ -5556,7 +7352,7 @@ function FoodJournalHome() {
                                         name="dinner_fat"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("dinner_fat")}
                                         value={
@@ -5578,13 +7374,65 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
                                       />
                                     </Grid>
                                   </Grid>
+
+                                  <center>
+                                      <Typography> Sodium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/sodium white.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="dinner_sodium"
+                                          name="dinner_sodium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("dinner_sodium")}
+                                          value={
+                                            typeof sodiumDvalue === "number"
+                                              ? sodiumDvalue
+                                              : 0
+                                          }
+                                          onChange={handleSodiumDSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={sodiumDvalue}
+                                          size="small"
+                                          onChange={handleSodiumDInputChange}
+                                          onBlur={handleSodiumDBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
                                   {/* <Typography sx={{ ml: 2 }}>Fat</Typography> */}
                                 </Grid>
                                 <Grid xs={6}>
@@ -5611,7 +7459,7 @@ function FoodJournalHome() {
                                         name="dinner_protein"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("dinner_protein")}
                                         value={
@@ -5633,7 +7481,7 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
@@ -5662,7 +7510,7 @@ function FoodJournalHome() {
                                         name="dinner_carbs"
                                         min={0}
                                         step={1}
-                                        max={1000}
+                                        max={10000}
                                         label=""
                                         {...register("dinner_carbs")}
                                         value={
@@ -5684,11 +7532,65 @@ function FoodJournalHome() {
                                         inputProps={{
                                           step: 1,
                                           min: 0,
-                                          max: 1000,
+                                          max: 10000,
                                           type: "number",
                                           "aria-labelledby": "input-slider",
                                         }}
                                       />
+                                    </Grid>
+                                  </Grid>
+                                  
+                                  <center>
+                                      <Typography>Potassium</Typography>
+                                    </center>
+                                    <Grid
+                                      container
+                                      spacing={2}
+                                      alignItems="center"
+                                    >
+                                      <br />
+                                      <br />
+                                      <Grid item>
+                                        <img
+                                          src="/images/potassium white.png"
+                                          height="25"
+                                        />
+                                      </Grid>
+                                      <Grid item xs>
+                                        <Slider
+                                          id="dinner_potassium"
+                                          name="dinner_potassium"
+                                          min={0}
+                                          step={1}
+                                          max={10000}
+                                          label=""
+                                          {...register("dinner_potassium")}
+                                          value={
+                                            typeof potassiumDvalue === "number"
+                                              ? potassiumDvalue
+                                              : 0
+                                          }
+                                          onChange={handlePotassiumDSliderChange}
+                                          aria-labelledby="input-slider"
+                                          sx={{ color: secondaryColor }}
+                                        />
+                                      </Grid>
+                                      <Grid item>
+                                        <Input
+                                          value={potassiumDvalue}
+                                          size="small"
+                                          onChange={handlePotassiumDInputChange}
+                                          onBlur={handlePotassiumDBlur}
+                                          inputProps={{
+                                            step: 1,
+                                            min: 0,
+                                            max: 10000,
+                                            type: "number",
+                                            "aria-labelledby": "input-slider",
+                                          }}
+                                        />
+                                      </Grid>
+                                    </Grid>
                                     </Grid>
                                   </Grid>
                                 </Grid>
@@ -5975,7 +7877,7 @@ function FoodJournalHome() {
               background: secondaryColor,
               color: "#ffffff",
               display: "inline-block",
-              justifyItems: "right",
+             // justifyItems: "right",
               p: 5,
               width: "100%",
             }}
@@ -5994,7 +7896,12 @@ function FoodJournalHome() {
                 p: 4,
               }}
             >
-              Calories
+            <Grid container spacing = {2}>
+            <Grid xs = {10}> <Typography sx = {{fontWeight: "bold"}}>
+              Calories </Typography></Grid>
+            <Grid xs = {2}> {calories * 20} g</Grid>
+            </Grid>
+            
               <BorderLinearProgress variant="determinate" value={calories} />
             </Box>
             <br />
@@ -6050,6 +7957,77 @@ function FoodJournalHome() {
                 </Box>
               </Grid>
             </Grid>
+
+            <Typography sx = {{fontWeight: "bold"}} > BLOOD PRESSURE </Typography>
+            
+            <Box sx = {{mt: 2, ml: "30%", mr: "30%"}}>
+            <Grid container spacing = {0}>
+            <Grid xs = {4}>
+             <Box
+                  sx={{
+                    background: "#ffffff",
+                    color: secondaryColor,
+                    borderRadius: 2,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
+                  }}
+                >
+                  {journalEntry[0]?.systolic}
+                </Box>
+                Systolic
+            </Grid>
+            <Grid xs = {4}>
+             <Box
+                  sx={{
+                   
+                    color: "#ffffff",
+                    borderRadius: 2,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
+                  }}
+                >
+                  /
+                </Box>
+                </Grid>
+            <Grid xs = {4}>
+             <Box
+                  sx={{
+                    background: "#ffffff",
+                    color: secondaryColor,
+                    borderRadius: 2,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
+                  }}
+                >
+                 {journalEntry[0]?.diastolic}
+                </Box>
+                Diastolic
+            </Grid>
+            </Grid>
+            <br/>
+             <Box
+                  sx={{
+                   // background: getBPRange(parseInt(journalEntry[0]?.systolic), parseInt(journalEntry[0]?.diastolic))[1],
+                    background: BPRange[1],
+                    color: secondaryColor,
+                    borderRadius: 2,
+                    mx: {
+                      sm: 1,
+                      md: 5,
+                    },
+                  }}
+                >
+                  {BPRange[0]}
+                 {/* {getBPRange(parseInt(journalEntry[0]?.systolic), parseInt(journalEntry[0]?.diastolic))[0]} */}
+                </Box>
+            </Box>
+             
           </Box>
           {/* <Typography>{journalEntry[0]?.title}</Typography>
           <Typography>{journalEntry[0]?.entry}</Typography>
@@ -6176,6 +8154,98 @@ function FoodJournalHome() {
       ) : (
         <div></div>
       )}
+
+
+      <Box sx = {{ml: "3%",mr: "6%"}}>
+      <Accordion sx={{  border: 3 , borderColor: "#898246"}}>
+      <AccordionSummary   expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1-content"
+                    id="panel1-header">
+                         <img
+                          src="/images/day.png"
+                          width="40px"
+                          height="40px"
+                        />
+                      <Typography sx = {{mt: "1%" , ml: "5%", fontWeight: "bold", color: "#99756E"}}>Meal Recommendation of the Day</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <center>
+                    <Typography sx = {{ color: "#99756E", fontWeight: "bold"}}>
+                      Report: <br/>
+                    </Typography>
+                    <Typography sx = {{ml: "20%", mr:"20%"}}>{dietRecommendation[1]}</Typography>
+                    </center>
+                     <hr/>
+                    <Box sx = {{background: "#898246", borderRadius: 5, ml: "30%", mr:"30%",pt: 3, pb: 1, color: "#ffffff"}}>
+                      <Grid container spacing = {2} sx = {{ml: "0%", mr: "0%"}}>
+                      <Grid xs = {3.5}><Typography sx = {{fontWeight:"bold", ml: 5}}>HEALTH TIP: </Typography></Grid>
+                      <Grid xs = {8}>{BPRange[2]}</Grid>
+                      </Grid>
+                       
+                      </Box>
+                        <Button onClick={() => fetchMealSuggestionsBP(BPRange[0])}>test</Button>
+                      
+                   
+                        <Box sx = {{border: 3, borderRadius: 4, borderColor:"#898246"}}>
+                          <Typography sx = {{fontWeight: "bold", color: "#99756E"}}>Recommended Meals</Typography>
+
+                        <Box sx = {{ml: 1, mr: 0}}>
+                        <Grid container spacing = {2} sx = {{mt: "2%"}}>
+                        
+                        <Grid xs = {3}>
+                            <img src = {mealBPRecommendations[0]?.meals[randomNumberbreakfast].image} width = "60%" height = "60%" />
+                            <br/>
+                          {mealBPRecommendations[0]?.type}: 
+                          <Typography sx = {{ wordWrap: 'break-word',
+                            wordBreak: 'break-all',
+                            whiteSpace: 'normal', }}
+                            >
+                          {mealBPRecommendations[0]?.meals[randomNumberbreakfast].label}
+                          </Typography>
+                           <br/>
+                          </Grid>
+
+                          <Grid xs = {3}>
+                            <img src = {mealBPRecommendations[1]?.meals[randomNumberlunch].image} width = "60%" height = "60%" />
+                            <br/>
+                          {mealBPRecommendations[1]?.type}:  <br/>
+                          {mealBPRecommendations[1]?.meals[randomNumberlunch].label} <br/>
+                          </Grid>
+
+                          <Grid xs = {3}>
+                            <img src = {mealBPRecommendations[2]?.meals[randomNumbersnack].image} width = "60%" height = "60%" />
+                            <br/>
+                          {mealBPRecommendations[2]?.type}:  <br/>
+                          {mealBPRecommendations[2]?.meals[randomNumbersnack].label} <br/>
+                          </Grid>
+
+                          <Grid xs = {3}>
+                            <img src = {mealBPRecommendations[3]?.meals[randomNumberdinner].image} width = "60%" height = "60%" />
+                          <br/>
+                          {mealBPRecommendations[3]?.type}: <br/>
+                          {mealBPRecommendations[3]?.meals[randomNumberdinner].label} <br/>
+                          </Grid>
+                        
+                        {/* {mealBPRecommendations?.map((item,index) => (
+                          <>
+                          
+                          <Grid xs = {3}>
+                            <img src = {item.meals[randomNumber].image} width = "20%" height = "30%" />
+                          {item.type}: 
+                          {item.meals[randomNumber].label} <br/>
+                          </Grid>
+                          </>
+                        ))} */}
+                        
+                        </Grid>
+                        </Box>
+                        </Box>
+                      </AccordionDetails>
+               
+      </Accordion>
+      </Box>
+
+
     </div>
   );
 }

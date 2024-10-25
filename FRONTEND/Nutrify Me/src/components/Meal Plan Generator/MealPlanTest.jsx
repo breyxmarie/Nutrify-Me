@@ -99,7 +99,7 @@ function MealPlanTest() {
   //!
   //? edamam api
   const API_ID = "a91422a3";
-  const API_KEY = "98019bc3768ed14abc6be04432e9d8e3	";
+  const API_KEY = "98019bc3768ed14abc6be04432e9d8e3";
   const URL = `https://api.edamam.com/search?app_id=${API_ID}&app_key=${API_KEY}&from=1&to=100&`; //! to get meals
   //?
 
