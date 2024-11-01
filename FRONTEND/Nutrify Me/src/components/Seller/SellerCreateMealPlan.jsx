@@ -1,8 +1,14 @@
 import { Typography } from "@mui/material";
-import { useState } from "react";
+import { useState, useCallback  } from "react";
 import Box from "@mui/material/Box";
+import axios from "axios";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import CircularProgress from "@mui/material/CircularProgress";
 import * as React from "react";
 import Button from "@mui/material/Button";
+import _ from "lodash";
 import Grid from "@mui/material/Grid";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
@@ -22,6 +28,281 @@ import { PickersDay } from "@mui/x-date-pickers/PickersDay";
 import { ToastContainer, toast } from "react-toastify";
 
 function SellerCreateMealPlan() {
+
+  //! meal suggestions
+   //? meal suggestion
+   const EDAMAM_APP_ID = "857354ae";
+   const EDAMAM_APP_KEY = "018c3d97c58bc4bee7559bc5755c01a8";
+ 
+   const [inputValue, setInputValue] = useState("");
+   const [notFound, setNotFound] = useState(false)
+   const [suggestions, setSuggestions] = useState([]);
+   const [loading, setLoading] = useState(false);
+   const [tempData, setTempData] = useState([]);
+   const [breakfastFood, setBreakfastFood] = useState()
+   const [caloriesBvalue, setCaloriesBvalue] = React.useState(0);
+   const [fatBvalue, setFatBvalue] = React.useState(0);
+   const [proteinBvalue, setProteinBvalue] = React.useState(0);
+   const [carbsBvalue, setCarbsBvalue] = React.useState(0);
+   const [sodiumBvalue, setSodiumBvalue] = React.useState(0);
+   const [potassiumBvalue, setPotassiumBvalue] = React.useState(0);
+   const [breakfastFoodImage, setBreakfastFoodImage] =
+   useState("/images/food.png");
+ 
+ 
+ 
+   // Edamam API credentials (Replace with your actual credentials)
+ 
+   // Debounced function to fetch meal suggestions from Edamam API
+   const fetchMealSuggestions = useCallback(
+     _.debounce(async (query) => {
+       if (!query) {
+         setSuggestions([]);
+         return;
+       }
+ 
+       setLoading(true);
+       try {
+         // API request to Edamam to search for recipes
+         const response = await axios.get(
+           `https://api.edamam.com/search?q=${query}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
+         );
+ 
+         // Update the suggestions list with fetched data
+         setTempData(response.data.hits.map((hit) => hit.recipe));
+         setSuggestions(response.data.hits.map((hit) => hit.recipe.label));
+         if(response.data.length === undefined) {
+          setNotFound(true)
+        }
+        } catch (error) {
+         console.error("Error fetching meal suggestions:", error);
+       } finally {
+         setLoading(false);
+       }
+     }, 500), // Debounce delay (500 ms)
+     []
+   );
+ 
+   // Handle input changes and trigger API request
+   const handleInputChanges = (e, type) => {
+    setNotFound(false)
+     const value = e.target.value;
+     //   setInputValue(value);
+     fetchMealSuggestions(value);
+ 
+     if (type === "breakfast") {
+       setBreakfastFood(value);
+     }
+     if (type === "lunch") {
+       setLunchFood(value);
+     }
+   };
+ 
+   const [foods, setFoods] = useState();
+   // Handle selecting a suggestion
+   const handleSuggestionClick = (suggestion, index, type) => {
+    setNotFound(false)
+     // if (type === "breakfast") {
+       setBreakfastFood(suggestion);
+       setBreakfastFoodImage(tempData[index].image);
+       setCaloriesBvalue(
+         parseInt(tempData[index].calories / tempData[index].yield)
+       );
+       setProteinBvalue(parseInt(tempData[index].digest[2].total));
+       setCarbsBvalue(parseInt(tempData[index].digest[1].total));
+       setFatBvalue(parseInt(tempData[index].digest[0].total));
+       setPotassiumBvalue(parseInt(tempData[index].digest[7].total));
+       setSodiumBvalue(parseInt(tempData[index].digest[4].total));
+     // } else if (type === "lunch") {
+     //   setLunchFood(suggestion);
+     // }
+ 
+     // // setInputValue(suggestion);
+     // console.log(suggestion, tempData[index]);
+     setSuggestions([]);
+     setTempData([]);
+   };
+ 
+ 
+ 
+ 
+   //?
+
+  //!
+  //? save image
+  async function getImage(imageLink) {
+    //  console.log(imageLink);
+    // const response = await axios.get(
+    //   //`https://cors-anywhere.herokuapp.com/${BtempMeal.recipe.image}`,
+    //   BtempMeal.recipe.image,
+
+    //   {
+    //     responseType: "blob",
+    //   }
+    // );
+    // console.log(response);
+
+    // fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // mode: "no-cors",
+    // })
+    //   .then((response) => response.blob())
+    //   .then((imageBlob) => {
+    // Handle the image blob
+    // const blob = getBlob(imageLink);
+    // console.log(blob);
+    // const formData = new FormData();
+    // blob.then((result) => {
+    //   let imageFile = new File([result], "image.jpg", {
+    //     type: "image/jpeg",
+    //   });
+    //   console.log(imageFile);
+
+    //   formData.append("file", imageFile);
+
+    // });
+
+    // try {
+    //   AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }).then((res) => {
+    //     console.log(res.data);
+    //     // filename = res.data;
+    //     return res.data;
+    //     // console.log(filename, "hi");
+    //     //  meals.push({ Meal: "Breakfast", details: BtempMeal });
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // console.log(formData);
+
+    try {
+      const response = await axios.get(
+        `https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`,
+        { responseType: "blob" }
+      );
+      const imageBlob = response.data;
+
+      const formData = new FormData();
+      const imageFile = new File([imageBlob], "image.jpg", {
+        type: "image/jpeg",
+      });
+      formData.append("file", imageFile);
+
+      const res = await AxiosInstance.post("shopmealplan/savefile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      //  console.log(res.data);
+      return res.data; // Return the response data if needed
+    } catch (error) {
+      console.error(error);
+    }
+
+    // console.log(imageBlob);
+
+    // })
+    // .catch((error) => {
+    //   console.error("Error fetching image:", error);
+    // });
+
+    // console.log(response);
+    // const imageFile = new File([response], "image.jpg", {
+    //   type: "image/jpeg",
+    // });
+
+    // const formData = new FormData();
+    // formData.append("file", imageFile);
+    // try {
+    //   await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }).then((res) => {
+    //     console.log(res);
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
+    // fetch(`https://cors-anywhere.herokuapp.com/${imageLink}`, {
+    // fetch(`https://proxynutrifyme-4a3d23e2f725.herokuapp.com/${imageLink}`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   // mode: "no-cors",
+    // })
+    //   .then((response) => response.blob())
+    //   .then((imageBlob) => {
+    //     // Handle the image blob
+    //     console.log(imageBlob);
+    //     //  const imageBlob = getBlob(imageLink);
+    //     //   console.log(imageBlob);
+    //     let imageFile = new File([imageBlob], "image.jpg", {
+    //       type: "image/jpeg",
+    //     });
+    //     console.log(imageFile);
+
+    //     const formData = new FormData();
+    //     formData.append("file", imageFile);
+    //     // try {
+    //     //   await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     //     headers: {
+    //     //       "Content-Type": "multipart/form-data",
+    //     //     },
+    //     //   }).then((res) => {
+    //     //     return processResponseData(res.data);
+    //     //     // console.log(res.data);
+    //     //     // const fileName = res.data;
+    //     //     // console.log(fileName);
+    //     //     // return fileName;
+    //     //   });
+    //     // } catch (error) {
+    //     //   console.log(error);
+    //     // }
+    //   });
+
+    // const res = await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+
+    // const fileName = res.data;
+    // return fileName;
+
+    // // })
+    // .catch((error) => {
+    //   console.error("Error fetching image:", error);
+    // });
+
+    //console.log(response);
+    // const imageFile = new File([response], "image.jpg", {
+    //   type: "image/jpeg",
+    // });
+
+    // const formData = new FormData();
+    // formData.append("file", imageFile);
+    // try {
+    //   await AxiosInstance.post("shopmealplan/savefile", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }).then((res) => {
+    //     console.log(res);
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+  }
+  //?
   const [loading1, setLoading1] = useState(false)
   const [indexmeal, setIndexmeal] = useState();
   const [tempMeal, setTempMeal] = useState([
@@ -35,6 +316,8 @@ function SellerCreateMealPlan() {
           fat: 0,
           protein: 0,
           description: "",
+          sodium: 0,
+          potassium: 0,
           image: "",
         },
         Lunch: {
@@ -43,6 +326,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -52,6 +337,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -61,6 +348,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -75,6 +364,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -84,6 +375,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -93,6 +386,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -102,6 +397,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -116,6 +413,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -125,6 +424,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -134,6 +435,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -143,6 +446,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -158,6 +463,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -167,6 +474,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -176,6 +485,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -185,6 +496,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -200,6 +513,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -209,6 +524,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -218,6 +535,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -227,6 +546,8 @@ function SellerCreateMealPlan() {
           carbs: 0,
           fat: 0,
           protein: 0,
+          sodium: 0,
+          potassium: 0,
           description: "",
           image: "",
         },
@@ -235,15 +556,15 @@ function SellerCreateMealPlan() {
   ]);
   const [day, setDay] = useState();
   const schema = yup.object().shape({
-    name: yup.string().required("Name is required"),
+    name: yup.string().required("Food is required"),
     // type: yup.string().required("Please Select a type"),
-    calories: yup.number().required("Calories is required"),
-    //.integer("Please enter an integer value"),
-    fat: yup.number().required("Fat is required"),
-    //  .integer("Please enter an integer value"),
-    carbs: yup.number().required("Carbs is required"),
-    // .integer("Please enter an integer value"),
-    protein: yup.number().required("Protein is required"),
+    // calories: yup.number().required("Calories is required"),
+    // //.integer("Please enter an integer value"),
+    // fat: yup.number().required("Fat is required"),
+    // //  .integer("Please enter an integer value"),
+    // carbs: yup.number().required("Carbs is required"),
+    // // .integer("Please enter an integer value"),
+    // protein: yup.number().required("Protein is required"),
 
     //  .integer("Please enter an integer value"),
     // Other fields
@@ -277,7 +598,7 @@ function SellerCreateMealPlan() {
     register: register1,
     formState: { errors: errors1 },
     handleSubmit: handleSubmit1,
-    reset1,
+    reset: reset1,
   } = useForm({
     resolver: yupResolver(mealPlanschema),
   });
@@ -288,6 +609,255 @@ function SellerCreateMealPlan() {
 
   const handleResetMealPlan = () => {
     reset1(); // Call reset function to clear form state and errors
+    setTempMeal([
+      {
+        day: "Day 1", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+      {
+        day: "Day 2", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+      {
+        day: "Day 3", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+  
+      {
+        day: "Day 4", // Optional: Add a day property for reference
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+  
+      {
+        day: "Day 5",
+        meals: {
+          Breakfast: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Lunch: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Snack: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+          Dinner: {
+            food: "",
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            sodium: 0,
+            potassium: 0,
+            description: "",
+            image: "",
+          },
+        },
+      },
+    ]);
   };
 
   const saveMealPlan = async (data) => {
@@ -398,6 +968,8 @@ function SellerCreateMealPlan() {
                     protein: mealDetails.protein,
                     carbs: mealDetails.carbs,
                     food: mealDetails.food,
+                    sodium: mealDetails.sodium ,
+                    potassium: mealDetails.potassium,
                     image: mealDetails.image,
                     day: extractedNumber,
                     //image: data.type,
@@ -534,38 +1106,52 @@ function SellerCreateMealPlan() {
   const [updatedMealInfo, setUpdatedMealInfo] = useState([]);
   const onSubmitHandler = async (data) => {
     // event.preventDefault(); // Prevent default form submission behavior
-    if (!file) {
-      return alert("Please select an image");
-    } else {
+    // if (!file) {
+    //   return alert("Please select an image");
+    // } else {
       setLoading1(true)
-      console.log({ data }, data.name);
-      console.log(file.name);
-      const formData = new FormData();
-      formData.append("file", file);
+      // console.log({ data }, data.name);
+      // console.log(file.name);
+      // const formData = new FormData();
+      // formData.append("file", file);
 
       try {
-        const response = await AxiosInstance.post(
-          "shopmealplan/savefile",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(response);
+        // const response = await AxiosInstance.post(
+        //   "shopmealplan/savefile",
+        //   formData,
+        //   {
+        //     headers: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //   }
+        // );
+
+        const imageData = await getImage(breakfastFoodImage);
+   
         const updatedMealInfo = {
-          calories: data.calories,
-          fat: data.fat,
-          protein: data.protein,
-          carbs: data.carbs,
-          food: data.name,
+          calories: caloriesBvalue,
+          fat: fatBvalue,
+          protein: proteinBvalue,
+          carbs: carbsBvalue,
+          sodium: sodiumBvalue,
+          potassium: potassiumBvalue,
+          food: breakfastFood,
+     
           image:
-            "https://nightxperson.pythonanywhere.com/Photos/" + response.data,
+            "https://nightxperson.pythonanywhere.com/Photos/" + imageData,
         };
 
         setTempMeal(updateMeal(day, tempTypeForMeal, updatedMealInfo));
+        changeDiv(activeButtonIndex, day)
         handleReset();
+        setBreakfastFood("")
+        setCaloriesBvalue(0);
+        setFatBvalue(0);
+        setProteinBvalue(0);
+        setCarbsBvalue(0);
+        setSodiumBvalue(0)
+        setPotassiumBvalue(0)
+        setBreakfastFoodImage("/images/food.png")
         console.log(activeButtonIndex, `Day ${activeButtonIndex + 1}`)
         changeDiv(activeButtonIndex, `Day ${activeButtonIndex + 1}`)
         setLoading1(false)
@@ -656,7 +1242,7 @@ function SellerCreateMealPlan() {
       } catch (error) {
         console.error("Error uploading file:", error); // Handle errors
       }
-    }
+    // }
 
     //   // const csrftoken = document.querySelector(
     //   //   '[name="csrfmiddlewaretoken"]'
@@ -856,7 +1442,97 @@ function SellerCreateMealPlan() {
     setDivContent(<b>Bold new content! {index}</b>);
   };
 
-  const [divContent, setDivContent] = useState("Initial content");
+  const [divContent, setDivContent] = useState(<Box sx={{ mx: "5%" }}>
+    {Object.keys(tempMeal[activeButtonIndex].meals).map((mealName) => (
+      <Box>
+        {" "}
+        <Typography
+          sx={{
+            color: "#E66253",
+            fontWeight: "bold",
+            fontSize: "200%",
+            textAlign: "left",
+            ml: 0,
+            mt: 3,
+          }}
+        >
+          {mealName}
+        </Typography>
+        <Box sx={{ my: 3, mx: 0, border: 2, borderRadius: 5, px: 3 }}>
+          <Grid container spacing={2} sx={{ my: 2 }}>
+            <Grid xs={12} sm={3}>
+              <img
+                src={
+                  tempMeal[activeButtonIndex]?.meals?.[mealName]?.image ||
+                  "/images/food.png"
+                }
+                height="80%"
+                width="80%"
+                alt="Meal Image" // Add an alt attribute for accessibility
+              />
+            </Grid>
+            <Grid xs={12} sm={7} sx={{ mx: 0, mt: 5 }}>
+              <Typography
+                sx={{
+                  color: "#99756E",
+                  fontWeight: "bold",
+                  fontSize: "25px",
+                  float: "left",
+                }}
+              >
+                {tempMeal[activeButtonIndex].meals[mealName].food}
+              </Typography>
+
+              <Grid container spacing={2}>
+                <Grid xs={6}>
+                  <img src="/images/calories.png" />
+                  {tempMeal[activeButtonIndex].meals[mealName].calories} calories |
+                </Grid>
+                <Grid xs={6}>
+                  <img src="/images/fat.png" />
+                  {tempMeal[activeButtonIndex].meals[mealName].fat}g fat |
+                </Grid>
+                <Grid xs={6}>
+                  <img src="/images/carbs.png" />
+                  {tempMeal[activeButtonIndex].meals[mealName].carbs}g carbs |
+                </Grid>
+                <Grid xs={6}>
+                  <img src="/images/protein.png" />
+                  {tempMeal[activeButtonIndex].meals[mealName].protein}g protein
+                </Grid>
+                <Grid xs={6}>
+                  <img width = "10%" height= "60%" src="/images/sodiumorange.png" />
+                  {tempMeal[activeButtonIndex].meals[mealName].sodium}g sodium
+                </Grid>
+                <Grid xs={6}>
+                  <img width = "10%" height= "60%" src="/images/potassiumorange.png" />
+                  {tempMeal[activeButtonIndex].meals[mealName].potassium}g potassium
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid xs={12} sm={2}>
+              <Button
+                sx={{
+                  background: "#E66253",
+                  color: "#ffffff",
+                  mt: 8,
+                  "&:hover": {
+                    backgroundColor: "#ffffff",
+                    color: "#E66253",
+                    border: 0.5,
+                    borderColor: "#E66253",
+                  },
+                }}
+                onClick={() => handleOpen(mealName)}
+              >
+                ADD
+              </Button>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+       ))}
+  </Box>);
 
   const changeContent = () => {
     setDivContent(<b>Bold new content!</b>);
@@ -966,6 +1642,15 @@ function SellerCreateMealPlan() {
                       <img src="/images/protein.png" />
                       {tempMeal[index].meals[mealName].protein}g protein
                     </Grid>
+                    <Grid xs={6}>
+                      <img width = "10%" height= "60%" src="/images/sodiumorange.png" />
+                      {tempMeal[index].meals[mealName].sodium}g sodium
+                    </Grid>
+                    <Grid xs={6}>
+                      <img width = "10%" height= "60%" src="/images/potassiumorange.png" />
+                      {tempMeal[index].meals[mealName].potassium}g potassium
+                    </Grid>
+                    
                   </Grid>
                 </Grid>
                 <Grid xs={12} sm={2}>
@@ -1157,7 +1842,7 @@ function SellerCreateMealPlan() {
               <Grid xs={6}>Stocks</Grid>
             </Grid> */}
             Name: <br />
-            <TextField
+            {/* <TextField
               id="name"
               name="name"
               label="Food Name"
@@ -1165,19 +1850,127 @@ function SellerCreateMealPlan() {
               margin="dense"
               {...register("name")}
               error={errors.name ? true : false}
+            /> */}
+            <div
+            className="meal-suggestion-input"
+            style={{
+              position: "relative",
+              width: "80%",
+              color: "#000000",
+            }}
+          >
+            <TextField
+              //fullWidth
+              id="name"
+              name="name"
+             
+              fullWidth
+              margin="dense"
+              {...register("name")}
+              error={
+                errors.name ? true : false
+              }
+             
+              variant="filled"
+              size="small"
+              // label="Search for meals"
+              value={breakfastFood}
+              onChange={(e) =>
+                handleInputChanges(e, "breakfast")
+              }
+              placeholder="Type to search for meals..."
+              sx={{
+                //  mr: 2,
+                background: "#ffffff",
+                color: "#000000",
+                width: "120%",
+              }}
             />
+              <Typography variant="inherit" color="textSecondary">
+{errors.name?.message}
+</Typography>
+            {loading && (
+              <CircularProgress
+                size={24}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  right: "10px",
+                  marginTop: "-12px",
+                }}
+              />
+            )}
+            {suggestions.length > 0 && notFound ? (
+              <List
+                style={{
+                  position: "absolute",
+                  top: "60px",
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  backgroundColor: "#fff",
+                  zIndex: 1000,
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                }}
+              >
+                {suggestions.map(
+                  (suggestion, index) => (
+                    <ListItem
+                      button
+                      key={index}
+                      onClick={() =>
+                        handleSuggestionClick(
+                          suggestion,
+                          index,
+                          "breakfast"
+                        )
+                      }
+                    >
+                      <ListItemText
+                        primary={suggestion}
+                      />
+                    </ListItem>
+                  )
+                )}
+              </List>
+            )  : suggestions.length <= 0 && notFound ? (
+              <>
+               <List
+                style={{
+                  position: "absolute",
+                  top: "60px",
+                  width: "100%",
+                  border: "1px solid #ccc",
+                  backgroundColor: "#fff",
+                  zIndex: 1000,
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                }}
+              >
+                 <ListItem
+                 
+                    >
+                      <ListItemText>    Nothing found </ListItemText>
+                    </ListItem>
+                </List>
+          
+              </>
+            ) : (<>
+                                    
+              </>) }
+          </div>
             <Typography variant="inherit" color="textSecondary">
               {errors.name?.message}
             </Typography>
             <br />
-            Upload Image:
-            {/* // * upload image */}
+            {/* Upload Image:
+          
             <input
               type="file"
               onChange={(evt) => setFile(evt.target.files[0])}
-            />
-            <br />
-            <br />
+            /> */}
+            {/* <br />
+            <br /> */}
             <Box sx={{ mx: 1 }}>
               <Typography sx={{ fontWeight: "bold" }}> Calories</Typography>
               <Grid container spacing={2} sx={{ mb: 2 }}>
@@ -1194,7 +1987,8 @@ function SellerCreateMealPlan() {
                   <TextField
                     id="calories"
                     name="calories"
-                    label="Calories"
+                  
+                    value={caloriesBvalue}
                     fullWidth
                     margin="dense"
                     type="number"
@@ -1243,7 +2037,7 @@ function SellerCreateMealPlan() {
                   <TextField
                     id="fat"
                     name="fat"
-                    label="Fat"
+                    value={fatBvalue}
                     fullWidth
                     margin="dense"
                     type="number"
@@ -1291,7 +2085,7 @@ function SellerCreateMealPlan() {
                   <TextField
                     id="carbs"
                     name="carbs"
-                    label="Carbs"
+                    value={carbsBvalue}
                     type="number"
                     fullWidth
                     margin="dense"
@@ -1339,7 +2133,7 @@ function SellerCreateMealPlan() {
                   <TextField
                     id="protein"
                     name="protein"
-                    label="Protein"
+                    value={proteinBvalue}
                     type="number"
                     fullWidth
                     margin="dense"
@@ -1371,6 +2165,105 @@ function SellerCreateMealPlan() {
                   </Button> */}
                 </Grid>
               </Grid>
+
+              <Typography sx={{ fontWeight: "bold" }}> Potassium</Typography>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid xs={5}>
+                  [Potassium]
+                  <img
+                    src="/images/arrow.png"
+                    width="40px"
+                    style={{ marginLeft: "35px", marginTop: "25px" }}
+                  />
+                </Grid>
+                <Grid xs={4}>
+                  <br />
+                  <TextField
+                    id="potassium"
+                    name="potassium"
+                 
+                    fullWidth
+                    value={potassiumBvalue}
+                    margin="dense"
+                    type="number"
+                    {...register("potassium")}
+                    error={errors.potassium ? true : false}
+                  />
+                  {/* <Typography variant="inherit" color="textSecondary">
+                    {errors.fat?.message}
+                  </Typography> */}
+                </Grid>
+                <Grid xs={1}>
+                  <br />
+                  {/* <Button
+                    sx={{
+                      background: "#ffffff",
+                      color: "#E66253",
+                      ml: 5,
+                      mt: 1,
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                  >
+                    OK
+                  </Button> */}
+                </Grid>
+              </Grid>
+
+              <Typography sx={{ fontWeight: "bold" }}> Sodium</Typography>
+              <Grid container spacing={2} sx={{ mb: 2 }}>
+                <Grid xs={5}>
+                  [Sodium]
+                  <img
+                    src="/images/arrow.png"
+                    width="40px"
+                    style={{ marginLeft: "35px", marginTop: "25px" }}
+                  />
+                </Grid>
+                <Grid xs={4}>
+                  <br />
+                  <TextField
+                    id="sodium"
+                    name="sodium"
+                 
+                    fullWidth
+                    value={sodiumBvalue}
+                    margin="dense"
+                    type="number"
+                    {...register("sodium")}
+                    error={errors.sodium ? true : false}
+                  />
+                  {/* <Typography variant="inherit" color="textSecondary">
+                    {errors.fat?.message}
+                  </Typography> */}
+                </Grid>
+                <Grid xs={1}>
+                  <br />
+                  {/* <Button
+                    sx={{
+                      background: "#ffffff",
+                      color: "#E66253",
+                      ml: 5,
+                      mt: 1,
+                      fontWeight: "bold",
+                      "&:hover": {
+                        backgroundColor: "#E66253",
+                        color: "#ffffff",
+                        border: 0.5,
+                        borderColor: "#ffffff",
+                      },
+                    }}
+                  >
+                    OK
+                  </Button> */}
+                </Grid>
+              </Grid>
+
             </Box>
             <center>
          
@@ -1695,6 +2588,23 @@ function SellerCreateMealPlan() {
                 tempMeal[activeButtonIndex].meals.Dinner.protein
                 } {" "} protein
               </Typography>
+              <Typography sx={{ my: 1 }}>
+                <img width="5%" height="10%" src="/images/sodiumorange.png" />
+                {tempMeal[activeButtonIndex]?.meals.Breakfast.sodium +
+                tempMeal[activeButtonIndex]?.meals.Lunch.sodium + 
+                tempMeal[activeButtonIndex]?.meals.Snack.sodium  +
+                tempMeal[activeButtonIndex]?.meals.Dinner.sodium
+                } {" "}sodium
+              </Typography>
+
+              <Typography sx={{ my: 1 }}>
+                <img width="5%" height="10%" src="/images/potassiumorange.png" />
+                {tempMeal[activeButtonIndex]?.meals.Breakfast.potassium +
+                tempMeal[activeButtonIndex]?.meals.Lunch.potassium + 
+                tempMeal[activeButtonIndex]?.meals.Snack.potassium  +
+                tempMeal[activeButtonIndex]?.meals.Dinner.potassium
+                } {" "}potassium
+              </Typography>
             </Box>
 
           
@@ -1726,6 +2636,7 @@ function SellerCreateMealPlan() {
             >
               SAVE MEAL PLAN
             </Button>
+            <br/>
             <Button
               sx={{
                 border: 2.5,
@@ -1747,6 +2658,7 @@ function SellerCreateMealPlan() {
                   borderColor: "#ffffff",
                 },
               }}
+              onClick = {handleResetMealPlan}
             >
               START OVER
             </Button>

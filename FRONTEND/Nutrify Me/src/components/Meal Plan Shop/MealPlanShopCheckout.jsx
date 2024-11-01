@@ -74,6 +74,17 @@ import {
 } from "select-philippines-address";
 
 function MealPlanShopCheckout() {
+  const [isHovered, setIsHovered] = useState(false);
+
+
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   const { cartId } = useParams();
   const navigate = useNavigate();
 
@@ -1629,16 +1640,69 @@ function MealPlanShopCheckout() {
                     {" "}
                     <img src={item.image} width="50%" height="80%" />
                   </Grid>
-                  <Grid xs={12} md={4} sx={{ textAlign: "center" }}>
+                  <Grid xs={12} md={6} sx={{ textAlign: "center" }}>
                     <Typography sx={{ color: "#99756E", mt: 3 }}>
                       {item.name}
                     </Typography>
+                    {item.price / 5 }
+                    <table style={{width:"120%"}}>
+                      <tr>
+                        <th></th>
+                        <th>Day 1</th>
+                        <th>Day 2</th>
+                        <th>Day 3</th>
+                        <th>Day 4</th>
+                        <th>Day 5</th>
+                      </tr>
+                      <tr>
+                        <td>Breakfast</td>
+                        <td>{(item.price / 5) * 0.3 }</td>
+                        <td>{(item.price / 5) * 0.4 }</td>
+                        <td>{(item.price / 5) * 0.2 }</td>
+
+                        <td>{(item.price / 5) * 0.4 }</td>
+                        <td>{(item.price / 5) * 0.2 }</td>
+
+                      </tr>
+
+                      <tr>
+                        <td>Lunch</td>
+                        <td>{(item.price / 5) * 0.4 }</td>
+                        <td>{(item.price / 5) * 0.2 }</td>
+                        <td>{(item.price / 5) * 0.3 }</td>
+
+                        <td>{(item.price / 5) * 0.3 }</td>
+                        <td>{(item.price / 5) * 0.4 }</td>
+
+                      </tr>
+
+                      <tr>
+                        <td>Snack</td>
+                        <td>{(item.price / 5) * 0.1 }</td>
+                        <td>{(item.price / 5) * 0.1 }</td>
+                        <td>{(item.price / 5) * 0.1 }</td>
+
+                        <td>{(item.price / 5) * 0.1 }</td>
+                        <td>{(item.price / 5) * 0.1 }</td>
+
+                      </tr>
+                      <tr>
+                        <td>Dinner</td>
+                        <td>{(item.price / 5) * 0.2 }</td>
+                        <td>{(item.price / 5) * 0.3 }</td>
+                        <td>{(item.price / 5) * 0.4 }</td>
+
+                        <td>{(item.price / 5) * 0.2 }</td>
+                        <td>{(item.price / 5) * 0.3 }</td>
+
+                      </tr>
+                    </table>
                     <Typography sx={{ color: "#E66253", mt: "2%" }}>
                       {" "}
-                      Php {item.price}
+                      ₱ {item.price}
                     </Typography>
                   </Grid>
-                  <Grid xs={12} md={4} sx={{ mt: "5%" }}>
+                  <Grid xs={12} md={0} sx={{ mt: "5%" }}>
                     {/* x {item.quantity} */}
                   </Grid>
                 </Grid>
@@ -1763,7 +1827,7 @@ function MealPlanShopCheckout() {
                 >
                   ORDER SUBTOTAL
                 </Grid>
-                <Grid xs={6}>Php {subTotalPrices}</Grid>
+                <Grid xs={6}>₱ {subTotalPrices}</Grid>
               </Grid>
 
               <hr />
@@ -1781,6 +1845,7 @@ function MealPlanShopCheckout() {
                     },
                   }}
                 >
+                  
                   SHIPPING DETAILS <br />
                   Courier: Lalamove
                 </Grid>
@@ -1813,17 +1878,54 @@ function MealPlanShopCheckout() {
               </Grid>
               <hr />
               <br />
+           
+
+              <Grid container spacing={2} sx={{ my: 0 }}>
+                {" "}
+                <Grid xs={6}>   
+                  
+                    <Grid container spacing = {2}>
+                      <Grid xs = {6} sx = {{display: "flex", justifyContent: "flex-end"}}>VAT (12%): </Grid>
+                      <Grid xs = {6} >
+
+                      <div   
+ onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} 
+ style = {{border: '1px solid black', borderRadius: 15, marginRight: "70%"
+  , marginLeft: "10%",  marginTop: "0%"
+ }}>   
+
+      ?
+      {isHovered && <div className="tooltip"  style={{
+        zIndex: 10,
+        marginRight: "10%",
+            position: 'absolute',
+            left: '68%', // Adjust this value as needed
+            top: '80%',
+            transform: 'translateY(-50%)',
+          backgroundColor: 'lightgray',
+            padding: '10px',
+            border: '1px solid black',
+          fontSize: '20px',
+            borderRadius: '5px',
+            color: "#000000",
+          }}>The Philippine government has implemented a 12% Value-Added Tax (VAT) on online purchases through Republic Act No. 12023. This law aims to expand the tax base and ensure fair taxation for both domestic and foreign digital service providers. </div>}
+    </div>
+                      </Grid>
+                      </Grid>                  
+                   <br/></Grid>
+                <Grid xs={6}>₱ {" "}{subTotalPrices * 0.12}</Grid>
+              </Grid>
               <Grid container spacing={2} sx={{ my: 0 }}>
                 {" "}
                 <Grid xs={6}>SHIPPING FEE</Grid>
-                <Grid xs={6}>Php {shippingPrice}</Grid>
+                <Grid xs={6}>₱{shippingPrice}</Grid>
               </Grid>
               <br />
 
               <Grid container spacing={2}>
                 {" "}
                 <Grid xs={6}>TOTAL</Grid>
-                <Grid xs={6}>Php {totalOrderPrice}</Grid>
+                <Grid xs={6}>₱{totalOrderPrice + (subTotalPrices * 0.12)}</Grid>
               </Grid>
             </Box></Grid>
            </Grid>

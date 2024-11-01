@@ -19,7 +19,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import { useLoggedInUser } from "../LoggedInUserContext";
 import { useNavigate } from "react-router-dom";
-import { useState, useContext , useEffect} from "react";
+import { useState, useContext, useEffect } from "react";
 import ColorContext from "../ColorContext"; // Import the context
 import ImageContext from "../ImageContext";
 
@@ -63,54 +63,46 @@ function MainUserNavbar() {
   const { primaryColor, secondaryColor, setPrimaryColor, setSecondaryColor } =
     useContext(ColorContext);
 
+  // ? anchorElNotif
 
-    // ? anchorElNotif
+  const handleOpenNotifMenu = (event) => {
+    setAnchorElNotif(event.currentTarget);
 
-    const handleOpenNotifMenu = (event) => {
-      setAnchorElNotif(event.currentTarget);
+    notifsData.forEach((item) => {
+      if (item.seen == false) {
+        console.log(item);
 
-
-      notifsData.forEach((item) => {
-        if(item.seen == false){
-          console.log(item)
-
-          AxiosInstance.put(`notifications/`, {
-            notif_id: item.notif_id, 
-            'type': item.type, 
-            'id': item.id, 
-            'user_id': item.user_id, 
-            'message': item.message, 
-            'link': item.link, 
-            'seen': 1, 
-            'other_id': item.other_id,
-            'title': item.title,
-            'date': item.date,
-          }).then((res) => {
-            console.log(res, res.data);
-            getNotifData()
-          });
-        }
-    })
-    };
-
-    const handleCloseNotifMenu = (event, type) => {
-      setAnchorElNotif(null);
-      if(event != null){
-
-        if (type === "DepOrder") {
-          window.open(event, '_blank');
-        }
-        else {
-          navigate(event);
-        }
-
-        
-        console.log("true")
+        AxiosInstance.put(`notifications/`, {
+          notif_id: item.notif_id,
+          type: item.type,
+          id: item.id,
+          user_id: item.user_id,
+          message: item.message,
+          link: item.link,
+          seen: 1,
+          other_id: item.other_id,
+          title: item.title,
+          date: item.date,
+        }).then((res) => {
+          console.log(res, res.data);
+          getNotifData();
+        });
       }
-      
-      
-    };
+    });
+  };
 
+  const handleCloseNotifMenu = (event, type) => {
+    setAnchorElNotif(null);
+    if (event != null) {
+      if (type === "DepOrder") {
+        window.open(event, "_blank");
+      } else {
+        navigate(event);
+      }
+
+      console.log("true");
+    }
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -137,68 +129,66 @@ function MainUserNavbar() {
     setAnchorElUser(null);
   };
 
-  const [notifsData, setNotifsData] = useState([])
+  const [notifsData, setNotifsData] = useState([]);
   const getNotifData = () => {
     AxiosInstance.get(`notifications`).then((res) => {
       console.log(res);
       setNotifsData(
-        res.data.reverse().filter((item) => item.user_id === loggedInUser.user_id)
+        res.data
+          .reverse()
+          .filter((item) => item.user_id === loggedInUser.user_id)
       );
     });
-  }
+  };
 
   useEffect(() => {
     getNotifData();
   }, []);
 
   const getNotifsNumber = () => {
-
     const count = notifsData.filter((item) => item.seen === false);
-    console.log(count.length, notifsData)
+    console.log(count.length, notifsData);
     switch (count.length) {
-      case 0: 
-      return "images/notification.png"
-      break;
-      case 1: 
-      return "images/notif1.png"
-      break;
-      case 2: 
-      return "images/notif2.png"
-      break;
-      case 3: 
-       return "images/notif3.png"
-      break;
-      case 4: 
-       return "images/notif4.png"
-      break;
-      case 5: 
-       return "images/notif5.png"
-      break;
-      default: 
-       return "images/notif5+.png"
-      break;
+      case 0:
+        return "images/notification.png";
+        break;
+      case 1:
+        return "images/notif1.png";
+        break;
+      case 2:
+        return "images/notif2.png";
+        break;
+      case 3:
+        return "images/notif3.png";
+        break;
+      case 4:
+        return "images/notif4.png";
+        break;
+      case 5:
+        return "images/notif5.png";
+        break;
+      default:
+        return "images/notif5+.png";
+        break;
     }
-  }
+  };
 
   const getNotifsImage = (type) => {
-
     switch (type) {
-      case "PAppointment": 
-      return "images/appointmentApprove.png"
-      break;
-      case "GReqOrder": 
-      return "images/genApprove.png"
-      break;
-      case "RReqOrder": 
-      return "images/recApprove.png"
-      break;
-      case "DepOrder": 
-      return "images/deploy.png"
-      break;
- 
+      case "PAppointment":
+        return "images/appointmentApprove.png";
+        break;
+      case "GReqOrder":
+        return "images/genApprove.png";
+        break;
+      case "RReqOrder":
+        return "images/recApprove.png";
+        break;
+      case "DepOrder":
+        return "images/deploy.png";
+        break;
     }
-  }
- 
+  };
 
   return (
     <AppBar position="" className="w-full" style={{ width: "100vw" }}>
@@ -314,9 +304,9 @@ function MainUserNavbar() {
               px: 5,
               ml: "2%",
               fontSize: {
-                         xs: "0.5em", 
-                         sm: "1em",
-                        },
+                xs: "0.5em",
+                sm: "1em",
+              },
             }}
           >
             {pages.map((page) => (
@@ -341,7 +331,6 @@ function MainUserNavbar() {
                 key={page.names}
                 onClick={handleCloseNavMenu}
                 sx={{
-               
                   textcolor: "#99756E",
                   display: "block",
                   transition: "box-shadow 0.3s background ease-in-out", // Add transition for smooth effect
@@ -383,36 +372,32 @@ function MainUserNavbar() {
             ))}
           </Box>
 
-
-
-
-<Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open Notifications">
               <IconButton onClick={handleOpenNotifMenu} sx={{ p: 0 }}>
                 <Button
                   // variant="contained"
                   // className="userButton"
-                  onMouseEnter={(e) =>
-                    (e.target.style.background = "#ffffff")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.target.style.background = "#ffffff")
-                  }
+                  onMouseEnter={(e) => (e.target.style.background = "#ffffff")}
+                  onMouseLeave={(e) => (e.target.style.background = "#ffffff")}
                   sx={{
                     borderRadius: 0,
                     background: "#ffffff",
                     mr: "0px ",
                   }}
                 >
-                 <img 
-                 src = {getNotifsNumber()}
-                 
-                 width = "70%" height = "70%"/>
+                  <img src={getNotifsNumber()} width="70%" height="70%" />
                 </Button>
               </IconButton>
             </Tooltip>
             <Menu
-              sx={{ mt: "45px", height:"auto", width: "auto", pt: 10, color: "#ffffff"}}
+              sx={{
+                mt: "45px",
+                height: "auto",
+                width: "auto",
+                pt: 10,
+                color: "#ffffff",
+              }}
               id="menu-appbar"
               anchorEl={anchorElNotif}
               anchorOrigin={{
@@ -438,51 +423,87 @@ function MainUserNavbar() {
               open={Boolean(anchorElNotif)}
               onClose={handleCloseNotifMenu}
             >
-              <Box sx = {{py: 2, background: primaryColor, height:"auto", width: "auto", color: "#ffffff"}}>
-                
-                <Typography sx = {{ml: "5%", fontWeight: "bold",  fontSize: "1.2em",}}>Notifications </Typography>
-                </Box>
-              <Box sx = {{pb:5, mt: 0}}>
-                
-              {notifsData.map((not) => (
-              <MenuItem
-              sx = {{color: "#E66253", background: not.seen === false ? "#E7E7E7" : "#ffffff"}}
-                  key={not.link}
-                  onClick={() => {
-                    handleCloseNotifMenu(not.link, not.type);
-                  }}
+              <Box
+                sx={{
+                  py: 2,
+                  background: primaryColor,
+                  height: "auto",
+                  width: "auto",
+                  color: "#ffffff",
+                }}
+              >
+                <Typography
+                  sx={{ ml: "5%", fontWeight: "bold", fontSize: "1.2em" }}
                 >
-                  <Grid container spacing = {0} sx = {{mt: 1}}>
-                    <Grid xs = {3}>
-                    
-                    <img 
-                    src = {getNotifsImage(not.type)}
-                    width = "60%" height = "90%"/></Grid>
-                    <Grid xs = {8}>
-                      <Typography variant="body1" sx={{ fontWeight: "bold", fontSize: 
-                        {xs: "0.5em",
-                          sm: "1em",
-                          wordWrap: 'break-word', // Ensures long words break into the next line
-                          whiteSpace: 'normal',   // Ensures normal wrapping behavior
-                        }
-                      }}>{not.title}</Typography>
-                      <Typography variant="body2"
-                      sx = {{fontSize: {xs: "0.5em",
-                        sm: "0.7em",
-                        wordWrap: 'break-word', // Ensures long words break into the next line
-          whiteSpace: 'normal',   // Ensures normal wrapping behavior
-                      }}}
-                      >{not.message}</Typography>
-                      <Typography sx = {{fontSize: "0.5em"}}>{dayjs(not.date).format("MMMM DD, YYYY")}</Typography>
+                  Notifications{" "}
+                </Typography>
+              </Box>
+              <Box sx={{ pb: 5, mt: 0 }}>
+                {notifsData.map((not) => (
+                  <MenuItem
+                    sx={{
+                      color: "#E66253",
+                      background: not.seen === false ? "#E7E7E7" : "#ffffff",
+                    }}
+                    key={not.link}
+                    onClick={() => {
+                      handleCloseNotifMenu(not.link, not.type);
+                    }}
+                  >
+                    <Grid container spacing={0} sx={{ mt: 1 }}>
+                      <Grid xs={3}>
+                        <img
+                          src={getNotifsImage(not.type)}
+                          width="60%"
+                          height="90%"
+                        />
+                      </Grid>
+                      <Grid xs={8}>
+                        <Typography
+                          variant="body1"
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: {
+                              xs: "0.5em",
+                              sm: "1em",
+                              wordWrap: "break-word", // Ensures long words break into the next line
+                              whiteSpace: "normal", // Ensures normal wrapping behavior
+                            },
+                          }}
+                        >
+                          {not.title}
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontSize: {
+                              xs: "0.5em",
+                              sm: "0.7em",
+                              wordWrap: "break-word", // Ensures long words break into the next line
+                              whiteSpace: "normal", // Ensures normal wrapping behavior
+                            },
+                          }}
+                        >
+                          {not.message}
+                        </Typography>
+                        <Typography sx={{ fontSize: "0.5em" }}>
+                          {dayjs(not.date).format("MMMM DD, YYYY")}
+                        </Typography>
+                      </Grid>
+                      <Grid xs={1} sx={{ mt: "3%" }}>
+                        <img
+                          src="/images/rightNotif.png"
+                          width="60%"
+                          height="40%"
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid xs = {1} sx = {{mt: "3%"}}><img src = "/images/rightNotif.png"  width = "60%" height = "40%"/></Grid>
-                  </Grid>
 
-                  {/* <Link to={navigate}></Link> */}
-                </MenuItem>
+                    {/* <Link to={navigate}></Link> */}
+                  </MenuItem>
                 ))}
               </Box>
-              
+
               {/* {settings.map((setting) => (
                 <MenuItem
                   key={setting}
@@ -496,8 +517,6 @@ function MainUserNavbar() {
               ))} */}
             </Menu>
           </Box>
-
-
 
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
@@ -518,7 +537,7 @@ function MainUserNavbar() {
                     fontSize: {
                       xs: "0.4em",
                       sm: "0.5em",
-                    }
+                    },
                   }}
                 >
                   WELCOME {loggedInUser.first_name}!
