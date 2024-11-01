@@ -74,6 +74,14 @@ import {
 } from "select-philippines-address";
 
 function MealPlanShopRequestCheckout() {
+  const [isHovered, setIsHovered] = useState(false);
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   const { cartId } = useParams();
   const navigate = useNavigate();
 
@@ -137,7 +145,7 @@ function MealPlanShopRequestCheckout() {
               parseInt(
                 quotationData?.data?.data?.priceBreakdown
                   ?.totalExcludePriorityFee
-              )
+              ) + parseInt(location.state.request.price * 0.12)
           );
 
           // console.log(tempPrice);
@@ -343,7 +351,7 @@ function MealPlanShopRequestCheckout() {
     setSubTotalPrices(location.state.request.price);
     setTotalOrderPrice(
       parseInt(location.state.request.price) + parseInt(shippingPrice)
-    );
+      + parseInt(location.state.request.price * 0.12)  ); 
 
     console.log(
       parseInt(location.state.request.price) + parseInt(shippingPrice)
@@ -656,8 +664,8 @@ function MealPlanShopRequestCheckout() {
   // const subTotalPrices = calculateSubTotalPrice(); // Calculate total price here
   const [subTotalPrices, setSubTotalPrices] = useState(0);
   const [totalOrderPrice, setTotalOrderPrice] = useState(
-    parseInt(subTotalPrices) + parseInt(shippingPrice) ||
-      parseInt(subTotalPrices) + parseInt(shippingPrice)
+    parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) ||
+      parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12)
   );
 
   const handleShippingChange = (event) => {
@@ -718,14 +726,14 @@ function MealPlanShopRequestCheckout() {
     getCartData();
     //getAddressData();
     const tempPrice = calculateSubTotalPrice();
-    // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+   setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
   }, []);
 
   useEffect(() => {
     // addNewObject();
 
     const tempPrice = calculateSubTotalPrice();
-    // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+   setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
   }, [shippingPrice]);
 
   useEffect(() => {
@@ -1265,7 +1273,7 @@ function MealPlanShopRequestCheckout() {
           parseInt(tempPrice) +
             parseInt(
               quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
-            )
+            ) + parseInt(subTotalPrices * 0.12)
         );
         setShippingDetails(quotationData);
       } catch (error) {
@@ -1613,9 +1621,63 @@ function MealPlanShopRequestCheckout() {
               <Typography sx={{ color: "#99756E", mt: 3 }}>
                 {location.state.meal.name}
               </Typography>
-              <Typography sx={{ color: "#E66253", mt: "2%" }}>
+             
+              <table style={{width:"150%"}}>
+                      <tr>
+                        <th></th>
+                        <th>Day 1</th>
+                        <th>Day 2</th>
+                        <th>Day 3</th>
+                        <th>Day 4</th>
+                        <th>Day 5</th>
+                      </tr>
+                      <tr>
+                        <td>Breakfast</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.32 )}</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.33 )}</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.25)}</td>
+
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.33 )}</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.21 )}</td>
+
+                      </tr>
+
+                      <tr>
+                        <td>Lunch</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.37) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.23)}</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.33 )}</td>
+
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.32) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.35) }</td>
+
+                      </tr>
+
+                      <tr>
+                        <td>Snack</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.1) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.115) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.12) }</td>
+
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.11) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.125 )}</td>
+
+                      </tr>
+                      <tr>
+                        <td>Dinner</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.21) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.31) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.32) }</td>
+
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.22) }</td>
+                        <td>₱ {parseInt((location.state.request.price / 5) * 0.325 )}</td>
+
+                      </tr>
+
+                    </table>
+                    <Typography sx={{ color: "#E66253", mt: "2%" }}>
                 {" "}
-                Php {location.state.request.price}
+                ₱ {location.state.request.price}
               </Typography>
             </Grid>
             <Grid xs={12} md={4} sx={{ mt: "5%" }}>
@@ -1839,6 +1901,45 @@ function MealPlanShopRequestCheckout() {
           </Grid>
           <hr />
           <br />
+
+
+          <Grid container spacing={2} sx={{ my: 0 }}>
+                {" "}
+                <Grid xs={6}>   
+                  
+                    <Grid container spacing = {2}>
+                      <Grid xs = {6} sx = {{display: "flex", justifyContent: "flex-end"}}>VAT (12%): </Grid>
+                      <Grid xs = {6} >
+
+                      <div   
+ onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} 
+ style = {{border: '1px solid black', borderRadius: 15, marginRight: "70%"
+  , marginLeft: "10%",  marginTop: "0%"
+ }}>   
+
+      ?
+      {isHovered && <div className="tooltip"  style={{
+        zIndex: 10,
+        marginRight: "10%",
+            position: 'absolute',
+            left: '68%', // Adjust this value as needed
+            top: '80%',
+            transform: 'translateY(-50%)',
+          backgroundColor: 'lightgray',
+            padding: '10px',
+            border: '1px solid black',
+          fontSize: '20px',
+            borderRadius: '5px',
+            color: "#000000",
+          }}>The Philippine government has implemented a 12% Value-Added Tax (VAT) on online purchases through Republic Act No. 12023. This law aims to expand the tax base and ensure fair taxation for both domestic and foreign digital service providers. </div>}
+    </div>
+                      </Grid>
+                      </Grid>                  
+                   <br/></Grid>
+                <Grid xs={6}>₱ {" "}{parseInt(subTotalPrices * 0.12)}</Grid>
+              </Grid>
+
+
           <Grid container spacing={2} sx={{ my: 0 }}>
             {" "}
             <Grid xs={6}>SHIPPING FEE</Grid>
@@ -1849,7 +1950,7 @@ function MealPlanShopRequestCheckout() {
           <Grid container spacing={2}>
             {" "}
             <Grid xs={6}>TOTAL</Grid>
-            <Grid xs={6}>Php {totalOrderPrice}</Grid>
+            <Grid xs={6}>Php {totalOrderPrice }</Grid>
           </Grid>
         </Box></Grid>
           </Grid>

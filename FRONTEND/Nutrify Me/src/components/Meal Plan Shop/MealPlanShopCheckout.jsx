@@ -138,7 +138,7 @@ function MealPlanShopCheckout() {
               parseInt(
                 quotationData?.data?.data?.priceBreakdown
                   ?.totalExcludePriorityFee
-              )
+              ) + parseInt(subTotalPrices * 0.12)
           );
 
           console.log(tempPrice);
@@ -683,8 +683,8 @@ function MealPlanShopCheckout() {
   const [shippingPrice, setShippingPrice] = useState(0);
   const subTotalPrices = calculateSubTotalPrice(); // Calculate total price here
   const [totalOrderPrice, setTotalOrderPrice] = useState(
-    parseInt(subTotalPrices) + parseInt(shippingPrice) ||
-      parseInt(subTotalPrices) + parseInt(shippingPrice)
+    parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) ||
+      parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12)
   );
 
   const handleShippingChange = (event) => {
@@ -745,14 +745,14 @@ function MealPlanShopCheckout() {
     getCartData();
     getAddressData();
     const tempPrice = calculateSubTotalPrice();
-    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice ) + parseInt(subTotalPrices * 0.12));
   }, []);
 
   useEffect(() => {
     // addNewObject();
 
     const tempPrice = calculateSubTotalPrice();
-    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice));
+    setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) );
   }, [shippingPrice]);
 
   useEffect(() => {
@@ -1309,7 +1309,7 @@ function MealPlanShopCheckout() {
           parseInt(tempPrice) +
             parseInt(
               quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
-            )
+            ) + parseInt(subTotalPrices * 0.12)
         );
         setShippingDetails(quotationData);
       } catch (error) {
@@ -1644,7 +1644,7 @@ function MealPlanShopCheckout() {
                     <Typography sx={{ color: "#99756E", mt: 3 }}>
                       {item.name}
                     </Typography>
-                    {item.price / 5 }
+                    
                     <table style={{width:"120%"}}>
                       <tr>
                         <th></th>
@@ -1656,46 +1656,47 @@ function MealPlanShopCheckout() {
                       </tr>
                       <tr>
                         <td>Breakfast</td>
-                        <td>{(item.price / 5) * 0.3 }</td>
-                        <td>{(item.price / 5) * 0.4 }</td>
-                        <td>{(item.price / 5) * 0.2 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.32 )}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.33 )}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.25)}</td>
 
-                        <td>{(item.price / 5) * 0.4 }</td>
-                        <td>{(item.price / 5) * 0.2 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.33 )}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.21 )}</td>
 
                       </tr>
 
                       <tr>
                         <td>Lunch</td>
-                        <td>{(item.price / 5) * 0.4 }</td>
-                        <td>{(item.price / 5) * 0.2 }</td>
-                        <td>{(item.price / 5) * 0.3 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.37) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.23)}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.33 )}</td>
 
-                        <td>{(item.price / 5) * 0.3 }</td>
-                        <td>{(item.price / 5) * 0.4 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.32) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.35) }</td>
 
                       </tr>
 
                       <tr>
                         <td>Snack</td>
-                        <td>{(item.price / 5) * 0.1 }</td>
-                        <td>{(item.price / 5) * 0.1 }</td>
-                        <td>{(item.price / 5) * 0.1 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.1) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.115) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.12) }</td>
 
-                        <td>{(item.price / 5) * 0.1 }</td>
-                        <td>{(item.price / 5) * 0.1 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.11) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.125 )}</td>
 
                       </tr>
                       <tr>
                         <td>Dinner</td>
-                        <td>{(item.price / 5) * 0.2 }</td>
-                        <td>{(item.price / 5) * 0.3 }</td>
-                        <td>{(item.price / 5) * 0.4 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.21) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.31) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.32) }</td>
 
-                        <td>{(item.price / 5) * 0.2 }</td>
-                        <td>{(item.price / 5) * 0.3 }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.22) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.325 )}</td>
 
                       </tr>
+
                     </table>
                     <Typography sx={{ color: "#E66253", mt: "2%" }}>
                       {" "}
@@ -1925,7 +1926,7 @@ function MealPlanShopCheckout() {
               <Grid container spacing={2}>
                 {" "}
                 <Grid xs={6}>TOTAL</Grid>
-                <Grid xs={6}>₱{totalOrderPrice + (subTotalPrices * 0.12)}</Grid>
+                <Grid xs={6}>₱{totalOrderPrice}</Grid>
               </Grid>
             </Box></Grid>
            </Grid>
