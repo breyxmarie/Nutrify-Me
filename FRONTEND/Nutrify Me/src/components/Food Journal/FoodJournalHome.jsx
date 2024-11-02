@@ -113,13 +113,13 @@ function FoodJournalHome() {
       "Prioritize Stress Management",
       "Quit Smoking and Limit Alcohol:",
     ];
-    if (sys < 120 && dia < 80) {
+    if (sys <= 120 && dia <= 80) {
       setBPRange(["Normal Blood Pressure", "#4DDA5B", normal[num]]);
       return ["Normal Blood Pressure", "#4DDA5B", normal[num]];
-    } else if (sys >= 120 && sys <= 129 && dia < 80) {
+    } else if (sys > 120 && sys <= 129 && dia < 80) {
       setBPRange(["Elevated Blood Pressure", "#F2CC01", elevate[num]]);
       return ["Elevated Blood Pressure", "#F2CC01", elevate[num]];
-    } else if ((sys >= 130 && sys <= 139) || (dia >= 80 && dia <= 89)) {
+    } else if ((sys >= 130 && sys <= 139) || (dia > 80 && dia <= 89)) {
       setBPRange(["Stage 1 Hypertension", "#ED7014", stage1[num]]);
       return ["Stage 1 Hypertension", "#ED7014", stage1[num]];
     } else if (sys >= 140 || dia >= 90) {
@@ -277,7 +277,7 @@ console.log(responses)
   const planChoices = [
     "Meal Plans by Nutritionist",
     "Generated Meal Plans",
-    "Meal Plan Ordered",
+  //  "Meal Plan Ordered",
   ];
   //!
   const { loggedInUser, setLoggedInUser } = useLoggedInUser(); // * to get the details of the log in user
@@ -614,6 +614,13 @@ console.log(responses)
   }, [journalEntry]);
   //!
 
+
+  const refreshMeals = () => {
+    setRandomNumberbreakfast1(generateRandomNumber(50));
+    setRandomNumberlunch1(generateRandomNumber(50));
+    setRandomNumbersnack1(generateRandomNumber(50));
+    setRandomNumberdinner1(generateRandomNumber(50));
+  }
   //! try
   const [date, setDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
@@ -2129,8 +2136,8 @@ console.log(responses)
                     protein: meals[0].protein,
                     carbs: meals[0].carbs,
                     journal_id: res.data.id,
-                    sodium: 0,
-                    potassium: 0,
+                    sodium:  meals[0].sodium,
+                    potassium:  meals[0].potassium,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2147,8 +2154,8 @@ console.log(responses)
                     protein: meals[1].protein,
                     carbs: meals[1].carbs,
                     journal_id: res.data.id,
-                    sodium: 0,
-                    potassium: 0,
+                    sodium:  meals[1].sodium,
+                    potassium:  meals[1].potassium,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2165,8 +2172,8 @@ console.log(responses)
                     protein: meals[2].protein,
                     carbs: meals[2].carbs,
                     journal_id: res.data.id,
-                    sodium: 0,
-                    potassium: 0,
+                    sodium:  meals[2].sodium,
+                    potassium:  meals[2].potassium,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2183,8 +2190,8 @@ console.log(responses)
                     protein: meals[3].protein,
                     carbs: meals[3].carbs,
                     journal_id: res.data.id,
-                    sodium: 0,
-                    potassium: 0,
+                    sodium:  meals[3].sodium,
+                    potassium:  meals[3].potassium,
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -2456,8 +2463,14 @@ console.log(responses)
                         .digest[1].total
                     ),
                     journal_id: res.data.id,
-                    sodium: 0,
-                    potassium: 0,
+                    sodium: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[4].total / finalMealPlan.meal[i - 1].meals[0].details.recipe.yield
+                    ),
+                    potassium: Math.round(
+                      finalMealPlan.meal[i - 1].meals[0].details.recipe
+                        .digest[7].total / finalMealPlan.meal[i - 1].meals[0].details.recipe.yield
+                    ),
                   }).then((res) => {
                     console.log(res, res.data);
                   });
@@ -4091,7 +4104,7 @@ const [notFound, setNotFound] = useState(false)
     >
       {/* //? test */}
 
-      <div
+      {/* <div
         className="meal-suggestion-input"
         style={{ position: "relative", width: "300px" }}
       >
@@ -4142,7 +4155,7 @@ const [notFound, setNotFound] = useState(false)
           Nothing found
           </>
         )}
-      </div>
+      </div> */}
       {/* //! weekly */}
       {/* <div className="calendar">
         {renderHeader()}
@@ -8321,7 +8334,7 @@ const [notFound, setNotFound] = useState(false)
                   {" "}
                   <Typography sx={{ fontWeight: "bold" }}>Calories </Typography>
                 </Grid>
-                <Grid xs={2}> {calories * 20} g</Grid>
+                <Grid xs={2}> {parseInt(calories * 20)} g</Grid>
               </Grid>
 
               <BorderLinearProgress variant="determinate" value={calories} />
@@ -8436,8 +8449,10 @@ const [notFound, setNotFound] = useState(false)
               <Box
                 sx={{
                   // background: getBPRange(parseInt(journalEntry[0]?.systolic), parseInt(journalEntry[0]?.diastolic))[1],
-                  background: BPRange[1],
-                  color: secondaryColor,
+                  backgroundColor: BPRange[1],
+                  color: BPRange[1] === "#4DDA5B" || BPRange[1] === "#FF0000" ? 
+                        '#ffffff' : '#000000'
+                  ,
                   borderRadius: 2,
                   mx: {
                     sm: 1,
@@ -8628,9 +8643,9 @@ const [notFound, setNotFound] = useState(false)
                 <Grid xs={8}>{BPRange[2]}</Grid>
               </Grid>
             </Box>
-            <Button onClick={() => fetchMealSuggestionsBP(BPRange[0])}>
+            {/* <Button onClick={() => fetchMealSuggestionsBP(BPRange[0])}>
               test
-            </Button>
+            </Button> */}
 
             <Box sx={{ border: 3, borderRadius: 4, borderColor: "#898246" }}>
               <Typography sx={{ fontWeight: "bold", color: "#99756E" }}>
@@ -8864,7 +8879,7 @@ const [notFound, setNotFound] = useState(false)
             <Typography
               sx={{ mt: "1%", ml: "5%", fontWeight: "bold", color: "#99756E" }}
             >
-              Meal Recommendation of the Week
+              Weekly Report
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -8907,8 +8922,21 @@ const [notFound, setNotFound] = useState(false)
             <Box sx={{ border: 3, borderRadius: 4, borderColor: "#898246" }}>
               <Typography sx={{ fontWeight: "bold", color: "#99756E" }}>
                 Recommended Meals
+              
               </Typography>
-              {console.log(mealBPRecommendations)}
+              <Button   sx={{
+                background: "#E66253",
+                color: "#ffffff",
+                mt: 1,
+                "&:hover": {
+                  ml: "10%",
+                  backgroundColor: "#ffffff",
+                  color: "#E66253",
+                  border: 0.5,
+                  borderColor: "#E66253",
+                },
+              }} onClick={(refreshMeals)}>Refresh Meals</Button>
+             
               <Box sx={{ ml: 1, mr: 0 }}>
                 <Grid container spacing={2} sx={{ mt: "2%" }}>
                   <Grid xs={3}>

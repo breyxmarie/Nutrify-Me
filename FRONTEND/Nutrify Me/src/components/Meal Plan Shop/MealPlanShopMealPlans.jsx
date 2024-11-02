@@ -787,7 +787,7 @@ function MealPlanShopMealPlans() {
                     <Typography sx={{ mx: "20%" }}>
                       {plan.description}
                     </Typography>
-                    <Typography variant="body1">PHP {plan.price}</Typography>
+                    <Typography variant="body1">₱ {plan.price}</Typography>
                     <Button
                       sx={{
                         borderRadius: 4,
@@ -1055,7 +1055,7 @@ function MealPlanShopMealPlans() {
                     {plan.description}
                   </Typography>
                   <Typography variant="body1">
-                    PHP {plan.price}
+                  ₱ {plan.price}
                   </Typography>
 
 

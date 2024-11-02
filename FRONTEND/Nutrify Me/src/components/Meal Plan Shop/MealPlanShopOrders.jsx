@@ -281,12 +281,12 @@ function MealPlanShopOrders() {
           <Box
             sx={{
               mx: 5,
-              color: "#99756E",
-              fontWeight: "bold",
-              fontSize: "120%",
+            
             }}
           >
-            <Grid container spacing={2} sx={{ mt: "2%", ml: "2%" }}>
+            <Grid container spacing={2} sx={{ mt: "2%", ml: "2%",   color: "#99756E",
+              fontWeight: "bold",
+              fontSize: "120%", }}>
               <Grid xs={2}> 
               <img src={ item.image && /\.(jpg|jpeg|png|gif)$/i.test(item.image)  ? item.image : "/images/food.png"} width="160px" height="160px" />
 
@@ -300,6 +300,65 @@ function MealPlanShopOrders() {
                 {item.price}
               </Grid>
             </Grid>
+
+
+            <table style={{width:"150%"}}>
+                      <tr>
+                        <th></th>
+                        <th>Day 1</th>
+                        <th>Day 2</th>
+                        <th>Day 3</th>
+                        <th>Day 4</th>
+                        <th>Day 5</th>
+                      </tr>
+                      <tr>
+                        <td>Breakfast</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.32 )}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.33 )}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.25)}</td>
+
+                        <td>₱ {parseInt((item.price / 5) * 0.33 )}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.21 )}</td>
+
+                      </tr>
+
+                      <tr>
+                        <td>Lunch</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.37) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.23)}</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.33 )}</td>
+
+                        <td>₱ {parseInt((item.price / 5) * 0.32) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.35) }</td>
+
+                      </tr>
+
+                      <tr>
+                        <td>Snack</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.1) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.115) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.12) }</td>
+
+                        <td>₱ {parseInt((item.price / 5) * 0.11) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.125 )}</td>
+
+                      </tr>
+                      <tr>
+                        <td>Dinner</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.21) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.31) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.32) }</td>
+
+                        <td>₱ {parseInt((item.price / 5) * 0.22) }</td>
+                        <td>₱ {parseInt((item.price / 5) * 0.325 )}</td>
+
+                      </tr>
+
+                    </table>
+
+
+
+
           </Box>
         ))}
         <br />
@@ -310,7 +369,7 @@ function MealPlanShopOrders() {
             <Grid xs={5}></Grid>
             <Grid xs={3}> Product Total</Grid>
             <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
-              {/* PHP {totalPrices} */} PHP{" "}
+              {/* PHP {totalPrices} */} ₱{" "}
               {location.state.totalprice - location.state.shipping_price}
             </Grid>
           </Grid>
@@ -319,7 +378,7 @@ function MealPlanShopOrders() {
             <Grid xs={5}></Grid>
             <Grid xs={3}> Shipping </Grid>
             <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
-              PHP {location.state.shipping_price}
+            ₱ {location.state.shipping_price}
             </Grid>
           </Grid>
           <br />
@@ -339,7 +398,7 @@ function MealPlanShopOrders() {
               Total
             </Grid>
             <Grid xs={2.5} s>
-              PHP {location.state.totalprice}
+            ₱ {location.state.totalprice}
             </Grid>
           </Grid>
         </Box>

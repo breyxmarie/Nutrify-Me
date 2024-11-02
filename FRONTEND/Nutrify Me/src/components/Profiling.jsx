@@ -578,7 +578,7 @@ function Profiling() {
               size="small"
               name="goal"
               width="100%"
-              {...register1("common_sys")}
+              {...register("common_sys")}
               error={errors.common_sys ? true : false}
             >
               {sysChoices.map((option) => (
@@ -590,7 +590,7 @@ function Profiling() {
   <Grid md = {2}> <div   
  onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} 
  style = {{border: '1px solid black', borderRadius: 15, marginRight: "50%"
-  , marginLeft: "30%",  marginTop: "5%"
+  , marginLeft: "30%",  marginTop: "5%", color: "#000000",
  }}>   
 
       ?
@@ -639,7 +639,7 @@ function Profiling() {
               size="small"
               name="goal"
               width="100%"
-              {...register1("common_dia")}
+              {...register("common_dia")}
               error={errors.common_dia ? true : false}
             >
               {diaChoices.map((option) => (
@@ -653,7 +653,7 @@ function Profiling() {
      <div   
  onMouseEnter={handleMouseEnter1} onMouseLeave={handleMouseLeave1} 
  style = {{border: '1px solid black', borderRadius: 15, marginRight: "50%"
-  , marginLeft: "30%",  marginTop: "5%"
+  , marginLeft: "30%",  marginTop: "5%", color: "#000000"
  }}>   
 
       ?
