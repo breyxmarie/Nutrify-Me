@@ -13,6 +13,18 @@ import AxiosInstance from "../forms/AxiosInstance";
 import dayjs from "dayjs";
 
 function MealPlanShopOrders() {
+
+  const [isHovered, setIsHovered] = useState(false);
+
+
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
   const [orderData, setOrderData] = useState([]);
   const location = useLocation();
   //* add up of props here for the data to be pass here everytime this page is open
@@ -369,9 +381,43 @@ function MealPlanShopOrders() {
             <Grid xs={5}></Grid>
             <Grid xs={3}> Product Total</Grid>
             <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
-              {/* PHP {totalPrices} */} ₱{" "}
-              {location.state.totalprice - location.state.shipping_price}
+            ₱ {Math.round(Math.round((location.state.totalprice - location.state.shipping_price) - ( (location.state.totalprice - location.state.shipping_price) - (location.state.totalprice - location.state.shipping_price) / 1.12))) }
+
             </Grid>
+          </Grid>
+          <br/>
+          <Grid container spacing={2}>
+            <Grid xs={5}></Grid>
+            <Grid xs={2} sx = {{display: "flex", alignItems: "flex-end",
+                                justifyContent: "flex-end"
+            }}> VAT  </Grid>
+              <Grid xs = {1}>
+              <div   
+ onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} 
+ style = {{border: '1px solid black', borderRadius: 15, marginRight: "60%"
+  , marginLeft: "10%",  marginTop: "0%"
+ }}>   
+
+      ?
+      {isHovered && <div className="tooltip"  style={{
+        zIndex: 10,
+        marginRight: "20%",
+            position: 'absolute',
+            left: '60%', // Adjust this value as needed
+            top: '80%',
+            transform: 'translateY(-50%)',
+          backgroundColor: 'lightgray',
+            padding: '10px',
+            border: '1px solid black',
+          fontSize: '20px',
+            borderRadius: '5px',
+            color: "#000000",
+          }}>The Philippine government has implemented a 12% Value-Added Tax (VAT) on online purchases through Republic Act No. 12023. This law aims to expand the tax base and ensure fair taxation for both domestic and foreign digital service providers. </div>}
+    </div></Grid>
+            <Grid xs={2} sx={{ textAlign: "right", mr: 5 }}>
+              {/* PHP {totalPrices} */} ₱{" "}
+              {parseInt( (location.state.totalprice - location.state.shipping_price) - (location.state.totalprice - location.state.shipping_price) / 1.12)}
+         </Grid>
           </Grid>
           <br />
           <Grid container spacing={2}>
