@@ -2817,7 +2817,201 @@ function MealPlanTest() {
                         }}
                       >
                         {item.Day}
+
+                        
                       </Typography>
+
+
+                      <Grid
+                                container
+                                spacing={2}
+                                sx={{
+                                  mt: {
+                                    xs: 2, // For extra small screens
+                                    sm: 2, // For small screens
+                                    md: 8, // For medium screens
+                                  },
+                                  ml: "15%",
+                                }}
+                              >
+                                <Grid xs={12} md={6}>
+                                  {" "}
+                                  <Grid container spacing={2}>
+                                    <Grid xs={1.8}>
+                                      {" "}
+                                      <img src="/images/calories.png" />
+                                    </Grid>
+                                    <Grid
+                                      xs={8}
+                                      md={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        item.meals[0].details.recipe.calories /
+                                        item.meals[0].details.recipe.yield
+                                      ) + Math.floor(
+                                        item.meals[1].details.recipe.calories /
+                                        item.meals[1].details.recipe.yield
+                                      ) + Math.floor(
+                                        item.meals[2].details.recipe.calories /
+                                        item.meals[2].details.recipe.yield
+                                      ) + 
+                                      Math.floor(
+                                        item.meals[3].details.recipe.calories /
+                                        item.meals[3].details.recipe.yield
+                                      )
+                                      }{" "}
+                                      calories
+                                    </Grid>
+                                  </Grid>
+                                  <br />
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/carbs.png" />
+                                    </Grid>
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        item.meals[0].details.recipe.digest[1].total
+                                      ) + Math.floor(
+                                        item.meals[1].details.recipe.digest[1].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[2].details.recipe.digest[1].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[3].details.recipe.digest[1].total
+                                      )}{" "}
+                                      carbs
+                                    </Grid>
+                                  </Grid>
+<br/>
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img width = "30%" height= "80%"  src="/images/potassiumorange.png" />
+                                    </Grid>
+
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        item.meals[0].details.recipe.digest[7].total
+                                      ) + 
+                                      Math.floor(
+                                        item.meals[1].details.recipe.digest[7].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[2].details.recipe.digest[7].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[3].details.recipe.digest[7].total
+                                      )}{" "}
+                                      protein
+                                    </Grid>
+                                  </Grid>
+                                </Grid>
+                                <Grid
+                                  xs={12}
+                                  md={6}
+                                  sx={{
+                                    mt: {
+                                      xs: 3,
+                                      sm: 3,
+                                      md: 0,
+                                    },
+                                  }}
+                                >
+                                  {" "}
+                                  <Grid container spacing={2} >
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/fat.png" />
+                                    </Grid>
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        item.meals[0].details.recipe.digest[0].total
+                                      ) + 
+                                      Math.floor(
+                                        item.meals[1].details.recipe.digest[0].total
+                                      ) + 
+                                      Math.floor(
+                                        item.meals[2].details.recipe.digest[0].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[3].details.recipe.digest[0].total
+                                      )}{" "}
+                                      fats
+                                    </Grid>
+                                  </Grid>
+                                  <br />
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img src="/images/protein.png" />
+                                    </Grid>
+
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        item.meals[0].details.recipe.digest[2].total
+                                      ) + 
+                                      Math.floor(
+                                        item.meals[1].details.recipe.digest[2].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[2].details.recipe.digest[2].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[3].details.recipe.digest[2].total
+                                      )}{" "}
+                                      protein
+                                    </Grid>
+                                  </Grid>
+                                  <br/>
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img width = "30%" height= "80%" src="/images/sodiumorange.png" />
+                                    </Grid>
+
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        item.meals[0].details.recipe.digest[4].total
+                                      ) + 
+                                      Math.floor(
+                                        item.meals[1].details.recipe.digest[4].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[2].details.recipe.digest[4].total
+                                      ) +
+                                      Math.floor(
+                                        item.meals[3].details.recipe.digest[4].total
+                                      )}{" "}
+                                      sodium
+                                    </Grid>
+                                  </Grid>
+                                  </Grid>
+                                  </Grid>
+
                       {item.meals.map((items) => (
                         <Box sx={{ mt: "5%", ml: "5%" }}>
                           <Grid container spacing={2}>
@@ -2934,6 +3128,25 @@ function MealPlanTest() {
                                       carbs
                                     </Grid>
                                   </Grid>
+
+                                  <br />
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img width = "70%" height= "80%"  src="/images/potassiumorange.png" />
+                                    </Grid>
+
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        items.details.recipe.digest[7].total
+                                      )}{" "}
+                                      potassium
+                                    </Grid>
+                                  </Grid>
                                 </Grid>
                                 <Grid
                                   xs={12}
@@ -2979,6 +3192,25 @@ function MealPlanTest() {
                                         items.details.recipe.digest[2].total
                                       )}{" "}
                                       protein
+                                    </Grid>
+                                  </Grid>
+
+                                  <br />
+                                  <Grid container spacing={2}>
+                                    <Grid xs={2}>
+                                      {" "}
+                                      <img width = "60%" height= "90%"  src="/images/sodiumorange.png" />
+                                    </Grid>
+
+                                    <Grid
+                                      xs={8}
+                                      display="flex"
+                                      justifyContent="flex-start"
+                                    >
+                                      {Math.floor(
+                                        items.details.recipe.digest[4].total
+                                      )}{" "}
+                                      sodium
                                     </Grid>
                                   </Grid>
                                 </Grid>

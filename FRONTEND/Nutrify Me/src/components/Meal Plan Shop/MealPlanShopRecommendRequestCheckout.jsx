@@ -108,7 +108,7 @@ function MealPlanShopRecommendRequestCheckout() {
   };
 
   const [addressData, setAddressData] = useState([]);
-
+console.log(location.state.price)
   const getAddressData = async () => {
     try {
       const response = await AxiosInstance.get(`address`);
@@ -140,13 +140,13 @@ function MealPlanShopRecommendRequestCheckout() {
           // );
 
           setSubTotalPrices(location.state.price);
-          setTotalOrderPrice(
-            parseInt(location.state.price) +
-              parseInt(
-                quotationData?.data?.data?.priceBreakdown
-                  ?.totalExcludePriorityFee
-              ) + parseInt(location.state.price * 0.12)
-          );
+          // setTotalOrderPrice(
+          //   parseInt(location.state.price) +
+          //     parseInt(
+          //       quotationData?.data?.data?.priceBreakdown
+          //         ?.totalExcludePriorityFee
+          //     ) + parseInt(location.state.price * 0.12)
+          // );
 
           // console.log(tempPrice);
           setShippingDetails(quotationData);
@@ -345,7 +345,7 @@ function MealPlanShopRecommendRequestCheckout() {
   const [cartData, setCartData] = useState([]);
   const [shopMeal, setShopMeal] = useState([]);
   const [cartMeal, setCartMeal] = useState([]);
-
+console.log(location)
   const [recommendMeals, setRecommendMeals] = useState([]);
   const getData = async () => {
     const mealData = await AxiosInstance.get(`recommendmealplan`);
@@ -354,9 +354,10 @@ function MealPlanShopRecommendRequestCheckout() {
   };
   const getCartData = async () => {
     const temp = location.state;
-    setSubTotalPrices(location.state.request.price);
+    setSubTotalPrices(location.state.price);
     setTotalOrderPrice(
-      parseInt(location.state.price) + parseInt(shippingPrice) + parseInt(location.state.request.price * 0.12)
+      parseInt(location.state.price) + parseInt(shippingPrice) 
+      + parseInt(location.state.price * 0.12)
     );
 
     console.log(parseInt(location.state.price) + parseInt(shippingPrice));
@@ -509,7 +510,7 @@ function MealPlanShopRecommendRequestCheckout() {
   } = useForm({
     resolver: yupResolver(secondschema),
   });
-
+console.log(location)
   const onSubmitHandler1 = async (data) => {
 
 
@@ -612,6 +613,8 @@ function MealPlanShopRecommendRequestCheckout() {
                   fat: items.fat,
                   protein: items.protein,
                   carbs: items.carbs,
+                  sodium: 0,
+                  potassium: 0,
                   food: items.food,
                   image:  "/images/food.png",
                   day: items.day,
@@ -680,8 +683,8 @@ function MealPlanShopRecommendRequestCheckout() {
   // const subTotalPrices = calculateSubTotalPrice(); // Calculate total price here
   const [subTotalPrices, setSubTotalPrices] = useState(0);
   const [totalOrderPrice, setTotalOrderPrice] = useState(
-    parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) ||
-      parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12)
+    // parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) ||
+    //   parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12)
   );
 
   const handleShippingChange = (event) => {
@@ -742,14 +745,14 @@ function MealPlanShopRecommendRequestCheckout() {
     getCartData();
     //getAddressData();
     const tempPrice = calculateSubTotalPrice();
-    // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
+   // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(tempPrice * 0.12));
   }, []);
 
   useEffect(() => {
     // addNewObject();
 
     const tempPrice = calculateSubTotalPrice();
-     setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
+     setTotalOrderPrice(parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
   }, [shippingPrice]);
 
   useEffect(() => {
@@ -1289,7 +1292,7 @@ function MealPlanShopRecommendRequestCheckout() {
           parseInt(tempPrice) +
             parseInt(
               quotationData?.data?.data?.priceBreakdown?.totalExcludePriorityFee
-            ) + parseInt(subTotalPrices * 0.12)
+            ) + parseInt(tempPrice * 0.12)
         );
         setShippingDetails(quotationData);
       } catch (error) {

@@ -140,13 +140,13 @@ function MealPlanShopRequestCheckout() {
           // );
 
           setSubTotalPrices(location.state.request.price);
-          setTotalOrderPrice(
-            parseInt(location.state.request.price) +
-              parseInt(
-                quotationData?.data?.data?.priceBreakdown
-                  ?.totalExcludePriorityFee
-              ) + parseInt(location.state.request.price * 0.12)
-          );
+          // setTotalOrderPrice(
+          //   parseInt(location.state.request.price) +
+          //     parseInt(
+          //       quotationData?.data?.data?.priceBreakdown
+          //         ?.totalExcludePriorityFee
+          //     ) + parseInt(location.state.request.price * 0.12)
+          // );
 
           // console.log(tempPrice);
           setShippingDetails(quotationData);
@@ -345,7 +345,7 @@ function MealPlanShopRequestCheckout() {
   const [cartData, setCartData] = useState([]);
   const [shopMeal, setShopMeal] = useState([]);
   const [cartMeal, setCartMeal] = useState([]);
-
+console.log(location)
   const getCartData = async () => {
     const temp = location.state;
     setSubTotalPrices(location.state.request.price);
@@ -353,9 +353,7 @@ function MealPlanShopRequestCheckout() {
       parseInt(location.state.request.price) + parseInt(shippingPrice)
       + parseInt(location.state.request.price * 0.12)  ); 
 
-    console.log(
-      parseInt(location.state.request.price) + parseInt(shippingPrice)
-    );
+  
     // try {
     //   const response = await AxiosInstance.get(`cart`);
     //   const filteredData = response.data.filter(
@@ -595,6 +593,8 @@ function MealPlanShopRequestCheckout() {
                       fat: Math.floor(items.details.recipe.digest[0].daily),
                       protein: Math.floor(items.details.recipe.digest[2].daily),
                       carbs: Math.floor(items.details.recipe.digest[1].daily),
+                      sodium: 0,
+                      potassium: 0,
                       food: items.details.recipe.label,
                       image: items.details.recipe.image,
                       day: item.Day.substring(4),
@@ -664,8 +664,8 @@ function MealPlanShopRequestCheckout() {
   // const subTotalPrices = calculateSubTotalPrice(); // Calculate total price here
   const [subTotalPrices, setSubTotalPrices] = useState(0);
   const [totalOrderPrice, setTotalOrderPrice] = useState(
-    parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) ||
-      parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12)
+  //  parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12) ||
+     // parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12)
   );
 
   const handleShippingChange = (event) => {
@@ -726,14 +726,14 @@ function MealPlanShopRequestCheckout() {
     getCartData();
     //getAddressData();
     const tempPrice = calculateSubTotalPrice();
-   setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
+ // setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
   }, []);
 
   useEffect(() => {
     // addNewObject();
 
     const tempPrice = calculateSubTotalPrice();
-   setTotalOrderPrice(parseInt(tempPrice) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
+   setTotalOrderPrice(parseInt(subTotalPrices) + parseInt(shippingPrice) + parseInt(subTotalPrices * 0.12));
   }, [shippingPrice]);
 
   useEffect(() => {

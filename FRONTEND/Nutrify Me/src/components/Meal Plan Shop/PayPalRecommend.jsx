@@ -29,8 +29,8 @@ function PayPalRecommend() {
         {
           amount: {
             currency_code: "PHP",
-           value: location.state.datas.totalprice,
-            //value: 0.01,
+          value: location.state.datas.totalprice,
+         //  value: 0.01,
           },
         },
       ],
@@ -103,6 +103,8 @@ function PayPalRecommend() {
                 fat: items.fat,
                 protein: items.protein,
                 carbs: items.carbs,
+                sodium: 0,
+                potassium: 0,
                 food: items.food,
                 image: "/images/food.png",
                 day: item.day,

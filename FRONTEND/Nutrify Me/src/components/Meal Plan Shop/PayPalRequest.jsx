@@ -99,6 +99,8 @@ function PayPalRequest() {
                 fat: Math.floor(items.details.recipe.digest[0].daily),
                 protein: Math.floor(items.details.recipe.digest[2].daily),
                 carbs: Math.floor(items.details.recipe.digest[1].daily),
+                sodium: Math.floor(items.details.recipe.digest[4].daily),
+                potassium: Math.floor(items.details.recipe.digest[7].daily),
                 food: items.details.recipe.label,
                 image: items.details.recipe.image,
                 day: item.Day.substring(4),
